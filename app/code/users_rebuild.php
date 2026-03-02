@@ -6,8 +6,6 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Schema\Blueprint;
 use Throwable;
 
-dd("Running users_rebuild.php...");
-
 try {
 
     $required = ['id','username','password','password_plain','role'];
