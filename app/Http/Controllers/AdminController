@@ -1,0 +1,129 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+
+class SectionController extends Controller
+{
+    /** Max depth for /admin/{segments?} */
+    private const MAX_SEGMENTS = 5;
+
+    /** Kept from trait */
+    protected array  $safelist          = ['data_type', 'alternate_domains'];
+    protected string $renderfromPattern = '/^[A-Za-z0-9._-]+$/';
+
+    public function __construct()
+    {
+        $this->middleware('role:admin,super');
+    }
+
+    public function decrypt(Request $req)
+    {
+        // Pull & normalize
+        $token = (string) $req->input('token', '');
+        if ($token === '') {
+            dd("error-line28-Admin/SectionController - missing token");};
+        // form-encoding can turn '+' into spaces; normalize just in case
+        $token = str_replace(' ', '+', $token);
+
+        // Decrypt
+        try {
+            $plain = decrypt($token); 
+        } catch (\Throwable $e) {
+            dd('error-line36-SectionController - decryption failed');}
+
+        // 3) Parse "k:v;k2:v2" into an array
+        $kv = [];
+        parse_str(str_replace([';', ':'], ['&', '='], $plain), $kv);
+
+        // 4) Validate required fields
+        $required = ['task_id', 'field', 'pid'];
+        foreach ($required as $key) {
+            if (!isset($kv[$key]) || $kv[$key] === '') {
+                dd("error-line46-SectionController - missing $key");};};
+
+        // 5) Return JSON for the client
+        return response()->json($kv);
+    }  
+
+    public function index(Request $request)
+    {
+        // Route param: "segments" separates by section
+        $segmentsPath = trim((string) $request->route('segments', ''), '/');    
+        $parts        = ($segmentsPath === '') ? [] : explode('/', $segmentsPath);
+
+        //sets view names & app files
+        include('parts/dynamic_index.php');
+
+        // ---- partial vs full ----
+        $isPartial = $request->header('X-Pageswap') === '1';
+        if ($isPartial) {
+            // return just the fragment for pageswap
+            return response()
+                ->view($viewName, compact('data'))
+                ->header('Vary', 'X-Pageswap');}
+                // cache safety
+
+        // full chrome + the same fragment on refresh/direct visit
+        return response()
+            ->view('admin.frame', [         
+                'data'        => $data,
+                'contentView' => $viewName,
+            ])->header('Vary', 'X-Pageswap');
+    }
+
+    public function uuid(Request $request, string $segments, string $uuid){
+
+        // Route param: "segments" separates by /
+        $segmentsPath = trim((string) $request->route('segments', ''), '/');    
+        $parts        = ($segmentsPath === '') ? [] : explode('/', $segmentsPath);
+
+        //sets view names & app files
+        include('parts/dynamic_index.php');
+
+        // ---- partial vs full ----
+        $isPartial = $request->header('X-Pageswap') === '1';
+        if ($isPartial) {
+            // return just the fragment for pageswap
+            return response()
+                ->view($viewName, compact('data'))
+                ->header('Vary', 'X-Pageswap');}
+                // cache safety
+
+        // full chrome + the same fragment on refresh/direct visit
+        return response()
+            ->view('admin.frame', [         
+                'data'        => $data,
+                'contentView' => $viewName,
+            ])->header('Vary', 'X-Pageswap');
+    }
+
+    public function textedit(Request $request){
+
+        // skip sanitize for safelisted fields
+        $safelist=[];
+        // takes all values from $_POST and converts to $input
+        include(app_path().'/code/sanitize_extract.php');
+        // check renderfrom
+        if(!$renderfrom){
+            dd("error-line163-SectionController - missing renderfrom");}
+
+        if(isset($value)){
+            include(app_path().'/code/getValue.php');}
+
+        // compute view path + run processor
+        $renderFrom = $renderfrom;
+        $renderPath = str_replace('.', '/', $renderFrom);
+        $fullPath   = app_path("{$renderPath}.php");
+        $viewName   = $renderFrom;
+
+        include $fullPath;
+
+        // render and return
+        $html = \View::make($viewName)->with(['data' => $data])->render();
+        return response($html);
+
+    }
+}
