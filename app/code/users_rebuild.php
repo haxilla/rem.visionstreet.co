@@ -26,6 +26,11 @@ try {
 
     DB::transaction(function () {
 
+        DB::statement("
+            ALTER TABLE remuserdb.propagents
+            MODIFY COLUMN id BIGINT UNSIGNED NOT NULL
+        ");
+
         Schema::dropIfExists('users');
 
         Schema::create('users', function (Blueprint $table) {
