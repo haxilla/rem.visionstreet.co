@@ -35,7 +35,7 @@ try {
 
         Schema::create('users', function (Blueprint $table) {
             $table->unsignedBigInteger('id');
-            $table->string('username', 100)->unique();
+            $table->string('username', 100);
             $table->string('password_plain', 255)->nullable();
             $table->string('password', 255)->nullable();
             $table->string('role', 20)->default('member');
