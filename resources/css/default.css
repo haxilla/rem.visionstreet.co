@@ -1,0 +1,48 @@
+/* ===== Layout Core ===== */
+
+.flex { display: flex; }
+.inline-flex { display: inline-flex; }
+
+.row { flex-direction: row; }
+.col { flex-direction: column; }
+
+.wrap { flex-wrap: wrap; }
+.nowrap { flex-wrap: nowrap; }
+
+.center { justify-content: center; align-items: center; }
+
+.between { justify-content: space-between; }
+.around { justify-content: space-around; }
+
+.align-center { align-items: center; }
+.align-start { align-items: flex-start; }
+.align-end { align-items: flex-end; }
+
+/* ===== Flexible Ratios ===== */
+
+.flex-1 { flex: 1; }
+.flex-2 { flex: 2; }
+.flex-3 { flex: 3; }
+.flex-4 { flex: 4; }
+.flex-5 { flex: 5; }
+.flex-6 { flex: 6; }
+.flex-7 { flex: 7; }
+.flex-8 { flex: 8; }
+.flex-9 { flex: 9; }
+.flex-10 { flex: 10; }
+
+/* ===== Percentage Widths ===== */
+
+.w-10 { flex: 0 0 10%; }
+.w-20 { flex: 0 0 20%; }
+.w-25 { flex: 0 0 25%; }
+.w-30 { flex: 0 0 30%; }
+.w-33 { flex: 0 0 33.333%; }
+.w-40 { flex: 0 0 40%; }
+.w-50 { flex: 0 0 50%; }
+.w-60 { flex: 0 0 60%; }
+.w-70 { flex: 0 0 70%; }
+.w-75 { flex: 0 0 75%; }
+.w-80 { flex: 0 0 80%; }
+.w-90 { flex: 0 0 90%; }
+.w-100 { flex: 0 0 100%; }
