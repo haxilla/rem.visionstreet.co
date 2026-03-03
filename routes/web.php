@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Models\Core\PropFlyer;
+use App\Models\Core\Propflyer;
 use Illuminate\Support\Facades\DB;
 
 Route::get('/', function () {
@@ -25,5 +25,5 @@ Route::get('/_diag', function () {
 
 Route::get('/_flyers', function () {
     DB::connection()->getPdo(); // forces connection; will throw a useful error if DB is wrong
-    return PropFlyer::query()->limit(5)->get();
+    return Propflyer::query()->limit(5)->get();
 });
