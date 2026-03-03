@@ -25,5 +25,5 @@ Route::get('/_diag', function () {
 
 Route::get('/_flyers', function () {
     DB::connection()->getPdo(); // forces connection; will throw a useful error if DB is wrong
-    return Propflyer::query()->limit(5)->get();
+    return Propflyer::query()->orderBy('created_at', 'desc')->limit(5)->get();
 });
