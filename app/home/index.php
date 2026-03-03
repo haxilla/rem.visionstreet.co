@@ -2,8 +2,9 @@
 
 Use App\Models\Core\Propflyer;
 
+$flyers=Propflyer::all();
+
 dd('hi');
 
-$flyers=Propflyer::all();
 
 dd($flyers);
