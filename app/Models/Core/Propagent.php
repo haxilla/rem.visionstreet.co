@@ -15,4 +15,8 @@ class Propagent extends Model{
       return $this->hasOne('App\Models\Core\Propagentmeta','propagent_id','id');
     }
 
+    public function theAgentCleanup(){
+      return $this->hasOne('App\Models\Core\Propagentcleanup','propagent_id','id');
+    }
+
 }
