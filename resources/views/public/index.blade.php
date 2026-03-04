@@ -34,11 +34,11 @@ data-ride="carousel" style="position:relative;z-index:0;">
                 <div style="display:inline-block;vertical-align:bottom;">
                   @if($the->theAgent->theAgentCleanup)
                     <img class="carouselAgentImg"
-                    src='{{env('APP_IMGURL')}}/agentPhotos/{{$the->theAgent->theAgentCleanup
+                    src='https://www.realtyrepublic.com/agentPhotos/{{$the->theAgent->theAgentCleanup
                       ->newRemID}}/{{$the->theAgent->agtPhoto}}'>
                   @else
                     <img class="carouselAgentImg"
-                    src='{{env('APP_IMGURL')}}/HQoffice/{{$the->theOffice
+                    src='https://www.realtyrepublic.com/HQoffice/{{$the->theOffice
                       ->officeID}}/{{$the->theAgent->agtPhoto}}'>
                   @endif
                 </div>
