@@ -15,4 +15,12 @@ class Propflyer extends Model{
         return $this->belongsTo('App\Models\Core\Propagent','propagent_id','id');
     }
 
+    public function theOffice(){
+        return $this->belongsTo('App\Models\Core\Agtoffice','propagent_id','propagent_id');
+    }
+
+    public function theMeta(){
+        return $this->hasOne('App\Models\Core\Propmeta','propflyer_id','id');
+    }
+
 }
