@@ -27,4 +27,8 @@ class Propflyer extends Model{
         return $this->hasMany('App\Models\Core\Propphoto','propflyer_id','id');
     }
 
+    public function theRemarks(){
+        return $this->hasOne('App\Models\Core\Propremark','propflyer_id','id');
+    }
+
 }
