@@ -1,7 +1,6 @@
 <?php
-
-Use App\Models\Core\Propflyer;
-
+//model
+use App\models\core\propflyer;
 //set date frame
 $theDate=\Carbon\Carbon::today()->subDays(30);
 //query
@@ -31,5 +30,3 @@ $baseQuery=propflyer::select(
 ->leftJoin('propflyerstats',
   'propflyers.id', '=', 'propflyerstats.propflyer_id')
 ->where('xAgtSent','=','1');
-
-dd($baseQuery->get());
