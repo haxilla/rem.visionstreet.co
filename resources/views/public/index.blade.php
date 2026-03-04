@@ -9,7 +9,7 @@ data-ride="carousel" style="position:relative;z-index:0;">
         @endif">
         <div class="responsiveImgContainer" style="position:relative;">
           <img class="d-block w-100 responsiveImg"
-          src="https://wwww.realtyrepublic.com/hqphotos/{{$the->theMeta->zipDir}}/{{$the->theMeta
+          src="https://www.realtyrepublic.com/hqphotos/{{$the->theMeta->zipDir}}/{{$the->theMeta
             ->mlsDir}}/{{$the->thePhotos->where('def','=','1')
             ->first()->photoName}}"
             alt="{{$the->xFullStreet}} Main">
