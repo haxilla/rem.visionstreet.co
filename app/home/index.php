@@ -1,35 +1,44 @@
 <?php
 
-Use App\Models\Core\Propflyer;
+require app_path('queries/base.php');
 
-//set date frame
-$theDate=\Carbon\Carbon::today()->subDays(30);
-//query
-$baseQuery=propflyer::select(
-  'id','propflyers.propagent_id','propflyers.created_at','creationDate',
-  'xFullStreet','xCity','xState','xZip','xxZip','xBeds','xBaths','officeID',
-  'xSqft','xxBeds','xxBaths','xxSqft','xYrBuilt','xxYrBuilt','xListPrice',
-  'xWebViews')
-->where(function($q)use($theDate){
-  //either or created_at || creationDate
-  $q->where('propflyers.created_at','>',"$theDate")
-    ->orWhere('propflyers.creationDate','>',"$theDate");
+//clone & continue
+$newAdds    = clone $base;
+$mostViews  = clone $base;
+//new Adds = ordered by created_at desc
+$newAdds=$newAdds
+->whereHas('thePhotos',function($q){
+  $q->where('def','=','1')
+    ->where('resized','=','1000')
+    ->where('orient','=','wide');
 })
-->with(['theAgent'=>function($q){
-   $q->select(
-    'id','agtFullName','agtPhoto','agtMainPhone','agtLogo')
-      ->with(['theAgentMeta'=>function($q){
-         $q->select('propagent_id','newRemID');
-      }]);
-   }])
-->with(['theMeta'=>function($q){
-  $q->select('propflyer_id','zipDir','mlsDir','sk1');
+->whereHas('thePhotos',function($q){
+  $q->where('def','=','1')
+  ->where('resized','=','1000');
+})
+->with(['thePhotos'=>function($q){
+  $q->select('propflyer_id','photoName','def','resized','localFound',
+    'width','height','orient','ratio','ord','notFound','photoID','remoteFound')
+    ->where('resized','=','1000')
+    ->where('def','=','1');
 }])
-->with(['theOffice'=>function($q){
-  $q->select('officeName','propagent_id','officeID');
-}])
-->leftJoin('propflyerstats',
-  'propflyers.id', '=', 'propflyerstats.propflyer_id')
-->where('xAgtSent','=','1');
+->orderBy('propflyers.creationDate','desc')
+->take(10)
+->get();
 
-dd($baseQuery->get());
+//most Views = ordered by xWebViews desc
+$mostViews=$mostViews
+->with(['thePhotos'=>function($q){
+  $q->select('propflyer_id','photoName','def','resized','localFound',
+    'width','height','orient','ratio','ord','notFound','photoID','remoteFound')
+    ->where('resized','=','500')
+    ->where('def','=','1');
+}])
+->with(['theRemarks'=>function($q){
+  $q->select('propflyer_id','xPubRemarks');
+}])
+->take(10)
+->orderBy('xWebViews','desc')
+->get();
+
+dd($newAdds,$mostViews);
