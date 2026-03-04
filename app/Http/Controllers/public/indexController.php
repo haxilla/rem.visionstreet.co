@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\public;
 use App\Http\Controllers\Controller;
 
-use Request;
-
 class indexController extends Controller
 {
 
