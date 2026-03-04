@@ -38,7 +38,7 @@ data-ride="carousel" style="position:relative;z-index:0;">
                       ->newRemID}}/{{$the->theAgent->agtPhoto}}'>
                   @else
                     <img class="carouselAgentImg"
-                    src='https://www.realtyemails.com/HQoffice/{{$the->theOffice
+                    src='https://realtyemails.com/HQoffice/{{$the->theOffice
                       ->officeID}}/{{$the->theAgent->agtPhoto}}'>
                   @endif
                 </div>
