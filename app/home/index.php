@@ -40,5 +40,3 @@ $mostViews=$mostViews
 ->take(10)
 ->orderBy('xWebViews','desc')
 ->get();
-
-dd($newAdds,$mostViews);
