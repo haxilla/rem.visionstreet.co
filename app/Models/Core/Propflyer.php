@@ -11,4 +11,8 @@ class Propflyer extends Model{
     protected $keyType = 'int';
     protected $guarded=['id'];
 
+    public function theAgent(){
+        return $this->belongsTo('App\Models\Core\Propagent','propagent_id','id');
+    }
+
 }
