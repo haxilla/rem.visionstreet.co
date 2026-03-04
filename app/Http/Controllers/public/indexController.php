@@ -12,7 +12,7 @@ class indexController extends Controller
     require app_path('public/index.php');
 
     //return view
-    return view('mdbxPublic.index',
+    return view('public.index',
       [
         'newAdds'     => $newAdds,
         'mostViews'   => $mostViews,
