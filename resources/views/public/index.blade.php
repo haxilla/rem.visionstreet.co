@@ -169,14 +169,129 @@
       </div>
     </div>
   </div>
-  <div>
-    HELLO?
+
+  {{-- FEATURES SECTION (Themify Icons) --}}
+@php
+  $kicker = $kicker ?? 'Looking to do <span class="font-semibold text-blue-800">MORE</span> than just MLS &amp; wait?';
+  $title  = $title  ?? 'GET YOUR LISTING NOTICED!';
+  $sub    = $sub    ?? 'Each flyer includes the following...';
+
+  $items = $items ?? [
+    [
+      'icon'  => 'ti-email',
+      'title' => 'EMAIL',
+      'text'  => 'THOUSANDS Of Interested Local RE Agents.<br>(AZ &amp; NV)',
+    ],
+    [
+      'icon'  => 'ti-comments',
+      'title' => 'SHARE',
+      'text'  => 'Easily Post to Social Media Sites (Facebook,<br>Twitter, etc.)',
+    ],
+    [
+      'icon'  => 'ti-printer',
+      'title' => 'PRINT',
+      'text'  => 'Print Color Brochures with a Custom Link to<br>view your Online Flyer!',
+    ],
+    [
+      'icon'  => 'ti-world',
+      'title' => 'ONLINE',
+      'text'  => 'Each Flyer Includes custom landing page with<br><span class="italic">YOUR</span> contact info',
+    ],
+    [
+      'icon'  => 'ti-stats-up',
+      'title' => 'TRACK',
+      'text'  => 'Monitor the progress of your campaigns and<br>see how many times your flyer is viewed',
+    ],
+    [
+      'icon'  => 'ti-bolt',
+      'title' => 'AUTO IMPORT',
+      'text'  => 'If its on the MLS or anywhere online, just enter<br>address or MLS# for instant creation',
+    ],
+  ];
+@endphp
+
+<section class="w-full bg-white">
+  <div class="mx-auto w-full max-w-screen-2xl px-4 sm:px-6 lg:px-10 py-14 lg:py-16" style="max-width:1600px;">
+
+    {{-- Header --}}
+    <div class="text-center">
+      <div class="text-[15px] sm:text-[16px] text-gray-800">
+        {!! $kicker !!}
+      </div>
+
+      <h2 class="mt-3 text-[34px] sm:text-[46px] font-extrabold tracking-tight text-blue-800">
+        {{ $title }}
+      </h2>
+
+      <div class="mt-2 text-[14px] sm:text-[15px] text-gray-800">
+        {{ $sub }}
+      </div>
+
+      {{-- squiggle --}}
+      <div class="mt-5 flex justify-center">
+        <span class="text-[22px] leading-none tracking-[0.22em] text-gray-900">~~~</span>
+      </div>
+    </div>
+
+    {{-- Grid --}}
+    <div class="mt-12 grid grid-cols-1 md:grid-cols-3">
+
+      @foreach($items as $i => $it)
+        @php
+          $col = $i % 3;                 // 0,1,2
+          $isSecondRow = $i >= 3;        // bottom row
+          $needsLeftDivider = $col !== 0; // add vertical line on cols 2 & 3
+        @endphp
+
+        <div class="relative px-8 py-12 text-center">
+
+          {{-- vertical dividers (desktop) --}}
+          @if($needsLeftDivider)
+            <div class="hidden md:block absolute left-0 top-8 bottom-8 w-px bg-gray-200"></div>
+          @endif
+
+          {{-- horizontal divider between the two rows --}}
+          @if($isSecondRow)
+            <div class="absolute left-8 right-8 top-0 h-px bg-gray-200"></div>
+          @endif
+
+          {{-- Icon (gradient like screenshot) --}}
+          <div class="mx-auto relative h-16 w-16">
+            {{-- soft offset layer to mimic the “two-tone” look --}}
+            <i class="{{ $it['icon'] }} absolute inset-0 translate-x-[2px] translate-y-[2px] text-[56px] text-pink-400/70"></i>
+
+            {{-- main icon with text gradient --}}
+            <i class="{{ $it['icon'] }} absolute inset-0 text-[56px] text-transparent bg-clip-text
+                       bg-gradient-to-br from-indigo-700 via-purple-600 to-pink-500"></i>
+          </div>
+
+          {{-- Title --}}
+          <div class="mt-5 text-[18px] font-extrabold tracking-wide text-blue-900">
+            {{ $it['title'] }}
+          </div>
+
+          {{-- Text --}}
+          <div class="mt-3 text-[14px] leading-relaxed text-gray-900">
+            {!! $it['text'] !!}
+          </div>
+
+        </div>
+      @endforeach
+
+    </div>
+
+    {{-- Footer line --}}
+    <div class="mt-14 text-center">
+      <div class="text-[20px] font-extrabold tracking-wide text-blue-900">
+        PROVIDING AN EASY WAY
+      </div>
+      <div class="mt-1 text-[14px] text-blue-800">
+        to help you go beyond the average agent
+      </div>
+    </div>
+
   </div>
-  <div class="text-4xl space-x-6 p-10">
-    <i class="ti-email"></i>
-    <i class="ti-share"></i>
-    <i class="ti-printer"></i>
-    <i class="ti-world"></i>
-  </div>
+</section>
+
 </body>
 </html>
