@@ -1,70 +1,181 @@
+{{-- resources/views/home/hero.blade.php (example) --}}
 <!DOCTYPE html>
 <html lang="en" class="h-full bg-black text-white">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ $pageTitle ?? 'Realty Emails' }}</title>
 
-  <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Realty Emails</title>
+  @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-      {{-- Vite asset bundling --}}
-      @vite(['resources/css/app.css', 'resources/js/app.js'])
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
+</head>
 
-      {{-- CSRF token for forms --}}
-      <meta name="csrf-token" content="{{ csrf_token() }}">
+<body class="h-full">
 
-      {{-- Optional: favicon --}}
-      <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
+  @php
+    // ----- RIGHT PANEL (marketing copy) -----
+    // Pass these from controller, or let the defaults stand.
+    $brandName   = $brandName   ?? 'RealtyEmails';
+    $headline    = $headline    ?? 'Maximize Exposure<br>On Your Listing!';
+    $subLines    = $subLines    ?? [
+      'Easily Create Professional Real Estate',
+      'E-Flyers with a FREE Website',
+      'for YOU & Your Property!',
+    ];
+    $ctaText     = $ctaText     ?? 'Create FREE Flyer!';
+    $ctaHref     = $ctaHref     ?? route('register'); // change if needed
+    $loginHref   = $loginHref   ?? route('login');    // change if needed
+    $signupHref  = $signupHref  ?? route('register'); // change if needed
 
-  </head>
-  <body>
-    <div class="swiper" data-swiper>
-      <div class="swiper-wrapper">
-        @foreach($newAdds as $the)
-          <div class="swiper-slide">
-            <div class="listingCard">
+    // Optional: you can pass a bool to hide top-right buttons if needed
+    $showAuthButtons = $showAuthButtons ?? true;
 
-              <img class="bg"
-                src="https://realtyrepublic.com/hqphotos/{{$the->theMeta->zipDir}}/{{$the->theMeta->mlsDir}}/{{$the->thePhotos->where('def','=','1')->first()->photoName}}"
-                alt="{{$the->xFullStreet}}"
-              >
+    // Swiper sizing
+    $heroMinH = $heroMinH ?? 'min-h-[520px]'; // Tailwind class string
+  @endphp
 
-              <div class="shade"></div>
+  <div class="w-full">
+    <div class="grid grid-cols-1 lg:grid-cols-2 {{ $heroMinH }}">
 
-              <div class="overlay">
-                <div style="display:inline-block;background:rgba(0,0,0,.6);padding:.25rem .5rem;border-radius:.5rem;font-size:.75rem;font-weight:600;">
-                  Featured
-                </div>
+      {{-- LEFT: Swiper (listings) --}}
+      <div class="relative overflow-hidden bg-black">
+        {{-- Brand/logo top-left --}}
+        <div class="absolute left-4 top-4 z-20 flex items-center gap-2">
+          <button type="button" class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-black/30 text-white backdrop-blur-sm">
+            {{-- hamburger icon --}}
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
+          </button>
 
-                <div style="margin-top:.5rem;font-size:1.35rem;font-weight:700;line-height:1.2;">
-                  {{$the->xFullStreet}}
-                </div>
+          <div class="text-lg font-semibold tracking-wide">
+            {{ $brandName }}
+          </div>
+        </div>
 
-                <div style="margin-top:.25rem;font-size:.95rem;opacity:.95;">
-                  {{$the->xCity}}, {{$the->xState}} {{$the->xxZip}}
-                </div>
+        <div class="swiper h-full" data-swiper>
+          <div class="swiper-wrapper">
 
-                <div style="margin-top:1rem;display:flex;align-items:center;gap:.75rem;">
-                  <img class="agentImg"
-                    src='@if($the->theAgent->agtPhoto && $the->theAgent->theAgentCleanup)https://realtyrepublic.com/agentPhotos/{{$the->theAgent->theAgentCleanup->newRemID}}/{{$the->theAgent->agtPhoto}}@elseif($the->theAgent->agtPhoto)https://realtyemails.com/HQoffice/{{$the->theOffice->officeID}}/{{$the->theAgent->agtPhoto}}@endif'
-                    alt="{{$the->theAgent->agtFullName}}"
-                  >
-                  <div style="line-height:1.15;">
-                    <div style="font-weight:700;">{{$the->theAgent->agtFullName}}</div>
-                    <div style="font-size:.9rem;opacity:.95;">{{$the->theOffice->officeName}}</div>
-                    <div style="font-size:.9rem;opacity:.95;">{{$the->theAgent->agtMainPhone}}</div>
+            @foreach($newAdds as $the)
+              @php
+                // Listing image (your current approach)
+                $photo = $the->thePhotos->where('def','=','1')->first()->photoName;
+                $listingImg = "https://realtyrepublic.com/hqphotos/{$the->theMeta->zipDir}/{$the->theMeta->mlsDir}/{$photo}";
+
+                // Agent image (same logic you already used)
+                $agentImg = null;
+                if ($the->theAgent->agtPhoto && $the->theAgent->theAgentCleanup) {
+                  $agentImg = "https://realtyrepublic.com/agentPhotos/{$the->theAgent->theAgentCleanup->newRemID}/{$the->theAgent->agtPhoto}";
+                } elseif ($the->theAgent->agtPhoto) {
+                  $agentImg = "https://realtyemails.com/HQoffice/{$the->theOffice->officeID}/{$the->theAgent->agtPhoto}";
+                }
+
+                $street   = $the->xFullStreet;
+                $cityLine = "{$the->xCity}, {$the->xState} {$the->xxZip}";
+                $agentName  = $the->theAgent->agtFullName;
+                $officeName = $the->theOffice->officeName;
+                $agentPhone = $the->theAgent->agtMainPhone;
+
+                // Optional labels
+                $badgeText = $badgeText ?? 'Featured';
+              @endphp
+
+              <div class="swiper-slide">
+                <div class="relative {{ $heroMinH }}">
+
+                  {{-- background photo --}}
+                  <img
+                    src="{{ $listingImg }}"
+                    alt="{{ $street }}"
+                    class="absolute inset-0 h-full w-full object-cover"
+                  />
+
+                  {{-- readability overlay --}}
+                  <div class="absolute inset-0 bg-black/35"></div>
+
+                  {{-- top-left listing info --}}
+                  <div class="absolute left-6 top-20 z-10 text-white drop-shadow">
+                    <div class="text-sm font-semibold opacity-90">{{ $badgeText }}</div>
+                    <div class="mt-2 text-sm font-medium opacity-95">{{ $street }}</div>
+                    <div class="text-xs opacity-90">{{ $cityLine }}</div>
                   </div>
+
+                  {{-- bottom-left agent card --}}
+                  <div class="absolute bottom-6 left-6 z-10 flex items-center gap-3 rounded bg-black/40 px-3 py-2 text-white backdrop-blur-sm">
+                    @if($agentImg)
+                      <img
+                        src="{{ $agentImg }}"
+                        alt="{{ $agentName }}"
+                        class="h-10 w-10 rounded object-cover ring-2 ring-white/90"
+                      />
+                    @endif
+                    <div class="leading-tight">
+                      <div class="text-sm font-semibold">{{ $agentName }}</div>
+                      <div class="text-xs opacity-90">{{ $officeName }}</div>
+                      <div class="text-xs opacity-90">{{ $agentPhone }}</div>
+                    </div>
+                  </div>
+
                 </div>
               </div>
+            @endforeach
 
-            </div>
           </div>
-        @endforeach
-        <!-- END LOOP 1 -->
+
+          {{-- Swiper controls (optional; you can hide w/ Tailwind if desired) --}}
+          <div class="swiper-pagination"></div>
+          <div class="swiper-button-prev"></div>
+          <div class="swiper-button-next"></div>
+        </div>
       </div>
-      <div class="swiper-pagination"></div>
-      <div class="swiper-button-prev"></div>
-      <div class="swiper-button-next"></div>
+
+      {{-- RIGHT: Marketing panel --}}
+      <div class="relative flex items-center justify-center overflow-hidden bg-gradient-to-b from-indigo-900 via-indigo-800 to-indigo-950 px-8 py-14">
+        {{-- Top-right icons/buttons --}}
+        @if($showAuthButtons)
+          <div class="absolute right-6 top-6 z-10 flex items-center gap-3">
+            <button type="button" class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-sm hover:bg-white/15">
+              {{-- search icon --}}
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 104.5 4.5a7.5 7.5 0 0012.15 12.15z"/>
+              </svg>
+            </button>
+
+            <a href="{{ $signupHref }}" class="rounded-full bg-white/15 px-4 py-2 text-sm font-semibold text-white hover:bg-white/20">
+              Sign Up
+            </a>
+            <a href="{{ $loginHref }}" class="text-sm font-semibold text-white/90 hover:text-white">
+              Log in
+            </a>
+          </div>
+        @endif
+
+        <div class="w-full max-w-md text-center">
+          <h1 class="text-3xl font-extrabold italic tracking-tight sm:text-4xl">
+            {!! $headline !!}
+          </h1>
+
+          <div class="mt-10 space-y-2 text-sm opacity-95 sm:text-base">
+            @foreach($subLines as $line)
+              <div>{{ $line }}</div>
+            @endforeach
+          </div>
+
+          <div class="mt-10">
+            <a
+              href="{{ $ctaHref }}"
+              class="inline-flex items-center justify-center rounded-full border-2 border-yellow-300 bg-red-700 px-7 py-3 text-sm font-bold shadow hover:bg-red-600"
+            >
+              {{ $ctaText }}
+            </a>
+          </div>
+        </div>
+      </div>
+
     </div>
-  </body>
-  
+  </div>
+
+</body>
 </html>
