@@ -8,7 +8,7 @@
       <div class="flex items-center gap-4">
 
         <img 
-          src="/images/realtyemails-logo.png"
+          src="/images/RealtyEmails_logo1.png"
           alt="RealtyEmails"
           class="h-10 w-auto"
         >
