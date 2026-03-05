@@ -3,6 +3,7 @@
 @import "swiper/css/pagination";
 
 @import "./components/listing-slider.css";
+@import "../icons/themify/css/themify-icons.css";
 
 @import 'tailwindcss';
 
