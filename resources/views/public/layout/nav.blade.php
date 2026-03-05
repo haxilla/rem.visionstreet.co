@@ -1,73 +1,61 @@
-{{-- NAVBAR --}}
-<header class="relative w-full text-white">
-
-  {{-- gradient background --}}
+{{-- NAVBAR (matches hero style) --}}
+<header class="relative w-full">
+  {{-- background --}}
   <div class="absolute inset-0 bg-gradient-to-r from-[#1b2f63] via-[#223a75] to-[#2a4486]"></div>
+  {{-- subtle bottom divider --}}
+  <div class="absolute bottom-0 left-0 right-0 h-px bg-white/10"></div>
 
-  {{-- subtle bottom highlight --}}
-  <div class="absolute bottom-0 left-0 w-full h-[1px] bg-white/10"></div>
+  <div class="relative mx-auto max-w-screen-2xl px-6 lg:px-10" style="max-width:1600px;">
+    <div class="flex h-[72px] items-center justify-between">
 
-  <div class="relative mx-auto max-w-screen-2xl px-6 lg:px-10">
+      {{-- Logo --}}
+      <a href="/" class="flex items-center gap-3">
+        <img src="{{ asset('images/realtyemails-logo.png') }}" alt="RealtyEmails" class="h-9 w-auto" />
+      </a>
 
-    <div class="flex items-center justify-between h-[72px]">
+      {{-- Menu --}}
+      <nav class="hidden md:flex items-center gap-10 text-[14px] font-medium tracking-[0.06em] text-white/80">
+        @php
+          $nav = [
+            ['label' => 'Features', 'href' => '#features'],
+            ['label' => 'Pricing',  'href' => '#pricing'],
+            ['label' => 'Examples', 'href' => '#examples'],
+            ['label' => 'Support',  'href' => '#support'],
+          ];
+        @endphp
 
-        {{-- LOGO --}}
-        <div class="flex items-center">
+        @foreach($nav as $item)
+          <a
+            href="{{ $item['href'] }}"
+            class="group relative py-1 transition-colors hover:text-white"
+          >
+            <span>{{ $item['label'] }}</span>
 
-            <img
-            src="{{ asset('images/RealtyEmails_logo1.png') }}"
-            alt="RealtyEmails"
-            class="h-9 w-auto brightness-110"
-            >
+            {{-- elegant underline --}}
+            <span class="pointer-events-none absolute left-1/2 -bottom-1 h-[2px] w-0 -translate-x-1/2 rounded-full bg-white/60 transition-all duration-200 group-hover:w-8"></span>
+          </a>
+        @endforeach
+      </nav>
 
-        </div>
+      {{-- Right --}}
+      <div class="flex items-center gap-5">
+        {{-- Search --}}
+        <button class="rounded-full p-2 text-white/80 hover:text-white hover:bg-white/10 transition" aria-label="Search">
+          <i class="ti-search text-[16px]"></i>
+        </button>
 
-        {{-- NAVIGATION --}}
-        <nav class="hidden md:flex items-center gap-10 text-[15px] font-medium tracking-[.04em] text-white/85">
+        <a href="#" class="text-[14px] font-medium text-white/80 hover:text-white transition">
+          Log in
+        </a>
 
-            <a href="#" class="hover:text-white transition duration-200">
-                Features
-            </a>
-
-            <a href="#" class="hover:text-white transition duration-200">
-                Pricing
-            </a>
-
-            <a href="#" class="hover:text-white transition duration-200">
-                Examples
-            </a>
-
-            <a href="#" class="hover:text-white transition duration-200">
-                Support
-            </a>
-
-        </nav>
-
-        {{-- RIGHT SIDE --}}
-        <div class="flex items-center gap-6">
-
-            {{-- SEARCH --}}
-            <button class="text-white/80 hover:text-white transition">
-                <i class="ti-search text-[18px]"></i>
-            </button>
-
-            {{-- LOGIN --}}
-            <a href="#" class="text-white/85 hover:text-white text-[14px] font-medium transition">
-            Log in
-            </a>
-
-            {{-- SIGN UP --}}
-            <a
-            href="#"
-            class="rounded-full bg-white/15 border border-white/20 px-4 py-[6px] text-[14px] font-semibold tracking-[.02em] backdrop-blur-sm hover:bg-white/25 transition duration-200"
-            >
-            Sign Up
-            </a>
-
-        </div>
+        <a
+          href="#"
+          class="inline-flex items-center justify-center rounded-full border border-white/20 bg-white/10 px-4 py-2 text-[13px] font-semibold text-white shadow-sm ring-1 ring-white/10 backdrop-blur-sm hover:bg-white/15 transition"
+        >
+          Sign Up
+        </a>
+      </div>
 
     </div>
-
   </div>
-
 </header>
