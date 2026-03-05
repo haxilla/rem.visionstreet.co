@@ -135,10 +135,9 @@
           </div>
         </div>
 
-        {{-- RIGHT: Marketing panel (shifted to BLUE/NAVY, less purple) --}}
+        {{-- RIGHT: Marketing panel (blue/navy, no "cutting line") --}}
         <div class="relative flex items-center justify-center overflow-hidden bg-gradient-to-b from-[#2f4f7f] via-[#2c3f73] to-[#1e2f57] px-8 py-14 text-white">
-          {{-- subtle mid highlight band like original --}}
-          <div class="pointer-events-none absolute inset-x-0 top-[45%] h-px bg-white/10"></div>
+          {{-- REMOVED the mid highlight line that was "cutting" the headline --}}
 
           <div class="w-full max-w-md text-center">
 
@@ -175,7 +174,7 @@
 
   {{-- FEATURES SECTION (Themify Icons) --}}
   @php
-    // Make colors match the "more blue / subtle gradient" reference
+    // Keep typography consistent with hero: use the SAME display font for headline
     $kicker = $kicker ?? 'Looking to do <span class="font-semibold text-[#214e9b]">MORE</span> than just MLS &amp; wait?';
     $title  = $title  ?? 'Get Your Listing Noticed!';
     $sub    = $sub    ?? 'Each flyer includes the following...';
@@ -213,9 +212,11 @@
       ],
     ];
 
-    // subtle icon gradient (blue -> soft violet, no hot pink)
-    $iconGradient = $iconGradient ?? 'bg-gradient-to-b from-[#2e56a3] via-[#416bc2] to-[#7a6cc8]';
-    $headlineBlue = $headlineBlue ?? '#214e9b';
+    // Slightly stronger soft-violet presence (still not neon/hot pink)
+    // Blue -> periwinkle -> soft violet
+    $iconGradient = $iconGradient ?? 'bg-gradient-to-b from-[#2e56a3] via-[#4b79d6] to-[#8d7ae6]';
+
+    $brandBlue    = $brandBlue ?? '#214e9b';
     $dividerColor = $dividerColor ?? 'bg-[#e6ebf6]';
   @endphp
 
@@ -228,7 +229,8 @@
           {!! $kicker !!}
         </div>
 
-        <h2 class="mt-3 text-[34px] sm:text-[46px] font-extrabold tracking-tight" style="color: {{ $headlineBlue }};">
+        {{-- MATCH hero headline font: font-display --}}
+        <h2 class="font-display mt-3 text-[34px] sm:text-[46px] font-medium tracking-tight leading-[1.05]" style="color: {{ $brandBlue }};">
           {{ $title }}
         </h2>
 
@@ -264,13 +266,13 @@
               <div class="absolute left-8 right-8 top-0 h-px {{ $dividerColor }}"></div>
             @endif
 
-            {{-- Icon (subtle blue gradient, no neon pink) --}}
+            {{-- Icon (stronger soft violet presence, still clean) --}}
             <div class="mx-auto flex h-16 w-16 items-center justify-center">
               <i class="{{ $it['icon'] }} text-[56px] text-transparent bg-clip-text {{ $iconGradient }}"></i>
             </div>
 
             {{-- Title --}}
-            <div class="mt-5 text-[18px] font-extrabold tracking-wide" style="color: {{ $headlineBlue }};">
+            <div class="mt-5 text-[18px] font-extrabold tracking-wide" style="color: {{ $brandBlue }};">
               {{ $it['title'] }}
             </div>
 
@@ -286,10 +288,10 @@
 
       {{-- Footer line --}}
       <div class="mt-14 text-center">
-        <div class="text-[20px] font-extrabold tracking-wide" style="color: {{ $headlineBlue }};">
+        <div class="text-[20px] font-extrabold tracking-wide" style="color: {{ $brandBlue }};">
           PROVIDING AN EASY WAY
         </div>
-        <div class="mt-1 text-[14px]" style="color: {{ $headlineBlue }};">
+        <div class="mt-1 text-[14px]" style="color: {{ $brandBlue }};">
           to help you go beyond the average agent
         </div>
       </div>
