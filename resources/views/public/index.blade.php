@@ -123,7 +123,7 @@
                 <img
                   src="{{ $agentImg }}"
                   alt="{{ $agentName }}"
-                  class="h-16 w-auto rounded-sm ring-1 ring-white/20
+                  class="h-16 w-auto rounded-sm ring-1 ring-white/20"
                 >
 
                 @endif
