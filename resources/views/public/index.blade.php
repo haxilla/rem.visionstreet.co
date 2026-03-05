@@ -3,7 +3,7 @@
 <html lang="en" class="h-full bg-white text-gray-900">
 @include('public.layout.head');
 
-<body class="min-h-screen bg-white">
+<body class="min-h-screen bg-white pt-[72px]">
   @include('public.layout.nav')
   <section>
     @include('public.includes.hero_card')
