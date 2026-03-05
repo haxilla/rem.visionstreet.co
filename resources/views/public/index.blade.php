@@ -6,10 +6,10 @@
 <body class="min-h-screen bg-white">
 
   <section>
-    @include('includes.hero_card')
+    @include('public.includes.hero_card')
   </section>
   <section>
-    @include('includes.features_section')
+    @include('public.includes.features_section')
   </section>
 
 </body>
