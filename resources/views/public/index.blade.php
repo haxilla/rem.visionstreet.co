@@ -91,7 +91,7 @@
                     <div class="absolute inset-0 bg-black/35"></div>
 
                     {{-- top-left listing info --}}
-                    <div class="absolute left-6 top-20 z-10 text-white drop-shadow">
+                    <div class="absolute left-6 top-6z-10 text-white drop-shadow">
                       <div class="inline-flex items-center rounded-full bg-black/35 px-3 py-1 text-[11px] font-medium tracking-wide ring-1 ring-white/10 backdrop-blur-sm">
                         {{ $badgeText }}
                       </div>
