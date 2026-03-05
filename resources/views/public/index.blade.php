@@ -1,12 +1,7 @@
-<div id="carouselBackgroundAbsolute"
-class="carousel slide"
-data-ride="carousel" style="position:relative;z-index:0;">
-  <div class="carousel-inner">
+<div class="swiper" data-swiper>
+  <div class="swiper-wrapper">
     @foreach($newAdds as $the)
-      <div class="carousel-item
-        @if($loop->iteration===1)
-          active
-        @endif">
+      <div class="swiper-slide">
         <div class="responsiveImgContainer" style="position:relative;">
           <img class="d-block w-100 responsiveImg"
           src="https://www.realtyrepublic.com/hqphotos/{{$the->theMeta->zipDir}}/{{$the->theMeta
@@ -62,5 +57,8 @@ data-ride="carousel" style="position:relative;z-index:0;">
       </div>
     @endforeach
     <!-- END LOOP 1 -->
+    <div class="swiper-pagination"></div>
+    <div class="swiper-button-prev"></div>
+    <div class="swiper-button-next"></div>
   </div>
 </div>
