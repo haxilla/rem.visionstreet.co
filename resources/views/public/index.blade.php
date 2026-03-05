@@ -219,7 +219,7 @@
         {!! $kicker !!}
       </div>
 
-      <h2 class="mt-3 text-[34px] sm:text-[46px] font-extrabold tracking-tight text-blue-800">
+      <h2 class="font-display mt-3 text-[34px] sm:text-[46px] font-semibold tracking-tight text-blue-800">
         {{ $title }}
       </h2>
 
