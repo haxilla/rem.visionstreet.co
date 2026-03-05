@@ -144,7 +144,6 @@
 
           <div class="mt-10">
             <a
-              href="{{ $ctaHref }}"
               class="inline-flex items-center justify-center rounded-full border-2 border-yellow-300 bg-red-700 px-7 py-3 text-sm font-bold shadow hover:bg-red-600"
             >
               {{ $ctaText }}
