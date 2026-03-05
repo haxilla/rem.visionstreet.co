@@ -120,11 +120,6 @@
             @endforeach
 
           </div>
-
-          {{-- Swiper controls (optional; you can hide w/ Tailwind if desired) --}}
-          <div class="swiper-pagination"></div>
-          <div class="swiper-button-prev"></div>
-          <div class="swiper-button-next"></div>
         </div>
       </div>
 
