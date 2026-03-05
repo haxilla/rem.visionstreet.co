@@ -52,24 +52,6 @@
 
         {{-- LEFT: Swiper (listings) --}}
         <div class="relative overflow-hidden bg-black">
-          {{-- Brand/logo top-left --}}
-          <div class="absolute left-5 top-5 z-20 flex items-center gap-3 text-white">
-            <button type="button"
-              class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-black/30 text-white backdrop-blur-sm ring-1 ring-white/10 hover:bg-black/40">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-              </svg>
-            </button>
-
-            <div class="leading-tight">
-              <div class="text-[15px] font-medium tracking-wide">
-                {{ $brandName }}
-              </div>
-              <div class="text-[11px] font-normal tracking-wider uppercase opacity-80">
-                Real Estate E-Flyers
-              </div>
-            </div>
-          </div>
 
           <div class="swiper h-full" data-swiper>
             <div class="swiper-wrapper">
