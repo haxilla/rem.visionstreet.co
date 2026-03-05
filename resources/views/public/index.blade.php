@@ -7,6 +7,7 @@
   <title>{{ $pageTitle ?? 'Realty Emails' }}</title>
 
   @vite(['resources/css/app.css', 'resources/js/app.js'])
+  <link rel="stylesheet" href="{{ asset('icons/themify/css/themify-icons.css') }}">
 
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
@@ -169,6 +170,11 @@
       </div>
     </div>
   </div>
-
+  <div class="text-4xl space-x-6 p-10">
+    <i class="ti-email"></i>
+    <i class="ti-share"></i>
+    <i class="ti-printer"></i>
+    <i class="ti-world"></i>
+  </div>
 </body>
 </html>
