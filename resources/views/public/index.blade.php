@@ -24,7 +24,7 @@
             <div class="listingCard">
 
               <img class="bg"
-                src="https://www.realtyrepublic.com/hqphotos/{{$the->theMeta->zipDir}}/{{$the->theMeta->mlsDir}}/{{$the->thePhotos->where('def','=','1')->first()->photoName}}"
+                src="https://realtyrepublic.com/hqphotos/{{$the->theMeta->zipDir}}/{{$the->theMeta->mlsDir}}/{{$the->thePhotos->where('def','=','1')->first()->photoName}}"
                 alt="{{$the->xFullStreet}}"
               >
 
@@ -45,7 +45,7 @@
 
                 <div style="margin-top:1rem;display:flex;align-items:center;gap:.75rem;">
                   <img class="agentImg"
-                    src='@if($the->theAgent->agtPhoto && $the->theAgent->theAgentCleanup)https://www.realtyrepublic.com/agentPhotos/{{$the->theAgent->theAgentCleanup->newRemID}}/{{$the->theAgent->agtPhoto}}@elseif($the->theAgent->agtPhoto)https://realtyemails.com/HQoffice/{{$the->theOffice->officeID}}/{{$the->theAgent->agtPhoto}}@endif'
+                    src='@if($the->theAgent->agtPhoto && $the->theAgent->theAgentCleanup)https://realtyrepublic.com/agentPhotos/{{$the->theAgent->theAgentCleanup->newRemID}}/{{$the->theAgent->agtPhoto}}@elseif($the->theAgent->agtPhoto)https://realtyemails.com/HQoffice/{{$the->theOffice->officeID}}/{{$the->theAgent->agtPhoto}}@endif'
                     alt="{{$the->theAgent->agtFullName}}"
                   >
                   <div style="line-height:1.15;">
