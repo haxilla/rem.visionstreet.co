@@ -88,7 +88,7 @@
                     />
 
                     {{-- readability overlay --}}
-                    <div class="absolute inset-0 bg-black/35"></div>
+                    <div class="absolute inset-0 bg-black/20"></div>
 
                     {{-- top-left listing info --}}
                     <div class="absolute left-6 top-6 z-10 text-white drop-shadow">
