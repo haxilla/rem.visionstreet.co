@@ -10,7 +10,7 @@
 
       {{-- Logo --}}
       <a href="/" class="flex items-center gap-3">
-        <img src="{{ asset('images/realtyemails-logo.png') }}" alt="RealtyEmails" class="h-9 w-auto" />
+        <img src="{{ asset('images/RealtyEmails_logo1.png') }}" alt="RealtyEmails" class="h-9 w-auto" />
       </a>
 
       {{-- Menu --}}
