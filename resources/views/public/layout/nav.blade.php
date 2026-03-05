@@ -15,7 +15,7 @@
       <div class="flex items-center">
 
         <img
-          src="{{ asset('images/realtyemails-logo.png') }}"
+          src="{{ asset('images/RealtyEmails_logo1.png') }}"
           alt="RealtyEmails"
           class="h-9 w-auto brightness-110"
         >
