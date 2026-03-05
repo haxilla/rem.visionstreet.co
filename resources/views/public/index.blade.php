@@ -25,9 +25,6 @@
       'for YOU & Your Property!',
     ];
     $ctaText     = $ctaText     ?? 'Create FREE Flyer!';
-    $ctaHref     = $ctaHref     ?? route('register'); // change if needed
-    $loginHref   = $loginHref   ?? route('login');    // change if needed
-    $signupHref  = $signupHref  ?? route('register'); // change if needed
 
     // Optional: you can pass a bool to hide top-right buttons if needed
     $showAuthButtons = $showAuthButtons ?? true;
@@ -133,24 +130,6 @@
 
       {{-- RIGHT: Marketing panel --}}
       <div class="relative flex items-center justify-center overflow-hidden bg-gradient-to-b from-indigo-900 via-indigo-800 to-indigo-950 px-8 py-14">
-        {{-- Top-right icons/buttons --}}
-        @if($showAuthButtons)
-          <div class="absolute right-6 top-6 z-10 flex items-center gap-3">
-            <button type="button" class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-sm hover:bg-white/15">
-              {{-- search icon --}}
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 104.5 4.5a7.5 7.5 0 0012.15 12.15z"/>
-              </svg>
-            </button>
-
-            <a href="{{ $signupHref }}" class="rounded-full bg-white/15 px-4 py-2 text-sm font-semibold text-white hover:bg-white/20">
-              Sign Up
-            </a>
-            <a href="{{ $loginHref }}" class="text-sm font-semibold text-white/90 hover:text-white">
-              Log in
-            </a>
-          </div>
-        @endif
 
         <div class="w-full max-w-md text-center">
           <h1 class="text-3xl font-extrabold italic tracking-tight sm:text-4xl">
