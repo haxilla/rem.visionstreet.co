@@ -11,60 +11,60 @@
 
     <div class="flex items-center justify-between h-[72px]">
 
-      {{-- LOGO --}}
-      <div class="flex items-center">
+        {{-- LOGO --}}
+        <div class="flex items-center">
 
-        <img
-          src="{{ asset('images/RealtyEmails_logo1.png') }}"
-          alt="RealtyEmails"
-          class="h-9 w-auto brightness-110"
-        >
+            <img
+            src="{{ asset('images/RealtyEmails_logo1.png') }}"
+            alt="RealtyEmails"
+            class="h-9 w-auto brightness-110"
+            >
 
-      </div>
+        </div>
 
-      {{-- NAVIGATION --}}
-      <nav class="hidden md:flex items-center gap-10 text-[15px] font-medium tracking-[.03em]">
+        {{-- NAVIGATION --}}
+        <nav class="hidden md:flex items-center gap-10 text-[15px] font-medium tracking-[.04em] text-white/85">
 
-        <a href="#" class="text-white/85 hover:text-white transition duration-200">
-          Features
-        </a>
+            <a href="#" class="hover:text-white transition duration-200">
+                Features
+            </a>
 
-        <a href="#" class="text-white/85 hover:text-white transition duration-200">
-          Pricing
-        </a>
+            <a href="#" class="hover:text-white transition duration-200">
+                Pricing
+            </a>
 
-        <a href="#" class="text-white/85 hover:text-white transition duration-200">
-          Examples
-        </a>
+            <a href="#" class="hover:text-white transition duration-200">
+                Examples
+            </a>
 
-        <a href="#" class="text-white/85 hover:text-white transition duration-200">
-          Support
-        </a>
+            <a href="#" class="hover:text-white transition duration-200">
+                Support
+            </a>
 
-      </nav>
+        </nav>
 
-      {{-- RIGHT SIDE --}}
-      <div class="flex items-center gap-6">
+        {{-- RIGHT SIDE --}}
+        <div class="flex items-center gap-6">
 
-        {{-- SEARCH --}}
-        <button class="text-white/80 hover:text-white transition">
-          <i class="ti-search text-[18px]"></i>
-        </button>
+            {{-- SEARCH --}}
+            <button class="text-white/80 hover:text-white transition">
+                <i class="ti-search text-[18px]"></i>
+            </button>
 
-        {{-- LOGIN --}}
-        <a href="#" class="text-white/85 hover:text-white text-[14px] font-medium transition">
-          Log in
-        </a>
+            {{-- LOGIN --}}
+            <a href="#" class="text-white/85 hover:text-white text-[14px] font-medium transition">
+            Log in
+            </a>
 
-        {{-- SIGN UP --}}
-        <a
-          href="#"
-          class="rounded-full bg-white/15 border border-white/20 px-4 py-[6px] text-[14px] font-semibold tracking-[.02em] backdrop-blur-sm hover:bg-white/25 transition duration-200"
-        >
-          Sign Up
-        </a>
+            {{-- SIGN UP --}}
+            <a
+            href="#"
+            class="rounded-full bg-white/15 border border-white/20 px-4 py-[6px] text-[14px] font-semibold tracking-[.02em] backdrop-blur-sm hover:bg-white/25 transition duration-200"
+            >
+            Sign Up
+            </a>
 
-      </div>
+        </div>
 
     </div>
 
