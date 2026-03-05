@@ -173,7 +173,7 @@
   {{-- FEATURES SECTION (Themify Icons) --}}
 @php
   $kicker = $kicker ?? 'Looking to do <span class="font-semibold text-blue-800">MORE</span> than just MLS &amp; wait?';
-  $title  = $title  ?? 'GET YOUR LISTING NOTICED!';
+  $title  = $title  ?? 'Get Your Listing Noticed!';
   $sub    = $sub    ?? 'Each flyer includes the following...';
 
   $items = $items ?? [
