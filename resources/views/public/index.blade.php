@@ -105,7 +105,7 @@
                       <img
                         src="{{ $agentImg }}"
                         alt="{{ $agentName }}"
-                        class="h-14 w-10 rounded object-contain bg-white ring-1 ring-white/70 p-[2px]"
+                        class="h-14 w-auto rounded-sm ring-1 ring-white/80"
                       />
                     @endif
                     <div class="leading-tight">
