@@ -4,7 +4,7 @@
 @include('public.layout.head');
 
 <body class="min-h-screen bg-white">
-
+  @include('public.layout.nav')
   <section>
     @include('public.includes.hero_card')
   </section>
