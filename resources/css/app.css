@@ -2,6 +2,18 @@
 @import "swiper/css/navigation";
 @import "swiper/css/pagination";
 
+/* ---- Swiper overrides ---- */
+.swiper-button-prev::after,
+.swiper-button-next::after {
+    display: none !important;
+}
+
+.swiper-button-prev,
+.swiper-button-next {
+    width: auto;
+    height: auto;
+}
+
 @import "./components/listing-slider.css";
 @import "../icons/themify/css/themify-icons.css";
 
