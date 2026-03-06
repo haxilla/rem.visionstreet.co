@@ -23,4 +23,8 @@ class Propagent extends Model{
         return $this->hasMany('App\Models\Core\Propflyerstat','propagent_id','id');
     }
 
+    public function theAgtOffice(){
+      return $this->hasOne('App\Models\Core\Agtoffice','propagent_id','id');
+    }
+
 }
