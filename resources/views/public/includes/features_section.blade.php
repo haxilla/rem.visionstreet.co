@@ -65,7 +65,7 @@ $dividerColor = $dividerColor ?? 'bg-[#e6ebf6]';
 
         {{-- squiggle --}}
         <div class="mt-5 flex justify-center">
-            <span class="text-[22px] leading-none tracking-[0.22em] text-gray-900">~~~</span>
+            <img src="/images/angle_divider" alt="Squiggle accent" class="h-3 w-auto">    
         </div>
     </div>
 
