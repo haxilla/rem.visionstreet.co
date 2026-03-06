@@ -42,7 +42,7 @@
               <div class="swiper-button-prev" aria-label="Previous top viewed listings"></div>
               <div class="swiper-button-next" aria-label="Next top viewed listings"></div>
 
-                <div class="swiper-wrapper">
+                <div class="swiper-wrapper" style="border-left: 10px solid #000000;">
 
                     @foreach($topViewedItems as $the)
                         @php
