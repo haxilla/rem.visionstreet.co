@@ -85,7 +85,7 @@
                             <div class="grid grid-cols-1 md:grid-cols-[220px_1fr] gap-5 md:gap-6 items-start">
 
                                 {{-- Larger photo --}}
-                                <div class="overflow-hidden rounded-[22px] bg-[#e8e8ec] h-[150px] sm:h-[170px] md:h-[160px] lg:h-[175px]">
+                                <div class="overflow-hidden rounded-[22px] bg-[#e8e8ec] h-[160px] sm:h-[180px] md:h-[170px] lg:h-[185px]">
                                     @if($listingImg)
                                         <img
                                             src="{{ $listingImg }}"
