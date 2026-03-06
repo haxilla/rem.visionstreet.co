@@ -16,7 +16,7 @@
   </section>
   @php
     $brandName   = $brandName   ?? 'RealtyEmails';
-    $headline    = $headline    ?? 'The Agent Who Markets More<br>Gets Seen More';
+    $headline    = $headline    ?? 'The Agent Who Markets More Gets Seen More';
     $subLines    = $subLines    ?? [
         'RealtyEmails has helped agents promote listings proactively since 2006.',
         'Do more than just MLS and wait.',
