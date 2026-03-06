@@ -36,9 +36,11 @@
         </div>
 
         <div class="mt-8">
-            <div class="swiper-button-prev" aria-label="Previous top viewed listings"></div>
-            <div class="swiper-button-next" aria-label="Next top viewed listings"></div>
+
             <div class="swiper topViewedSwiper" data-swiper="top-viewed">
+
+              <div class="swiper-button-prev" aria-label="Previous top viewed listings"></div>
+              <div class="swiper-button-next" aria-label="Next top viewed listings"></div>
 
                 <div class="swiper-wrapper">
 
