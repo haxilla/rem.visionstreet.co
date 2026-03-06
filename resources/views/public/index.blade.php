@@ -28,9 +28,7 @@
         <div class="text-center">
             <div class="flex items-center justify-center">
                 {{-- simple bookmark icon --}}
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#214e9b]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 21l-5-3-5 3V5a2 2 0 012-2h6a2 2 0 012 2v16z" />
-                </svg>
+                <i class="ti-bookmark"></i>
             </div>
 
             <h2 class="font-display mt-2 text-[28px] sm:text-[38px] font-medium leading-none text-[#1e1e24]">
