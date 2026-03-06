@@ -86,7 +86,7 @@
 
                                 {{-- image band --}}
                                 <div class="relative overflow-hidden bg-[#e8e8ec]">
-                                    <div class="aspect-[1.9/1] w-full">
+                                    <div class="aspect-[1.6/1]w-full">
                                         @if($listingImg)
                                             <img
                                                 src="{{ $listingImg }}"
