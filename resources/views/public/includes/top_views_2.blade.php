@@ -9,7 +9,7 @@
 <div class="mx-auto w-full max-w-screen-2xl px-4 sm:px-6 lg:px-10" style="max-width: {{ $sectionMax }};">
 
     {{-- Header --}}
-    <div class="text-center">
+    <div class="text-center max-w-4xl mx-auto">
         <div class="flex justify-center">
             <i class="ti-bookmark text-[28px] leading-none" style="color: {{ $brandBlue }};"></i>
         </div>
@@ -18,7 +18,9 @@
             {!! $topViewedTitle !!}
         </h2>
 
-        <div class="mx-auto mt-5 h-px w-full bg-[#ddddE5]"></div>
+        <div class="mt-5 text-[15px] sm:text-[17px] leading-7 text-gray-600 max-w-3xl mx-auto">
+            See the most popular listings on Realty Emails today. From eye-catching homes to standout presentations, these are the listings attracting the most attention on the platform right now.
+        </div>
     </div>
 
     {{-- Main layout --}}
