@@ -12,7 +12,7 @@
     @include('public.includes.features_section')
   </section>
 
-  {{-- TOP VIEWED CAROUSEL SECTION --}}
+{{-- TOP VIEWED CAROUSEL SECTION --}}
 @php
     $topViewedTitle = $topViewedTitle ?? "Today's <span class='text-[#214e9b]'>TOP VIEWED</span>";
     $topViewedItems = $mostViews ?? collect();
@@ -36,9 +36,8 @@
             <div class="mx-auto mt-5 h-px w-full bg-[#ddddE5]"></div>
         </div>
 
-        {{-- Swiper --}}
         <div class="mt-8">
-            <div class="swiper topViewedSwiper overflow-visible" data-swiper="top-viewed">
+            <div class="swiper topViewedSwiper" data-swiper="top-viewed">
                 <div class="swiper-wrapper">
 
                     @foreach($topViewedItems as $the)
@@ -85,7 +84,7 @@
                                     </div>
                                 </div>
 
-                                {{-- image --}}
+                                {{-- image band --}}
                                 <div class="relative overflow-hidden bg-[#e8e8ec]">
                                     <div class="aspect-[1.9/1] w-full">
                                         @if($listingImg)
@@ -133,7 +132,7 @@
                                         <img
                                             src="{{ $agentImg }}"
                                             alt="{{ $agentName }}"
-                                            class="h-20 w-auto max-w-none rounded object-cover ring-1 ring-black/10"
+                                            class="h-24 w-auto max-w-none rounded object-cover ring-1 ring-black/10"
                                         >
                                     @endif
 
@@ -160,26 +159,31 @@
 
                 </div>
 
-                {{-- arrows stay inside swiper for JS, but sit OUTSIDE photos visually --}}
+                {{-- edge overlay navigation --}}
                 <button
                     type="button"
-                    class="swiper-button-prev !left-[-14px] md:!left-[-28px] !top-[49%] !mt-0 !h-12 !w-12 !-translate-y-1/2 !bg-transparent !shadow-none !ring-0"
+                    class="swiper-button-prev topViewedEdgeNav topViewedEdgeNav--prev"
                     aria-label="Previous top viewed listings"
                 >
-                    <i class="ti-angle-left text-[42px] leading-none" style="color: {{ $brandBlue }};"></i>
+                    <span class="topViewedEdgeFade topViewedEdgeFade--prev"></span>
+                    <span class="topViewedEdgeIcon">
+                        <i class="ti-angle-left"></i>
+                    </span>
                 </button>
 
                 <button
                     type="button"
-                    class="swiper-button-next !right-[-14px] md:!right-[-28px] !top-[49%] !mt-0 !h-12 !w-12 !-translate-y-1/2 !bg-transparent !shadow-none !ring-0"
+                    class="swiper-button-next topViewedEdgeNav topViewedEdgeNav--next"
                     aria-label="Next top viewed listings"
                 >
-                    <i class="ti-angle-right text-[42px] leading-none" style="color: {{ $brandBlue }};"></i>
+                    <span class="topViewedEdgeFade topViewedEdgeFade--next"></span>
+                    <span class="topViewedEdgeIcon">
+                        <i class="ti-angle-right"></i>
+                    </span>
                 </button>
             </div>
         </div>
     </div>
 </section>
-
 </body>
 </html>
