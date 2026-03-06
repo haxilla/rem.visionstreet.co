@@ -40,3 +40,33 @@ $mostViews=$mostViews
 ->take(10)
 ->orderBy('xWebViews','desc')
 ->get();
+
+// member since / agent wall
+$theDate = \Carbon\Carbon::today()->subDays(45);
+
+$memberSince = \App\models\core\propagent::select(
+    'startDate',
+    'agtFullName',
+    'id',
+    'officeID',
+    'agtPhoto'
+)
+->whereHas('theStats', function ($q) use ($theDate) {
+    $q->select('propagent_id', 'xLastDeliveryDate')
+      ->where('xLastDeliveryDate', '>', $theDate);
+})
+->with(['theAgentMeta' => function ($q) {
+    $q->select('newRemID', 'propagent_id');
+}])
+->with(['theAgentCleanup' => function ($q) {
+    $q->select('newRemID', 'propagent_id');
+}])
+->with(['theAgtOffice' => function ($q) {
+    $q->select('officeID', 'propagent_id');
+}])
+->whereNotNull('startDate')
+->whereNotNull('agtPhoto')
+->groupBy('id')
+->orderBy('startDate')
+->take(36)
+->get();
