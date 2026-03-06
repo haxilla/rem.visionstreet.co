@@ -82,7 +82,7 @@
                         @endphp
 
                         <article class="group px-5 py-5 sm:px-6 sm:py-6">
-                            <div class="grid grid-cols-1 md:grid-cols-[220px_1fr] gap-5 md:gap-6 items-start">
+                            <div class="grid grid-cols-1 md:grid-cols-[250px_1fr] gap-5 md:gap-6 items-start">
 
                                 {{-- Larger photo --}}
                                 <div class="overflow-hidden rounded-[15px] bg-[#e8e8ec] h-[165px] sm:h-[185px] md:h-[175px] lg:h-[190px]">
