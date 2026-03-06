@@ -33,7 +33,6 @@
                 {!! $topViewedTitle !!}
             </h2>
 
-            <div class="mx-auto mt-5 h-px w-full bg-[#ddddE5]"></div>
         </div>
 
         <div class="mt-8">
@@ -132,7 +131,7 @@
                                         <img
                                             src="{{ $agentImg }}"
                                             alt="{{ $agentName }}"
-                                            class="h-24 w-auto max-w-none rounded object-cover ring-1 ring-black/10"
+                                            class="h-20 w-auto max-w-none rounded object-cover ring-1 ring-black/10"
                                         >
                                     @endif
 
