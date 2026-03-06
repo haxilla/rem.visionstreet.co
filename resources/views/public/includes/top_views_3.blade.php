@@ -1,7 +1,7 @@
 {{-- MOST VIEWED / POPULAR LISTINGS + INLINE SIGNUP FORM --}}
 @php
     $topViewedTitle = $topViewedTitle ?? "Today's <span class='text-[#214e9b]'>TOP VIEWED</span>";
-    $topViewedItems = ($mostViews ?? collect())->take(4);
+    $topViewedItems = ($mostViews ?? collect())->take(5);
     $sectionMax     = $sectionMax ?? '1600px';
     $brandBlue      = $brandBlue ?? '#214e9b';
 @endphp
