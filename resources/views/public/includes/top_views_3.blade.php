@@ -1,7 +1,7 @@
 {{-- MOST VIEWED / POPULAR LISTINGS + INLINE SIGNUP FORM --}}
 @php
     $topViewedTitle = $topViewedTitle ?? "Today's <span class='text-[#214e9b]'>TOP VIEWED</span>";
-    $topViewedItems = ($mostViews ?? collect())->take(5);
+    $topViewedItems = ($mostViews ?? collect())->take(4);
     $sectionMax     = $sectionMax ?? '1600px';
     $brandBlue      = $brandBlue ?? '#214e9b';
 @endphp
@@ -143,128 +143,118 @@
         </div>
 
         {{-- RIGHT: Explanation + inline form --}}
-<div class="relative overflow-hidden rounded-[30px] min-h-[760px] lg:min-h-[820px] text-white shadow-[0_20px_50px_rgba(17,31,61,.22)]">
+        <div class="relative overflow-hidden rounded-[30px] min-h-[760px] lg:min-h-[820px] text-white shadow-[0_20px_50px_rgba(17,31,61,.22)]">
 
-    {{-- Background image --}}
-    <div
-        class="absolute inset-0 bg-cover bg-center"
-        style="background-image: url('{{ asset('images/twilight_realty_emails_promo.jpg') }}');"
-    ></div>
+            {{-- Background image --}}
+            <div
+                class="absolute inset-0 bg-cover bg-center"
+                style="background-image: url('{{ asset('images/twilight_realty_emails_promo.jpg') }}');"
+            ></div>
 
-    {{-- Dark luxury overlay --}}
-    <div class="absolute inset-0 bg-[linear-gradient(135deg,rgba(10,20,48,.88)_0%,rgba(24,43,84,.80)_38%,rgba(23,40,74,.62)_62%,rgba(15,24,45,.78)_100%)]"></div>
+            {{-- Dark luxury overlay --}}
+            <div class="absolute inset-0 bg-[linear-gradient(135deg,rgba(10,20,48,.88)_0%,rgba(24,43,84,.80)_38%,rgba(23,40,74,.62)_62%,rgba(15,24,45,.78)_100%)]"></div>
 
-    {{-- Soft vignette --}}
-    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,.10),transparent_24%),radial-gradient(circle_at_bottom_right,rgba(255,255,255,.08),transparent_24%)]"></div>
+            {{-- Soft vignette --}}
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,.10),transparent_24%),radial-gradient(circle_at_bottom_right,rgba(255,255,255,.08),transparent_24%)]"></div>
 
-    {{-- Content --}}
-    <div class="relative z-10 flex h-full flex-col justify-between px-7 py-8 sm:px-10 sm:py-10 lg:px-12 lg:py-12">
+            {{-- Content --}}
+            <div class="relative z-10 flex h-full flex-col justify-between px-7 py-8 sm:px-10 sm:py-10 lg:px-12 lg:py-12">
 
-        {{-- Top copy --}}
-        <div class="max-w-[540px]">
-            <div class="inline-flex items-center rounded-full border border-white/15 bg-white/10 px-4 py-1.5 text-[12px] font-semibold uppercase tracking-[0.16em] text-white/85 backdrop-blur-sm">
-                Realty Emails Promotion
-            </div>
+                {{-- Top copy --}}
+                <div class="max-w-[540px]">
+                    <div class="inline-flex items-center rounded-full border border-white/15 bg-white/10 px-4 py-1.5 text-[12px] font-semibold uppercase tracking-[0.16em] text-white/85 backdrop-blur-sm">
+                        Realty Emails Promotion
+                    </div>
 
-            <h3 class="font-display mt-6 text-[38px] sm:text-[48px] lg:text-[56px] leading-[0.98] tracking-tight text-white">
-                One Price.<br>
-                All Your Listings.
-            </h3>
+                    <h3 class="font-display mt-6 text-[38px] sm:text-[48px] lg:text-[56px] leading-[0.98] tracking-tight text-white">
+                        One Price.<br>
+                        All Your Listings.
+                    </h3>
 
-            <div class="mt-5 text-[22px] sm:text-[28px] font-medium leading-tight text-[#f0d28a]">
-                3 Months for $99
-            </div>
+                    <div class="mt-5 text-[22px] sm:text-[28px] font-medium leading-tight text-[#f0d28a]">
+                        3 Months for $99
+                    </div>
 
-            <p class="mt-6 max-w-[500px] text-[16px] sm:text-[18px] leading-8 text-white/88">
-                Advertise every listing you have for one low price. Each listing may be sent once, with free resends available after 30 days upon request.
-            </p>
+                    <p class="mt-6 max-w-[500px] text-[16px] sm:text-[18px] leading-8 text-white/88">
+                        Advertise every listing you have for one low price. Each listing may be sent once, with free resends available after 30 days upon request.
+                    </p>
 
-            <div class="mt-7 space-y-3 text-[15px] sm:text-[16px] text-white/84">
-                <div class="flex items-start gap-3">
-                    <span class="mt-[3px] h-2.5 w-2.5 rounded-full bg-[#f0d28a]"></span>
-                    <span>No per-listing upcharges</span>
+                    <div class="mt-7 space-y-3 text-[15px] sm:text-[16px] text-white/84">
+                        <div class="flex items-start gap-3">
+                            <span class="mt-[3px] h-2.5 w-2.5 rounded-full bg-[#f0d28a]"></span>
+                            <span>No per-listing upcharges</span>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="mt-[3px] h-2.5 w-2.5 rounded-full bg-[#f0d28a]"></span>
+                            <span>Clean, professional flyer exposure for multiple properties</span>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="mt-[3px] h-2.5 w-2.5 rounded-full bg-[#f0d28a]"></span>
+                            <span>Simple pricing designed for active agents and brokers</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="flex items-start gap-3">
-                    <span class="mt-[3px] h-2.5 w-2.5 rounded-full bg-[#f0d28a]"></span>
-                    <span>Clean, professional flyer exposure for multiple properties</span>
+
+                {{-- Form card --}}
+                <div class="mt-10 w-full max-w-[560px] rounded-[28px] border border-white/14 bg-[rgba(13,24,50,.58)] p-5 sm:p-7 backdrop-blur-md shadow-[0_18px_40px_rgba(0,0,0,.22)]">
+                    <div class="text-[12px] font-semibold uppercase tracking-[0.16em] text-white/65">
+                        Get Started
+                    </div>
+
+                    <div class="mt-2 text-[24px] sm:text-[30px] font-semibold leading-tight text-white">
+                        Join Realty Emails Today and Promote Your Listings
+                    </div>
+
+                    <p class="mt-2 text-[14px] sm:text-[15px] leading-7 text-white/74">
+                        ---
+                    </p>
+
+                    <form class="mt-6 grid grid-cols-1 gap-4" method="post" action="#">
+                        @csrf
+
+                        <div>
+                            <label class="mb-1.5 block text-[13px] font-medium text-white/80">Your Name</label>
+                            <input
+                                type="text"
+                                name="name"
+                                class="w-full rounded-2xl border border-white/12 bg-white/96 px-4 py-3 text-[15px] text-gray-900 placeholder:text-gray-400 outline-none"
+                                placeholder="Your name"
+                            >
+                        </div>
+
+                        <div>
+                            <label class="mb-1.5 block text-[13px] font-medium text-white/80">Your Email</label>
+                            <input
+                                type="email"
+                                name="email"
+                                class="w-full rounded-2xl border border-white/12 bg-white/96 px-4 py-3 text-[15px] text-gray-900 placeholder:text-gray-400 outline-none"
+                                placeholder="you@example.com"
+                            >
+                        </div>
+
+                        <div>
+                            <label class="mb-1.5 block text-[13px] font-medium text-white/80">Brokerage Name</label>
+                            <input
+                                type="text"
+                                name="brokerage_name"
+                                class="w-full rounded-2xl border border-white/12 bg-white/96 px-4 py-3 text-[15px] text-gray-900 placeholder:text-gray-400 outline-none"
+                                placeholder="Your brokerage"
+                            >
+                        </div>
+
+                        <div class="pt-2">
+                            <button
+                                type="submit"
+                                class="inline-flex w-full items-center justify-center rounded-full bg-[#f0d28a] px-8 py-3.5 text-[14px] font-semibold tracking-[0.08em] text-[#1d2f5f] shadow-lg transition hover:brightness-105"
+                            >
+                                SUBMIT DETAILS
+                            </button>
+                        </div>
+                    </form>
                 </div>
-                <div class="flex items-start gap-3">
-                    <span class="mt-[3px] h-2.5 w-2.5 rounded-full bg-[#f0d28a]"></span>
-                    <span>Simple pricing designed for active agents and brokers</span>
-                </div>
+
             </div>
         </div>
-
-        {{-- Form card --}}
-        <div class="mt-10 w-full max-w-[560px] rounded-[28px] border border-white/14 bg-[rgba(13,24,50,.58)] p-5 sm:p-7 backdrop-blur-md shadow-[0_18px_40px_rgba(0,0,0,.22)]">
-            <div class="text-[12px] font-semibold uppercase tracking-[0.16em] text-white/65">
-                Get Started
-            </div>
-
-            <div class="mt-2 text-[24px] sm:text-[30px] font-semibold leading-tight text-white">
-                Submit your listing details.
-            </div>
-
-            <p class="mt-2 text-[14px] sm:text-[15px] leading-7 text-white/74">
-                Tell us where to reach you and which property you want to promote.
-            </p>
-
-            <form class="mt-6 grid grid-cols-1 gap-4" method="post" action="#">
-                @csrf
-
-                <div>
-                    <label class="mb-1.5 block text-[13px] font-medium text-white/80">Name</label>
-                    <input
-                        type="text"
-                        name="name"
-                        class="w-full rounded-2xl border border-white/12 bg-white/96 px-4 py-3 text-[15px] text-gray-900 placeholder:text-gray-400 outline-none"
-                        placeholder="Your name"
-                    >
-                </div>
-
-                <div>
-                    <label class="mb-1.5 block text-[13px] font-medium text-white/80">Email</label>
-                    <input
-                        type="email"
-                        name="email"
-                        class="w-full rounded-2xl border border-white/12 bg-white/96 px-4 py-3 text-[15px] text-gray-900 placeholder:text-gray-400 outline-none"
-                        placeholder="you@example.com"
-                    >
-                </div>
-
-                <div>
-                    <label class="mb-1.5 block text-[13px] font-medium text-white/80">Brokerage Name</label>
-                    <input
-                        type="text"
-                        name="brokerage_name"
-                        class="w-full rounded-2xl border border-white/12 bg-white/96 px-4 py-3 text-[15px] text-gray-900 placeholder:text-gray-400 outline-none"
-                        placeholder="Your brokerage"
-                    >
-                </div>
-
-                <div>
-                    <label class="mb-1.5 block text-[13px] font-medium text-white/80">Address of listing to advertise</label>
-                    <textarea
-                        name="listing_address"
-                        rows="3"
-                        class="w-full rounded-2xl border border-white/12 bg-white/96 px-4 py-3 text-[15px] text-gray-900 placeholder:text-gray-400 outline-none resize-none"
-                        placeholder="Enter the property address"
-                    ></textarea>
-                </div>
-
-                <div class="pt-2">
-                    <button
-                        type="submit"
-                        class="inline-flex w-full items-center justify-center rounded-full bg-[#f0d28a] px-8 py-3.5 text-[14px] font-semibold tracking-[0.08em] text-[#1d2f5f] shadow-lg transition hover:brightness-105"
-                    >
-                        SUBMIT DETAILS
-                    </button>
-                </div>
-            </form>
-        </div>
-
-    </div>
-</div>
 
     </div>
 </div> 
