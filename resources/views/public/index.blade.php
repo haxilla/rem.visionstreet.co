@@ -32,6 +32,9 @@
             <h2 class="font-display mt-2 text-[30px] sm:text-[42px] font-medium leading-none text-[#1c1d22]">
                 {!! $topViewedTitle !!}
             </h2>
+            <p class="mx-auto mt-4 max-w-xl text-[15px] text-gray-600">
+              Check out some of the most popular listings on RealtyEmails right now.
+            </p>
 
         </div>
 
