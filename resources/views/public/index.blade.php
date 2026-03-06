@@ -136,7 +136,7 @@
                                         <img
                                             src="{{ $agentImg }}"
                                             alt="{{ $agentName }}"
-                                            class="h-20 w-auto max-w-none rounded object-cover ring-1 ring-black/10"
+                                            class="h-18 w-auto max-w-none rounded object-cover ring-1 ring-black/10"
                                         >
                                     @endif
 
