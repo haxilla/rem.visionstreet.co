@@ -16,5 +16,34 @@
   </section>
 
 
+  <div class="agent-mosaic-luxury">
+
+    <div class="agent-tile tile-lg-portrait">
+        <img src="https://realtyrepublic.com/agentPhotos/8oz9nhtjjq/5980agtphoto-FCC4DDADA96F69C94C4C2A0D5FDCB626.jpg">
+    </div>
+
+    <div class="agent-tile tile-square">
+        <img src="https://realtyrepublic.com/agentPhotos/8oz9nhtjjq/5980agtphoto-FCC4DDADA96F69C94C4C2A0D5FDCB626.jpg">
+    </div>
+
+    <div class="agent-tile tile-square">
+        <img src="https://realtyrepublic.com/agentPhotos/8oz9nhtjjq/5980agtphoto-FCC4DDADA96F69C94C4C2A0D5FDCB626.jpg">
+    </div>
+
+    <div class="agent-tile tile-square">
+        <img src="https://realtyrepublic.com/agentPhotos/8oz9nhtjjq/5980agtphoto-FCC4DDADA96F69C94C4C2A0D5FDCB626.jpg">
+    </div>
+
+    <div class="agent-tile tile-portrait">
+        <img src="https://realtyrepublic.com/agentPhotos/8oz9nhtjjq/5980agtphoto-FCC4DDADA96F69C94C4C2A0D5FDCB626.jpg">
+    </div>
+
+    <div class="agent-tile tile-wide">
+        <img src="https://realtyrepublic.com/agentPhotos/8oz9nhtjjq/5980agtphoto-FCC4DDADA96F69C94C4C2A0D5FDCB626.jpg">
+    </div>
+
+</div>
+
+
 </body>
 </html>

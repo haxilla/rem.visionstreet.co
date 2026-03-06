@@ -1,0 +1,45 @@
+/* components/agent-wall.css */
+
+.agent-mosaic-luxury{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    grid-auto-rows:78px;
+    gap:3px;
+    width:100%;
+    max-width:390px;
+    overflow:hidden;
+}
+
+.agent-tile{
+    position:relative;
+    overflow:hidden;
+    background:#d9d9d9;
+}
+
+.agent-tile img{
+    width:100%;
+    height:100%;
+    display:block;
+    object-fit:cover;
+    object-position:center top;
+}
+
+.tile-square{
+    grid-column:span 1;
+    grid-row:span 2;
+}
+
+.tile-portrait{
+    grid-column:span 1;
+    grid-row:span 3;
+}
+
+.tile-lg-portrait{
+    grid-column:span 1;
+    grid-row:span 4;
+}
+
+.tile-wide{
+    grid-column:span 2;
+    grid-row:span 2;
+}

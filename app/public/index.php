@@ -40,3 +40,5 @@ $mostViews=$mostViews
 ->take(10)
 ->orderBy('xWebViews','desc')
 ->get();
+
+$memberSince=
