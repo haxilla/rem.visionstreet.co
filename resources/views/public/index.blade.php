@@ -24,7 +24,7 @@
     <div class="mx-auto w-full max-w-screen-2xl px-4 sm:px-6 lg:px-10" style="max-width: {{ $sectionMax }};">
 
         {{-- Header --}}
-        <div class="text-center mb-5">
+        <div class="text-center mb-25">
             <div class="flex justify-center">
                 <i class="ti-bookmark text-[28px] leading-none" style="color: {{ $brandBlue }};"></i>
             </div>
