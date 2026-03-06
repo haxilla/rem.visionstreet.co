@@ -16,6 +16,7 @@ class indexController extends Controller
       [
         'newAdds'     => $newAdds,
         'mostViews'   => $mostViews,
+        'memberSince' => $memberSince,
       ]);
   }
 
