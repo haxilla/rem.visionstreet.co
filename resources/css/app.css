@@ -15,6 +15,7 @@
 }
 
 @import "./components/listing-slider.css";
+@import "./components/custom-swiper.css";
 @import "../icons/themify/css/themify-icons.css";
 
 @import 'tailwindcss';
