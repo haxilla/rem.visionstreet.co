@@ -205,13 +205,8 @@
                         Join Realty Emails Today and Promote Your Listings
                     </div>
 
-                    <p class="mt-2 text-[14px] sm:text-[15px] leading-7 text-white/74">
-                        ---
-                    </p>
-
                     <form class="mt-6 grid grid-cols-1 gap-4" method="post" action="#">
                         @csrf
-
                         <div>
                             <label class="mb-1.5 block text-[13px] font-medium text-white/80">Your Name</label>
                             <input
