@@ -18,7 +18,7 @@
             {{-- LEFT: Swiper (listings) --}}
             <div class="relative overflow-hidden bg-black">
 
-                <div class="swiper h-full" data-swiper>
+                <div class="swiper h-full" data-swiper="hero">
                 <div class="swiper-wrapper">
 
                     @foreach($newAdds as $the)
