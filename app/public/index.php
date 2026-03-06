@@ -70,3 +70,5 @@ $memberSince = \App\models\core\propagent::select(
 ->orderBy('startDate')
 ->take(36)
 ->get();
+
+dd($memberSince)
