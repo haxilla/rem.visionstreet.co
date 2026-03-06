@@ -26,7 +26,7 @@
         {{-- Header --}}
         <div class="text-center mb-15">
             <div class="flex justify-center">
-                <i class="ti-bookmark text-[28px] leading-none" style="color: {{ $brandBlue }};"></i>
+                <i class="ti-bookmark text-[35px] leading-none" style="color: {{ $brandBlue }};"></i>
             </div>
 
             <h2 class="font-display mt-2 text-[30px] sm:text-[42px] font-medium leading-none text-[#1c1d22]">
