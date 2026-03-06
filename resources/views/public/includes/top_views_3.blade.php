@@ -163,7 +163,7 @@
                 {{-- Top copy --}}
                 <div class="max-w-[540px]">
                     <div class="inline-flex items-center rounded-full border border-white/15 bg-white/10 px-4 py-1.5 text-[12px] font-semibold uppercase tracking-[0.16em] text-white/85 backdrop-blur-sm">
-                        Realty Emails Promotion
+                        Limited Time Offering
                     </div>
 
                     <h3 class="font-display mt-6 text-[38px] sm:text-[48px] lg:text-[56px] leading-[0.98] tracking-tight text-white">
