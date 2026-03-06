@@ -42,7 +42,7 @@
             {{-- LEFT NAV BAR --}}
             <button
                 type="button"
-                class="topViewedPrev absolute left-0 top-[42%] z-20 hidden -translate-y-1/2 md:flex h-[120px] w-[42px] items-center justify-center bg-white/88 text-[#214e9b] shadow-sm ring-1 ring-black/5 backdrop-blur-sm transition hover:bg-white"
+                class="swiper-button-prev topViewedPrev absolute left-0 top-[42%] z-20 hidden -translate-y-1/2 md:flex h-[120px] w-[42px] items-center justify-center bg-white/88 text-[#214e9b] shadow-sm ring-1 ring-black/5 backdrop-blur-sm transition hover:bg-white"
                 aria-label="Previous top viewed listings"
             >
                 <i class="ti-angle-left text-[20px]"></i>
@@ -51,7 +51,7 @@
             {{-- RIGHT NAV BAR --}}
             <button
                 type="button"
-                class="topViewedNext absolute right-0 top-[42%] z-20 hidden -translate-y-1/2 md:flex h-[120px] w-[42px] items-center justify-center bg-white/88 text-[#214e9b] shadow-sm ring-1 ring-black/5 backdrop-blur-sm transition hover:bg-white"
+                class="swiper-button-next topViewedNext absolute right-0 top-[42%] z-20 hidden -translate-y-1/2 md:flex h-[120px] w-[42px] items-center justify-center bg-white/88 text-[#214e9b] shadow-sm ring-1 ring-black/5 backdrop-blur-sm transition hover:bg-white"
                 aria-label="Next top viewed listings"
             >
                 <i class="ti-angle-right text-[20px]"></i>
@@ -119,7 +119,8 @@
 
                                         @if($priceLabel)
                                             <div class="absolute left-1/2 top-0 z-10 -translate-x-1/2">
-                                                <span class="inline-flex rounded-b-lg px-4 py-1.5 text-[13px] font-semibold text-white shadow-sm" style="background-color: {{ $brandBlue }};">
+                                                <span class="inline-flex rounded-b-lg px-4 py-1.5 text-[13px] font-semibold text-white shadow-sm" 
+                                                style="background-color: {{ $brandBlue }};">
                                                     {{ $priceLabel }}
                                                 </span>
                                             </div>
