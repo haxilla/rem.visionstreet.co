@@ -39,26 +39,22 @@
         {{-- Swiper wrap --}}
         <div class="relative mt-8">
 
-            {{-- LEFT NAV BAR --}}
-            <button
-                type="button"
-                class="swiper-button-prev topViewedPrev absolute left-0 top-[42%] z-20 hidden -translate-y-1/2 md:flex h-[120px] w-[42px] items-center justify-center bg-white/88 text-[#214e9b] shadow-sm ring-1 ring-black/5 backdrop-blur-sm transition hover:bg-white"
-                aria-label="Previous top viewed listings"
-            >
-                <i class="ti-angle-left text-[20px]"></i>
-            </button>
-
-            {{-- RIGHT NAV BAR --}}
-            <button
-                type="button"
-                class="swiper-button-next topViewedNext absolute right-0 top-[42%] z-20 hidden -translate-y-1/2 md:flex h-[120px] w-[42px] items-center justify-center bg-white/88 text-[#214e9b] shadow-sm ring-1 ring-black/5 backdrop-blur-sm transition hover:bg-white"
-                aria-label="Next top viewed listings"
-            >
-                <i class="ti-angle-right text-[20px]"></i>
-            </button>
-
             <div class="px-0 md:px-[52px]">
                 <div class="swiper topViewedSwiper overflow-hidden" data-swiper="top-viewed">
+                    {{-- LEFT NAV BAR --}}
+                    <button
+                    type="button"
+                    class="swiper-button-prev topViewedPrev absolute left-0 top-[42%] z-20 hidden -translate-y-1/2 md:flex h-[120px] w-[42px] items-center justify-center bg-white/88 text-[#214e9b] shadow-sm ring-1 ring-black/5 backdrop-blur-sm transition hover:bg-white"
+                    aria-label="Previous top viewed listings">
+                        <i class="ti-angle-left text-[20px]"></i>
+                    </button>
+                    {{-- RIGHT NAV BAR --}}
+                    <button
+                    type="button"
+                    class="swiper-button-next topViewedNext absolute right-0 top-[42%] z-20 hidden -translate-y-1/2 md:flex h-[120px] w-[42px] items-center justify-center bg-white/88 text-[#214e9b] shadow-sm ring-1 ring-black/5 backdrop-blur-sm transition hover:bg-white"
+                    aria-label="Next top viewed listings">
+                        <i class="ti-angle-right text-[20px]"></i>
+                    </button>
                     <div class="swiper-wrapper">
 
                         @foreach($topViewedItems as $the)
