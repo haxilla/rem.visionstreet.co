@@ -158,29 +158,8 @@
                     @endforeach
 
                 </div>
-
-                {{-- edge overlay navigation --}}
-                <button
-                    type="button"
-                    class="swiper-button-prev topViewedEdgeNav topViewedEdgeNav--prev"
-                    aria-label="Previous top viewed listings"
-                >
-                    <span class="topViewedEdgeFade topViewedEdgeFade--prev"></span>
-                    <span class="topViewedEdgeIcon">
-                        <i class="ti-angle-left"></i>
-                    </span>
-                </button>
-
-                <button
-                    type="button"
-                    class="swiper-button-next topViewedEdgeNav topViewedEdgeNav--next"
-                    aria-label="Next top viewed listings"
-                >
-                    <span class="topViewedEdgeFade topViewedEdgeFade--next"></span>
-                    <span class="topViewedEdgeIcon">
-                        <i class="ti-angle-right"></i>
-                    </span>
-                </button>
+                <div class="swiper-button-prev" aria-label="Previous top viewed listings"></div>
+                <div class="swiper-button-next" aria-label="Next top viewed listings"></div>
             </div>
         </div>
     </div>
