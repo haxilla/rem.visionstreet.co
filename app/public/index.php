@@ -68,5 +68,5 @@ $memberSince = \App\models\core\propagent::select(
 ->whereNotNull('agtPhoto')
 ->groupBy('id')
 ->orderBy('startDate')
-->take(36)
+->take(10)
 ->get();
