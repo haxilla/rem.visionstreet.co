@@ -19,4 +19,8 @@ class Propagent extends Model{
       return $this->hasOne('App\Models\Core\Propagentcleanup','propagent_id','id');
     }
 
+    public function theStats(){
+        return $this->hasMany('App\models\core\propflyerstat','propagent_id','id');
+    }
+
 }
