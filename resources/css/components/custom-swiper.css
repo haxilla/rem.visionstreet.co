@@ -3,14 +3,6 @@
     text-shadow: 0 2px 8px rgba(0,0,0,.35);
 }
 
-.topViewedSwiper .swiper-button-prev{
-    margin-left:-50px;
-}
-
-.topViewedSwiper .swiper-button-next{
-    margin-right: -50px;
-}
-
 .topViewedSwiper .swiper-button-prev:hover,
 .topViewedSwiper .swiper-button-next:hover {
 
