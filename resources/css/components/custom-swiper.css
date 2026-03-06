@@ -3,3 +3,11 @@
     color: #fff;
     text-shadow: 0 2px 8px rgba(0,0,0,.35);
 }
+
+.topViewedSwiper .swiper-button-prev:hover,
+.topViewedSwiper .swiper-button-next:hover {
+
+    background:#000000;
+    font-weight:bold;
+
+}
