@@ -1,8 +1,8 @@
 <?php
 
-Use Illuminate\Database\Eloquent\Model;
+namespace App\Models\Core;
 
-namespace App\models\core;
+Use Illuminate\Database\Eloquent\Model;
 
 class Propflyerstat extends Model
 {
