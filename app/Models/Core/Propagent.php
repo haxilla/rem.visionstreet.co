@@ -20,7 +20,7 @@ class Propagent extends Model{
     }
 
     public function theStats(){
-        return $this->hasMany('App\Models\Core\Propflyerstats','propagent_id','id');
+        return $this->hasMany('App\Models\Core\Propflyerstat','propagent_id','id');
     }
 
 }
