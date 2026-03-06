@@ -71,4 +71,4 @@ $memberSince = \App\models\core\propagent::select(
 ->take(36)
 ->get();
 
-dd($memberSince)
+dd($memberSince);
