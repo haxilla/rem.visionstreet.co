@@ -37,9 +37,6 @@
             {{-- LEFT: 2x2 most viewed grid --}}
             <div class="rounded-[28px] bg-white shadow-[0_12px_34px_rgba(0,0,0,.05)] ring-1 ring-black/5 overflow-hidden">
                 <div class="border-b border-[#e7e9ef] px-6 py-5 sm:px-8">
-                    <div class="text-[13px] font-semibold uppercase tracking-[0.16em] text-gray-500">
-                        Popular Listings
-                    </div>
                     {{-- Header --}}
                     <div class="text-center max-w-4xl mx-auto">
                         <div class="flex justify-center">
@@ -51,7 +48,7 @@
                         </h2>
 
                         <div class="mt-5 text-[15px] sm:text-[17px] leading-7 text-gray-600 max-w-3xl mx-auto">
-                            See the most popular listings on Realty Emails today. This section highlights properties drawing standout interest and offers a quick snapshot of what is resonating most right now.
+                            See the most popular listings on Realty Emails today based on real-time views
                         </div>
                     </div>
                 </div>
