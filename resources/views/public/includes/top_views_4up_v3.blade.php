@@ -140,94 +140,103 @@
             <aside class="flex flex-col items-start gap-7">
 
                 {{-- FREE FLYER SIDEBAR --}}
-<div class="relative w-full overflow-visible rounded-[30px] bg-[#1e3566] p-7 pt-8 sm:p-8 sm:pt-9 shadow-[0_20px_55px_rgba(0,0,0,.22)]">
+                <div class="relative w-full overflow-visible rounded-[30px] bg-[#1e3566] p-7 pt-8 sm:p-8 sm:pt-9 shadow-[0_20px_55px_rgba(0,0,0,.22)]">
 
-    {{-- subtle lighting --}}
-    <div class="absolute -top-16 right-[-40px] h-64 w-64 rounded-full bg-white/8 blur-3xl"></div>
-    <div class="absolute bottom-[-50px] left-[-40px] h-72 w-72 rounded-full bg-[#f0d28a]/10 blur-3xl"></div>
+                    {{-- subtle lighting --}}
+                    <div class="absolute -top-16 right-[-40px] h-64 w-64 rounded-full bg-white/8 blur-3xl"></div>
+                    <div class="absolute bottom-[-50px] left-[-40px] h-72 w-72 rounded-full bg-[#f0d28a]/10 blur-3xl"></div>
 
-    {{-- floating flyer visual --}}
-    <div class="pointer-events-none absolute right-[-30px] top-[-45px] z-20 hidden sm:block">
-        <img
-            src="{{ asset('images/2FlyerPerspective.gif') }}"
-            alt="Flyer preview"
-            class="h-auto max-w-[220px] lg:max-w-[260px] object-contain drop-shadow-[0_20px_28px_rgba(0,0,0,.30)]"
-        />
-    </div>
+                    {{-- desktop breakout flyer --}}
+                    <div class="pointer-events-none absolute right-[-6px] top-[-42px] z-20 hidden xl:block">
+                        <img
+                            src="{{ asset('images/2FlyerPerspective.gif') }}"
+                            alt="Flyer preview"
+                            class="h-auto max-w-[195px] 2xl:max-w-[225px] object-contain drop-shadow-[0_18px_24px_rgba(0,0,0,.28)]"
+                        >
+                    </div>
 
-    <div class="relative z-10">
+                    <div class="relative z-10">
 
-        {{-- icon row --}}
-        <div class="flex justify-center sm:justify-start">
-            <div
-                class="flex h-[64px] w-[64px] items-center justify-center rounded-full border-2 shadow-lg"
-                style="border-color: {{ $brandGold }}; background: rgba(255,255,255,.06);"
-            >
-                <i class="ti-wand text-[22px]" style="color:#f0d28a;"></i>
-            </div>
-        </div>
+                        {{-- tablet / small desktop flyer --}}
+                        <div class="mb-6 hidden justify-center xl:hidden sm:flex">
+                            <img
+                                src="{{ asset('images/2FlyerPerspective.gif') }}"
+                                alt="Flyer preview"
+                                class="h-auto max-w-[150px] lg:max-w-[170px] object-contain drop-shadow-[0_16px_20px_rgba(0,0,0,.24)]"
+                            >
+                        </div>
 
-        {{-- text block with room for floating flyer --}}
-        <div class="mt-5 pr-0 sm:pr-[120px] lg:pr-[140px]">
-            <div class="text-center sm:text-left text-[12px] uppercase tracking-[0.18em] text-white/60 font-semibold">
-                Flyer Creation Wizard
-            </div>
+                        {{-- icon --}}
+                        <div class="flex justify-center xl:justify-start">
+                            <div
+                                class="flex h-[64px] w-[64px] items-center justify-center rounded-full border-2 shadow-lg"
+                                style="border-color: {{ $brandGold }}; background: rgba(255,255,255,.06);"
+                            >
+                                <i class="ti-wand text-[22px]" style="color:#f0d28a;"></i>
+                            </div>
+                        </div>
 
-            <h3 class="font-display mt-3 text-center sm:text-left text-[34px] leading-[1.03] text-white">
-                Start With a<br>Free Flyer
-            </h3>
+                        {{-- text block --}}
+                        <div class="mt-5 pr-0 xl:pr-[190px]">
+                            <div class="text-center xl:text-left text-[12px] uppercase tracking-[0.18em] text-white/60 font-semibold">
+                                Flyer Creation Wizard
+                            </div>
 
-            <div class="mx-auto sm:mx-0 mt-5 h-[2px] w-20 rounded-full bg-[#f0d28a]"></div>
+                            <h3 class="font-display mt-3 text-center xl:text-left text-[34px] leading-[1.03] text-white">
+                                Start With a<br>Free Flyer
+                            </h3>
 
-            <p class="mt-5 max-w-[320px] text-center sm:text-left text-[15px] leading-7 text-white/80">
-                Enter your email and a property address or MLS number and we’ll instantly generate a flyer draft you can preview.
-            </p>
-        </div>
+                            <div class="mx-auto xl:mx-0 mt-5 h-[2px] w-20 rounded-full bg-[#f0d28a]"></div>
 
-        {{-- form --}}
-        <form method="post" action="#" class="mt-7 space-y-4">
-            @csrf
+                            <p class="mt-5 max-w-[320px] text-center xl:text-left text-[15px] leading-7 text-white/80">
+                                Enter your email and a property address or MLS number and we’ll instantly generate a flyer draft you can preview.
+                            </p>
+                        </div>
 
-            <div>
-                <label class="mb-1.5 block text-[12px] uppercase tracking-[0.14em] text-white/60 font-semibold">
-                    Email
-                </label>
+                        {{-- form --}}
+                        <form method="post" action="#" class="mt-7 space-y-4">
+                            @csrf
 
-                <input
-                    type="email"
-                    name="email"
-                    placeholder="Your email"
-                    class="w-full rounded-[14px] border border-gray-200 bg-white px-4 py-3 text-[15px] text-gray-800"
-                >
-            </div>
+                            <div>
+                                <label class="mb-1.5 block text-[12px] uppercase tracking-[0.14em] text-white/60 font-semibold">
+                                    Email
+                                </label>
 
-            <div>
-                <label class="mb-1.5 block text-[12px] uppercase tracking-[0.14em] text-white/60 font-semibold">
-                    Address or MLS#
-                </label>
+                                <input
+                                    type="email"
+                                    name="email"
+                                    placeholder="Your email"
+                                    class="w-full rounded-[14px] border border-gray-200 bg-white px-4 py-3 text-[15px] text-gray-800"
+                                >
+                            </div>
 
-                <input
-                    type="text"
-                    name="listing_input"
-                    placeholder="Address or MLS# of listing"
-                    class="w-full rounded-[14px] border border-gray-200 bg-white px-4 py-3 text-[15px] text-gray-800"
-                >
-            </div>
+                            <div>
+                                <label class="mb-1.5 block text-[12px] uppercase tracking-[0.14em] text-white/60 font-semibold">
+                                    Address or MLS#
+                                </label>
 
-            <button
-                type="submit"
-                class="w-full rounded-full py-3.5 text-[15px] font-semibold text-[#1d2f5f] shadow-lg transition hover:-translate-y-[1px]"
-                style="background:#f0d28a;"
-            >
-                Generate Free Flyer
-            </button>
-        </form>
+                                <input
+                                    type="text"
+                                    name="listing_input"
+                                    placeholder="Address or MLS# of listing"
+                                    class="w-full rounded-[14px] border border-gray-200 bg-white px-4 py-3 text-[15px] text-gray-800"
+                                >
+                            </div>
 
-        <div class="mt-5 text-center text-[12px] text-white/55">
-            Takes less than 30 seconds to start.
-        </div>
-    </div>
-</div>
+                            <button
+                                type="submit"
+                                class="w-full rounded-full py-3.5 text-[15px] font-semibold text-[#1d2f5f] shadow-lg transition hover:-translate-y-[1px]"
+                                style="background:#f0d28a;"
+                            >
+                                Generate Free Flyer
+                            </button>
+                        </form>
+
+                        <div class="mt-5 text-center text-[12px] text-white/55">
+                            Takes less than 30 seconds to start.
+                        </div>
+                    </div>
+                </div>
 
             </aside>
 
