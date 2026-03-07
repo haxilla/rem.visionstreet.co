@@ -154,93 +154,92 @@
             </div>
 
 {{-- RIGHT: Premium free trial sidebar --}}
+
 <aside class="flex items-center">
-    <div class="relative w-full overflow-hidden rounded-[30px] p-6 sm:p-8 shadow-[0_18px_45px_rgba(17,31,61,.16)] ring-1 ring-black/5">
+<div class="relative w-full rounded-[30px] bg-[#1e3566] p-7 sm:p-8 shadow-[0_20px_55px_rgba(0,0,0,.22)] overflow-hidden">
 
-        {{-- background --}}
-        <div class="absolute inset-0 bg-[linear-gradient(160deg,#284b8f_0%,#21427e_38%,#1a3364_72%,#172a52_100%)]"></div>
-        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,.16),transparent_24%),radial-gradient(circle_at_bottom_left,rgba(255,255,255,.10),transparent_22%)]"></div>
+    {{-- subtle lighting --}}
+    <div class="absolute -top-16 right-[-40px] w-64 h-64 bg-white/8 blur-3xl rounded-full"></div>
+    <div class="absolute bottom-[-50px] left-[-40px] w-72 h-72 bg-[#f0d28a]/10 blur-3xl rounded-full"></div>
 
-        {{-- soft glow --}}
-        <div class="absolute -top-10 right-[-20px] h-36 w-36 rounded-full bg-white/10 blur-3xl"></div>
-        <div class="absolute bottom-[-40px] left-[-30px] h-40 w-40 rounded-full bg-[#f0d28a]/10 blur-3xl"></div>
+    <div class="relative z-10">
 
-        <div class="relative z-10">
-            {{-- Top badge --}}
-            <div class="flex justify-center">
-                <div
-                    class="flex h-[74px] w-[74px] items-center justify-center rounded-full border-[2.5px] shadow-[0_8px_18px_rgba(0,0,0,.14)]"
-                    style="border-color: {{ $brandGold }}; background: rgba(255,255,255,.08);"
-                >
-                    <i class="ti-wand text-[25px]" style="color: #f3cf82;"></i>
-                </div>
-            </div>
-
-            {{-- Eyebrow --}}
-            <div class="mt-5 text-center text-[12px] font-semibold uppercase tracking-[0.18em] text-white/68">
-                Flyer Creation Wizard
-            </div>
-
-            {{-- Heading --}}
-            <h3 class="font-display mt-3 text-center text-[36px] sm:text-[40px] leading-[1.02] text-white">
-                Start With a<br>Free Flyer
-            </h3>
-
-            {{-- Accent line --}}
-            <div class="mx-auto mt-5 h-[2px] w-20 rounded-full bg-[#f0d28a]/80"></div>
-
-            {{-- Supporting copy --}}
-            <p class="mx-auto mt-5 max-w-[300px] text-center text-[15px] leading-7 text-white/80">
-                Give us an address or MLS number and we’ll turn it into a polished flyer draft in minutes.
-            </p>
-
-            {{-- Form shell --}}
-            <div class="mt-7 rounded-[24px] border border-white/12 bg-white/8 p-4 sm:p-5 backdrop-blur-md shadow-[inset_0_1px_0_rgba(255,255,255,.05)]">
-                <form class="space-y-4" method="post" action="#">
-                    @csrf
-
-                    <div>
-                        <label class="mb-1.5 block text-[12px] font-semibold uppercase tracking-[0.12em] text-white/62">
-                            Email
-                        </label>
-                        <input
-                            type="email"
-                            name="email"
-                            class="w-full rounded-[16px] border border-white/14 bg-white/94 px-5 py-3.5 text-[15px] text-gray-800 placeholder:text-gray-400 outline-none transition focus:border-[#f0d28a] focus:ring-2 focus:ring-[#f0d28a]/15"
-                            placeholder="Your email"
-                        >
-                    </div>
-
-                    <div>
-                        <label class="mb-1.5 block text-[12px] font-semibold uppercase tracking-[0.12em] text-white/62">
-                            Address or MLS#
-                        </label>
-                        <input
-                            type="text"
-                            name="listing_input"
-                            class="w-full rounded-[16px] border border-white/14 bg-white/94 px-5 py-3.5 text-[15px] text-gray-800 placeholder:text-gray-400 outline-none transition focus:border-[#f0d28a] focus:ring-2 focus:ring-[#f0d28a]/15"
-                            placeholder="Address or MLS# of flyer to create"
-                        >
-                    </div>
-
-                    <div class="pt-2">
-                        <button
-                            type="submit"
-                            class="inline-flex w-full items-center justify-center rounded-full px-6 py-3.5 text-[15px] font-semibold text-[#1d2f5f] shadow-[0_12px_26px_rgba(0,0,0,.18)] transition hover:-translate-y-[1px] hover:brightness-105"
-                            style="background: linear-gradient(180deg, #f4d793 0%, #eebf67 100%);"
-                        >
-                            Create Free Flyer
-                        </button>
-                    </div>
-                </form>
-            </div>
-
-            {{-- Bottom microcopy --}}
-            <div class="mt-5 text-center text-[12px] leading-6 text-white/58">
-                Built to make flyer creation fast, simple, and presentation-ready.
+        {{-- icon --}}
+        <div class="flex justify-center">
+            <div class="flex items-center justify-center w-[70px] h-[70px] rounded-full border-2 shadow-lg"
+                 style="border-color: {{ $brandGold }}; background: rgba(255,255,255,.06);">
+                <i class="ti-wand text-[24px]" style="color:#f0d28a;"></i>
             </div>
         </div>
+
+        {{-- label --}}
+        <div class="mt-5 text-center text-[12px] uppercase tracking-[0.18em] text-white/60 font-semibold">
+            Flyer Creation Wizard
+        </div>
+
+        {{-- headline --}}
+        <h3 class="font-display text-center text-[36px] leading-[1.05] mt-3 text-white">
+            Start With a<br>Free Flyer
+        </h3>
+
+        {{-- accent divider --}}
+        <div class="mx-auto mt-5 w-20 h-[2px] bg-[#f0d28a] rounded-full"></div>
+
+        {{-- description --}}
+        <p class="text-center text-[15px] text-white/80 leading-7 mt-5 max-w-[300px] mx-auto">
+            Enter your email and a property address or MLS number.  
+            We'll instantly generate a polished flyer draft you can preview.
+        </p>
+
+        {{-- form shell --}}
+        <div class="mt-7 bg-white/8 border border-white/10 rounded-[22px] p-5 backdrop-blur-sm">
+
+            <form method="post" action="#" class="space-y-4">
+            @csrf
+
+                <div>
+                    <label class="block text-[12px] uppercase tracking-[0.14em] text-white/60 font-semibold mb-1.5">
+                        Email
+                    </label>
+                    <input
+                        type="email"
+                        name="email"
+                        placeholder="Your email"
+                        class="w-full rounded-[14px] bg-white px-4 py-3 text-[15px] text-gray-800 border border-gray-200 outline-none focus:border-[#214e9b] focus:ring-2 focus:ring-[#214e9b]/10"
+                    >
+                </div>
+
+                <div>
+                    <label class="block text-[12px] uppercase tracking-[0.14em] text-white/60 font-semibold mb-1.5">
+                        Address or MLS#
+                    </label>
+                    <input
+                        type="text"
+                        name="listing_input"
+                        placeholder="Address or MLS# of listing"
+                        class="w-full rounded-[14px] bg-white px-4 py-3 text-[15px] text-gray-800 border border-gray-200 outline-none focus:border-[#214e9b] focus:ring-2 focus:ring-[#214e9b]/10"
+                    >
+                </div>
+
+                <button
+                    type="submit"
+                    class="w-full rounded-full py-3.5 text-[15px] font-semibold text-[#1d2f5f] shadow-lg transition hover:-translate-y-[1px]"
+                    style="background:#f0d28a;"
+                >
+                    Create Free Flyer
+                </button>
+
+            </form>
+
+        </div>
+
+        {{-- microcopy --}}
+        <div class="text-center text-[12px] text-white/55 mt-5">
+            Takes less than 30 seconds to start.
+        </div>
+
     </div>
+</div>
 </aside>
 
         </div>
