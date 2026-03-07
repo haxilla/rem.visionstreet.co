@@ -50,7 +50,7 @@
             {!! $topViewedTitle !!}
         </h2>
 
-        <div class="mt-4 text-[16px] leading-7 text-gray-600 max-w-lg mx-auto">
+        <div class="mt-4 text-[16px] leading-7 text-gray-600 max-w-sm mx-auto">
             Discover the listings getting the most attention on Realty Emails right now.
         </div>
 
