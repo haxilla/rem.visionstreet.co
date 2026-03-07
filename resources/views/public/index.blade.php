@@ -46,8 +46,8 @@
                         {!! $topViewedTitle !!}
                     </h2>
 
-                    <div class="mt-5 text-[15px] sm:text-[17px] leading-7 text-gray-600 max-w-3xl mx-auto">
-                        See the most popular listings on Realty Emails today based on the attention they are receiving right now.
+                    <div class="mt-5 text-[15px] sm:text-[17px] leading-7 text-gray-600 max-w-lg mx-auto">
+                        Discover the listings getting the most attention on Realty Emails right now.
                     </div>
                 </div>
 
