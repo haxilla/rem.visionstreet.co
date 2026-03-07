@@ -1,12 +1,10 @@
 {{-- TOP VIEWED + FREE TRIAL SIDEBAR --}}
 @php
     $topViewedTitle = $topViewedTitle ?? "Today's <span class='text-[#214e9b]'>TOP VIEWED</span>";
-    $topViewedItems = ($mostViews ?? collect())->take(5);
+    $topViewedItems = ($mostViews ?? collect())->take(4);
     $sectionMax     = $sectionMax ?? '1600px';
     $brandBlue      = $brandBlue ?? '#214e9b';
     $brandGold      = $brandGold ?? '#e79a63';
-    $leftItems      = $topViewedItems->take(4);
-    $rightItem      = $topViewedItems->skip(4)->first();
 @endphp
 
 <div class="w-full bg-[#f5f5f7] py-12 lg:py-16">
@@ -38,7 +36,7 @@
                 {{-- Property Grid --}}
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-7">
 
-                @foreach($leftItems as $index => $the)
+                @foreach($topViewedItems as $index => $the)
 
                     @php
                     $photoObj = $the->thePhotos->where('def','=','1')->first();
@@ -212,90 +210,6 @@
         </div>
     </div>
 
-    {{-- 5TH PROPERTY CARD --}}
-    @if($rightItem)
-        @php
-            $photoObj = $rightItem->thePhotos->where('def','=','1')->first();
-            $photo    = $photoObj?->photoName;
-
-            $listingImg = null;
-            if ($photo && !empty($rightItem->theMeta?->zipDir) && !empty($rightItem->theMeta?->mlsDir)) {
-                $listingImg = "https://realtyrepublic.com/hqphotos/{$rightItem->theMeta->zipDir}/{$rightItem->theMeta->mlsDir}/{$photo}";
-            }
-
-            $agentImg = null;
-            if (!empty($rightItem->theAgent?->agtPhoto) && !empty($rightItem->theAgent?->theAgentCleanup?->newRemID)) {
-                $agentImg = "https://realtyrepublic.com/agentPhotos/{$rightItem->theAgent->theAgentCleanup->newRemID}/{$rightItem->theAgent->agtPhoto}";
-            } elseif (!empty($rightItem->theAgent?->agtPhoto) && !empty($rightItem->theOffice?->officeID)) {
-                $agentImg = "https://realtyemails.com/HQoffice/{$rightItem->theOffice->officeID}/{$rightItem->theAgent->agtPhoto}";
-            }
-
-            $street     = $rightItem->xFullStreet ?? '';
-            $cityLine   = trim(($rightItem->xCity ?? '') . ' ' . ($rightItem->xState ?? '') . ' ' . ($rightItem->xxZip ?? ''));
-            $agentName  = $rightItem->theAgent->agtFullName ?? '';
-            $officeName = $rightItem->theOffice->officeName ?? '';
-            $price      = $rightItem->xPrice ?? $rightItem->xListPrice ?? null;
-            $priceLabel = $price ? '$' . number_format((float) $price) : null;
-        @endphp
-
-        <article class="group w-full rounded-[24px] bg-white p-6 shadow-[0_8px_24px_rgba(0,0,0,.06)] ring-1 ring-black/5 transition hover:-translate-y-[2px] hover:shadow-[0_18px_40px_rgba(0,0,0,.10)]">
-
-            <div class="overflow-hidden rounded-[18px] h-[230px] bg-[#e8e8ec]">
-                @if($listingImg)
-                    <img
-                        src="{{ $listingImg }}"
-                        alt="{{ $street }}"
-                        class="h-full w-full object-cover transition duration-500 group-hover:scale-[1.035]"
-                    >
-                @endif
-            </div>
-
-            <div class="mt-4 flex items-center gap-3">
-                <div class="text-[11px] uppercase tracking-[0.16em] text-gray-400 font-semibold">
-                    #5 Trending
-                </div>
-
-                @if($priceLabel)
-                    <span class="inline-flex rounded-full bg-[#214e9b] px-3 py-1 text-[11px] font-semibold text-white">
-                        {{ $priceLabel }}
-                    </span>
-                @endif
-            </div>
-
-            <a href="#" class="block mt-3 text-[22px] font-semibold leading-tight text-[#214e9b] hover:opacity-80">
-                {{ $street }}
-            </a>
-
-            <div class="mt-2 text-[15px] text-gray-600">
-                {{ $cityLine }}
-            </div>
-
-            <div class="mt-5 flex items-start gap-3">
-                @if($agentImg)
-                    <img
-                        src="{{ $agentImg }}"
-                        alt="{{ $agentName }}"
-                        class="h-16 w-auto rounded-xl object-cover ring-1 ring-black/10"
-                    >
-                @endif
-
-                <div>
-                    <div class="text-[12px] text-gray-500">
-                        Listed by:
-                    </div>
-
-                    <div class="text-[17px] text-[#214e9b] font-medium leading-tight">
-                        {{ $agentName }}
-                    </div>
-
-                    <div class="text-[14px] text-gray-600">
-                        {{ $officeName }}
-                    </div>
-                </div>
-            </div>
-
-        </article>
-    @endif
 
 </aside>
 
