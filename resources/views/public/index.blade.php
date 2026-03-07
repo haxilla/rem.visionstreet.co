@@ -28,32 +28,31 @@
     $brandGold      = $brandGold ?? '#e79a63';
 @endphp
 
-<section class="w-full py-12 lg:py-16">
+<section class="w-full bg-[#f5f5f7] py-12 lg:py-16">
     <div class="mx-auto w-full max-w-screen-2xl px-4 sm:px-6 lg:px-10" style="max-width: {{ $sectionMax }};">
 
         {{-- Main layout --}}
-        <div class="mt-10 grid grid-cols-1 xl:grid-cols-[2fr_1fr] gap-8 xl:gap-8 items-start">
+        <div class="grid grid-cols-1 xl:grid-cols-[2fr_1fr] gap-8 xl:gap-8 items-start">
 
-            {{-- LEFT: 2x2 most viewed grid --}}
-            <div class="rounded-[28px] bg-white shadow-[0_12px_34px_rgba(0,0,0,.05)] ring-1 ring-black/5 overflow-hidden">
-                <div class="border-b border-[#e7e9ef] px-6 py-5 sm:px-8">
-                    {{-- Header --}}
-                    <div class="text-center max-w-4xl mx-auto">
-                        <div class="flex justify-center">
-                            <i class="ti-bookmark text-[28px] leading-none" style="color: {{ $brandBlue }};"></i>
-                        </div>
+            {{-- LEFT: Top viewed container --}}
+            <div class="rounded-[30px] bg-white shadow-[0_14px_36px_rgba(0,0,0,.05)] ring-1 ring-black/5 overflow-hidden">
+                {{-- Header --}}
+                <div class="px-6 py-6 sm:px-8 sm:py-7 text-center border-b border-[#edf0f5]">
+                    <div class="flex justify-center">
+                        <i class="ti-bookmark text-[28px] leading-none" style="color: {{ $brandBlue }};"></i>
+                    </div>
 
-                        <h2 class="font-display mt-2 text-[30px] sm:text-[42px] font-medium leading-none text-[#1c1d22]">
-                            {!! $topViewedTitle !!}
-                        </h2>
+                    <h2 class="font-display mt-2 text-[30px] sm:text-[42px] font-medium leading-none text-[#1c1d22]">
+                        {!! $topViewedTitle !!}
+                    </h2>
 
-                        <div class="mt-5 text-[15px] sm:text-[17px] leading-7 text-gray-600 max-w-3xl mx-auto">
-                            See the most popular listings on Realty Emails today based on real-time views
-                        </div>
+                    <div class="mt-5 text-[15px] sm:text-[17px] leading-7 text-gray-600 max-w-3xl mx-auto">
+                        See the most popular listings on Realty Emails today based on the attention they are receiving right now.
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2">
+                {{-- Grid --}}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 sm:p-7">
                     @foreach($topViewedItems as $index => $the)
                         @php
                             $photoObj = $the->thePhotos->where('def','=','1')->first();
@@ -82,17 +81,19 @@
                             $priceLabel = $price ? '$' . number_format((float) $price) : null;
                         @endphp
 
-                        <article class="group p-5 sm:p-6 border-b border-[#edf0f5] md:[&:nth-last-child(-n+2)]:border-b-0 md:odd:border-r md:border-[#edf0f5]">
-                            <div class="overflow-hidden rounded-[22px] bg-[#e8e8ec] h-[220px] sm:h-[240px]">
+                        <article class="group rounded-[24px] bg-white p-5 sm:p-6 shadow-[0_8px_22px_rgba(0,0,0,.06)] ring-1 ring-black/5 transition duration-300 hover:-translate-y-[3px] hover:shadow-[0_16px_38px_rgba(0,0,0,.10)]">
+                            {{-- Photo --}}
+                            <div class="overflow-hidden rounded-[18px] bg-[#e8e8ec] h-[220px] sm:h-[240px]">
                                 @if($listingImg)
                                     <img
                                         src="{{ $listingImg }}"
                                         alt="{{ $street }}"
-                                        class="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
+                                        class="h-full w-full object-cover transition duration-500 group-hover:scale-[1.035]"
                                     >
                                 @endif
                             </div>
 
+                            {{-- Meta pills --}}
                             <div class="mt-4 flex flex-wrap items-center gap-3">
                                 <div class="text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-400">
                                     #{{ $index + 1 }} Trending
@@ -100,16 +101,16 @@
 
                                 @if($priceLabel)
                                     <span
-                                        class="inline-flex rounded-full px-3 py-1 text-[11px] font-semibold text-white"
-                                        style="background-color: {{ $brandBlue }};"
+                                        class="inline-flex rounded-full bg-[#214e9b]/95 px-3 py-1 text-[11px] font-semibold text-white backdrop-blur-sm"
                                     >
                                         {{ $priceLabel }}
                                     </span>
                                 @endif
                             </div>
 
+                            {{-- Address --}}
                             <div class="mt-3">
-                                <a href="#" class="block text-[24px] sm:text-[28px] font-semibold leading-tight text-[#214e9b] hover:opacity-80 transition">
+                                <a href="#" class="block text-[22px] sm:text-[24px] font-semibold leading-tight text-[#214e9b] transition hover:opacity-80">
                                     {{ $street }}
                                 </a>
                             </div>
@@ -118,6 +119,7 @@
                                 {{ $cityLine }}
                             </div>
 
+                            {{-- Home details --}}
                             @if($beds || $baths || $sqft)
                                 <div class="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-gray-600">
                                     @if($beds)<span>{{ $beds }} Beds</span>@endif
@@ -126,6 +128,7 @@
                                 </div>
                             @endif
 
+                            {{-- Agent --}}
                             <div class="mt-5 flex items-start gap-3">
                                 @if($agentImg)
                                     <img
@@ -151,61 +154,62 @@
             </div>
 
             {{-- RIGHT: Free trial sidebar --}}
-            <aside class="rounded-[28px] bg-[#eceaf8] px-6 py-8 sm:px-8 sm:py-10 shadow-[0_12px_34px_rgba(0,0,0,.04)] ring-1 ring-black/5">
-                <div class="flex flex-col items-center text-center">
-                    <div
-                        class="flex h-[84px] w-[84px] items-center justify-center rounded-full border-[4px]"
-                        style="background-color: {{ $brandBlue }}; border-color: {{ $brandGold }};"
-                    >
-                        <i class="ti-wand text-[34px]" style="color: #f5c14d;"></i>
-                    </div>
-
-                    <div class="mt-5 text-[15px] italic leading-none" style="color: {{ $brandBlue }};">
-                        Flyer Creation Wizard
-                    </div>
-
-                    <h3 class="mt-3 text-[40px] sm:text-[46px] font-extrabold leading-none" style="color: {{ $brandBlue }};">
-                        FREE TRIAL!
-                    </h3>
-
-                    <p class="mt-5 max-w-[300px] text-[18px] leading-8" style="color: {{ $brandBlue }};">
-                        If it’s your listing and online anywhere, our system will find it and auto create it.
-                    </p>
-                </div>
-
-                <form class="mt-8 space-y-4" method="post" action="#">
-                    @csrf
-
-                    <input
-                        type="email"
-                        name="email"
-                        class="w-full rounded-full border-0 bg-white px-6 py-4 text-center text-[16px] text-gray-700 placeholder:text-gray-500 outline-none shadow-sm"
-                        placeholder="Your Email"
-                    >
-
-                    <input
-                        type="text"
-                        name="listing_input"
-                        class="w-full rounded-full border-0 bg-white px-6 py-4 text-center text-[16px] text-gray-700 placeholder:text-gray-500 outline-none shadow-sm"
-                        placeholder="Address or MLS# of Flyer to Create"
-                    >
-
-                    <div class="pt-3 flex justify-center">
-                        <button
-                            type="submit"
-                            class="inline-flex items-center justify-center rounded-full px-8 py-4 text-[16px] font-semibold text-white shadow-[0_8px_18px_rgba(0,0,0,.12)] transition hover:brightness-105"
-                            style="background-color: {{ $brandBlue }}; box-shadow: 0 0 0 4px {{ $brandGold }} inset;"
+            <aside class="flex items-center">
+                <div class="w-full rounded-[28px] bg-[#eceaf8] px-6 py-8 sm:px-8 sm:py-10 shadow-[0_12px_34px_rgba(0,0,0,.04)] ring-1 ring-black/5">
+                    <div class="flex flex-col items-center text-center">
+                        <div
+                            class="flex h-[84px] w-[84px] items-center justify-center rounded-full border-[4px]"
+                            style="background-color: {{ $brandBlue }}; border-color: {{ $brandGold }};"
                         >
-                            Create FREE Flyer
-                        </button>
+                            <i class="ti-wand text-[34px]" style="color: #f5c14d;"></i>
+                        </div>
+
+                        <div class="mt-5 text-[15px] italic leading-none" style="color: {{ $brandBlue }};">
+                            Flyer Creation Wizard
+                        </div>
+
+                        <h3 class="mt-3 text-[38px] sm:text-[44px] font-extrabold leading-none" style="color: {{ $brandBlue }};">
+                            FREE TRIAL!
+                        </h3>
+
+                        <p class="mt-5 max-w-[300px] text-[18px] leading-8" style="color: {{ $brandBlue }};">
+                            If it’s your listing and online anywhere, our system will find it and auto create it.
+                        </p>
                     </div>
-                </form>
+
+                    <form class="mt-8 space-y-4" method="post" action="#">
+                        @csrf
+
+                        <input
+                            type="email"
+                            name="email"
+                            class="w-full rounded-full border-0 bg-white px-6 py-4 text-center text-[16px] text-gray-700 placeholder:text-gray-500 outline-none shadow-sm"
+                            placeholder="Your Email"
+                        >
+
+                        <input
+                            type="text"
+                            name="listing_input"
+                            class="w-full rounded-full border-0 bg-white px-6 py-4 text-center text-[16px] text-gray-700 placeholder:text-gray-500 outline-none shadow-sm"
+                            placeholder="Address or MLS# of Flyer to Create"
+                        >
+
+                        <div class="pt-3 flex justify-center">
+                            <button
+                                type="submit"
+                                class="inline-flex items-center justify-center rounded-full px-8 py-4 text-[16px] font-semibold text-white shadow-[0_8px_18px_rgba(0,0,0,.12)] transition hover:brightness-105"
+                                style="background-color: {{ $brandBlue }}; box-shadow: 0 0 0 4px {{ $brandGold }} inset;"
+                            >
+                                Create FREE Flyer
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </aside>
 
         </div>
     </div>
 </section>
-
 
 
 
