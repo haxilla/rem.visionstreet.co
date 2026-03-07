@@ -153,80 +153,92 @@
                 </div>
             </div>
 
-            {{-- RIGHT: Polished free trial sidebar --}}
+{{-- RIGHT: Premium free trial sidebar --}}
 <aside class="flex items-center">
-    <div class="w-full rounded-[30px] bg-white p-6 sm:p-8 shadow-[0_14px_36px_rgba(0,0,0,.05)] ring-1 ring-black/5">
+    <div class="relative w-full overflow-hidden rounded-[30px] p-6 sm:p-8 shadow-[0_18px_45px_rgba(17,31,61,.16)] ring-1 ring-black/5">
 
-        {{-- Top badge --}}
-        <div class="flex justify-center">
-            <div
-                class="flex h-[68px] w-[68px] items-center justify-center rounded-full border-2 shadow-sm"
-                style="border-color: {{ $brandGold }}; background-color: rgba(33,78,155,.06);"
-            >
-                <i class="ti-wand text-[24px]" style="color: {{ $brandBlue }};"></i>
-            </div>
-        </div>
+        {{-- background --}}
+        <div class="absolute inset-0 bg-[linear-gradient(160deg,#284b8f_0%,#21427e_38%,#1a3364_72%,#172a52_100%)]"></div>
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,.16),transparent_24%),radial-gradient(circle_at_bottom_left,rgba(255,255,255,.10),transparent_22%)]"></div>
 
-        {{-- Eyebrow --}}
-        <div class="mt-5 text-center text-[12px] font-semibold uppercase tracking-[0.16em] text-gray-500">
-            Flyer Creation Wizard
-        </div>
+        {{-- soft glow --}}
+        <div class="absolute -top-10 right-[-20px] h-36 w-36 rounded-full bg-white/10 blur-3xl"></div>
+        <div class="absolute bottom-[-40px] left-[-30px] h-40 w-40 rounded-full bg-[#f0d28a]/10 blur-3xl"></div>
 
-        {{-- Heading --}}
-        <h3 class="font-display mt-3 text-center text-[34px] sm:text-[38px] leading-[1.02] text-[#1c1d22]">
-            Create Your<br>First Flyer Free
-        </h3>
-
-        {{-- Supporting copy --}}
-        <p class="mx-auto mt-4 max-w-[290px] text-center text-[15px] leading-7 text-gray-600">
-            Enter your email and a property address or MLS number to instantly create a polished flyer draft.
-        </p>
-
-        {{-- Divider --}}
-        <div class="mx-auto mt-6 h-px w-full bg-[#edf0f5]"></div>
-
-        {{-- Form --}}
-        <form class="mt-6 space-y-4" method="post" action="#">
-            @csrf
-
-            <div>
-                <label class="mb-1.5 block text-[13px] font-medium text-[#374151]">
-                    Email
-                </label>
-                <input
-                    type="email"
-                    name="email"
-                    class="w-full rounded-[16px] border border-[#dde3ee] bg-white px-5 py-3.5 text-[15px] text-gray-800 placeholder:text-gray-400 outline-none transition focus:border-[#214e9b] focus:ring-2 focus:ring-[#214e9b]/10"
-                    placeholder="Your email"
+        <div class="relative z-10">
+            {{-- Top badge --}}
+            <div class="flex justify-center">
+                <div
+                    class="flex h-[74px] w-[74px] items-center justify-center rounded-full border-[2.5px] shadow-[0_8px_18px_rgba(0,0,0,.14)]"
+                    style="border-color: {{ $brandGold }}; background: rgba(255,255,255,.08);"
                 >
+                    <i class="ti-wand text-[25px]" style="color: #f3cf82;"></i>
+                </div>
             </div>
 
-            <div>
-                <label class="mb-1.5 block text-[13px] font-medium text-[#374151]">
-                    Address or MLS#
-                </label>
-                <input
-                    type="text"
-                    name="listing_input"
-                    class="w-full rounded-[16px] border border-[#dde3ee] bg-white px-5 py-3.5 text-[15px] text-gray-800 placeholder:text-gray-400 outline-none transition focus:border-[#214e9b] focus:ring-2 focus:ring-[#214e9b]/10"
-                    placeholder="Address or MLS# of flyer to create"
-                >
+            {{-- Eyebrow --}}
+            <div class="mt-5 text-center text-[12px] font-semibold uppercase tracking-[0.18em] text-white/68">
+                Flyer Creation Wizard
             </div>
 
-            <div class="pt-2">
-                <button
-                    type="submit"
-                    class="inline-flex w-full items-center justify-center rounded-full px-6 py-3.5 text-[15px] font-semibold text-white shadow-[0_10px_20px_rgba(33,78,155,.18)] transition hover:-translate-y-[1px] hover:brightness-105"
-                    style="background-color: {{ $brandBlue }};"
-                >
-                    Create Free Flyer
-                </button>
-            </div>
-        </form>
+            {{-- Heading --}}
+            <h3 class="font-display mt-3 text-center text-[36px] sm:text-[40px] leading-[1.02] text-white">
+                Start With a<br>Free Flyer
+            </h3>
 
-        {{-- Footer note --}}
-        <div class="mt-5 text-center text-[12px] leading-6 text-gray-500">
-            Fast, simple, and designed to help your listing stand out.
+            {{-- Accent line --}}
+            <div class="mx-auto mt-5 h-[2px] w-20 rounded-full bg-[#f0d28a]/80"></div>
+
+            {{-- Supporting copy --}}
+            <p class="mx-auto mt-5 max-w-[300px] text-center text-[15px] leading-7 text-white/80">
+                Give us an address or MLS number and we’ll turn it into a polished flyer draft in minutes.
+            </p>
+
+            {{-- Form shell --}}
+            <div class="mt-7 rounded-[24px] border border-white/12 bg-white/8 p-4 sm:p-5 backdrop-blur-md shadow-[inset_0_1px_0_rgba(255,255,255,.05)]">
+                <form class="space-y-4" method="post" action="#">
+                    @csrf
+
+                    <div>
+                        <label class="mb-1.5 block text-[12px] font-semibold uppercase tracking-[0.12em] text-white/62">
+                            Email
+                        </label>
+                        <input
+                            type="email"
+                            name="email"
+                            class="w-full rounded-[16px] border border-white/14 bg-white/94 px-5 py-3.5 text-[15px] text-gray-800 placeholder:text-gray-400 outline-none transition focus:border-[#f0d28a] focus:ring-2 focus:ring-[#f0d28a]/15"
+                            placeholder="Your email"
+                        >
+                    </div>
+
+                    <div>
+                        <label class="mb-1.5 block text-[12px] font-semibold uppercase tracking-[0.12em] text-white/62">
+                            Address or MLS#
+                        </label>
+                        <input
+                            type="text"
+                            name="listing_input"
+                            class="w-full rounded-[16px] border border-white/14 bg-white/94 px-5 py-3.5 text-[15px] text-gray-800 placeholder:text-gray-400 outline-none transition focus:border-[#f0d28a] focus:ring-2 focus:ring-[#f0d28a]/15"
+                            placeholder="Address or MLS# of flyer to create"
+                        >
+                    </div>
+
+                    <div class="pt-2">
+                        <button
+                            type="submit"
+                            class="inline-flex w-full items-center justify-center rounded-full px-6 py-3.5 text-[15px] font-semibold text-[#1d2f5f] shadow-[0_12px_26px_rgba(0,0,0,.18)] transition hover:-translate-y-[1px] hover:brightness-105"
+                            style="background: linear-gradient(180deg, #f4d793 0%, #eebf67 100%);"
+                        >
+                            Create Free Flyer
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            {{-- Bottom microcopy --}}
+            <div class="mt-5 text-center text-[12px] leading-6 text-white/58">
+                Built to make flyer creation fast, simple, and presentation-ready.
+            </div>
         </div>
     </div>
 </aside>
