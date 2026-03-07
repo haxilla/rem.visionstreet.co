@@ -17,144 +17,129 @@
 
 
 
-    {{-- ANNOUNCE YOUR LISTINGS / USE CASES SECTION --}}
+    
+{{-- ANNOUNCE YOUR LISTINGS / OCCASIONS SECTION --}}
 @php
     $announceTitle = $announceTitle ?? 'Announce Your Listings';
-    $announceIntro = $announceIntro ?? 'From new listings to open houses and price improvements, Realty Emails helps you promote the moments that matter most.';
-    $announceText  = $announceText  ?? 'Use flyers for the occasions buyers and agents care about most — and keep your listings in front of the right audience at the right time.';
+    $announceIntro = $announceIntro ?? 'Every listing has moments worth promoting.';
+    $announceBody  = $announceBody ?? 'From pre-MLS exposure to open houses, price improvements, and major updates, Realty Emails helps you create the right flyer for the right occasion so your listing stays visible when it matters most.';
     $brandBlue     = $brandBlue ?? '#214e9b';
     $brandGold     = $brandGold ?? '#e79a63';
 
-    $announceItems = $announceItems ?? [
-        [
-            'icon' => 'ti-eye',
-            'title' => 'Pre-MLS',
-            'text' => 'Create early interest before a property officially hits the market.',
-        ],
-        [
-            'icon' => 'ti-announcement',
-            'title' => 'Just Listed',
-            'text' => 'Announce a brand new listing with a polished flyer ready to share.',
-        ],
-        [
-            'icon' => 'ti-home',
-            'title' => 'Open House',
-            'text' => 'Promote upcoming dates and times so more people know when to visit.',
-        ],
-        [
-            'icon' => 'ti-trending-down',
-            'title' => 'Reduced',
-            'text' => 'Highlight a price improvement and renew attention on the listing.',
-        ],
-        [
-            'icon' => 'ti-reload',
-            'title' => 'Updated',
-            'text' => 'Share important listing updates, refreshed details, or new features.',
-        ],
-        [
-            'icon' => 'ti-hummer',
-            'title' => 'Builders',
-            'text' => 'Promote communities, quick move-ins, specs, and special builder events.',
-        ],
+    $announceTags = $announceTags ?? [
+        'Pre-MLS',
+        'Just Listed',
+        'Open House',
+        'Reduced',
+        'Updated',
+        'Builders',
     ];
 @endphp
 
-<section class="w-full bg-[#f5f5f7] py-14 lg:py-18">
+<section class="w-full py-16 lg:py-20" style="background: linear-gradient(180deg, #eef3fb 0%, #f6f8fc 100%);">
     <div class="mx-auto w-full max-w-screen-2xl px-4 sm:px-6 lg:px-10" style="max-width: 1600px;">
 
-        {{-- Top intro --}}
-        <div class="rounded-[30px] bg-white px-6 py-10 sm:px-10 sm:py-12 shadow-[0_14px_36px_rgba(0,0,0,.05)] ring-1 ring-black/5">
-            <div class="grid grid-cols-1 xl:grid-cols-[1.1fr_.9fr] gap-10 xl:gap-12 items-center">
+        <div class="grid grid-cols-1 xl:grid-cols-[1fr_.95fr] gap-10 xl:gap-14 items-center">
 
-                {{-- Left copy --}}
-                <div class="max-w-[760px]">
-                    <div class="inline-flex items-center gap-3 rounded-full border border-[#dfe6f3] bg-[#f7f9fd] px-4 py-2">
-                        <span class="flex h-10 w-10 items-center justify-center rounded-full bg-[#214e9b]/8">
-                            <i class="ti-announcement text-[18px]" style="color: {{ $brandBlue }};"></i>
-                        </span>
-                        <span class="text-[12px] font-semibold uppercase tracking-[0.16em] text-gray-500">
-                            Flyer Use Cases
-                        </span>
-                    </div>
+            {{-- LEFT COPY --}}
+            <div class="max-w-[760px]">
+                <div class="inline-flex items-center gap-3">
+                    <span class="flex h-12 w-12 items-center justify-center rounded-full bg-white/80 shadow-[0_8px_18px_rgba(33,78,155,.08)] ring-1 ring-[#214e9b]/10">
+                        <i class="ti-announcement text-[20px]" style="color: {{ $brandBlue }};"></i>
+                    </span>
 
-                    <h2 class="font-display mt-6 text-[34px] sm:text-[46px] lg:text-[54px] leading-[0.98] tracking-tight text-[#1c1d22]">
-                        {{ $announceTitle }}
-                    </h2>
-
-                    <p class="mt-5 max-w-[680px] text-[16px] sm:text-[18px] leading-8 text-gray-600">
-                        {{ $announceIntro }}
-                    </p>
-
-                    <p class="mt-4 max-w-[680px] text-[15px] sm:text-[16px] leading-8 text-gray-500">
-                        {{ $announceText }}
-                    </p>
-
-                    <div class="mt-7 flex flex-wrap gap-x-6 gap-y-3 text-[14px] sm:text-[15px] text-gray-600">
-                        <div class="flex items-center gap-3">
-                            <span class="h-2.5 w-2.5 rounded-full" style="background-color: {{ $brandGold }};"></span>
-                            <span>Promote important listing milestones</span>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <span class="h-2.5 w-2.5 rounded-full" style="background-color: {{ $brandGold }};"></span>
-                            <span>Stay visible beyond the MLS</span>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <span class="h-2.5 w-2.5 rounded-full" style="background-color: {{ $brandGold }};"></span>
-                            <span>Use the right message for the right moment</span>
-                        </div>
-                    </div>
+                    <span class="text-[12px] font-semibold uppercase tracking-[0.18em] text-[#214e9b]/70">
+                        Flyer Occasions
+                    </span>
                 </div>
 
-                {{-- Right visual --}}
-                <div class="flex justify-center xl:justify-end">
-                    <div class="relative">
-                        <div class="absolute inset-0 rounded-full bg-[#214e9b]/6 blur-3xl scale-110"></div>
+                <h2 class="font-display mt-6 text-[36px] sm:text-[48px] lg:text-[56px] leading-[0.98] tracking-tight text-[#1c1d22]">
+                    {{ $announceTitle }}
+                </h2>
 
-                        <div class="relative rounded-[28px] bg-[linear-gradient(180deg,#ffffff_0%,#f7f9fd_100%)] p-6 sm:p-8 shadow-[0_18px_40px_rgba(0,0,0,.08)] ring-1 ring-black/5">
-                            <img
-                                src="{{ asset('images/2FlyerPerspective.gif') }}"
-                                alt="Realty Emails flyer examples"
-                                class="mx-auto w-full max-w-[320px] sm:max-w-[360px] h-auto object-contain"
-                            >
-                        </div>
-                    </div>
+                <div class="mt-5 h-[2px] w-24 rounded-full" style="background-color: {{ $brandGold }};"></div>
+
+                <p class="mt-6 text-[20px] sm:text-[24px] leading-[1.45] text-[#214e9b]">
+                    {{ $announceIntro }}
+                </p>
+
+                <p class="mt-5 max-w-[700px] text-[16px] sm:text-[18px] leading-8 text-gray-600">
+                    {{ $announceBody }}
+                </p>
+
+                <div class="mt-8 flex flex-wrap gap-3">
+                    @foreach($announceTags as $tag)
+                        <span class="inline-flex items-center rounded-full border border-[#d9e3f3] bg-white/75 px-4 py-2 text-[14px] font-medium text-[#214e9b] shadow-[0_6px_14px_rgba(0,0,0,.03)]">
+                            {{ $tag }}
+                        </span>
+                    @endforeach
                 </div>
-
             </div>
+
+            {{-- RIGHT VISUAL --}}
+            <div class="relative flex justify-center xl:justify-end">
+                {{-- background accent only, no box --}}
+                <div class="absolute inset-y-[12%] left-[10%] right-[10%] rounded-[40px] bg-[radial-gradient(circle_at_center,rgba(33,78,155,.10),rgba(33,78,155,0)_68%)] blur-2xl"></div>
+
+                <div class="relative w-full max-w-[560px]">
+                    {{-- subtle floating decorative shapes --}}
+                    <div class="absolute left-0 top-[10%] h-24 w-24 rounded-full bg-white/55 blur-xl"></div>
+                    <div class="absolute right-[8%] top-0 h-20 w-20 rounded-full bg-[#214e9b]/8 blur-xl"></div>
+                    <div class="absolute bottom-[12%] left-[12%] h-28 w-28 rounded-full bg-[#e79a63]/10 blur-2xl"></div>
+
+                    <img
+                        src="{{ asset('images/2FlyerPerspective.gif') }}"
+                        alt="Realty Emails flyer examples"
+                        class="relative z-10 mx-auto w-full max-w-[420px] sm:max-w-[470px] lg:max-w-[520px] h-auto object-contain drop-shadow-[0_26px_34px_rgba(0,0,0,.12)]"
+                    >
+                </div>
+            </div>
+
         </div>
 
-        {{-- Occasions grid --}}
-        <div class="mt-10 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-7">
-            @foreach($announceItems as $item)
-                <article class="group rounded-[26px] bg-white p-6 sm:p-7 shadow-[0_8px_24px_rgba(0,0,0,.05)] ring-1 ring-black/5 transition duration-300 hover:-translate-y-[2px] hover:shadow-[0_16px_36px_rgba(0,0,0,.08)]">
-                    <div class="flex items-start gap-4">
-                        <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[#214e9b]/8 ring-1 ring-[#214e9b]/10">
-                            <i class="{{ $item['icon'] }} text-[22px]" style="color: {{ $brandBlue }};"></i>
-                        </div>
-
-                        <div class="min-w-0">
-                            <div class="text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-400">
-                                Occasion
-                            </div>
-
-                            <h3 class="mt-1 text-[24px] font-semibold leading-tight text-[#214e9b]">
-                                {{ $item['title'] }}
-                            </h3>
-                        </div>
+        {{-- BOTTOM STRIP --}}
+        <div class="mt-14 rounded-[28px] bg-white/78 px-6 py-6 sm:px-8 shadow-[0_10px_28px_rgba(0,0,0,.04)] ring-1 ring-black/5 backdrop-blur-sm">
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 xl:gap-10">
+                <div>
+                    <div class="text-[12px] font-semibold uppercase tracking-[0.16em] text-gray-400">
+                        Before the market
                     </div>
-
-                    <div class="mt-5 h-px w-full bg-[#edf0f5]"></div>
-
-                    <p class="mt-5 text-[15px] sm:text-[16px] leading-8 text-gray-600">
-                        {{ $item['text'] }}
+                    <div class="mt-2 text-[18px] font-semibold text-[#214e9b]">
+                        Build early interest
+                    </div>
+                    <p class="mt-2 text-[15px] leading-7 text-gray-600">
+                        Use flyers for pre-MLS visibility and just-listed announcements.
                     </p>
-                </article>
-            @endforeach
+                </div>
+
+                <div>
+                    <div class="text-[12px] font-semibold uppercase tracking-[0.16em] text-gray-400">
+                        During the campaign
+                    </div>
+                    <div class="mt-2 text-[18px] font-semibold text-[#214e9b]">
+                        Keep attention active
+                    </div>
+                    <p class="mt-2 text-[15px] leading-7 text-gray-600">
+                        Promote open houses, updated details, and momentum-driving changes.
+                    </p>
+                </div>
+
+                <div>
+                    <div class="text-[12px] font-semibold uppercase tracking-[0.16em] text-gray-400">
+                        Special situations
+                    </div>
+                    <div class="mt-2 text-[18px] font-semibold text-[#214e9b]">
+                        Support unique property needs
+                    </div>
+                    <p class="mt-2 text-[15px] leading-7 text-gray-600">
+                        Highlight reductions, builder inventory, and special community announcements.
+                    </p>
+                </div>
+            </div>
         </div>
 
     </div>
 </section>
-
 
 
 </body>
