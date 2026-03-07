@@ -147,7 +147,7 @@
     <div class="absolute bottom-[-50px] left-[-40px] h-72 w-72 rounded-full bg-[#f0d28a]/10 blur-3xl"></div>
 
     {{-- floating flyer visual --}}
-    <div class="pointer-events-none absolute right-[-10px] top-[-18px] z-20 hidden sm:block">
+    <div class="pointer-events-none absolute right-[-6px] top-[-36px] z-20 hidden sm:block">
         <img
             src="{{ asset('images/2FlyerPerspective.gif') }}"
             alt="Flyer preview"
