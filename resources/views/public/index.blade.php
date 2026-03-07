@@ -11,13 +11,14 @@
     <section>
         @include('public.includes.features_section')
     </section>
-
+    <!--
     <section class="bg-[#f5f5f7] py-12 lg:py-16">
         @include('public.includes.top_views')
     </section>
     <section>
         @include('public.includes.top_views_3')
     </section>
+-->
 {{-- TOP VIEWED + FREE TRIAL SIDEBAR --}}
 @php
     $topViewedTitle = $topViewedTitle ?? "Today's <span class='text-[#214e9b]'>TOP VIEWED</span>";
