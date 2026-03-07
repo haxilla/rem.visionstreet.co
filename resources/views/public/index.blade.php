@@ -12,7 +12,7 @@
         @include('public.includes.features_section')
     </section>
     <section >
-        @include('public.includes.top_views2')
+        @include('public.includes.top_views_2')
     </section>
 
 
