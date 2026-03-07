@@ -155,6 +155,7 @@
 
 {{-- RIGHT: Premium free trial sidebar --}}
 
+{{-- RIGHT: Premium Free Flyer Sidebar --}}
 <aside class="flex items-center">
 <div class="relative w-full rounded-[30px] bg-[#1e3566] p-7 sm:p-8 shadow-[0_20px_55px_rgba(0,0,0,.22)] overflow-hidden">
 
@@ -187,51 +188,46 @@
 
         {{-- description --}}
         <p class="text-center text-[15px] text-white/80 leading-7 mt-5 max-w-[300px] mx-auto">
-            Enter your email and a property address or MLS number.  
-            We'll instantly generate a polished flyer draft you can preview.
+            Enter your email and a property address or MLS number and we’ll instantly generate a flyer draft you can preview.
         </p>
 
-        {{-- form shell --}}
-        <div class="mt-7 bg-white/8 border border-white/10 rounded-[22px] p-5 backdrop-blur-sm">
+        {{-- form --}}
+        <form method="post" action="#" class="mt-7 space-y-4">
+        @csrf
 
-            <form method="post" action="#" class="space-y-4">
-            @csrf
-
-                <div>
-                    <label class="block text-[12px] uppercase tracking-[0.14em] text-white/60 font-semibold mb-1.5">
-                        Email
-                    </label>
-                    <input
-                        type="email"
-                        name="email"
-                        placeholder="Your email"
-                        class="w-full rounded-[14px] bg-white px-4 py-3 text-[15px] text-gray-800 border border-gray-200 outline-none focus:border-[#214e9b] focus:ring-2 focus:ring-[#214e9b]/10"
-                    >
-                </div>
-
-                <div>
-                    <label class="block text-[12px] uppercase tracking-[0.14em] text-white/60 font-semibold mb-1.5">
-                        Address or MLS#
-                    </label>
-                    <input
-                        type="text"
-                        name="listing_input"
-                        placeholder="Address or MLS# of listing"
-                        class="w-full rounded-[14px] bg-white px-4 py-3 text-[15px] text-gray-800 border border-gray-200 outline-none focus:border-[#214e9b] focus:ring-2 focus:ring-[#214e9b]/10"
-                    >
-                </div>
-
-                <button
-                    type="submit"
-                    class="w-full rounded-full py-3.5 text-[15px] font-semibold text-[#1d2f5f] shadow-lg transition hover:-translate-y-[1px]"
-                    style="background:#f0d28a;"
+            <div>
+                <label class="block text-[12px] uppercase tracking-[0.14em] text-white/60 font-semibold mb-1.5">
+                    Email
+                </label>
+                <input
+                    type="email"
+                    name="email"
+                    placeholder="Your email"
+                    class="w-full rounded-[14px] bg-white px-4 py-3 text-[15px] text-gray-800 border border-gray-200 outline-none focus:border-[#214e9b] focus:ring-2 focus:ring-[#214e9b]/10"
                 >
-                    Create Free Flyer
-                </button>
+            </div>
 
-            </form>
+            <div>
+                <label class="block text-[12px] uppercase tracking-[0.14em] text-white/60 font-semibold mb-1.5">
+                    Address or MLS#
+                </label>
+                <input
+                    type="text"
+                    name="listing_input"
+                    placeholder="Address or MLS# of listing"
+                    class="w-full rounded-[14px] bg-white px-4 py-3 text-[15px] text-gray-800 border border-gray-200 outline-none focus:border-[#214e9b] focus:ring-2 focus:ring-[#214e9b]/10"
+                >
+            </div>
 
-        </div>
+            <button
+                type="submit"
+                class="w-full rounded-full py-3.5 text-[15px] font-semibold text-[#1d2f5f] shadow-lg transition hover:-translate-y-[1px]"
+                style="background:#f0d28a;"
+            >
+                Generate Free Flyer
+            </button>
+
+        </form>
 
         {{-- microcopy --}}
         <div class="text-center text-[12px] text-white/55 mt-5">
