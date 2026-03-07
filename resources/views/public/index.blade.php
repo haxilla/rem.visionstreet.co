@@ -13,7 +13,7 @@
     </section>
 
     <section class="bg-[#f5f5f7] py-12 lg:py-16">
-        @include('public.includes.top_views')
+        @include('public.includes.top_views_2')
     </section>
         <!--
     <section>
