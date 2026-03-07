@@ -146,49 +146,43 @@
                     <div class="absolute -top-16 right-[-40px] h-64 w-64 rounded-full bg-white/8 blur-3xl"></div>
                     <div class="absolute bottom-[-50px] left-[-40px] h-72 w-72 rounded-full bg-[#f0d28a]/10 blur-3xl"></div>
 
-                    {{-- desktop breakout flyer --}}
-                    <div class="pointer-events-none absolute right-[-6px] top-[-42px] z-20 hidden xl:block">
-                        <img
-                            src="{{ asset('images/2FlyerPerspective.gif') }}"
-                            alt="Flyer preview"
-                            class="h-auto max-w-[195px] 2xl:max-w-[225px] object-contain drop-shadow-[0_18px_24px_rgba(0,0,0,.28)]"
-                        >
-                    </div>
-
                     <div class="relative z-10">
 
-                        {{-- tablet / small desktop flyer --}}
-                        <div class="mb-6 hidden justify-center xl:hidden sm:flex">
-                            <img
-                                src="{{ asset('images/2FlyerPerspective.gif') }}"
-                                alt="Flyer preview"
-                                class="h-auto max-w-[150px] lg:max-w-[170px] object-contain drop-shadow-[0_16px_20px_rgba(0,0,0,.24)]"
-                            >
-                        </div>
+                        {{-- top visual area --}}
+                        <div class="relative min-h-[150px] sm:min-h-[175px]">
+                            {{-- icon --}}
+                            <div class="flex justify-start">
+                                <div
+                                    class="flex h-[64px] w-[64px] items-center justify-center rounded-full border-2 shadow-lg"
+                                    style="border-color: {{ $brandGold }}; background: rgba(255,255,255,.06);"
+                                >
+                                    <i class="ti-wand text-[22px]" style="color:#f0d28a;"></i>
+                                </div>
+                            </div>
 
-                        {{-- icon --}}
-                        <div class="flex justify-center xl:justify-start">
-                            <div
-                                class="flex h-[64px] w-[64px] items-center justify-center rounded-full border-2 shadow-lg"
-                                style="border-color: {{ $brandGold }}; background: rgba(255,255,255,.06);"
-                            >
-                                <i class="ti-wand text-[22px]" style="color:#f0d28a;"></i>
+                            {{-- breakout flyer --}}
+                            <div class="pointer-events-none absolute right-[-8px] top-[-38px] z-20">
+                                <img
+                                    src="{{ asset('images/2FlyerPerspective.gif') }}"
+                                    alt="Flyer preview"
+                                    class="h-auto w-auto max-w-[170px] sm:max-w-[190px] lg:max-w-[210px] object-contain drop-shadow-[0_18px_24px_rgba(0,0,0,.28)]"
+                                >
                             </div>
                         </div>
 
-                        {{-- text block --}}
-                        <div class="mt-5 pr-0 xl:pr-[190px]">
-                            <div class="text-center xl:text-left text-[12px] uppercase tracking-[0.18em] text-white/60 font-semibold">
+                        {{-- text block full width --}}
+                        <div class="mt-2">
+                            <div class="text-[12px] uppercase tracking-[0.18em] text-white/60 font-semibold">
                                 Flyer Creation Wizard
                             </div>
 
-                            <h3 class="font-display mt-3 text-center xl:text-left text-[34px] leading-[1.03] text-white">
+                            <h3 class="font-display mt-3 text-[34px] leading-[1.03] text-white">
                                 Start With a<br>Free Flyer
                             </h3>
 
-                            <div class="mx-auto xl:mx-0 mt-5 h-[2px] w-20 rounded-full bg-[#f0d28a]"></div>
+                            <div class="mt-5 h-[2px] w-20 rounded-full bg-[#f0d28a]"></div>
 
-                            <p class="mt-5 max-w-[320px] text-center xl:text-left text-[15px] leading-7 text-white/80">
+                            <p class="mt-5 max-w-[340px] text-[15px] leading-7 text-white/80">
                                 Enter your email and a property address or MLS number and we’ll instantly generate a flyer draft you can preview.
                             </p>
                         </div>
