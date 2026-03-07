@@ -19,6 +19,15 @@
         @include('public.includes.top_views_3')
     </section>
 -->
+{{-- TOP VIEWED + FREE TRIAL SIDEBAR --}}
+@php
+    $topViewedTitle = $topViewedTitle ?? "Today's <span class='text-[#214e9b]'>TOP VIEWED</span>";
+    $topViewedItems = ($mostViews ?? collect())->take(4);
+    $sectionMax     = $sectionMax ?? '1600px';
+    $brandBlue      = $brandBlue ?? '#214e9b';
+    $brandGold      = $brandGold ?? '#e79a63';
+@endphp
+
 {{-- TOP VIEWED + FREE FLYER SECTION --}}
 
 <section class="w-full bg-[#f5f5f7] py-12 lg:py-16">
@@ -236,7 +245,6 @@
 </div>
 </div>
 </section>
-
 
 
 
