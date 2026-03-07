@@ -1,10 +1,12 @@
 {{-- TOP VIEWED + FREE TRIAL SIDEBAR --}}
 @php
     $topViewedTitle = $topViewedTitle ?? "Today's <span class='text-[#214e9b]'>TOP VIEWED</span>";
-    $topViewedItems = ($mostViews ?? collect())->take(4);
+    $topViewedItems = ($mostViews ?? collect())->take(5);
     $sectionMax     = $sectionMax ?? '1600px';
     $brandBlue      = $brandBlue ?? '#214e9b';
     $brandGold      = $brandGold ?? '#e79a63';
+    $leftItems      = $topViewedItems->take(4);
+    $rightItem      = $topViewedItems->skip(4)->first();
 @endphp
 
 <div class="w-full bg-[#f5f5f7] py-12 lg:py-16">
@@ -36,7 +38,7 @@
                 {{-- Property Grid --}}
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-7">
 
-                @foreach($topViewedItems as $index => $the)
+                @foreach($leftItems as $index => $the)
 
                     @php
                     $photoObj = $the->thePhotos->where('def','=','1')->first();
@@ -137,85 +139,165 @@
             </div>
 
 
-            <aside class="flex flex-col items-start gap-7">
+{{-- RIGHT COLUMN --}}
+<aside class="flex flex-col items-start gap-7">
 
-                {{-- FREE FLYER SIDEBAR --}}
-                <div class="w-full rounded-[30px] bg-[#1e3566] p-7 sm:p-8 shadow-[0_20px_55px_rgba(0,0,0,.22)]">
+    {{-- FREE FLYER SIDEBAR --}}
+    <div class="w-full rounded-[30px] bg-[#1e3566] px-7 pb-7 pt-14 sm:px-8 sm:pb-8 sm:pt-16 shadow-[0_20px_55px_rgba(0,0,0,.22)]">
 
+        <div class="flex flex-col items-center text-center">
 
-                    <div class="flex flex-col items-center text-center">
+            <div
+                class="flex h-[64px] w-[64px] items-center justify-center rounded-full border-2 shadow-lg"
+                style="border-color: {{ $brandGold }}; background: rgba(255,255,255,.06);"
+            >
+                <i class="ti-wand text-[22px]" style="color:#f0d28a;"></i>
+            </div>
 
-                        {{-- icon --}}
-                        <div
-                            class="flex h-[64px] w-[64px] items-center justify-center rounded-full border-2 shadow-lg"
-                            style="border-color: {{ $brandGold }}; background: rgba(255,255,255,.06);"
-                        >
-                            <i class="ti-wand text-[22px]" style="color:#f0d28a;"></i>
-                        </div>
+            <div class="mt-5 text-[12px] uppercase tracking-[0.18em] text-white/60 font-semibold">
+                Flyer Creation Wizard
+            </div>
 
-                        {{-- label --}}
-                        <div class="mt-5 text-[12px] uppercase tracking-[0.18em] text-white/60 font-semibold">
-                            Flyer Creation Wizard
-                        </div>
+            <h3 class="font-display mt-3 text-[34px] leading-[1.03] text-white">
+                Start With a<br>Free Flyer
+            </h3>
 
-                        {{-- heading --}}
-                        <h3 class="font-display mt-3 text-[34px] leading-[1.03] text-white">
-                            Start With a<br>Free Flyer
-                        </h3>
+            <div class="mt-5 h-[2px] w-20 rounded-full bg-[#f0d28a]"></div>
 
-                        <div class="mt-5 h-[2px] w-20 rounded-full bg-[#f0d28a]"></div>
+            <p class="mt-5 max-w-[320px] text-[15px] leading-7 text-white/80">
+                Enter your email and a property address or MLS number and we’ll instantly generate a flyer draft you can preview.
+            </p>
+        </div>
 
-                        {{-- description --}}
-                        <p class="mt-5 max-w-[320px] text-[15px] leading-7 text-white/80">
-                            Enter your email and a property address or MLS number and we’ll instantly generate a flyer draft you can preview.
-                        </p>
-                    </div>
+        <form method="post" action="#" class="mt-7 space-y-4">
+            @csrf
 
-                    {{-- form --}}
-                    <form method="post" action="#" class="mt-7 space-y-4">
-                        @csrf
+            <div>
+                <label class="mb-1.5 block text-[12px] uppercase tracking-[0.14em] text-white/60 font-semibold">
+                    Email
+                </label>
 
-                        <div>
-                            <label class="mb-1.5 block text-[12px] uppercase tracking-[0.14em] text-white/60 font-semibold">
-                                Email
-                            </label>
+                <input
+                    type="email"
+                    name="email"
+                    placeholder="Your email"
+                    class="w-full rounded-[14px] border border-gray-200 bg-white px-4 py-3 text-[15px] text-gray-800"
+                >
+            </div>
 
-                            <input
-                                type="email"
-                                name="email"
-                                placeholder="Your email"
-                                class="w-full rounded-[14px] border border-gray-200 bg-white px-4 py-3 text-[15px] text-gray-800"
-                            >
-                        </div>
+            <div>
+                <label class="mb-1.5 block text-[12px] uppercase tracking-[0.14em] text-white/60 font-semibold">
+                    Address or MLS#
+                </label>
 
-                        <div>
-                            <label class="mb-1.5 block text-[12px] uppercase tracking-[0.14em] text-white/60 font-semibold">
-                                Address or MLS#
-                            </label>
+                <input
+                    type="text"
+                    name="listing_input"
+                    placeholder="Address or MLS# of listing"
+                    class="w-full rounded-[14px] border border-gray-200 bg-white px-4 py-3 text-[15px] text-gray-800"
+                >
+            </div>
 
-                            <input
-                                type="text"
-                                name="listing_input"
-                                placeholder="Address or MLS# of listing"
-                                class="w-full rounded-[14px] border border-gray-200 bg-white px-4 py-3 text-[15px] text-gray-800"
-                            >
-                        </div>
+            <button
+                type="submit"
+                class="w-full rounded-full py-3.5 text-[15px] font-semibold text-[#1d2f5f] shadow-lg transition hover:-translate-y-[1px]"
+                style="background:#f0d28a;"
+            >
+                Generate Free Flyer
+            </button>
+        </form>
 
-                        <button
-                            type="submit"
-                            class="w-full rounded-full py-3.5 text-[15px] font-semibold text-[#1d2f5f] shadow-lg transition hover:-translate-y-[1px]"
-                            style="background:#f0d28a;"
-                        >
-                            Generate Free Flyer
-                        </button>
-                    </form>
+        <div class="mt-5 text-center text-[12px] text-white/55">
+            Takes less than 30 seconds to start.
+        </div>
+    </div>
 
-                    <div class="mt-5 text-center text-[12px] text-white/55">
-                        Takes less than 30 seconds to start.
-                    </div>
+    {{-- 5TH PROPERTY CARD --}}
+    @if($rightItem)
+        @php
+            $photoObj = $rightItem->thePhotos->where('def','=','1')->first();
+            $photo    = $photoObj?->photoName;
+
+            $listingImg = null;
+            if ($photo && !empty($rightItem->theMeta?->zipDir) && !empty($rightItem->theMeta?->mlsDir)) {
+                $listingImg = "https://realtyrepublic.com/hqphotos/{$rightItem->theMeta->zipDir}/{$rightItem->theMeta->mlsDir}/{$photo}";
+            }
+
+            $agentImg = null;
+            if (!empty($rightItem->theAgent?->agtPhoto) && !empty($rightItem->theAgent?->theAgentCleanup?->newRemID)) {
+                $agentImg = "https://realtyrepublic.com/agentPhotos/{$rightItem->theAgent->theAgentCleanup->newRemID}/{$rightItem->theAgent->agtPhoto}";
+            } elseif (!empty($rightItem->theAgent?->agtPhoto) && !empty($rightItem->theOffice?->officeID)) {
+                $agentImg = "https://realtyemails.com/HQoffice/{$rightItem->theOffice->officeID}/{$rightItem->theAgent->agtPhoto}";
+            }
+
+            $street     = $rightItem->xFullStreet ?? '';
+            $cityLine   = trim(($rightItem->xCity ?? '') . ' ' . ($rightItem->xState ?? '') . ' ' . ($rightItem->xxZip ?? ''));
+            $agentName  = $rightItem->theAgent->agtFullName ?? '';
+            $officeName = $rightItem->theOffice->officeName ?? '';
+            $price      = $rightItem->xPrice ?? $rightItem->xListPrice ?? null;
+            $priceLabel = $price ? '$' . number_format((float) $price) : null;
+        @endphp
+
+        <article class="group w-full rounded-[24px] bg-white p-6 shadow-[0_8px_24px_rgba(0,0,0,.06)] ring-1 ring-black/5 transition hover:-translate-y-[2px] hover:shadow-[0_18px_40px_rgba(0,0,0,.10)]">
+
+            <div class="overflow-hidden rounded-[18px] h-[230px] bg-[#e8e8ec]">
+                @if($listingImg)
+                    <img
+                        src="{{ $listingImg }}"
+                        alt="{{ $street }}"
+                        class="h-full w-full object-cover transition duration-500 group-hover:scale-[1.035]"
+                    >
+                @endif
+            </div>
+
+            <div class="mt-4 flex items-center gap-3">
+                <div class="text-[11px] uppercase tracking-[0.16em] text-gray-400 font-semibold">
+                    #5 Trending
                 </div>
 
-            </aside>
+                @if($priceLabel)
+                    <span class="inline-flex rounded-full bg-[#214e9b] px-3 py-1 text-[11px] font-semibold text-white">
+                        {{ $priceLabel }}
+                    </span>
+                @endif
+            </div>
+
+            <a href="#" class="block mt-3 text-[22px] font-semibold leading-tight text-[#214e9b] hover:opacity-80">
+                {{ $street }}
+            </a>
+
+            <div class="mt-2 text-[15px] text-gray-600">
+                {{ $cityLine }}
+            </div>
+
+            <div class="mt-5 flex items-start gap-3">
+                @if($agentImg)
+                    <img
+                        src="{{ $agentImg }}"
+                        alt="{{ $agentName }}"
+                        class="h-16 w-auto rounded-xl object-cover ring-1 ring-black/10"
+                    >
+                @endif
+
+                <div>
+                    <div class="text-[12px] text-gray-500">
+                        Listed by:
+                    </div>
+
+                    <div class="text-[17px] text-[#214e9b] font-medium leading-tight">
+                        {{ $agentName }}
+                    </div>
+
+                    <div class="text-[14px] text-gray-600">
+                        {{ $officeName }}
+                    </div>
+                </div>
+            </div>
+
+        </article>
+    @endif
+
+</aside>
 
         </div>
     </div>
