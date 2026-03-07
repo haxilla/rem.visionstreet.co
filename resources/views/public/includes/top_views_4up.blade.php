@@ -214,6 +214,57 @@
                     </div>
                 </div>
 
+                {{-- RIGHT LOWER: Announce / Occasions mini-panel --}}
+@php
+    $occasionItems = $occasionItems ?? [
+        ['icon' => 'ti-eye',           'title' => 'Pre-MLS'],
+        ['icon' => 'ti-announcement',  'title' => 'Just Listed'],
+        ['icon' => 'ti-home',          'title' => 'Open House'],
+        ['icon' => 'ti-stats-down',    'title' => 'Reduced'],
+        ['icon' => 'ti-reload',        'title' => 'Updated'],
+        ['icon' => 'ti-hummer',        'title' => 'Builders'],
+    ];
+@endphp
+
+<div class="mt-7 rounded-[28px] bg-white p-6 sm:p-7 shadow-[0_12px_30px_rgba(0,0,0,.05)] ring-1 ring-black/5">
+    <div class="flex items-center gap-3">
+        <span class="flex h-11 w-11 items-center justify-center rounded-full bg-[#214e9b]/8 ring-1 ring-[#214e9b]/10">
+            <i class="ti-announcement text-[18px]" style="color: {{ $brandBlue }};"></i>
+        </span>
+
+        <div>
+            <div class="text-[12px] font-semibold uppercase tracking-[0.16em] text-gray-400">
+                Flyer Occasions
+            </div>
+            <h3 class="text-[24px] font-semibold leading-tight text-[#214e9b]">
+                Announce Your Listings
+            </h3>
+        </div>
+    </div>
+
+    <p class="mt-4 text-[15px] leading-7 text-gray-600">
+        Use Realty Emails for the moments that matter most.
+    </p>
+
+    <div class="mt-5 grid grid-cols-2 gap-3">
+        @foreach($occasionItems as $item)
+            <div class="flex items-center gap-3 rounded-[18px] bg-[#f7f9fd] px-4 py-3 ring-1 ring-[#214e9b]/8">
+                <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white ring-1 ring-[#214e9b]/10">
+                    <i class="{{ $item['icon'] }} text-[15px]" style="color: {{ $brandBlue }};"></i>
+                </span>
+
+                <span class="text-[14px] font-medium leading-tight text-[#214e9b]">
+                    {{ $item['title'] }}
+                </span>
+            </div>
+        @endforeach
+    </div>
+
+    <div class="mt-5 text-[13px] leading-6 text-gray-500">
+        From early interest to price improvements and updates, create the right flyer for the right moment.
+    </div>
+</div>
+
             </aside>
 
 
