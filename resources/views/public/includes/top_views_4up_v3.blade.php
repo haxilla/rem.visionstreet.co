@@ -137,81 +137,81 @@
             </div>
 
 
-{{-- RIGHT COLUMN --}}
-<aside class="flex flex-col items-start gap-7">
+            {{-- RIGHT COLUMN --}}
+            <aside class="flex flex-col items-start gap-7">
 
-    {{-- FREE FLYER SIDEBAR --}}
-    <div class="w-full rounded-[30px] bg-[#1e3566] px-7 pb-7 pt-14 sm:px-8 sm:pb-8 sm:pt-16 shadow-[0_20px_55px_rgba(0,0,0,.22)]">
+                {{-- FREE FLYER SIDEBAR --}}
+                <div class="w-full rounded-[30px] bg-[#1e3566] px-7 pb-7 pt-14 sm:px-8 sm:pb-8 sm:pt-16 shadow-[0_20px_55px_rgba(0,0,0,.22)]">
 
-        <div class="flex flex-col items-center text-center">
+                    <div class="flex flex-col items-center text-center">
 
-            <div
-                class="flex h-[64px] w-[64px] items-center justify-center rounded-full border-2 shadow-lg"
-                style="border-color: {{ $brandGold }}; background: rgba(255,255,255,.06);"
-            >
-                <i class="ti-wand text-[22px]" style="color:#f0d28a;"></i>
-            </div>
+                        <div
+                            class="flex h-[64px] w-[64px] items-center justify-center rounded-full border-2 shadow-lg"
+                            style="border-color: {{ $brandGold }}; background: rgba(255,255,255,.06);"
+                        >
+                            <i class="ti-wand text-[22px]" style="color:#f0d28a;"></i>
+                        </div>
 
-            <div class="mt-5 text-[12px] uppercase tracking-[0.18em] text-white/60 font-semibold">
-                Flyer Creation Wizard
-            </div>
+                        <div class="mt-5 text-[12px] uppercase tracking-[0.18em] text-white/60 font-semibold">
+                            Flyer Creation Wizard
+                        </div>
 
-            <h3 class="font-display mt-3 text-[34px] leading-[1.03] text-white">
-                Start With a<br>Free Flyer
-            </h3>
+                        <h3 class="font-display mt-3 text-[34px] leading-[1.03] text-white">
+                            Start With a<br>Free Flyer
+                        </h3>
 
-            <div class="mt-5 h-[2px] w-20 rounded-full bg-[#f0d28a]"></div>
+                        <div class="mt-5 h-[2px] w-20 rounded-full bg-[#f0d28a]"></div>
 
-            <p class="mt-5 max-w-[320px] text-[15px] leading-7 text-white/80">
-                Enter your email and a property address or MLS number and we’ll instantly generate a flyer draft you can preview.
-            </p>
-        </div>
+                        <p class="mt-5 max-w-[320px] text-[15px] leading-7 text-white/80">
+                            Enter your email and a property address or MLS number and we’ll instantly generate a flyer draft you can preview.
+                        </p>
+                    </div>
 
-        <form method="post" action="#" class="mt-7 space-y-4">
-            @csrf
+                    <form method="post" action="#" class="mt-7 space-y-4">
+                        @csrf
 
-            <div>
-                <label class="mb-1.5 block text-[12px] uppercase tracking-[0.14em] text-white/60 font-semibold">
-                    Email
-                </label>
+                        <div>
+                            <label class="mb-1.5 block text-[12px] uppercase tracking-[0.14em] text-white/60 font-semibold">
+                                Email
+                            </label>
 
-                <input
-                    type="email"
-                    name="email"
-                    placeholder="Your email"
-                    class="w-full rounded-[14px] border border-gray-200 bg-white px-4 py-3 text-[15px] text-gray-800"
-                >
-            </div>
+                            <input
+                                type="email"
+                                name="email"
+                                placeholder="Your email"
+                                class="w-full rounded-[14px] border border-gray-200 bg-white px-4 py-3 text-[15px] text-gray-800"
+                            >
+                        </div>
 
-            <div>
-                <label class="mb-1.5 block text-[12px] uppercase tracking-[0.14em] text-white/60 font-semibold">
-                    Address or MLS#
-                </label>
+                        <div>
+                            <label class="mb-1.5 block text-[12px] uppercase tracking-[0.14em] text-white/60 font-semibold">
+                                Address or MLS#
+                            </label>
 
-                <input
-                    type="text"
-                    name="listing_input"
-                    placeholder="Address or MLS# of listing"
-                    class="w-full rounded-[14px] border border-gray-200 bg-white px-4 py-3 text-[15px] text-gray-800"
-                >
-            </div>
+                            <input
+                                type="text"
+                                name="listing_input"
+                                placeholder="Address or MLS# of listing"
+                                class="w-full rounded-[14px] border border-gray-200 bg-white px-4 py-3 text-[15px] text-gray-800"
+                            >
+                        </div>
 
-            <button
-                type="submit"
-                class="w-full rounded-full py-3.5 text-[15px] font-semibold text-[#1d2f5f] shadow-lg transition hover:-translate-y-[1px]"
-                style="background:#f0d28a;"
-            >
-                Generate Free Flyer
-            </button>
-        </form>
+                        <button
+                            type="submit"
+                            class="w-full rounded-full py-3.5 text-[15px] font-semibold text-[#1d2f5f] shadow-lg transition hover:-translate-y-[1px]"
+                            style="background:#f0d28a;"
+                        >
+                            Generate Free Flyer
+                        </button>
+                    </form>
 
-        <div class="mt-5 text-center text-[12px] text-white/55">
-            Takes less than 30 seconds to start.
-        </div>
-    </div>
+                    <div class="mt-5 text-center text-[12px] text-white/55">
+                        Takes less than 30 seconds to start.
+                    </div>
+                </div>
 
 
-</aside>
+            </aside>
 
         </div>
     </div>
