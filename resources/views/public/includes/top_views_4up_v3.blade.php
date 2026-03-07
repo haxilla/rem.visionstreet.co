@@ -139,15 +139,6 @@
 
             <aside class="flex flex-col items-start gap-7">
 
-                                    {{-- flyer visual --}}
-                        <div class="mt-5 flex justify-center">
-                            <img
-                                src="{{ asset('images/2FlyerPerspective.gif') }}"
-                                alt="Flyer preview"
-                                class="h-auto w-auto max-w-[210px] sm:max-w-[240px] object-contain rotate-[7deg] drop-shadow-[0_18px_24px_rgba(0,0,0,.28)]"
-                            >
-                        </div>
-
                 {{-- FREE FLYER SIDEBAR --}}
                 <div class="w-full rounded-[30px] bg-[#1e3566] p-7 sm:p-8 shadow-[0_20px_55px_rgba(0,0,0,.22)]">
 
