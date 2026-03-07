@@ -16,7 +16,7 @@
         @include('public.includes.top_views')
     </section>
     <section>
-        @include('public.includes.wide_99_promo')
+        @include('public.includes.top_views_3')
     </section>
 
 
