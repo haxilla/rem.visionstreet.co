@@ -138,134 +138,135 @@
 
 
             {{-- RIGHT SIDEBAR --}}
-            <aside class="flex items-start">
-
-                <div class="relative w-full rounded-[30px] bg-[#1e3566] p-7 sm:p-8 shadow-[0_20px_55px_rgba(0,0,0,.22)] overflow-hidden">
-
-                    <div class="absolute -top-16 right-[-40px] w-64 h-64 bg-white/8 blur-3xl rounded-full"></div>
-                    <div class="absolute bottom-[-50px] left-[-40px] w-72 h-72 bg-[#f0d28a]/10 blur-3xl rounded-full"></div>
-
-                    <div class="relative z-10">
-
-                        <div class="flex justify-center">
-                            <div class="flex items-center justify-center w-[70px] h-[70px] rounded-full border-2 shadow-lg"
-                                style="border-color: {{ $brandGold }}; background: rgba(255,255,255,.06);">
-                                <i class="ti-wand text-[24px]" style="color:#f0d28a;"></i>
-                            </div>
-                        </div>
-
-                        <div class="mt-5 text-center text-[12px] uppercase tracking-[0.18em] text-white/60 font-semibold">
-                            Flyer Creation Wizard
-                        </div>
-
-                        <h3 class="font-display text-center text-[36px] leading-[1.05] mt-3 text-white">
-                            Start With a<br>Free Flyer
-                        </h3>
-
-                        <div class="mx-auto mt-5 w-20 h-[2px] bg-[#f0d28a] rounded-full"></div>
-
-                        <p class="text-center text-[15px] text-white/80 leading-7 mt-5 max-w-[300px] mx-auto">
-                            Enter your email and a property address or MLS number and we'll instantly generate a flyer draft you can preview.
-                        </p>
-
-                        <form method="post" action="#" class="mt-7 space-y-4">
-                        @csrf
-
-                            <div>
-                                <label class="block text-[12px] uppercase tracking-[0.14em] text-white/60 font-semibold mb-1.5">
-                                    Email
-                                </label>
-
-                                <input
-                                    type="email"
-                                    name="email"
-                                    placeholder="Your email"
-                                    class="w-full rounded-[14px] bg-white px-4 py-3 text-[15px] text-gray-800 border border-gray-200"
-                                >
-                            </div>
-
-                            <div>
-                                <label class="block text-[12px] uppercase tracking-[0.14em] text-white/60 font-semibold mb-1.5">
-                                    Address or MLS#
-                                </label>
-
-                                <input
-                                    type="text"
-                                    name="listing_input"
-                                    placeholder="Address or MLS# of listing"
-                                    class="w-full rounded-[14px] bg-white px-4 py-3 text-[15px] text-gray-800 border border-gray-200"
-                                >
-                            </div>
-
-                            <button
-                                type="submit"
-                                class="w-full rounded-full py-3.5 text-[15px] font-semibold text-[#1d2f5f] shadow-lg transition hover:-translate-y-[1px]"
-                                style="background:#f0d28a;"
-                            >
-                                Generate Free Flyer
-                            </button>
-
-                        </form>
-
-                        <div class="text-center text-[12px] text-white/55 mt-5">
-                            Takes less than 30 seconds to start.
-                        </div>
-
-                    </div>
-                </div>
-
-                {{-- RIGHT LOWER: Announce / Occasions mini-panel --}}
+{{-- RIGHT COLUMN --}}
 @php
     $occasionItems = $occasionItems ?? [
-        ['icon' => 'ti-eye',           'title' => 'Pre-MLS'],
-        ['icon' => 'ti-announcement',  'title' => 'Just Listed'],
-        ['icon' => 'ti-home',          'title' => 'Open House'],
-        ['icon' => 'ti-stats-down',    'title' => 'Reduced'],
-        ['icon' => 'ti-reload',        'title' => 'Updated'],
-        ['icon' => 'ti-hummer',        'title' => 'Builders'],
+        ['icon' => 'ti-eye',          'title' => 'Pre-MLS'],
+        ['icon' => 'ti-announcement', 'title' => 'Just Listed'],
+        ['icon' => 'ti-home',         'title' => 'Open House'],
+        ['icon' => 'ti-stats-down',   'title' => 'Reduced'],
+        ['icon' => 'ti-reload',       'title' => 'Updated'],
+        ['icon' => 'ti-hummer',       'title' => 'Builders'],
     ];
 @endphp
 
-<div class="mt-7 rounded-[28px] bg-white p-6 sm:p-7 shadow-[0_12px_30px_rgba(0,0,0,.05)] ring-1 ring-black/5">
-    <div class="flex items-center gap-3">
-        <span class="flex h-11 w-11 items-center justify-center rounded-full bg-[#214e9b]/8 ring-1 ring-[#214e9b]/10">
-            <i class="ti-announcement text-[18px]" style="color: {{ $brandBlue }};"></i>
-        </span>
+<aside class="flex flex-col items-start gap-7">
 
-        <div>
-            <div class="text-[12px] font-semibold uppercase tracking-[0.16em] text-gray-400">
-                Flyer Occasions
+    {{-- FREE FLYER SIDEBAR --}}
+    <div class="relative w-full rounded-[30px] bg-[#1e3566] p-7 sm:p-8 shadow-[0_20px_55px_rgba(0,0,0,.22)] overflow-hidden">
+
+        <div class="absolute -top-16 right-[-40px] w-64 h-64 bg-white/8 blur-3xl rounded-full"></div>
+        <div class="absolute bottom-[-50px] left-[-40px] w-72 h-72 bg-[#f0d28a]/10 blur-3xl rounded-full"></div>
+
+        <div class="relative z-10">
+
+            <div class="flex justify-center">
+                <div class="flex items-center justify-center w-[70px] h-[70px] rounded-full border-2 shadow-lg"
+                     style="border-color: {{ $brandGold }}; background: rgba(255,255,255,.06);">
+                    <i class="ti-wand text-[24px]" style="color:#f0d28a;"></i>
+                </div>
             </div>
-            <h3 class="text-[24px] font-semibold leading-tight text-[#214e9b]">
-                Announce Your Listings
+
+            <div class="mt-5 text-center text-[12px] uppercase tracking-[0.18em] text-white/60 font-semibold">
+                Flyer Creation Wizard
+            </div>
+
+            <h3 class="font-display text-center text-[36px] leading-[1.05] mt-3 text-white">
+                Start With a<br>Free Flyer
             </h3>
+
+            <div class="mx-auto mt-5 w-20 h-[2px] bg-[#f0d28a] rounded-full"></div>
+
+            <p class="text-center text-[15px] text-white/80 leading-7 mt-5 max-w-[300px] mx-auto">
+                Enter your email and a property address or MLS number and we’ll instantly generate a flyer draft you can preview.
+            </p>
+
+            <form method="post" action="#" class="mt-7 space-y-4">
+                @csrf
+
+                <div>
+                    <label class="block text-[12px] uppercase tracking-[0.14em] text-white/60 font-semibold mb-1.5">
+                        Email
+                    </label>
+
+                    <input
+                        type="email"
+                        name="email"
+                        placeholder="Your email"
+                        class="w-full rounded-[14px] bg-white px-4 py-3 text-[15px] text-gray-800 border border-gray-200"
+                    >
+                </div>
+
+                <div>
+                    <label class="block text-[12px] uppercase tracking-[0.14em] text-white/60 font-semibold mb-1.5">
+                        Address or MLS#
+                    </label>
+
+                    <input
+                        type="text"
+                        name="listing_input"
+                        placeholder="Address or MLS# of listing"
+                        class="w-full rounded-[14px] bg-white px-4 py-3 text-[15px] text-gray-800 border border-gray-200"
+                    >
+                </div>
+
+                <button
+                    type="submit"
+                    class="w-full rounded-full py-3.5 text-[15px] font-semibold text-[#1d2f5f] shadow-lg transition hover:-translate-y-[1px]"
+                    style="background:#f0d28a;"
+                >
+                    Generate Free Flyer
+                </button>
+            </form>
+
+            <div class="text-center text-[12px] text-white/55 mt-5">
+                Takes less than 30 seconds to start.
+            </div>
+
         </div>
     </div>
 
-    <p class="mt-4 text-[15px] leading-7 text-gray-600">
-        Use Realty Emails for the moments that matter most.
-    </p>
+    {{-- ANNOUNCE / OCCASIONS MINI-PANEL --}}
+    <div class="w-full rounded-[28px] bg-white p-6 sm:p-7 shadow-[0_12px_30px_rgba(0,0,0,.05)] ring-1 ring-black/5">
+        <div class="flex items-start gap-3">
+            <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#214e9b]/8 ring-1 ring-[#214e9b]/10">
+                <i class="ti-announcement text-[18px]" style="color: {{ $brandBlue }};"></i>
+            </span>
 
-    <div class="mt-5 grid grid-cols-2 gap-3">
-        @foreach($occasionItems as $item)
-            <div class="flex items-center gap-3 rounded-[18px] bg-[#f7f9fd] px-4 py-3 ring-1 ring-[#214e9b]/8">
-                <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white ring-1 ring-[#214e9b]/10">
-                    <i class="{{ $item['icon'] }} text-[15px]" style="color: {{ $brandBlue }};"></i>
-                </span>
-
-                <span class="text-[14px] font-medium leading-tight text-[#214e9b]">
-                    {{ $item['title'] }}
-                </span>
+            <div>
+                <div class="text-[12px] font-semibold uppercase tracking-[0.16em] text-gray-400">
+                    Flyer Occasions
+                </div>
+                <h3 class="mt-1 text-[24px] font-semibold leading-tight text-[#214e9b]">
+                    Announce Your Listings
+                </h3>
             </div>
-        @endforeach
+        </div>
+
+        <p class="mt-4 text-[15px] leading-7 text-gray-600">
+            Use Realty Emails for the moments that matter most.
+        </p>
+
+        <div class="mt-5 grid grid-cols-2 gap-3">
+            @foreach($occasionItems as $item)
+                <div class="flex items-center gap-3 rounded-[18px] bg-[#f9fafc] px-4 py-3 ring-1 ring-[#214e9b]/8">
+                    <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white ring-1 ring-[#214e9b]/10">
+                        <i class="{{ $item['icon'] }} text-[15px]" style="color: {{ $brandBlue }};"></i>
+                    </span>
+
+                    <span class="text-[14px] font-medium leading-tight text-[#214e9b]">
+                        {{ $item['title'] }}
+                    </span>
+                </div>
+            @endforeach
+        </div>
+
+        <div class="mt-5 text-[13px] leading-6 text-gray-500">
+            From early interest to price improvements and updates, create the right flyer for the right moment.
+        </div>
     </div>
 
-    <div class="mt-5 text-[13px] leading-6 text-gray-500">
-        From early interest to price improvements and updates, create the right flyer for the right moment.
-    </div>
-</div>
-
-            </aside>
+</aside>
 
 
         </div>
