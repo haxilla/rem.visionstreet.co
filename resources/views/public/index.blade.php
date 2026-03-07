@@ -29,7 +29,7 @@
         ['icon' => 'ti-eye', 'title' => 'Pre-MLS'],
         ['icon' => 'ti-announcement', 'title' => 'Just Listed'],
         ['icon' => 'ti-home', 'title' => 'Open House'],
-        ['icon' => 'ti-down', 'title' => 'Reduced'],
+        ['icon' => 'ti-stats-down', 'title' => 'Reduced'],
         ['icon' => 'ti-reload', 'title' => 'Updated'],
         ['icon' => 'ti-hummer', 'title' => 'Builders'],
     ];
