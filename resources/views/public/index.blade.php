@@ -207,6 +207,84 @@
                 </div>
             </aside>
 
+            {{-- RIGHT: Polished free trial sidebar --}}
+<aside class="flex items-center">
+    <div class="w-full rounded-[30px] bg-white p-6 sm:p-8 shadow-[0_14px_36px_rgba(0,0,0,.05)] ring-1 ring-black/5">
+
+        {{-- Top badge --}}
+        <div class="flex justify-center">
+            <div
+                class="flex h-[68px] w-[68px] items-center justify-center rounded-full border-2 shadow-sm"
+                style="border-color: {{ $brandGold }}; background-color: rgba(33,78,155,.06);"
+            >
+                <i class="ti-wand text-[24px]" style="color: {{ $brandBlue }};"></i>
+            </div>
+        </div>
+
+        {{-- Eyebrow --}}
+        <div class="mt-5 text-center text-[12px] font-semibold uppercase tracking-[0.16em] text-gray-500">
+            Flyer Creation Wizard
+        </div>
+
+        {{-- Heading --}}
+        <h3 class="font-display mt-3 text-center text-[34px] sm:text-[38px] leading-[1.02] text-[#1c1d22]">
+            Create Your<br>First Flyer Free
+        </h3>
+
+        {{-- Supporting copy --}}
+        <p class="mx-auto mt-4 max-w-[290px] text-center text-[15px] leading-7 text-gray-600">
+            Enter your email and a property address or MLS number to instantly create a polished flyer draft.
+        </p>
+
+        {{-- Divider --}}
+        <div class="mx-auto mt-6 h-px w-full bg-[#edf0f5]"></div>
+
+        {{-- Form --}}
+        <form class="mt-6 space-y-4" method="post" action="#">
+            @csrf
+
+            <div>
+                <label class="mb-1.5 block text-[13px] font-medium text-[#374151]">
+                    Email
+                </label>
+                <input
+                    type="email"
+                    name="email"
+                    class="w-full rounded-[16px] border border-[#dde3ee] bg-white px-5 py-3.5 text-[15px] text-gray-800 placeholder:text-gray-400 outline-none transition focus:border-[#214e9b] focus:ring-2 focus:ring-[#214e9b]/10"
+                    placeholder="Your email"
+                >
+            </div>
+
+            <div>
+                <label class="mb-1.5 block text-[13px] font-medium text-[#374151]">
+                    Address or MLS#
+                </label>
+                <input
+                    type="text"
+                    name="listing_input"
+                    class="w-full rounded-[16px] border border-[#dde3ee] bg-white px-5 py-3.5 text-[15px] text-gray-800 placeholder:text-gray-400 outline-none transition focus:border-[#214e9b] focus:ring-2 focus:ring-[#214e9b]/10"
+                    placeholder="Address or MLS# of flyer to create"
+                >
+            </div>
+
+            <div class="pt-2">
+                <button
+                    type="submit"
+                    class="inline-flex w-full items-center justify-center rounded-full px-6 py-3.5 text-[15px] font-semibold text-white shadow-[0_10px_20px_rgba(33,78,155,.18)] transition hover:-translate-y-[1px] hover:brightness-105"
+                    style="background-color: {{ $brandBlue }};"
+                >
+                    Create Free Flyer
+                </button>
+            </div>
+        </form>
+
+        {{-- Footer note --}}
+        <div class="mt-5 text-center text-[12px] leading-6 text-gray-500">
+            Fast, simple, and designed to help your listing stand out.
+        </div>
+    </div>
+</aside>
+
         </div>
     </div>
 </section>
