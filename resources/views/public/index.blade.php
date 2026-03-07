@@ -153,60 +153,6 @@
                 </div>
             </div>
 
-            {{-- RIGHT: Free trial sidebar --}}
-            <aside class="flex items-center">
-                <div class="w-full rounded-[28px] bg-[#eceaf8] px-6 py-8 sm:px-8 sm:py-10 shadow-[0_12px_34px_rgba(0,0,0,.04)] ring-1 ring-black/5">
-                    <div class="flex flex-col items-center text-center">
-                        <div
-                            class="flex h-[84px] w-[84px] items-center justify-center rounded-full border-[4px]"
-                            style="background-color: {{ $brandBlue }}; border-color: {{ $brandGold }};"
-                        >
-                            <i class="ti-wand text-[34px]" style="color: #f5c14d;"></i>
-                        </div>
-
-                        <div class="mt-5 text-[15px] italic leading-none" style="color: {{ $brandBlue }};">
-                            Flyer Creation Wizard
-                        </div>
-
-                        <h3 class="mt-3 text-[38px] sm:text-[44px] font-extrabold leading-none" style="color: {{ $brandBlue }};">
-                            FREE TRIAL!
-                        </h3>
-
-                        <p class="mt-5 max-w-[300px] text-[18px] leading-8" style="color: {{ $brandBlue }};">
-                            If it’s your listing and online anywhere, our system will find it and auto create it.
-                        </p>
-                    </div>
-
-                    <form class="mt-8 space-y-4" method="post" action="#">
-                        @csrf
-
-                        <input
-                            type="email"
-                            name="email"
-                            class="w-full rounded-full border-0 bg-white px-6 py-4 text-center text-[16px] text-gray-700 placeholder:text-gray-500 outline-none shadow-sm"
-                            placeholder="Your Email"
-                        >
-
-                        <input
-                            type="text"
-                            name="listing_input"
-                            class="w-full rounded-full border-0 bg-white px-6 py-4 text-center text-[16px] text-gray-700 placeholder:text-gray-500 outline-none shadow-sm"
-                            placeholder="Address or MLS# of Flyer to Create"
-                        >
-
-                        <div class="pt-3 flex justify-center">
-                            <button
-                                type="submit"
-                                class="inline-flex items-center justify-center rounded-full px-8 py-4 text-[16px] font-semibold text-white shadow-[0_8px_18px_rgba(0,0,0,.12)] transition hover:brightness-105"
-                                style="background-color: {{ $brandBlue }}; box-shadow: 0 0 0 4px {{ $brandGold }} inset;"
-                            >
-                                Create FREE Flyer
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </aside>
-
             {{-- RIGHT: Polished free trial sidebar --}}
 <aside class="flex items-center">
     <div class="w-full rounded-[30px] bg-white p-6 sm:p-8 shadow-[0_14px_36px_rgba(0,0,0,.05)] ring-1 ring-black/5">
