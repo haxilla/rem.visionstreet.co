@@ -151,8 +151,8 @@
         <img
             src="{{ asset('images/2FlyerPerspective.gif') }}"
             alt="Flyer preview"
-            class="h-auto w-[135px] lg:w-[155px] object-contain drop-shadow-[0_18px_24px_rgba(0,0,0,.28)]"
-        >
+            class="h-auto max-w-[220px] lg:max-w-[260px] object-contain drop-shadow-[0_20px_28px_rgba(0,0,0,.30)]"
+        />
     </div>
 
     <div class="relative z-10">
