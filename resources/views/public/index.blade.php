@@ -28,23 +28,8 @@
     $brandGold      = $brandGold ?? '#e79a63';
 @endphp
 
-<section class="w-full bg-[#f5f5f7] py-12 lg:py-16">
+<section class="w-full py-12 lg:py-16">
     <div class="mx-auto w-full max-w-screen-2xl px-4 sm:px-6 lg:px-10" style="max-width: {{ $sectionMax }};">
-
-        {{-- Header --}}
-        <div class="text-center max-w-4xl mx-auto">
-            <div class="flex justify-center">
-                <i class="ti-bookmark text-[28px] leading-none" style="color: {{ $brandBlue }};"></i>
-            </div>
-
-            <h2 class="font-display mt-2 text-[30px] sm:text-[42px] font-medium leading-none text-[#1c1d22]">
-                {!! $topViewedTitle !!}
-            </h2>
-
-            <div class="mt-5 text-[15px] sm:text-[17px] leading-7 text-gray-600 max-w-3xl mx-auto">
-                See the most popular listings on Realty Emails today. This section highlights properties drawing standout interest and offers a quick snapshot of what is resonating most right now.
-            </div>
-        </div>
 
         {{-- Main layout --}}
         <div class="mt-10 grid grid-cols-1 xl:grid-cols-[2fr_1fr] gap-8 xl:gap-8 items-start">
@@ -55,8 +40,19 @@
                     <div class="text-[13px] font-semibold uppercase tracking-[0.16em] text-gray-500">
                         Popular Listings
                     </div>
-                    <div class="mt-1 text-[20px] sm:text-[24px] font-semibold text-[#1d2433]">
-                        Most viewed properties right now
+                    {{-- Header --}}
+                    <div class="text-center max-w-4xl mx-auto">
+                        <div class="flex justify-center">
+                            <i class="ti-bookmark text-[28px] leading-none" style="color: {{ $brandBlue }};"></i>
+                        </div>
+
+                        <h2 class="font-display mt-2 text-[30px] sm:text-[42px] font-medium leading-none text-[#1c1d22]">
+                            {!! $topViewedTitle !!}
+                        </h2>
+
+                        <div class="mt-5 text-[15px] sm:text-[17px] leading-7 text-gray-600 max-w-3xl mx-auto">
+                            See the most popular listings on Realty Emails today. This section highlights properties drawing standout interest and offers a quick snapshot of what is resonating most right now.
+                        </div>
                     </div>
                 </div>
 
