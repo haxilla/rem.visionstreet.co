@@ -187,26 +187,6 @@
                             Promote every listing you have for one low price. Each property may be sent once, with free resends available after 30 days upon request.
                         </p>
 
-                        <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-[760px]">
-                            <div class="rounded-[22px] border border-white/12 bg-white/10 px-5 py-4 backdrop-blur-sm">
-                                <div class="text-[12px] font-semibold uppercase tracking-[0.14em] text-white/58">
-                                    Built for active agents
-                                </div>
-                                <div class="mt-2 text-[18px] font-semibold leading-snug text-white">
-                                    Advertise multiple listings without per-property pricing.
-                                </div>
-                            </div>
-
-                            <div class="rounded-[22px] border border-white/12 bg-white/10 px-5 py-4 backdrop-blur-sm">
-                                <div class="text-[12px] font-semibold uppercase tracking-[0.14em] text-white/58">
-                                    Simple and flexible
-                                </div>
-                                <div class="mt-2 text-[18px] font-semibold leading-snug text-white">
-                                    Clean pricing with resends available after 30 days.
-                                </div>
-                            </div>
-                        </div>
-
                         <div class="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-[15px] sm:text-[16px] text-white/82">
                             <div class="flex items-center gap-3">
                                 <span class="h-2.5 w-2.5 rounded-full bg-[#f0d28a]"></span>
@@ -270,16 +250,6 @@
                                     class="w-full rounded-2xl border border-white/12 bg-white/96 px-4 py-3 text-[15px] text-gray-900 placeholder:text-gray-400 outline-none"
                                     placeholder="Your brokerage"
                                 >
-                            </div>
-
-                            <div>
-                                <label class="mb-1.5 block text-[13px] font-medium text-white/80">Address of listing to advertise</label>
-                                <textarea
-                                    name="listing_address"
-                                    rows="3"
-                                    class="w-full rounded-2xl border border-white/12 bg-white/96 px-4 py-3 text-[15px] text-gray-900 placeholder:text-gray-400 outline-none resize-none"
-                                    placeholder="Enter the property address"
-                                ></textarea>
                             </div>
 
                             <div class="pt-2">
