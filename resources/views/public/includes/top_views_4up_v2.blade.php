@@ -146,7 +146,9 @@
                     <div class="relative z-10">
 
                         <div class="flex justify-center">
-                            <img src="{{ asset('images/2FlyerPerspective.gif') }}" alt="Realty Emails">
+                            <div>
+                                <img src="{{ asset('images/2FlyerPerspective.gif') }}" alt="Realty Emails">
+                            </div>
                             <div class="flex items-center justify-center w-[70px] h-[70px] rounded-full border-2 shadow-lg"
                                 style="border-color: {{ $brandGold }}; background: rgba(255,255,255,.06);">
                                 <i class="ti-wand text-[24px]" style="color:#f0d28a;"></i>
