@@ -139,13 +139,14 @@
 
             {{-- RIGHT COLUMN --}}
             <aside class="flex flex-col items-start gap-7">
-                <img src="{{ asset('images/2FlyerPerspective.gif') }}" alt="Realty Emails">
+                
                 {{-- FREE FLYER SIDEBAR --}}
                 <div class="relative w-full rounded-[30px] bg-[#1e3566] p-7 sm:p-8 shadow-[0_20px_55px_rgba(0,0,0,.22)] overflow-hidden">
 
                     <div class="relative z-10">
 
                         <div class="flex justify-center">
+                            <img src="{{ asset('images/2FlyerPerspective.gif') }}" alt="Realty Emails">
                             <div class="flex items-center justify-center w-[70px] h-[70px] rounded-full border-2 shadow-lg"
                                 style="border-color: {{ $brandGold }}; background: rgba(255,255,255,.06);">
                                 <i class="ti-wand text-[24px]" style="color:#f0d28a;"></i>
