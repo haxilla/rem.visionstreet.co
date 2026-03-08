@@ -139,7 +139,11 @@
 
             {{-- RIGHT COLUMN --}}
             <aside class="flex flex-col items-start gap-7">
-
+                
+                {{-- served thousands image --}}
+                <div class="w-full rounded-[30px]">
+                    <img src="{{ asset('images/realtyemails-served-thousands.jpg') }}" alt="Realty Emails">
+                </div>
                 {{-- FREE FLYER SIDEBAR --}}
                 <div class="w-full rounded-[30px] bg-[#1e3566] px-7 pb-7 pt-14 sm:px-8 sm:pb-8 sm:pt-16 shadow-[0_20px_55px_rgba(0,0,0,.22)]">
 
@@ -209,11 +213,6 @@
                         Takes less than 30 seconds to start.
                     </div>
                 </div>
-
-                <div>
-                    <img src="{{ asset('images/realtyemails-served-thousands.jpg') }}" alt="Realty Emails">
-                </div>
-
 
             </aside>
 
