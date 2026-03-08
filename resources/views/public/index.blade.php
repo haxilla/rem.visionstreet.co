@@ -14,14 +14,9 @@
     <section >
         @include('public.includes.top_views_4up_v1')
     </section>
-
-
-
-    
-
-
-
-
+    <section >
+        @include('public.includes.top_views_4up_v2')
+    </section>
 
 </body>
 </html>
