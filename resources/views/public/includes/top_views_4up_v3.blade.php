@@ -138,7 +138,7 @@
 
 
             {{-- RIGHT COLUMN --}}
-            <aside class="flex flex-col items-start gap-7">
+            <aside class="grid w-full grid-cols-1 gap-7 md:grid-cols-2 lg:grid-cols-1">
                 
                 {{-- served thousands image --}}
                 <div class="w-full rounded-[30px] overflow-hidden shadow-[0_20px_55px_rgba(0,0,0,.15)]">
