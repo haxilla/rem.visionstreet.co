@@ -14,7 +14,7 @@
     <section>
         @include('public.includes.free_flyer_served_v1')
     </section>
-    <section style="background: #f7f5f5;">
+    <section style="background: #f7f5f5;padding-top: 60px;">
         @include('public.includes.top_views')
     </section>
 </body>
