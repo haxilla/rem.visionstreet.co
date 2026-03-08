@@ -146,13 +146,11 @@
                     <div class="relative z-10">
 
                         <div class="flex justify-center">
-                            <div>
-                                <img src="{{ asset('images/2FlyerPerspective.gif') }}" alt="Realty Emails">
-                            </div>
-                            <div class="flex items-center justify-center w-[70px] h-[70px] rounded-full border-2 shadow-lg"
-                                style="border-color: {{ $brandGold }}; background: rgba(255,255,255,.06);">
-                                <i class="ti-wand text-[24px]" style="color:#f0d28a;"></i>
-                            </div>
+                            <img src="{{ asset('images/2FlyerPerspective.gif') }}" alt="Realty Emails">
+                        </div>
+                        <div class="flex items-center justify-center w-[70px] h-[70px] rounded-full border-2 shadow-lg"
+                        style="border-color: {{ $brandGold }}; background: rgba(255,255,255,.06);">
+                            <i class="ti-wand text-[24px]" style="color:#f0d28a;"></i>
                         </div>
 
                         <div class="mt-5 text-center text-[12px] uppercase tracking-[0.18em] text-white/60 font-semibold">
