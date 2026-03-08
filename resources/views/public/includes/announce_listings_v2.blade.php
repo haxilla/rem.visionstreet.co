@@ -18,12 +18,12 @@
 <div class="w-full py-16 lg:py-24">
     <div class="mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-8">
 
-        {{-- TOP: flyer left, headline right --}}
-        <div class="grid grid-cols-1 lg:grid-cols-[340px_minmax(0,1fr)] xl:grid-cols-[380px_minmax(0,1fr)] items-start gap-10 lg:gap-14">
+        {{-- TOP: flyer left, headline right from md up --}}
+        <div class="grid grid-cols-1 md:grid-cols-[250px_minmax(0,1fr)] lg:grid-cols-[300px_minmax(0,1fr)] xl:grid-cols-[360px_minmax(0,1fr)] items-start gap-8 md:gap-10 lg:gap-14">
 
             {{-- LEFT: FLYERS --}}
-            <div class="lg:pt-2">
-                <div class="mx-auto max-w-[260px] sm:max-w-[290px] md:max-w-[310px] lg:max-w-[340px] xl:max-w-[380px] lg:mx-0">
+            <div class="md:pt-2">
+                <div class="mx-auto max-w-[240px] sm:max-w-[260px] md:max-w-[250px] lg:max-w-[300px] xl:max-w-[360px] md:mx-0">
                     <img
                         src="{{ $flyerImage }}"
                         alt="Luxury real estate flyer examples"
@@ -31,13 +31,13 @@
                     >
                 </div>
 
-                <div class="mt-3 text-center lg:text-left italic text-sm text-gray-500">
+                <div class="mt-3 text-center md:text-left italic text-sm text-gray-500">
                     ** Flyers shown are examples only **
                 </div>
             </div>
 
             {{-- RIGHT: HEADLINE / COPY --}}
-            <div class="lg:pt-2">
+            <div class="md:pt-2">
                 <div class="mb-4 inline-flex items-center gap-3">
                     <span class="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[#e8eefb] text-[#214e9b] shadow-inner">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -54,11 +54,11 @@
                     </span>
                 </div>
 
-                <h2 class="max-w-[13ch] font-serif text-[2.2rem] leading-[1.05] text-[#18233b] sm:text-[2.8rem] xl:text-[3.15rem]">
+                <h2 class="max-w-[11ch] md:max-w-[12ch] xl:max-w-[13ch] font-serif text-[2.1rem] leading-[1.05] text-[#18233b] sm:text-[2.5rem] lg:text-[3rem] xl:text-[3.15rem]">
                     {{ $headline }}
                 </h2>
 
-                <p class="mt-6 max-w-[820px] text-[1.05rem] leading-8 text-[#5b6475] sm:text-[1.12rem]">
+                <p class="mt-6 max-w-[820px] text-[1rem] leading-8 text-[#5b6475] sm:text-[1.08rem]">
                     {{ $copy }}
                 </p>
             </div>
