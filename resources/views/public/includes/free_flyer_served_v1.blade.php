@@ -47,7 +47,7 @@
                             <div class="mt-4 h-[2px] w-20 rounded-full" style="background: {{ $brandGold }};"></div>
 
                             <p class="mt-5 max-w-[270px] text-[16px] leading-8 text-white/88">
-                                Enter your name, email and a property address or MLS number and we’ll instantly generate a flyer draft you can preview.
+                                Enter your name, email and a property address or MLS number and we’ll instantly create a draft.
                             </p>
 
                             <div class="mt-4 text-[12px] text-white/55">
