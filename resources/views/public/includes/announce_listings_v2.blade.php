@@ -22,7 +22,7 @@
         <div class="grid grid-cols-1 md:grid-cols-[250px_minmax(0,1fr)] lg:grid-cols-[300px_minmax(0,1fr)] xl:grid-cols-[360px_minmax(0,1fr)] items-start gap-8 md:gap-10 lg:gap-14">
 
             {{-- LEFT: FLYERS --}}
-            <div class="md:pt-2">
+            <div class="md:pt-2 md:-mt-10 lg:-mt-16">
                 <div class="mx-auto max-w-[240px] sm:max-w-[260px] md:max-w-[250px] lg:max-w-[300px] xl:max-w-[360px] md:mx-0">
                     <img
                         src="{{ $flyerImage }}"
@@ -54,7 +54,7 @@
                     </span>
                 </div>
 
-                <h2 class="max-w-[11ch] md:max-w-[12ch] xl:max-w-[13ch] font-serif text-[2.1rem] leading-[1.05] text-[#18233b] sm:text-[2.5rem] lg:text-[3rem] xl:text-[3.15rem]">
+                <h2 class="max-w-[18ch] md:max-w-[20ch] xl:max-w-[24ch] font-serif text-[2.1rem] leading-[1.05] text-[#18233b] sm:text-[2.6rem] lg:text-[3rem] xl:text-[3.2rem]">
                     {{ $headline }}
                 </h2>
 
