@@ -150,7 +150,7 @@
             @endphp
 
             <aside class="flex flex-col items-start gap-7">
-                <img src="{{ asset('images/2FlyerPerspective.gif') }}" alt="Realty Emails" class="shadow-lg">
+                <img src="{{ asset('images/2FlyerPerspective.gif') }}" alt="Realty Emails">
                 {{-- FREE FLYER SIDEBAR --}}
                 <div class="relative w-full rounded-[30px] bg-[#1e3566] p-7 sm:p-8 shadow-[0_20px_55px_rgba(0,0,0,.22)] overflow-hidden">
 
