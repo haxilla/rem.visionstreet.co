@@ -11,14 +11,8 @@
     <section>
         @include('public.includes.features_section')
     </section>
-    <section>
-        @include('public.includes.wide_99_promo')
-    </section>
     <section >
-        @include('public.includes.top_views_4up_v1')
-    </section>
-    <section >
-        @include('public.includes.top_views_4up_v2')
+        @include('public.includes.top_views_4up_v3')
     </section>
 
 </body>
