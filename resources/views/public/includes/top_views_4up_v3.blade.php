@@ -210,6 +210,10 @@
                     </div>
                 </div>
 
+                <div>
+                    <img src="{{ asset('assets/images/realtyemails-served-thousands.png') }}" alt="Realty Emails">
+                </div>
+
 
             </aside>
 
