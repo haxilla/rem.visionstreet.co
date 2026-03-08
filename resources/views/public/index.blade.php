@@ -85,6 +85,9 @@
                             class="block w-full h-auto select-none drop-shadow-[0_30px_55px_rgba(15,23,42,0.18)]"
                         >
                     </div>
+                    <div>
+                        ** Flyers shown are examples only **
+                    </div>
                 </div>
 
                 {{-- RIGHT: CONTENT --}}
