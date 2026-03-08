@@ -143,9 +143,6 @@
                 {{-- FREE FLYER SIDEBAR --}}
                 <div class="relative w-full rounded-[30px] bg-[#1e3566] p-7 sm:p-8 shadow-[0_20px_55px_rgba(0,0,0,.22)] overflow-hidden">
 
-                    <div class="absolute -top-16 right-[-40px] w-64 h-64 bg-white/8 blur-3xl rounded-full"></div>
-                    <div class="absolute bottom-[-50px] left-[-40px] w-72 h-72 bg-[#f0d28a]/10 blur-3xl rounded-full"></div>
-
                     <div class="relative z-10">
 
                         <div class="flex justify-center">
