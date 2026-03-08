@@ -27,7 +27,7 @@
     $eyebrow  = $eyebrow ?? 'FLYER OCCASIONS';
     $copy     = $copy ?? 'Use RealtyEmails for every stage of your listing — from pre-MLS marketing to open houses, price reductions, updated listings, and new construction phases.';
 
-    $flyerImage = $flyerImage ?? asset('images/luxury-flyers-example.jpg');
+    $flyerImage = $flyerImage ?? asset('images/luxury-flyers-example.png');
 
     $occasionCards = $occasionCards ?? [
         [
