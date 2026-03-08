@@ -8,32 +8,32 @@
     $occasionCards = $occasionCards ?? [
         [
             'title' => 'Pre-MLS',
-            'desc'  => 'Generate interest before going live',
+            'desc'  => 'Build interest before launch',
             'icon'  => 'eye',
         ],
         [
             'title' => 'Just Listed',
-            'desc'  => 'Promote your newest listing launch',
+            'desc'  => 'Promote your newest listing',
             'icon'  => 'home',
         ],
         [
             'title' => 'Open House',
-            'desc'  => 'Advertise upcoming showing events',
+            'desc'  => 'Advertise showing events',
             'icon'  => 'calendar',
         ],
         [
             'title' => 'Reduced',
-            'desc'  => 'Highlight new pricing to attract buyers',
+            'desc'  => 'Highlight pricing updates',
             'icon'  => 'tag',
         ],
         [
             'title' => 'Updated',
-            'desc'  => 'Share listing changes and fresh details',
+            'desc'  => 'Share listing changes',
             'icon'  => 'refresh',
         ],
         [
             'title' => 'Builders',
-            'desc'  => 'Market new construction opportunities',
+            'desc'  => 'Market new homes',
             'icon'  => 'building',
         ],
     ];
@@ -42,29 +42,28 @@
 <div class="w-full py-16 lg:py-24">
     <div class="mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-8">
         <div class="overflow-hidden rounded-[32px] border border-[#e6e8ee] bg-gradient-to-br from-[#eef3fb] via-white to-[#f8f8fb] shadow-[0_20px_60px_rgba(16,24,40,0.08)]">
-            <div class="grid grid-cols-1 lg:grid-cols-[1.05fr_.95fr] items-center gap-8 lg:gap-0">
+            <div class="grid grid-cols-1 lg:grid-cols-[1.08fr_.92fr] items-start gap-8 lg:gap-0">
 
                 {{-- LEFT: FLYER VISUAL --}}
-                <div class="relative px-6 py-10 sm:px-10 lg:px-14 lg:py-16">
-
-                    <div class="relative mx-auto max-w-[640px]">
+                <div class="relative px-6 pt-10 pb-8 sm:px-10 lg:px-14 lg:pt-16 lg:pb-12 self-start">
+                    <div class="relative mx-auto max-w-[640px] lg:mx-0">
                         <img
                             src="{{ $flyerImage }}"
                             alt="Luxury real estate flyer examples"
-                            class="block h-auto select-none drop-shadow-[0_30px_55px_rgba(15,23,42,0.18)]"
+                            class="block h-auto w-auto max-w-full select-none drop-shadow-[0_22px_40px_rgba(15,23,42,0.14)]"
                         >
                     </div>
-                    <div class="text-center italic text-sm text-gray-500 mt-2">
+
+                    <div class="mt-3 text-center lg:text-left italic text-sm text-gray-500">
                         ** Flyers shown are examples only **
                     </div>
                 </div>
 
                 {{-- RIGHT: CONTENT --}}
-                <div class="px-6 py-10 sm:px-10 lg:px-12 lg:py-16">
-                    <div class="max-w-[620px]">
+                <div class="px-6 pt-10 pb-10 sm:px-10 lg:px-12 lg:pt-16 lg:pb-16 self-start">
+                    <div class="max-w-[700px]">
                         <div class="mb-4 inline-flex items-center gap-3">
                             <span class="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[#e8eefb] text-[#214e9b] shadow-inner">
-                                {{-- megaphone / flyer icon --}}
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M3 11v2"/>
                                     <path d="M6 10v4"/>
@@ -79,11 +78,11 @@
                             </span>
                         </div>
 
-                        <h2 class="max-w-[12ch] font-serif text-[2.2rem] leading-[1.05] text-[#18233b] sm:text-[2.8rem] lg:text-[3.35rem]">
+                        <h2 class="max-w-[13ch] font-serif text-[2.2rem] leading-[1.05] text-[#18233b] sm:text-[2.8rem] lg:max-w-none lg:text-[3.15rem]">
                             {{ $headline }}
                         </h2>
 
-                        <p class="mt-6 max-w-[560px] text-[1.05rem] leading-8 text-[#5b6475] sm:text-[1.12rem]">
+                        <p class="mt-6 max-w-[620px] text-[1.05rem] leading-8 text-[#5b6475] sm:text-[1.12rem]">
                             {{ $copy }}
                         </p>
 
@@ -139,11 +138,11 @@
                                             @endswitch
                                         </div>
 
-                                        <div>
+                                        <div class="min-w-0">
                                             <h3 class="text-[1.35rem] font-semibold tracking-[-0.02em] text-[#1d2a44]">
                                                 {{ $card['title'] }}
                                             </h3>
-                                            <p class="mt-1 text-[0.98rem] leading-7 text-[#687182]">
+                                            <p class="mt-1 text-[0.95rem] leading-7 text-[#687182]">
                                                 {{ $card['desc'] }}
                                             </p>
                                         </div>
