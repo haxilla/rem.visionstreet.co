@@ -7,10 +7,10 @@
 @endphp
 
 <section class="w-full py-10 lg:py-14">
-    <div class="mx-auto max-w-[1200px] px-4 sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-[1100px] px-4 sm:px-6 lg:px-8">
 
         <div class="overflow-hidden rounded-[28px] shadow-[0_18px_48px_rgba(0,0,0,.16)]">
-            <div class="grid grid-cols-1 md:grid-cols-[380px_minmax(0,1fr)] items-stretch">
+            <div class="grid grid-cols-1 md:grid-cols-[425px_minmax(0,1fr)] items-stretch">
 
                 {{-- LEFT: TRUST AD --}}
                 <div class="bg-white flex items-stretch">
