@@ -1,5 +1,5 @@
 @php
-    $headline = $headline ?? 'Email Digital Real Estate Flyers for Your Next Listing Event';
+    $headline = $headline ?? 'Email Digital Real Estate Flyers for Your Listings';
     $eyebrow  = $eyebrow ?? 'FLYER OCCASIONS';
     $copy     = $copy ?? 'Use RealtyEmails for every stage of your listing — from pre-MLS marketing to open houses, price reductions, updated listings, and new construction phases.';
 
