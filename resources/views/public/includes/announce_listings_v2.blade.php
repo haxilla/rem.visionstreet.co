@@ -46,19 +46,12 @@
 
                 {{-- LEFT: FLYER VISUAL --}}
                 <div class="relative px-6 py-10 sm:px-10 lg:px-14 lg:py-16">
-                    {{-- subtle background pattern --}}
-                    <div class="absolute inset-0 opacity-[0.035] pointer-events-none"
-                         style="background-image:
-                            linear-gradient(to right, #214e9b 1px, transparent 1px),
-                            linear-gradient(to bottom, #214e9b 1px, transparent 1px);
-                            background-size: 44px 44px;">
-                    </div>
 
                     <div class="relative mx-auto max-w-[640px]">
                         <img
                             src="{{ $flyerImage }}"
                             alt="Luxury real estate flyer examples"
-                            class="block w-full h-auto select-none drop-shadow-[0_30px_55px_rgba(15,23,42,0.18)]"
+                            class="block h-auto select-none drop-shadow-[0_30px_55px_rgba(15,23,42,0.18)]"
                         >
                     </div>
                     <div class="text-center italic text-sm text-gray-500 mt-2">
