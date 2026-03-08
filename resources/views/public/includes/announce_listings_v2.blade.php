@@ -1,3 +1,44 @@
+@php
+    $headline = $headline ?? 'Professional Flyers for Every Listing Event';
+    $eyebrow  = $eyebrow ?? 'FLYER OCCASIONS';
+    $copy     = $copy ?? 'Use RealtyEmails for every stage of your listing — from pre-MLS marketing to open houses, price reductions, updated listings, and new construction phases.';
+
+    $flyerImage = $flyerImage ?? asset('images/luxury-flyers-example.png');
+
+    $occasionCards = $occasionCards ?? [
+        [
+            'title' => 'Pre-MLS',
+            'desc'  => 'Build interest before launch',
+            'icon'  => 'eye',
+        ],
+        [
+            'title' => 'Just Listed',
+            'desc'  => 'Promote your newest listing',
+            'icon'  => 'home',
+        ],
+        [
+            'title' => 'Open House',
+            'desc'  => 'Advertise showing events',
+            'icon'  => 'calendar',
+        ],
+        [
+            'title' => 'Reduced',
+            'desc'  => 'Highlight pricing updates',
+            'icon'  => 'tag',
+        ],
+        [
+            'title' => 'Updated',
+            'desc'  => 'Share listing changes',
+            'icon'  => 'refresh',
+        ],
+        [
+            'title' => 'Builders',
+            'desc'  => 'Market new homes',
+            'icon'  => 'building',
+        ],
+    ];
+@endphp
+
 <div class="w-full py-16 lg:py-24">
     <div class="mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-8">
 
@@ -18,7 +59,7 @@
                 </div>
             </div>
 
-            {{-- RIGHT: HEADLINE + COPY + 2 ROWS OF 3 --}}
+            {{-- RIGHT: HEADLINE + COPY + CARDS --}}
             <div class="xl:pt-2">
                 <div class="max-w-none">
                     <div class="mb-4 inline-flex items-center gap-3">
@@ -57,6 +98,7 @@
                                                     <circle cx="12" cy="12" r="3"/>
                                                 </svg>
                                                 @break
+
                                             @case('home')
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
                                                     <path d="M3 10.5 12 3l9 7.5"/>
@@ -64,24 +106,28 @@
                                                     <path d="M9 21v-6h6v6"/>
                                                 </svg>
                                                 @break
+
                                             @case('calendar')
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
                                                     <rect x="3" y="5" width="18" height="16" rx="2"/>
                                                     <path d="M16 3v4M8 3v4M3 10h18"/>
                                                 </svg>
                                                 @break
+
                                             @case('tag')
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
                                                     <path d="M20.59 13.41 12 22l-9-9V4h9l8.59 8.59a2 2 0 0 1 0 2.82Z"/>
                                                     <circle cx="7.5" cy="8.5" r="1.5"/>
                                                 </svg>
                                                 @break
+
                                             @case('refresh')
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
                                                     <path d="M21 12a9 9 0 1 1-2.64-6.36"/>
                                                     <path d="M21 3v6h-6"/>
                                                 </svg>
                                                 @break
+
                                             @case('building')
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
                                                     <path d="M3 21h18"/>
