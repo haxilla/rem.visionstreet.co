@@ -42,12 +42,11 @@
 <div class="w-full py-16 lg:py-24">
     <div class="mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-8">
 
-        {{-- TOP AREA: flyers + headline together --}}
+        {{-- TOP AREA --}}
         <div class="grid grid-cols-1 xl:grid-cols-[440px_minmax(0,1fr)] items-start gap-8 lg:gap-12">
-
             {{-- LEFT: SMALLER FLYERS --}}
             <div class="relative pt-2">
-                <div class="relative mx-auto max-w-[360px] lg:max-w-[400px] xl:max-w-[430px]">
+                <div class="relative mx-auto max-w-[360px] lg:max-w-[390px] xl:max-w-[420px]">
                     <img
                         src="{{ $flyerImage }}"
                         alt="Luxury real estate flyer examples"
@@ -60,7 +59,7 @@
                 </div>
             </div>
 
-            {{-- RIGHT: HEADLINE / COPY --}}
+            {{-- RIGHT: HEADLINE / COPY / 2x3 MINI CARDS --}}
             <div class="pt-2">
                 <div class="mb-4 inline-flex items-center gap-3">
                     <span class="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[#e8eefb] text-[#214e9b] shadow-inner">
@@ -85,73 +84,73 @@
                 <p class="mt-6 max-w-[760px] text-[1.05rem] leading-8 text-[#5b6475] sm:text-[1.12rem]">
                     {{ $copy }}
                 </p>
-            </div>
-        </div>
 
-        {{-- BUTTONS UNDERNEATH: always 2 rows of 3 on md+ --}}
-        <div class="mt-12 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-            @foreach ($occasionCards as $card)
-                <div class="group rounded-[20px] border border-[#e4e7ef] bg-white/85 p-5 shadow-[0_8px_24px_rgba(15,23,42,0.05)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_14px_30px_rgba(15,23,42,0.08)]">
-                    <div class="flex items-start gap-4">
-                        <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#eef3ff] text-[#214e9b] transition duration-300 group-hover:bg-[#214e9b] group-hover:text-white">
-                            @switch($card['icon'])
-                                @case('eye')
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6Z"/>
-                                        <circle cx="12" cy="12" r="3"/>
-                                    </svg>
-                                    @break
+                {{-- MINI CARDS UNDER HEADLINE --}}
+                <div class="mt-10 grid grid-cols-2 gap-4 lg:grid-cols-3">
+                    @foreach ($occasionCards as $card)
+                        <div class="group min-w-0 rounded-[20px] border border-[#e4e7ef] bg-white/85 px-5 py-4 shadow-[0_8px_24px_rgba(15,23,42,0.05)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_14px_30px_rgba(15,23,42,0.08)]">
+                            <div class="flex items-start gap-3">
+                                <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#eef3ff] text-[#214e9b] transition duration-300 group-hover:bg-[#214e9b] group-hover:text-white">
+                                    @switch($card['icon'])
+                                        @case('eye')
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6Z"/>
+                                                <circle cx="12" cy="12" r="3"/>
+                                            </svg>
+                                            @break
 
-                                @case('home')
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M3 10.5 12 3l9 7.5"/>
-                                        <path d="M5 9.5V21h14V9.5"/>
-                                        <path d="M9 21v-6h6v6"/>
-                                    </svg>
-                                    @break
+                                        @case('home')
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M3 10.5 12 3l9 7.5"/>
+                                                <path d="M5 9.5V21h14V9.5"/>
+                                                <path d="M9 21v-6h6v6"/>
+                                            </svg>
+                                            @break
 
-                                @case('calendar')
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-                                        <rect x="3" y="5" width="18" height="16" rx="2"/>
-                                        <path d="M16 3v4M8 3v4M3 10h18"/>
-                                    </svg>
-                                    @break
+                                        @case('calendar')
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                                                <rect x="3" y="5" width="18" height="16" rx="2"/>
+                                                <path d="M16 3v4M8 3v4M3 10h18"/>
+                                            </svg>
+                                            @break
 
-                                @case('tag')
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M20.59 13.41 12 22l-9-9V4h9l8.59 8.59a2 2 0 0 1 0 2.82Z"/>
-                                        <circle cx="7.5" cy="8.5" r="1.5"/>
-                                    </svg>
-                                    @break
+                                        @case('tag')
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M20.59 13.41 12 22l-9-9V4h9l8.59 8.59a2 2 0 0 1 0 2.82Z"/>
+                                                <circle cx="7.5" cy="8.5" r="1.5"/>
+                                            </svg>
+                                            @break
 
-                                @case('refresh')
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M21 12a9 9 0 1 1-2.64-6.36"/>
-                                        <path d="M21 3v6h-6"/>
-                                    </svg>
-                                    @break
+                                        @case('refresh')
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M21 12a9 9 0 1 1-2.64-6.36"/>
+                                                <path d="M21 3v6h-6"/>
+                                            </svg>
+                                            @break
 
-                                @case('building')
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M3 21h18"/>
-                                        <path d="M5 21V7l7-4 7 4v14"/>
-                                        <path d="M9 10h.01M15 10h.01M9 14h.01M15 14h.01"/>
-                                    </svg>
-                                    @break
-                            @endswitch
+                                        @case('building')
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M3 21h18"/>
+                                                <path d="M5 21V7l7-4 7 4v14"/>
+                                                <path d="M9 10h.01M15 10h.01M9 14h.01M15 14h.01"/>
+                                            </svg>
+                                            @break
+                                    @endswitch
+                                </div>
+
+                                <div class="min-w-0">
+                                    <h3 class="text-[1rem] sm:text-[1.05rem] font-semibold leading-6 tracking-[-0.02em] text-[#1d2a44]">
+                                        {{ $card['title'] }}
+                                    </h3>
+                                    <p class="mt-1 text-[0.88rem] leading-6 text-[#687182]">
+                                        {{ $card['desc'] }}
+                                    </p>
+                                </div>
+                            </div>
                         </div>
-
-                        <div class="min-w-0">
-                            <h3 class="text-[1.35rem] font-semibold tracking-[-0.02em] text-[#1d2a44]">
-                                {{ $card['title'] }}
-                            </h3>
-                            <p class="mt-1 text-[0.95rem] leading-7 text-[#687182]">
-                                {{ $card['desc'] }}
-                            </p>
-                        </div>
-                    </div>
+                    @endforeach
                 </div>
-            @endforeach
+            </div>
         </div>
 
     </div>
