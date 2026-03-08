@@ -1,6 +1,6 @@
 {{-- =========================================
-   TRUST + FREE FLYER CONNECTED SECTION
-   Drop-in replacement
+   TRUST AD + FREE FLYER CONNECTED UNIT
+   Side-by-side, smaller, centered
 ========================================= --}}
 @php
     $brandBlue = $brandBlue ?? '#1e3566';
@@ -8,44 +8,46 @@
 @endphp
 
 <section class="w-full py-10 lg:py-14">
-    <div class="mx-auto max-w-[1120px] px-4 sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-[1040px] px-4 sm:px-6 lg:px-8">
 
-        <div class="overflow-hidden rounded-[30px] shadow-[0_20px_55px_rgba(0,0,0,.16)]">
-            <div class="grid grid-cols-1 xl:grid-cols-[320px_minmax(0,1fr)]">
+        <div class="overflow-hidden rounded-[28px] shadow-[0_18px_48px_rgba(0,0,0,.16)]">
+            <div class="grid grid-cols-1 md:grid-cols-[280px_minmax(0,1fr)]">
 
                 {{-- LEFT: TRUST AD --}}
                 <div class="bg-white">
                     <img
                         src="{{ asset('images/realtyemails-served-thousands.jpg') }}"
                         alt="RealtyEmails has served thousands of agents since 2006"
-                        class="block w-full h-auto"
+                        class="block w-full h-full object-cover"
                     >
                 </div>
 
                 {{-- RIGHT: FREE FLYER PANEL --}}
-                <div class="bg-[#1e3566] px-6 py-5 sm:px-7 sm:py-6 lg:px-8 lg:py-7">
-                    <div class="grid grid-cols-1 gap-5 lg:grid-cols-[300px_400px] lg:justify-center lg:items-start">
+                <div class="bg-[#1e3566] px-5 py-5 sm:px-6 sm:py-6 lg:px-7 lg:py-6">
+                    <div class="grid grid-cols-1 gap-5 lg:grid-cols-[260px_minmax(0,360px)] lg:items-start lg:justify-between">
 
-                        {{-- LEFT SIDE: ICON + TEXT --}}
-                        <div class="flex flex-col items-start text-left lg:pl-8">
-                            <div
-                                class="flex h-[58px] w-[58px] items-center justify-center rounded-full border-2"
-                                style="border-color: {{ $brandGold }}; background: rgba(255,255,255,.06);"
-                            >
-                                <i class="ti-wand text-[20px]" style="color: {{ $brandGold }};"></i>
+                        {{-- LEFT SIDE: TEXT --}}
+                        <div class="flex flex-col items-start text-left">
+                            <div class="flex items-center gap-3">
+                                <div
+                                    class="flex h-[50px] w-[50px] items-center justify-center rounded-full border-2 shrink-0"
+                                    style="border-color: {{ $brandGold }}; background: rgba(255,255,255,.06);"
+                                >
+                                    <i class="ti-wand text-[18px]" style="color: {{ $brandGold }};"></i>
+                                </div>
+
+                                <div class="text-[12px] font-semibold uppercase tracking-[0.18em] text-white/60">
+                                    Flyer Creation Wizard
+                                </div>
                             </div>
 
-                            <div class="mt-4 text-[12px] font-semibold uppercase tracking-[0.18em] text-white/60">
-                                Flyer Creation Wizard
-                            </div>
-
-                            <h3 class="font-display mt-2 text-[28px] leading-[1.02] text-white sm:text-[30px]">
+                            <h3 class="font-display mt-4 text-[26px] leading-[1.02] text-white sm:text-[28px]">
                                 Start With a<br>Free Flyer
                             </h3>
 
                             <div class="mt-4 h-[2px] w-20 rounded-full" style="background: {{ $brandGold }};"></div>
 
-                            <p class="mt-4 max-w-[320px] text-[15px] leading-7 text-white/80">
+                            <p class="mt-4 max-w-[260px] text-[15px] leading-7 text-white/80">
                                 Enter your email and a property address or MLS number and we’ll instantly generate a flyer draft you can preview.
                             </p>
 
@@ -55,7 +57,7 @@
                         </div>
 
                         {{-- RIGHT SIDE: FORM --}}
-                        <div class="w-full max-w-[420px] lg:ml-auto">
+                        <div class="w-full max-w-[360px] lg:ml-auto">
                             <form method="post" action="#" class="space-y-3">
                                 @csrf
 
@@ -63,7 +65,6 @@
                                     <label class="mb-1.5 block text-[12px] font-semibold uppercase tracking-[0.14em] text-white/60">
                                         Email
                                     </label>
-
                                     <input
                                         type="email"
                                         name="email"
@@ -76,7 +77,6 @@
                                     <label class="mb-1.5 block text-[12px] font-semibold uppercase tracking-[0.14em] text-white/60">
                                         Address or MLS#
                                     </label>
-
                                     <input
                                         type="text"
                                         name="listing_input"
