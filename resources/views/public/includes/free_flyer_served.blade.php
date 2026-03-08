@@ -1,6 +1,5 @@
 {{-- =========================================
    TRUST AD + FREE FLYER CONNECTED UNIT
-   corrected sizing / no head crop
 ========================================= --}}
 @php
     $brandBlue = $brandBlue ?? '#1e3566';
@@ -8,10 +7,10 @@
 @endphp
 
 <section class="w-full py-10 lg:py-14">
-    <div class="mx-auto max-w-[1080px] px-4 sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-[1100px] px-4 sm:px-6 lg:px-8">
 
         <div class="overflow-hidden rounded-[28px] shadow-[0_18px_48px_rgba(0,0,0,.16)]">
-            <div class="grid grid-cols-1 md:grid-cols-[300px_minmax(0,1fr)] items-stretch">
+            <div class="grid grid-cols-1 md:grid-cols-[340px_minmax(0,1fr)] items-stretch">
 
                 {{-- LEFT: TRUST AD --}}
                 <div class="bg-white flex items-stretch">
@@ -24,7 +23,7 @@
 
                 {{-- RIGHT: FREE FLYER PANEL --}}
                 <div class="bg-[#1e3566] px-6 py-6 sm:px-7 sm:py-7 lg:px-8 lg:py-8">
-                    <div class="grid grid-cols-1 gap-8 lg:grid-cols-[280px_minmax(0,390px)] lg:items-start lg:justify-between">
+                    <div class="grid grid-cols-1 gap-8 lg:grid-cols-[280px_minmax(0,400px)] lg:items-start lg:justify-between">
 
                         {{-- LEFT SIDE: TEXT --}}
                         <div class="flex flex-col items-start text-left">
@@ -48,7 +47,7 @@
                             <div class="mt-4 h-[2px] w-20 rounded-full" style="background: {{ $brandGold }};"></div>
 
                             <p class="mt-5 max-w-[270px] text-[16px] leading-8 text-white/88">
-                                Enter your email and a property address or MLS number and we’ll instantly generate a flyer draft you can preview.
+                                Enter your name, email and a property address or MLS number and we’ll instantly generate a flyer draft you can preview.
                             </p>
 
                             <div class="mt-4 text-[12px] text-white/55">
@@ -57,10 +56,24 @@
                         </div>
 
                         {{-- RIGHT SIDE: FORM --}}
-                        <div class="w-full max-w-[390px] lg:ml-auto self-center">
+                        <div class="w-full max-w-[400px] lg:ml-auto self-center">
                             <form method="post" action="#" class="space-y-4">
                                 @csrf
 
+                                {{-- NAME --}}
+                                <div>
+                                    <label class="mb-2 block text-[12px] font-semibold uppercase tracking-[0.14em] text-white/60">
+                                        Your Name
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="name"
+                                        placeholder="Your name"
+                                        class="block w-full rounded-[16px] border border-gray-200 bg-white px-5 py-3.5 text-[16px] text-gray-800 outline-none"
+                                    >
+                                </div>
+
+                                {{-- EMAIL --}}
                                 <div>
                                     <label class="mb-2 block text-[12px] font-semibold uppercase tracking-[0.14em] text-white/60">
                                         Email
@@ -73,6 +86,7 @@
                                     >
                                 </div>
 
+                                {{-- ADDRESS --}}
                                 <div>
                                     <label class="mb-2 block text-[12px] font-semibold uppercase tracking-[0.14em] text-white/60">
                                         Address or MLS#
