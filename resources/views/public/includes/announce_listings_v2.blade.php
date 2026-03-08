@@ -1,29 +1,11 @@
-@php
-    $headline = $headline ?? 'Professional Flyers for Every Listing Event';
-    $eyebrow  = $eyebrow ?? 'FLYER OCCASIONS';
-    $copy     = $copy ?? 'Use RealtyEmails for every stage of your listing — from pre-MLS marketing to open houses, price reductions, updated listings, and new construction phases.';
-
-    $flyerImage = $flyerImage ?? asset('images/luxury-flyers-example.png');
-
-    $occasionCards = $occasionCards ?? [
-        ['title' => 'Pre-MLS',     'desc' => 'Build interest before launch', 'icon' => 'eye'],
-        ['title' => 'Just Listed', 'desc' => 'Promote your newest listing',  'icon' => 'home'],
-        ['title' => 'Open House',  'desc' => 'Advertise showing events',     'icon' => 'calendar'],
-        ['title' => 'Reduced',     'desc' => 'Highlight pricing updates',    'icon' => 'tag'],
-        ['title' => 'Updated',     'desc' => 'Share listing changes',        'icon' => 'refresh'],
-        ['title' => 'Builders',    'desc' => 'Market new homes',             'icon' => 'building'],
-    ];
-@endphp
-
 <div class="w-full py-16 lg:py-24">
     <div class="mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-8">
 
-        {{-- STACK on normal screens, side-by-side only on very large --}}
-        <div class="grid grid-cols-1 2xl:grid-cols-[420px_minmax(0,1fr)] items-start gap-10 2xl:gap-14">
+        <div class="grid grid-cols-1 xl:grid-cols-[360px_minmax(0,1fr)] items-start gap-10 xl:gap-16">
 
-            {{-- FLYERS --}}
-            <div class="order-1 2xl:order-1">
-                <div class="mx-auto max-w-[320px] sm:max-w-[360px] lg:max-w-[390px] 2xl:max-w-[420px]">
+            {{-- LEFT: FLYERS --}}
+            <div class="xl:pt-2">
+                <div class="mx-auto max-w-[280px] sm:max-w-[320px] lg:max-w-[340px] xl:max-w-[360px] xl:mx-0">
                     <img
                         src="{{ $flyerImage }}"
                         alt="Luxury real estate flyer examples"
@@ -31,14 +13,14 @@
                     >
                 </div>
 
-                <div class="mt-3 text-center italic text-sm text-gray-500 2xl:text-left">
+                <div class="mt-3 text-center xl:text-left italic text-sm text-gray-500">
                     ** Flyers shown are examples only **
                 </div>
             </div>
 
-            {{-- HEADLINE / COPY / CARDS --}}
-            <div class="order-2 2xl:order-2">
-                <div class="max-w-[1100px] mx-auto 2xl:mx-0">
+            {{-- RIGHT: HEADLINE + COPY + 2 ROWS OF 3 --}}
+            <div class="xl:pt-2">
+                <div class="max-w-none">
                     <div class="mb-4 inline-flex items-center gap-3">
                         <span class="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[#e8eefb] text-[#214e9b] shadow-inner">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -59,12 +41,11 @@
                         {{ $headline }}
                     </h2>
 
-                    <p class="mt-6 max-w-[760px] text-[1.05rem] leading-8 text-[#5b6475] sm:text-[1.12rem]">
+                    <p class="mt-6 max-w-[820px] text-[1.05rem] leading-8 text-[#5b6475] sm:text-[1.12rem]">
                         {{ $copy }}
                     </p>
 
-                    {{-- 2 rows of 3 on desktop, 2 cols on medium, 1 on mobile --}}
-                    <div class="mt-10 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                    <div class="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         @foreach ($occasionCards as $card)
                             <div class="group min-w-0 rounded-[20px] border border-[#e4e7ef] bg-white/85 px-5 py-4 shadow-[0_8px_24px_rgba(15,23,42,0.05)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_14px_30px_rgba(15,23,42,0.08)]">
                                 <div class="flex items-start gap-3">
@@ -123,6 +104,7 @@
                             </div>
                         @endforeach
                     </div>
+
                 </div>
             </div>
 
