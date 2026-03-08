@@ -39,8 +39,8 @@
     ];
 @endphp
 
-<div class="w-full bg-[#f5f6fa] py-16 lg:py-24">
-    <div class="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
+<div class="w-full py-16 lg:py-24">
+    <div class="mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-8">
         <div class="overflow-hidden rounded-[32px] border border-[#e6e8ee] bg-gradient-to-br from-[#eef3fb] via-white to-[#f8f8fb] shadow-[0_20px_60px_rgba(16,24,40,0.08)]">
             <div class="grid grid-cols-1 lg:grid-cols-[1.05fr_.95fr] items-center gap-8 lg:gap-0">
 
