@@ -6,7 +6,7 @@
     $brandGold = $brandGold ?? '#f0d28a';
 @endphp
 
-<section class="w-full py-10 lg:py-14">
+<div class="w-full py-10 lg:py-14">
     <div class="mx-auto max-w-[1200px] px-4 sm:px-6 lg:px-8">
 
         <div class="overflow-hidden rounded-[28px] shadow-[0_18px_48px_rgba(0,0,0,.16)]">
@@ -116,4 +116,4 @@
         </div>
 
     </div>
-</section>
+</div>
