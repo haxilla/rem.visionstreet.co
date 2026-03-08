@@ -15,7 +15,7 @@
     ];
 @endphp
 
-<div class="w-full py-12 lg:py-14 bg-[#eef3fb]">
+<div class="w-full py-12 lg:py-14">
     <div class="mx-auto w-full max-w-screen-2xl px-4 sm:px-6 lg:px-10" style="max-width:1600px;">
 
         <div class="rounded-[28px] bg-white/72 px-6 py-8 sm:px-8 sm:py-9 shadow-[0_10px_28px_rgba(0,0,0,.04)] ring-1 ring-black/5 backdrop-blur-sm">
