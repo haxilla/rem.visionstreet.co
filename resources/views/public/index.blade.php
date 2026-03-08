@@ -15,7 +15,7 @@
         @include('public.includes.free_flyer_served_v1')
     </section>
     <section>
-        @include('public.includes.top_views_6up_v1')
+        @include('public.includes.top_views_2')
     </section>
 </body>
 </html>
