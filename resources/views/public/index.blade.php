@@ -11,6 +11,9 @@
     <section>
         @include('public.includes.features_section')
     </section>
+    <section>
+        @include('public.includes.free_flyer_served')
+    </section>
     <section >
         @include('public.includes.top_views_4up_v3')
     </section>
