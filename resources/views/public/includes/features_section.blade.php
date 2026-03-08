@@ -46,7 +46,7 @@ $brandBlue    = $brandBlue ?? '#214e9b';
 $dividerColor = $dividerColor ?? 'bg-[#e6ebf6]';
 @endphp
 
-<div class="mx-auto w-full max-w-screen-2xl px-4 sm:px-6 lg:px-10 py-14 lg:py-16" style="max-width:1600px;">
+<div class="mx-auto w-full max-w-screen-2xl px-4 sm:px-6 lg:px-10 pt-14 lg:pt-16" style="max-width:1600px;">
 
     {{-- Header --}}
     <div class="text-center">
@@ -113,12 +113,12 @@ $dividerColor = $dividerColor ?? 'bg-[#e6ebf6]';
 
     {{-- Footer line --}}
     <div class="mt-14 text-center">
-    <div class="text-[20px] font-extrabold tracking-wide" style="color: {{ $brandBlue }};">
-        PROVIDING AN EASY WAY
-    </div>
-    <div class="mt-1 text-[14px]" style="color: {{ $brandBlue }};">
-        to help you go beyond the average agent
-    </div>
+        <div class="text-[20px] font-extrabold tracking-wide" style="color: {{ $brandBlue }};">
+            PROVIDING AN EASY WAY
+        </div>
+        <div class="mt-1 text-[14px]" style="color: {{ $brandBlue }};">
+            to help you go beyond the average agent
+        </div>
     </div>
 
 </div>
