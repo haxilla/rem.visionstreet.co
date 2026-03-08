@@ -211,7 +211,7 @@
                 </div>
 
                 <div>
-                    <img src="{{ asset('assets/images/realtyemails-served-thousands.png') }}" alt="Realty Emails">
+                    <img src="{{ asset('images/realtyemails-served-thousands.png') }}" alt="Realty Emails">
                 </div>
 
 
