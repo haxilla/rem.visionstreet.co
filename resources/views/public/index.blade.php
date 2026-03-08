@@ -17,5 +17,8 @@
     <section>
         @include('public.includes.top_views_6up_v1')
     </section>
+    <section>
+        @include('public.includes.announce_listings')
+    </section>
 </body>
 </html>
