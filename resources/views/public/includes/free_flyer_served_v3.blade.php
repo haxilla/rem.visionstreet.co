@@ -82,21 +82,22 @@
                                 >
                             </div>
 
-                            <button
-                                type="submit"
-                                class="mt-3 w-full rounded-full py-4 text-[16px] font-semibold text-white
-                                    transition-all duration-200 hover:-translate-y-[2px]"
-                                style="
-                                    font-family: inherit;
-                                    background:
-                                        linear-gradient(#b32621,#b32621) padding-box,
-                                        linear-gradient(120deg,#ff4b2b,#ff9b00,#ffd84d) border-box;
-                                    border:3px solid transparent;
-                                    box-shadow:0 12px 28px rgba(0,0,0,.25);
-                                "
-                            >
-                                Generate Free Flyer
-                            </button>
+<button
+    type="submit"
+    class="mt-3 w-full rounded-full py-3.5 text-[16px] font-semibold text-white
+           transition-all duration-200 hover:-translate-y-[1px]"
+    style="
+        font-family: inherit;
+        background:#c43a2f;
+        border:3px solid transparent;
+        background:
+            linear-gradient(#c43a2f,#c43a2f) padding-box,
+            linear-gradient(120deg,#d8b35c,#f2d18b) border-box;
+        box-shadow:0 10px 22px rgba(0,0,0,.18);
+    "
+>
+    Generate Free Flyer
+</button>
                         </form>
                     </div>
                 </div>
