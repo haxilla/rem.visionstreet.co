@@ -77,17 +77,22 @@
                             </div>
 
                             {{-- BUTTON --}}
-                            <button
-                                type="submit"
-                                class="w-full rounded-full py-3.5 text-[16px] font-semibold text-white transition-all duration-200 hover:-translate-y-[1px]"
-                                style="
-                                    font-family: inherit;
-                                    background: linear-gradient(135deg,#4f6fdc,#6c63ff);
-                                    box-shadow:0 8px 20px rgba(0,0,0,.18);
-                                "
-                            >
-                                Generate Flyer
-                            </button>
+{{-- BUTTON --}}
+<button
+    type="submit"
+    class="w-full rounded-full py-3.5 text-[16px] font-semibold text-white
+           transition-all duration-200 hover:-translate-y-[1px]"
+    style="
+        font-family: inherit;
+        background:
+            linear-gradient(#5663f7,#5663f7) padding-box,
+            linear-gradient(135deg,#2f4fa6,#6c63ff) border-box;
+        border:3px solid transparent;
+        box-shadow:0 8px 20px rgba(0,0,0,.18);
+    "
+>
+    Generate Flyer
+</button>
 
                         </form>
 
