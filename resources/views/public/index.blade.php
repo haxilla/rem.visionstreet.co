@@ -12,7 +12,7 @@
         @include('public.includes.features_section')
     </section>
     <section>
-        @include('public.includes.free_flyer_served_v2')
+        @include('public.includes.free_flyer_served_v1')
     </section>
     <section>
         @include('public.includes.top_views_6up_v1')
