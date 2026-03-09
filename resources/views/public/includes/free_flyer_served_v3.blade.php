@@ -7,7 +7,7 @@
 @endphp
 
 <div class="w-full pt-8 pb-10 lg:pt-12 lg:pb-14">
-    <div class="mx-auto max-w-[1200px] px-4 sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-[850px] px-4 sm:px-6 lg:px-8">
 
         <div class="overflow-hidden rounded-[28px] shadow-[0_18px_48px_rgba(0,0,0,.16)]">
 
