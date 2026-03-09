@@ -1,6 +1,6 @@
 {{-- =========================================
    FREE FLYER CONNECTED UNIT
-   ENHANCED BLUE PANEL + PREMIUM TIE-IN DETAILS
+   SOFTER BLUE/PURPLE DEPTH VERSION
 ========================================= --}}
 @php
     $brandBlue = $brandBlue ?? '#2c4273';
@@ -14,19 +14,18 @@
 
                 {{-- LEFT PANEL --}}
                 <div
-                    class="relative px-8 py-10 lg:px-12 lg:py-12 flex items-center overflow-hidden"
+                    class="relative overflow-hidden px-8 py-10 lg:px-12 lg:py-12 flex items-center"
                     style="
                         background:
-                            radial-gradient(circle at 82% 18%, rgba(255,255,255,.10), transparent 20%),
-                            radial-gradient(circle at 18% 82%, rgba(123,102,232,.20), transparent 34%),
-                            linear-gradient(135deg,#2c4273 0%, #314a84 52%, #395596 100%);
+                            radial-gradient(circle at 78% 22%, rgba(122,102,232,.16), transparent 24%),
+                            radial-gradient(circle at 22% 82%, rgba(91,118,224,.16), transparent 34%),
+                            linear-gradient(135deg, #2c4273 0%, #314984 48%, #3b4fa0 78%, #5e58c9 118%);
                     "
                 >
-                    {{-- subtle premium overlays --}}
+                    {{-- subtle overlays --}}
                     <div class="pointer-events-none absolute inset-0">
                         <div class="absolute inset-x-0 top-0 h-px bg-white/10"></div>
-                        <div class="absolute left-0 top-0 h-full w-px bg-white/8"></div>
-                        <div class="absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,.04),transparent_38%,transparent_62%,rgba(255,255,255,.02))]"></div>
+                        <div class="absolute inset-0 bg-[linear-gradient(145deg,rgba(255,255,255,.03),transparent_34%,transparent_68%,rgba(123,102,232,.06))]"></div>
                     </div>
 
                     <div class="relative mx-auto max-w-[420px] text-center">
@@ -35,8 +34,8 @@
                         <div class="flex items-center justify-center gap-3 text-[12px] tracking-[0.18em] uppercase text-white/65">
                             <span>Flyer Creation Wizard</span>
 
-                            <div class="relative flex h-[48px] w-[48px] items-center justify-center rounded-full border border-white/35 bg-white/[0.03] shadow-[0_0_0_1px_rgba(255,255,255,.04),0_0_22px_rgba(127,185,255,.10)]">
-                                <div class="pointer-events-none absolute inset-0 rounded-full bg-[linear-gradient(135deg,rgba(127,185,255,.18),rgba(163,108,255,.10))]"></div>
+                            <div class="relative flex h-[48px] w-[48px] items-center justify-center rounded-full border border-white/30 bg-white/[0.025] shadow-[0_0_0_1px_rgba(255,255,255,.03)]">
+                                <div class="pointer-events-none absolute inset-0 rounded-full bg-[linear-gradient(135deg,rgba(127,185,255,.10),rgba(163,108,255,.10))]"></div>
                                 <i class="ti-wand relative text-[16px] text-white"></i>
                             </div>
                         </div>
@@ -45,12 +44,11 @@
                             Start With a<br>Free Flyer
                         </h3>
 
-                        {{-- separator tied to CTA palette --}}
+                        {{-- separator tied softly to CTA palette --}}
                         <div
                             class="mt-5 mx-auto h-[2px] w-20 rounded-full"
                             style="
-                                background: linear-gradient(90deg, rgba(127,185,255,.35), rgba(255,255,255,.82), rgba(163,108,255,.45));
-                                box-shadow: 0 0 16px rgba(140,114,255,.12);
+                                background: linear-gradient(90deg, rgba(127,185,255,.25), rgba(255,255,255,.75), rgba(163,108,255,.30));
                             "
                         ></div>
 
