@@ -7,7 +7,14 @@
     $brandGold      = $brandGold ?? '#e79a63';
 @endphp
 
-<div class="w-full bg-[#EEF1F7] py-12 lg:py-16">
+<div
+    class="w-full pt-12 pb-16 lg:pt-14 lg:pb-20"
+    style="
+        background:
+            linear-gradient(180deg, #f3f5fa 0%, #eef1f7 16%, #eef1f7 100%);
+        border-top: 1px solid rgba(255,255,255,.65);
+    "
+>
     <div class="mx-auto max-w-[1300px] px-4 sm:px-6 lg:px-10">
 
         {{-- Header --}}
