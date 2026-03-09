@@ -111,6 +111,7 @@ $dividerColor = $dividerColor ?? 'bg-[#e6ebf6]';
 
     </div>
 
+    <!--
     {{-- Footer line --}}
     <div class="mt-14 text-center">
         <div class="text-[20px] font-extrabold tracking-wide" style="color: {{ $brandBlue }};">
@@ -120,5 +121,6 @@ $dividerColor = $dividerColor ?? 'bg-[#e6ebf6]';
             to help you go beyond the average agent
         </div>
     </div>
+    -->
 
 </div>
