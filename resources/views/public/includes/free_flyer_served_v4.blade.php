@@ -1,6 +1,6 @@
 {{-- =========================================
    FREE FLYER CONNECTED UNIT
-   SOFTER BLUE/PURPLE DEPTH VERSION
+   WITH SUBTLE ANGLED CENTER SEAM
 ========================================= --}}
 @php
     $brandBlue = $brandBlue ?? '#2c4273';
@@ -28,9 +28,17 @@
                         <div class="absolute inset-0 bg-[linear-gradient(145deg,rgba(255,255,255,.03),transparent_34%,transparent_68%,rgba(123,102,232,.06))]"></div>
                     </div>
 
+                    {{-- angled seam --}}
+                    <div
+                        class="pointer-events-none absolute right-0 top-0 hidden h-full w-[42px] md:block"
+                        style="
+                            background: #eef1f7;
+                            clip-path: polygon(100% 0, 0 50%, 100% 100%);
+                        "
+                    ></div>
+
                     <div class="relative mx-auto max-w-[420px] text-center">
 
-                        {{-- WIZARD HEADER --}}
                         <div class="flex items-center justify-center gap-3 text-[12px] tracking-[0.18em] uppercase text-white/65">
                             <span>Flyer Creation Wizard</span>
 
@@ -44,7 +52,6 @@
                             Start With a<br>Free Flyer
                         </h3>
 
-                        {{-- separator tied softly to CTA palette --}}
                         <div
                             class="mt-5 mx-auto h-[2px] w-20 rounded-full"
                             style="
@@ -63,13 +70,12 @@
                 </div>
 
                 {{-- FORM PANEL --}}
-                <div class="bg-[#eef1f7] md:border-l border-white/10 px-8 py-10 lg:px-10 lg:py-12 flex items-center">
+                <div class="relative bg-[#eef1f7] px-8 py-10 lg:px-10 lg:py-12 flex items-center">
                     <div class="mx-auto w-full max-w-[420px]">
 
                         <form method="post" action="#" class="space-y-6">
                             @csrf
 
-                            {{-- EMAIL --}}
                             <div>
                                 <label class="mb-2 block text-[12px] font-semibold uppercase tracking-[0.14em] text-[#50627f]">
                                     Email
@@ -83,7 +89,6 @@
                                 >
                             </div>
 
-                            {{-- ADDRESS --}}
                             <div>
                                 <label class="mb-2 block text-[12px] font-semibold uppercase tracking-[0.14em] text-[#50627f]">
                                     Address or MLS#
@@ -97,7 +102,6 @@
                                 >
                             </div>
 
-                            {{-- BUTTON --}}
                             <button
                                 type="submit"
                                 class="w-full rounded-full py-3.5 text-[16px] font-semibold text-white transition-all duration-200 hover:-translate-y-[1px]"
