@@ -8,7 +8,7 @@
 @endphp
 
 <div class="w-full bg-[#f5f5f7] py-12 lg:py-16">
-    <div class="mx-auto max-w-[1300px] max-w-screen-2xl px-4 sm:px-6 lg:px-10">
+    <div class="mx-auto max-w-[1300px] px-4 sm:px-6 lg:px-10">
 
         {{-- Header --}}
         <div class="mb-10 text-center">
