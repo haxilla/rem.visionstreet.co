@@ -19,10 +19,11 @@
                         background:
                             radial-gradient(circle at 78% 22%, rgba(122,102,232,.16), transparent 24%),
                             radial-gradient(circle at 22% 82%, rgba(91,118,224,.16), transparent 34%),
-                            linear-gradient(135deg, #2c4273 0%, #314984 48%, #3b4fa0 78%, #5e58c9 118%);
+                            linear-gradient(135deg,#2c4273 0%, #314984 48%, #3b4fa0 78%, #5e58c9 118%);
+                        clip-path: polygon(0 0, 96% 0, 92% 50%, 96% 100%, 0 100%);
                     "
                 >
-                    {{-- subtle overlays --}}
+                                        {{-- subtle overlays --}}
                     <div class="pointer-events-none absolute inset-0">
                         <div class="absolute inset-x-0 top-0 h-px bg-white/10"></div>
                         <div class="absolute inset-0 bg-[linear-gradient(145deg,rgba(255,255,255,.03),transparent_34%,transparent_68%,rgba(123,102,232,.06))]"></div>
