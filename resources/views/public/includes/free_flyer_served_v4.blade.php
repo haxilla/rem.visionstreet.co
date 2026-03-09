@@ -10,7 +10,7 @@
     <div class="mx-auto max-w-[1000px] px-4 sm:px-6 lg:px-8">
 
         <div class="overflow-hidden rounded-[28px] shadow-[0_18px_48px_rgba(0,0,0,.12)]">
-            <div class="grid grid-cols-1 md:grid-cols-2 items-stretch">
+            <div class="grid grid-cols-1 md:grid-cols-2 items-stretch bg-[#eef1f7]">
 
                 {{-- LEFT PANEL --}}
                 <div
