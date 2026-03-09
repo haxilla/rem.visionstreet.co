@@ -1,6 +1,6 @@
 {{-- =========================================
    FREE FLYER CONNECTED UNIT
-   WITH SUBTLE ANGLED CENTER SEAM
+   CLEAN INWARD CHEVRON SEAM (POINTS TOWARD FORM)
 ========================================= --}}
 @php
     $brandBlue = $brandBlue ?? '#2c4273';
@@ -20,21 +20,22 @@
                             radial-gradient(circle at 78% 22%, rgba(122,102,232,.16), transparent 24%),
                             radial-gradient(circle at 22% 82%, rgba(91,118,224,.16), transparent 34%),
                             linear-gradient(135deg,#2c4273 0%, #314984 48%, #3b4fa0 78%, #5e58c9 118%);
-                        clip-path: polygon(0 0, 96% 0, 92% 50%, 96% 100%, 0 100%);
                     "
                 >
-                                        {{-- subtle overlays --}}
+                    {{-- subtle overlays --}}
                     <div class="pointer-events-none absolute inset-0">
                         <div class="absolute inset-x-0 top-0 h-px bg-white/10"></div>
                         <div class="absolute inset-0 bg-[linear-gradient(145deg,rgba(255,255,255,.03),transparent_34%,transparent_68%,rgba(123,102,232,.06))]"></div>
                     </div>
 
-                    {{-- angled seam --}}
+                    {{-- clean inward chevron cut --}}
                     <div
-                        class="pointer-events-none absolute right-0 top-0 hidden h-full w-[42px] md:block"
+                        class="pointer-events-none absolute right-0 top-0 hidden h-full md:block"
                         style="
+                            width: 44px;
                             background: #eef1f7;
                             clip-path: polygon(100% 0, 0 50%, 100% 100%);
+                            transform: translateX(1px);
                         "
                     ></div>
 
@@ -55,9 +56,7 @@
 
                         <div
                             class="mt-5 mx-auto h-[2px] w-20 rounded-full"
-                            style="
-                                background: linear-gradient(90deg, rgba(127,185,255,.25), rgba(255,255,255,.75), rgba(163,108,255,.30));
-                            "
+                            style="background: linear-gradient(90deg, rgba(127,185,255,.25), rgba(255,255,255,.75), rgba(163,108,255,.30));"
                         ></div>
 
                         <p class="mt-6 text-[16px] leading-8 text-white/92">
