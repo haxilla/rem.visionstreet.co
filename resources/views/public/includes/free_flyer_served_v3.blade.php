@@ -88,12 +88,9 @@
            transition-all duration-200 hover:-translate-y-[1px]"
     style="
         font-family: inherit;
-        background:#c43a2f;
-        border:3px solid transparent;
-        background:
-            linear-gradient(#c43a2f,#c43a2f) padding-box,
-            linear-gradient(120deg,#d8b35c,#f2d18b) border-box;
-        box-shadow:0 10px 22px rgba(0,0,0,.18);
+        background:#c53a2f;
+        border:2px solid {{ $brandGold }};
+        box-shadow:0 8px 18px rgba(0,0,0,.18);
     "
 >
     Generate Free Flyer
