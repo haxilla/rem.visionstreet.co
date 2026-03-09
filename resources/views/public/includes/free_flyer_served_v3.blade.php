@@ -82,18 +82,23 @@
                                 >
                             </div>
 
-                            <button
-                                type="submit"
-                                class="mt-2 w-full rounded-full py-4 text-[16px] font-semibold text-white 
-                                    shadow-[0_12px_24px_rgba(0,0,0,.16)] 
-                                    transition hover:-translate-y-[1px] hover:shadow-[0_16px_30px_rgba(0,0,0,.20)]"
-                                style="
-                                    background:#b9322c;
-                                    border:2px solid {{ $brandGold }};
-                                "
-                            >
-                                Generate Free Flyer
-                            </button>
+<button
+    type="submit"
+    class="mt-3 w-full rounded-full py-4 px-8
+           text-[17px] font-semibold tracking-[0.05em]
+           text-white
+           transition-all duration-200
+           hover:-translate-y-[2px]"
+    style="
+        background:#b52a24;
+        box-shadow:
+            0 0 0 3px {{ $brandGold }},
+            0 12px 26px rgba(0,0,0,.25);
+        font-family: 'Poppins', sans-serif;
+    "
+>
+    Generate Free Flyer
+</button>
                         </form>
                     </div>
                 </div>
