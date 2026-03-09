@@ -88,9 +88,7 @@
             linear-gradient(#5663f7,#5663f7) padding-box,
             linear-gradient(135deg,#3bd1ff,#7b5cff,#c15bff) border-box;
         border:3px solid transparent;
-        box-shadow:
-            0 0 0 2px rgba(90,120,255,.45),
-            0 10px 22px rgba(0,0,0,.18);
+        box-shadow:0 10px 22px rgba(0,0,0,.18);
     "
 >
     Generate Flyer
