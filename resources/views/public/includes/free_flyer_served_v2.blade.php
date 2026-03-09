@@ -7,8 +7,8 @@
     $brandGold = $brandGold ?? '#f0d28a';
 @endphp
 
-<section class="w-full py-10 lg:py-14">
-    <div class="mx-auto max-w-[1100px] px-4 sm:px-6 lg:px-8">
+<div class="w-full py-10 lg:py-14">
+    <div class="mx-auto max-w-[1200px] px-4 sm:px-6 lg:px-8">
 
         <div class="grid grid-cols-1 gap-6 md:grid-cols-[340px_minmax(0,1fr)] items-start">
 
@@ -112,4 +112,4 @@
         </div>
 
     </div>
-</section>
+</div>
