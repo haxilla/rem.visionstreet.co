@@ -43,7 +43,7 @@
                 </div>
 
                 {{-- FORM PANEL --}}
-                <div class="bg-[#eef1f7] px-8 py-10 lg:px-10 lg:py-12 flex items-center">
+                <div class="bg-[#2c4273] px-8 py-10 lg:px-10 lg:py-12 flex items-center">
 
                     <div class="mx-auto w-full max-w-[420px]">
 
@@ -52,7 +52,7 @@
 
                             {{-- EMAIL --}}
                             <div>
-                                <label class="mb-2 block text-[12px] font-semibold uppercase tracking-[0.14em] text-[#5c6b82]">
+                                <label class="mb-2 block text-[12px] font-semibold uppercase tracking-[0.14em] text-white/70">
                                     Email
                                 </label>
 
@@ -66,7 +66,7 @@
 
                             {{-- ADDRESS --}}
                             <div>
-                                <label class="mb-2 block text-[12px] font-semibold uppercase tracking-[0.14em] text-[#5c6b82]">
+                                <label class="mb-2 block text-[12px] font-semibold uppercase tracking-[0.14em] text-white/70">
                                     Address or MLS#
                                 </label>
 
