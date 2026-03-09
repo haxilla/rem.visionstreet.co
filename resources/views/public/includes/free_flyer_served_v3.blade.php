@@ -84,8 +84,13 @@
 
                             <button
                                 type="submit"
-                                class="mt-2 w-full rounded-full py-4 text-[16px] font-semibold text-[#1e3566] shadow-[0_12px_24px_rgba(0,0,0,.14)] transition hover:-translate-y-[1px] hover:shadow-[0_16px_28px_rgba(0,0,0,.18)]"
-                                style="background: {{ $buttonBg }};"
+                                class="mt-2 w-full rounded-full py-4 text-[16px] font-semibold text-white 
+                                    shadow-[0_12px_24px_rgba(0,0,0,.16)] 
+                                    transition hover:-translate-y-[1px] hover:shadow-[0_16px_30px_rgba(0,0,0,.20)]"
+                                style="
+                                    background:#b9322c;
+                                    border:2px solid {{ $brandGold }};
+                                "
                             >
                                 Generate Free Flyer
                             </button>
