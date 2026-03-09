@@ -84,17 +84,17 @@
 
 <button
     type="submit"
-    class="mt-3 w-full rounded-full py-3.5 text-[16px] font-semibold text-white
+    class="mt-3 w-full rounded-full py-3.5 text-[16px] font-semibold
            transition-all duration-200 hover:-translate-y-[1px]"
     style="
         font-family: inherit;
-        background:#cf3e32;
+        color:#1e3566;
+        background:linear-gradient(135deg,#e7c36a,#f3d88d);
         box-shadow:
-            0 0 0 2px {{ $brandGold }},
-            0 8px 18px rgba(0,0,0,.18);
+            0 6px 16px rgba(0,0,0,.18);
     "
 >
-    Generate Flyer
+    Generate Free Flyer
 </button>
                         </form>
                     </div>
