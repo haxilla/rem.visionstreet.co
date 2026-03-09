@@ -14,7 +14,7 @@
 
                 {{-- LEFT PANEL --}}
                 <div
-                    class="relative overflow-hidden px-8 py-10 lg:px-12 lg:py-12 flex items-center"
+                    class="relative overflow-hidden px-8 py-10 lg:px-12 lg:py-12 flex items-center before:absolute before:top-0 before:right-0 before:h-full before:w-[60px] before:bg-[#eef1f7] before:clip-path-[polygon(100%_0,0_50%,100%_100%)]"
                     style="
                         background:
                             radial-gradient(circle at 78% 22%, rgba(122,102,232,.16), transparent 24%),
