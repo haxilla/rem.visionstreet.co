@@ -38,7 +38,7 @@
                         <div class="mt-4 ml-auto h-[2px] w-20 rounded-full" style="background: {{ $brandGold }};"></div>
 
                         <p class="mt-6 ml-auto max-w-[400px] text-[16px] leading-8 text-white/88">
-                            Enter your name, email and a property address or MLS number and we’ll instantly create a draft.
+                            Enter your email and a property address or MLS number and we’ll instantly create a draft.
                         </p>
 
                         <div class="mt-5 text-[13px] text-white/55">
@@ -55,19 +55,6 @@
                     <div class="w-full max-w-[420px]">
                         <form method="post" action="#" class="space-y-5">
                             @csrf
-
-                            {{-- NAME --}}
-                            <div>
-                                <label class="mb-2 block text-[12px] font-semibold uppercase tracking-[0.14em] text-[#5f6472]">
-                                    Your Name
-                                </label>
-                                <input
-                                    type="text"
-                                    name="name"
-                                    placeholder="Your name"
-                                    class="block w-full rounded-[16px] border border-[#d9cfba] bg-white px-5 py-3.5 text-[16px] text-gray-800 outline-none"
-                                >
-                            </div>
 
                             {{-- EMAIL --}}
                             <div>
