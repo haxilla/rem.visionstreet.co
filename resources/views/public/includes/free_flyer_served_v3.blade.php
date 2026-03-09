@@ -77,22 +77,21 @@
                             </div>
 
                             {{-- BUTTON --}}
-{{-- BUTTON --}}
-<button
-    type="submit"
-    class="w-full rounded-full py-3.5 text-[16px] font-semibold text-white
-           transition-all duration-200 hover:-translate-y-[1px]"
-    style="
-        font-family: inherit;
-        background:
-            linear-gradient(#5663f7,#5663f7) padding-box,
-            linear-gradient(135deg,#3bd1ff,#7b5cff,#c15bff) border-box;
-        border:3px solid transparent;
-        box-shadow:0 10px 22px rgba(0,0,0,.18);
-    "
->
-    Generate Flyer
-</button>
+                            <button
+                                type="submit"
+                                class="w-full rounded-full py-3.5 text-[16px] font-semibold text-white
+                                    transition-all duration-200 hover:-translate-y-[1px]"
+                                style="
+                                    font-family: inherit;
+                                    background:
+                                        linear-gradient(90deg,#4f6de6,#6c63ff,#8a5cff) padding-box,
+                                        linear-gradient(135deg,#3bd1ff,#7b5cff,#c15bff) border-box;
+                                    border:3px solid transparent;
+                                    box-shadow:0 10px 22px rgba(0,0,0,.18);
+                                "
+                            >
+                                Generate Flyer
+                            </button>
                         </form>
 
                     </div>
