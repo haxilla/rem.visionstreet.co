@@ -88,12 +88,13 @@
            transition-all duration-200 hover:-translate-y-[1px]"
     style="
         font-family: inherit;
-        background:#c53a2f;
-        border:2px solid {{ $brandGold }};
-        box-shadow:0 8px 18px rgba(0,0,0,.18);
+        background:#cf3e32;
+        box-shadow:
+            0 0 0 2px {{ $brandGold }},
+            0 8px 18px rgba(0,0,0,.18);
     "
 >
-    Generate Free Flyer
+    Generate Flyer
 </button>
                         </form>
                     </div>
