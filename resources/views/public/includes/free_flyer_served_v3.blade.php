@@ -4,7 +4,7 @@
 @php
     $brandBlue = $brandBlue ?? '#1e3566';
     $brandGold = $brandGold ?? '#f0d28a';
-    $formBg    = $formBg ?? '#f3ecdc';
+    $formBg    = $formBg ?? '#f5f5f7';
     $buttonBg  = $buttonBg ?? '#dfb550';
 @endphp
 
