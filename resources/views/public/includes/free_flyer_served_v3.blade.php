@@ -94,7 +94,7 @@
             0 6px 16px rgba(0,0,0,.18);
     "
 >
-    Generate Free Flyer
+    Generate Flyer
 </button>
                         </form>
                     </div>
