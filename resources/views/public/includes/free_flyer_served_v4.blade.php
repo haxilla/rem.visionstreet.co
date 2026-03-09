@@ -13,9 +13,10 @@
 
                 {{-- LEFT PANEL --}}
                 <div class="bg-[#2c4273] px-8 py-10 lg:px-12 lg:py-12 flex items-center">
-                    <div class="ml-auto max-w-[420px] text-center">
+                    <div class="mx-auto max-w-[420px] text-center">
 
-                        <div class="flex items-center justify-end gap-3 text-[12px] tracking-[0.18em] uppercase text-white/60">
+                        {{-- WIZARD HEADER --}}
+                        <div class="flex items-center justify-center gap-3 text-[12px] tracking-[0.18em] uppercase text-white/60">
                             Flyer Creation Wizard
 
                             <div class="flex h-[48px] w-[48px] items-center justify-center rounded-full border border-white/40">
@@ -27,7 +28,8 @@
                             Start With a<br>Free Flyer
                         </h3>
 
-                        <div class="mt-4 ml-auto h-[2px] w-20 bg-white/40"></div>
+                        {{-- CENTERED SEPARATOR --}}
+                        <div class="mt-5 mx-auto h-[2px] w-20 bg-white/40"></div>
 
                         <p class="mt-6 text-[16px] leading-8 text-white/90">
                             Enter your email and a property address or MLS number and we’ll instantly create a draft.
@@ -41,9 +43,9 @@
                 </div>
 
                 {{-- FORM PANEL --}}
-                <div class="bg-[#f4f5f8] px-8 py-10 lg:px-10 lg:py-12 flex items-center">
+                <div class="bg-[#eef1f7] px-8 py-10 lg:px-10 lg:py-12 flex items-center">
 
-                    <div class="w-full max-w-[420px]">
+                    <div class="mx-auto w-full max-w-[420px]">
 
                         <form method="post" action="#" class="space-y-6">
                             @csrf
