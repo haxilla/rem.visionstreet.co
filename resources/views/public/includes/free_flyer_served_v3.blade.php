@@ -72,7 +72,7 @@
                 {{-- RIGHT: BLUE TEXT PANEL --}}
                 <div class="bg-[#1e3566] px-6 py-8 sm:px-7 sm:py-9 lg:px-10 lg:py-10 flex items-center">
 
-                    <div class="max-w-[350px]">
+                    <div class="max-w-[420px]">
 
                         <div class="flex items-center gap-3">
                             <div
