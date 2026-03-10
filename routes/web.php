@@ -1,9 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\public\guestController;
+use App\Http\Controllers\guest\guestController;
 use App\Http\Controllers\admin\adminController;
-use App\Http\Controllers\admin\memberController;
+use App\Http\Controllers\member\memberController;
 
 
 //index
