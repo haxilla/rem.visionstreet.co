@@ -12,15 +12,16 @@ Route::get('/', [
   'uses' => '\App\Http\Controllers\public\indexController@index',
 ]);
 
+//admin/login
+Route::redirect('/admin', '/admin/login');
 Route::get('/admin/login', [guestController::class, 'adminLoginForm'])->name('admin.login');
 Route::post('/admin/login', [guestController::class, 'adminLogin'])->name('admin.login.submit');
 
+//member/login
+Route::redirect('/member', '/member/login');
+Route::redirect('/login', '/member/login');
 Route::get('/member/login', [guestController::class, 'memberLoginForm'])->name('member.login');
 Route::post('/member/login', [guestController::class, 'memberLogin'])->name('member.login.submit');
-
-//route for single segment only
-Route::get('/{segment}', [guestController::class, 'segment'])
-    ->where('segment', '[^/]+');
 
 //route for multiple segments
 Route::get('/admin/{segments}', [adminController::class, 'segments'])
@@ -29,3 +30,7 @@ Route::get('/admin/{segments}', [adminController::class, 'segments'])
 //route for multiple segments
 Route::get('/member/{segments}', [memberController::class, 'segments'])
     ->where('segments', '.+/.+');
+
+//route for single segment only
+Route::get('/{segment}', [guestController::class, 'segment'])
+    ->where('segment', '[^/]+');
