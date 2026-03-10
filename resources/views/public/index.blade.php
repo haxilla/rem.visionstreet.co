@@ -17,9 +17,6 @@
     <section>
         @include('public.includes.top_views_3up_v1')
     </section>
-    <section>
-        @include('public.includes.top_views_3up_v1')
-    </section>
 
 </body>
 </html>
