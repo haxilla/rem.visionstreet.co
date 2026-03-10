@@ -14,6 +14,8 @@ Route::get('/login', function () {
     return view('auth.login');
 })->name('login');
 
+Route::post('/login', [indexController::class, 'login'])->name('login.submit');
+
 //route for single segment only
 Route::get('/{segment}', [indexController::class, 'segment'])
     ->where('segment', '[^/]+');

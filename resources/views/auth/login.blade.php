@@ -7,7 +7,7 @@
 
 <h2>Login</h2>
 
-<form method="POST" action="/login">
+<form method="POST" action="{{ route('login.submit') }}">
     @csrf
 
     <div>

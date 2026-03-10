@@ -3,12 +3,31 @@
 namespace App\Http\Controllers\public;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 
 class indexController extends Controller
 {
 
-  public function index(){
+public function login(Request $request)
+{
+    $credentials = $request->validate([
+        'email' => ['required', 'email'],
+        'password' => ['required'],
+    ]);
+
+    if (Auth::attempt($credentials)) {
+        $request->session()->regenerate();
+
+        return redirect()->intended('/admin/dashboard');
+    }
+
+    return back()->withErrors([
+        'email' => 'Invalid credentials.',
+    ])->onlyInput('email');
+}
+
+public function index(){
 
     require app_path('code/users_rebuild.php');
     require app_path('public/index.php');
