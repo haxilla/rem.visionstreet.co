@@ -10,6 +10,10 @@ Route::get('/', [
   'uses' => '\App\Http\Controllers\public\indexController@index',
 ]);
 
+Route::get('/login', function () {
+    return view('auth.login');
+})->name('login');
+
 //route for single segment only
 Route::get('/{segment}', [indexController::class, 'segment'])
     ->where('segment', '[^/]+');
