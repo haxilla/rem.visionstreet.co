@@ -10,6 +10,10 @@ Route::get('/', [
   'uses' => '\App\Http\Controllers\public\indexController@index',
 ]);
 
+Route::middleware(['auth'])->group(function () {
+    Route::get('/admin/hello', [adminController::class, 'segments']);
+});
+
 Route::get('/login', function () {
     return view('auth.login');
 })->name('login');
