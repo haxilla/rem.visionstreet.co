@@ -20,15 +20,15 @@ class guestController extends Controller
             'password' => ['required'],
         ]);
 
-        if (Auth::attempt($credentials)) {
+        if (Auth::guard('admin')->attempt($credentials)) {
             $request->session()->regenerate();
 
             return redirect()->intended('/admin/dashboard');
         }
 
         return back()->withErrors([
-            'email' => 'Invalid credentials.',
-        ])->onlyInput('email');
+            'username' => 'Invalid credentials.',
+        ])->onlyInput('username');
     }
 
     public function memberLoginForm()
@@ -44,15 +44,15 @@ class guestController extends Controller
             'password' => ['required'],
         ]);
 
-        if (Auth::attempt($credentials)) {
+        if (Auth::guard('member')->attempt($credentials)) {
             $request->session()->regenerate();
 
             return redirect()->intended('/member/dashboard');
         }
 
         return back()->withErrors([
-            'email' => 'Invalid credentials.',
-        ])->onlyInput('email');
+            'username' => 'Invalid credentials.',
+        ])->onlyInput('username');
     }
 
     public function index(){
