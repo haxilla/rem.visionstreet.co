@@ -14,16 +14,11 @@ class adminController extends Controller
     protected array  $safelist          = ['data_type', 'alternate_domains'];
     protected string $renderfromPattern = '/^[A-Za-z0-9._-]+$/';
 
-    /*
     public function __construct()
     {
+        $this->middleware('auth');
         $this->middleware('role:admin,super');
     }
-        */
-    public function __construct()
-{
-    $this->middleware('auth');
-}
 
     public function segments(Request $request)
     {
