@@ -25,11 +25,11 @@ Route::post('/member/login', [guestController::class, 'memberLogin'])->name('mem
 
 //route for multiple segments
 Route::get('/admin/{segments}', [adminController::class, 'segments'])
-    ->where('segments', '.+/.+');
+    ->where('segments', '.+');
 
 //route for multiple segments
 Route::get('/member/{segments}', [memberController::class, 'segments'])
-    ->where('segments', '.+/.+');
+    ->where('segments', '.+');
 
 //route for single segment only
 Route::get('/{segment}', [guestController::class, 'segment'])
