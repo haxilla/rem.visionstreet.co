@@ -2,6 +2,8 @@
 @php
     $topViewedTitle = $topViewedTitle ?? "Today's <span class='text-[#214e9b]'>TOP VIEWED</span>";
     $topViewedItems = ($mostViews ?? collect())->take(3);
+    $topLuxuryItems = ($topLuxury ?? collect())->take(3);
+
     $sectionMax     = $sectionMax ?? '1600px';
     $brandBlue      = $brandBlue ?? '#214e9b';
     $brandGold      = $brandGold ?? '#e79a63';
@@ -126,23 +128,22 @@
         </div>
 
         {{-- Header --}}
-        <div class="mb-10 text-center">
+        <div class="my-10 text-center">
             <div class="flex justify-center">
                 <i class="ti-bookmark text-[28px]" style="color: {{ $brandBlue }}"></i>
             </div>
 
             <h2 class="font-display mt-2 text-[32px] leading-none text-[#1c1d22] sm:text-[42px]">
-                {!! $topViewedTitle !!}
+                Today's <span class='text-[#214e9b]'>TOP LUXURY</span>
             </h2>
-
             <div class="mx-auto mt-4 max-w-sm text-[16px] leading-7 text-gray-600">
-                Discover the listings getting the most attention on Realty Emails right now.
+                Trending Luxury Listings on Realty Emails right now.
             </div>
         </div>
 
         {{-- Property Grid --}}
         <div class="grid grid-cols-1 gap-7 md:grid-cols-2 xl:grid-cols-3">
-            @foreach($topViewedItems as $index => $the)
+            @foreach($topLuxuryItems as $index => $the)
 
                 @php
                     $photoObj = $the->thePhotos->where('def','=','1')->first();

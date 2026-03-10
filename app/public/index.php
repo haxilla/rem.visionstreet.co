@@ -5,6 +5,7 @@ require app_path('queries/base.php');
 //clone & continue
 $newAdds    = clone $base;
 $mostViews  = clone $base;
+$topLuxury   = clone $base;
 //new Adds = ordered by created_at desc
 $newAdds=$newAdds
 ->whereHas('thePhotos',function($q){
@@ -34,11 +35,28 @@ $mostViews=$mostViews
     ->where('resized','=','500')
     ->where('def','=','1');
 }])
+->where('xListPrice','<',1000000)
 ->with(['theRemarks'=>function($q){
   $q->select('propflyer_id','xPubRemarks');
 }])
 ->take(10)
 ->orderBy('xWebViews','desc')
+->get();
+
+//most Views = ordered by xWebViews desc
+$topLuxury=$topLuxury
+->with(['thePhotos'=>function($q){
+  $q->select('propflyer_id','photoName','def','resized','localFound',
+    'width','height','orient','ratio','ord','notFound','photoID','remoteFound')
+    ->where('resized','=','500')
+    ->where('def','=','1');
+}])
+->where('xListPrice','>',999999)
+->with(['theRemarks'=>function($q){
+  $q->select('propflyer_id','xPubRemarks');
+}])
+->take(10)
+->orderBy('xListPrice','desc')
 ->get();
 
 // member since / agent wall
