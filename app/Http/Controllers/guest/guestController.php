@@ -5,50 +5,78 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-
 class guestController extends Controller
 {
 
-public function login(Request $request)
-{
-    $credentials = $request->validate([
-        'username' => ['required', 'email'],
-        'password' => ['required'],
-    ]);
+    public function adminLoginForm()
+    {
+        return view('admin.login');
+    }   
 
-    if (Auth::attempt($credentials)) {
-        $request->session()->regenerate();
+    public function adminLogin(Request $request)
+    {
+        $credentials = $request->validate([
+            'username' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
 
-        return redirect()->intended('/admin/dashboard');
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+
+            return redirect()->intended('/admin/dashboard');
+        }
+
+        return back()->withErrors([
+            'email' => 'Invalid credentials.',
+        ])->onlyInput('email');
     }
 
-    return back()->withErrors([
-        'email' => 'Invalid credentials.',
-    ])->onlyInput('email');
-}
+    public function memberLoginForm()
+    {
+        return view('member.login');
+    }
 
-public function index(){
 
-    require app_path('code/users_rebuild.php');
-    require app_path('public/index.php');
+    public function memberLogin(Request $request)
+    {
+        $credentials = $request->validate([
+            'username' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
 
-    //return view
-    return view('public.index',
-      [
-        'newAdds'     => $newAdds,
-        'mostViews'   => $mostViews,
-        'topLuxury'   => $topLuxury,
-        'memberSince' => $memberSince,
-      ]);
-  }
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
 
-  public function segment(Request $request){
+            return redirect()->intended('/member/dashboard');
+        }
 
-        // Route param: "segments" separates by section
-        $segmentsPath = trim((string) $request->route('segments', ''), '/');    
-        $parts        = ($segmentsPath === '') ? [] : explode('/', $segmentsPath);
-        dd($parts);
+        return back()->withErrors([
+            'email' => 'Invalid credentials.',
+        ])->onlyInput('email');
+    }
 
-  }
+    public function index(){
+
+        require app_path('code/users_rebuild.php');
+        require app_path('public/index.php');
+
+        //return view
+        return view('public.index',
+        [
+            'newAdds'     => $newAdds,
+            'mostViews'   => $mostViews,
+            'topLuxury'   => $topLuxury,
+            'memberSince' => $memberSince,
+        ]);
+    }
+
+    public function segment(Request $request){
+
+            // Route param: "segments" separates by section
+            $segmentsPath = trim((string) $request->route('segments', ''), '/');    
+            $parts        = ($segmentsPath === '') ? [] : explode('/', $segmentsPath);
+            dd($parts);
+
+    }
 
 }
