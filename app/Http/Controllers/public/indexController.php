@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\public;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+
 
 class indexController extends Controller
 {
@@ -21,7 +23,7 @@ class indexController extends Controller
       ]);
   }
 
-  public function segment(){
+  public function segment(Request $request){
 
         // Route param: "segments" separates by section
         $segmentsPath = trim((string) $request->route('segments', ''), '/');    
