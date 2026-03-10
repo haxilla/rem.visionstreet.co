@@ -10,16 +10,20 @@ Route::get('/', [
   'uses' => '\App\Http\Controllers\public\indexController@index',
 ]);
 
-Route::get('/login', function () {
-    return view('auth.login');
-})->name('login');
+Route::get('/admin/login', [GuestController::class, 'adminLoginForm'])->name('admin.login');
+Route::post('/admin/login', [GuestController::class, 'adminLogin'])->name('admin.login.submit');
 
-Route::post('/login', [indexController::class, 'login'])->name('login.submit');
+Route::get('/member/login', [GuestController::class, 'memberLoginForm'])->name('member.login');
+Route::post('/member/login', [GuestController::class, 'memberLogin'])->name('member.login.submit');
 
 //route for single segment only
-Route::get('/{segment}', [indexController::class, 'segment'])
+Route::get('/{segment}', [GuestController::class, 'segment'])
     ->where('segment', '[^/]+');
 
 //route for multiple segments
-Route::get('/{segments}', [adminController::class, 'segments'])
+Route::get('/admin/{segments}', [adminController::class, 'segments'])
+    ->where('segments', '.+/.+');
+
+//route for multiple segments
+Route::get('/member/{segments}', [memberController::class, 'segments'])
     ->where('segments', '.+/.+');

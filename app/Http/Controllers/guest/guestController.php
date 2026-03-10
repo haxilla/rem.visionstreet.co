@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\public;
+namespace App\Http\Controllers\guest;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 
-class indexController extends Controller
+class guestController extends Controller
 {
 
 public function login(Request $request)

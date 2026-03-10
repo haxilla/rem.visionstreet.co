@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Http\Controllers\admin;
+namespace App\Http\Controllers\member;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class adminController extends Controller
+class memberController extends Controller
 {
-    /** Max depth for /admin/{segments?} */
+    /** Max depth for /member/{segments?} */
     private const MAX_SEGMENTS = 5;
 
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('role:admin,super');
+        $this->middleware('role:member,admin,super');
     }
 
     public function segments(Request $request)
@@ -23,7 +23,7 @@ class adminController extends Controller
         $parts        = ($segmentsPath === '') ? [] : explode('/', $segmentsPath);
 
         //sets view names & app files
-        dd("admin $parts");
+        dd("member $parts");
         
     }   
 
