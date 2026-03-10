@@ -1,0 +1,33 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+
+class AdminController extends Controller
+{
+    /** Max depth for /admin/{segments?} */
+    private const MAX_SEGMENTS = 5;
+
+    /** Kept from trait */
+    protected array  $safelist          = ['data_type', 'alternate_domains'];
+    protected string $renderfromPattern = '/^[A-Za-z0-9._-]+$/';
+
+    public function __construct()
+    {
+        $this->middleware('role:admin,super');
+    }
+
+    public function segments(Request $request)
+    {
+        // Route param: "segments" separates by section
+        $segmentsPath = trim((string) $request->route('segments', ''), '/');    
+        $parts        = ($segmentsPath === '') ? [] : explode('/', $segmentsPath);
+
+        //sets view names & app files
+        dd("admin $parts");
+        
+    }   
+
+}

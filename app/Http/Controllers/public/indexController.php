@@ -21,4 +21,13 @@ class indexController extends Controller
       ]);
   }
 
+  public function segment(){
+
+        // Route param: "segments" separates by section
+        $segmentsPath = trim((string) $request->route('segments', ''), '/');    
+        $parts        = ($segmentsPath === '') ? [] : explode('/', $segmentsPath);
+        dd($parts);
+
+  }
+
 }

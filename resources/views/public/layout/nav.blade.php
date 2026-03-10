@@ -18,22 +18,22 @@
       {{-- NAV LINKS --}}
       <nav class="hidden md:flex items-center gap-10 text-[14px] font-medium tracking-[0.06em] text-white/80">
 
-        <a href="#" class="relative group hover:text-white transition">
+        <a href="/features" class="relative group hover:text-white transition">
           Features
           <span class="absolute left-1/2 -bottom-1 h-[2px] w-0 -translate-x-1/2 bg-white/60 rounded-full transition-all group-hover:w-8"></span>
         </a>
 
-        <a href="#" class="relative group hover:text-white transition">
+        <a href="/pricing" class="relative group hover:text-white transition">
           Pricing
           <span class="absolute left-1/2 -bottom-1 h-[2px] w-0 -translate-x-1/2 bg-white/60 rounded-full transition-all group-hover:w-8"></span>
         </a>
 
-        <a href="#" class="relative group hover:text-white transition">
+        <a href="/examples" class="relative group hover:text-white transition">
           Examples
           <span class="absolute left-1/2 -bottom-1 h-[2px] w-0 -translate-x-1/2 bg-white/60 rounded-full transition-all group-hover:w-8"></span>
         </a>
 
-        <a href="#" class="relative group hover:text-white transition">
+        <a href="/support" class="relative group hover:text-white transition">
           Support
           <span class="absolute left-1/2 -bottom-1 h-[2px] w-0 -translate-x-1/2 bg-white/60 rounded-full transition-all group-hover:w-8"></span>
         </a>
