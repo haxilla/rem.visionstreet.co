@@ -11,8 +11,8 @@
     @csrf
 
     <div>
-        <label>Email</label>
-        <input type="email" name="email" required>
+        <label>Username</label>
+        <input type="email" name="username" required>
     </div>
 
     <div>
