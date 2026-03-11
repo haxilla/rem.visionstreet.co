@@ -26,7 +26,7 @@
                 onclick="document.getElementById('member-login-modal').style.display='none'"
             >×</button>
 
-            <div id="member-login-modal-content"></div>
+            <div class="member-login-modal-content"></div>
         </div>
     </div>
 
