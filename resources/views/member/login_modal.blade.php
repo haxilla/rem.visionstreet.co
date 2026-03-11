@@ -7,7 +7,7 @@
 
 <h2>Login</h2>
 
-<form method="POST" action="{{ route('login.submit') }}">
+<form method="POST" action="{{ route('member.login.submit') }}">
     @csrf
 
     <div>
