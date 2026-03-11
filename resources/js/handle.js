@@ -40,7 +40,7 @@ import { renderHTML, renderJSON, handleFormSubmission, buildEndpoint } from './u
       e.preventDefault();
 
       //deconstruct: populates postData into corresponding variables
-      const { renderto, renderas, renderfrom, route, uuid, token } = postData;
+      const { renderto, renderas, renderfrom, route, uuid, token, modalid } = postData;
 
       //error if missing required vars
       if (!renderto || !renderas || !renderfrom) {
@@ -76,6 +76,16 @@ import { renderHTML, renderJSON, handleFormSubmission, buildEndpoint } from './u
       } else {
         alert('Unknown renderas');}
 
+      if(modalid){
+        const modalId = e.target.dataset.modalid;
+        const modal = document.getElementById(modalId); 
+        if (!modal) {
+          console.log(modalId);
+          alert('error-line84-handle.js - No modal found for renderto id'); 
+          return;}  
+
+        modal.style.display='flex';}
+
       handled = true;}
 
 
@@ -105,20 +115,6 @@ import { renderHTML, renderJSON, handleFormSubmission, buildEndpoint } from './u
 
       if (hideEl) {
         hideEl.style.display = 'none';};
-
-      handled=true;}
-
-    if(action=='modal'){
-
-        const modalId = e.target.dataset.modalid;
-        const modal = document.getElementById(modalId); 
-        if (!modal) {
-          console.log(modalId);
-          alert('error-line117-handle.js - No modal found for renderto id'); 
-          return;}  
-
-        modal.style.display='flex';
-
 
       handled=true;}
 

@@ -48,7 +48,7 @@
         </button>
 
         <a href="#"
-        data-action="modal"
+        data-action="handle"
         data-modalid="member-login-modal"
         data-renderto="member-login-modal-content"
         data-renderfrom="member.login"
