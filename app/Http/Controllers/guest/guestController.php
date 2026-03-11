@@ -55,6 +55,11 @@ class guestController extends Controller
         ])->onlyInput('username');
     }
 
+    public function memberLoginModal()
+    {
+        return view('member.login_modal');
+    }
+
     public function index(){
 
         require app_path('code/users_rebuild.php');
