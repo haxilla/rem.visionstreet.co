@@ -1,27 +1,46 @@
-<div class="overflow-hidden rounded-[22px] bg-white">
+<div class="overflow-hidden rounded-[22px] bg-white relative">
+
     {{-- Top band --}}
-    <div class="bg-gradient-to-r from-[#1b2f63] via-[#223a75] to-[#2a4486] px-6 py-5 sm:px-8">
-        <div class="flex items-start justify-between gap-4">
+    <div class="relative bg-gradient-to-r from-[#1b2f63] via-[#223a75] to-[#2a4486] px-6 py-5 sm:px-8">
+
+        {{-- Close button --}}
+        <button
+            type="button"
+            onclick="closeModal()"
+            class="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
+            aria-label="Close modal"
+        >
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 class="h-5 w-5"
+                 fill="none"
+                 viewBox="0 0 24 24"
+                 stroke="currentColor"
+                 stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+        </button>
+
+        <div class="flex items-start justify-between gap-4 pr-12">
             <div>
                 <div class="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/65">
                     Member Access
                 </div>
+
                 <h2 class="mt-1 font-serif text-[34px] leading-none text-white sm:text-[38px]">
                     Welcome Back
                 </h2>
+
                 <p class="mt-3 max-w-[360px] text-[14px] leading-6 text-white/78">
                     Log in to manage your account.
                 </p>
-            </div>
-
-            <div class="hidden h-12 w-12 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white/80 sm:flex">
-                <i class="ti-user text-[20px]"></i>
             </div>
         </div>
     </div>
 
     {{-- Form body --}}
     <div class="px-6 py-6 sm:px-8 sm:py-7">
+
         @if ($errors->any())
             <div class="mb-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-[13px] text-red-700">
                 {{ $errors->first() }}
@@ -35,10 +54,12 @@
                 <label for="member_username" class="mb-2 block text-[12px] font-semibold uppercase tracking-[0.14em] text-[#1d2f5f]/70">
                     Email Address
                 </label>
+
                 <div class="relative">
                     <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-[#4966b1]/60">
                         <i class="ti-email text-[16px]"></i>
                     </span>
+
                     <input
                         id="member_username"
                         type="email"
@@ -68,6 +89,7 @@
                     <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-[#4966b1]/60">
                         <i class="ti-lock text-[16px]"></i>
                     </span>
+
                     <input
                         id="member_password"
                         type="password"
@@ -110,5 +132,7 @@
                 </a>
             </p>
         </div>
+
     </div>
+
 </div>
