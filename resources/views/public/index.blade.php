@@ -22,11 +22,13 @@
         <div class="relative w-full max-w-[560px] overflow-hidden rounded-[22px] shadow-[0_30px_80px_rgba(0,0,0,.35)]">
             <button
             type="button"
-            class="absolute right-4 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full
-            bg-white/10 text-[24px] leading-none text-white backdrop-blur-sm
-            transition hover:bg-white/20 cursor-pointer"
+            class="absolute right-4 top-3 z-10 flex h-8 w-8 items-center justify-center
+            rounded-full bg-white/10 text-gray-300 backdrop-blur-sm
+            transition-all duration-200 hover:bg-white/20 hover:text-white cursor-pointer"
             onclick="document.getElementById('member-login-modal').style.display='none'">
-                <i class="ti-close"></i>
+
+                <i class="ti-close text-[14px]"></i>
+
             </button>
 
             <div class="member-login-modal-content"></div>
