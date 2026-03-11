@@ -77,6 +77,7 @@ import { renderHTML, renderJSON, handleFormSubmission, buildEndpoint } from './u
         alert('Unknown renderas');}
 
       if(modalid){
+        alert(modalid);
         const modalId = e.target.dataset.modalid;
         const modal = document.getElementById(modalId); 
         if (!modal) {
