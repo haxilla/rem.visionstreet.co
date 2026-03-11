@@ -26,7 +26,7 @@
             bg-white/10 text-[24px] leading-none text-white backdrop-blur-sm
             transition hover:bg-white/20 cursor-pointer"
             onclick="document.getElementById('member-login-modal').style.display='none'">
-                XXX
+                <i class="ti-close"></i>
             </button>
 
             <div class="member-login-modal-content"></div>
