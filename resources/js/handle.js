@@ -54,6 +54,8 @@ import { renderHTML, renderJSON, handleFormSubmission, buildEndpoint } from './u
       } else {
         endpoint = buildEndpoint(renderfrom, uuid, token);}
 
+      console.log('built endpoint:', endpoint);
+      
       //choose function to run
       if (renderas === 'html') {
         renderHTML(postData, endpoint).then(async () => {
@@ -77,7 +79,6 @@ import { renderHTML, renderJSON, handleFormSubmission, buildEndpoint } from './u
         alert('Unknown renderas');}
 
       if(modalid){
-        alert(modalid);
         const modalId = e.target.dataset.modalid;
         const modal = document.getElementById(modalId); 
         if (!modal) {
