@@ -51,7 +51,7 @@
         data-action="handle"
         data-modalid="member-login-modal"
         data-renderto="member-login-modal-content"
-        data-renderfrom="member.login"
+        data-renderfrom="member.login.modal"
         data-renderas="html" 
         class="text-[14px] font-medium text-white/80 hover:text-white transition">
           Log in
