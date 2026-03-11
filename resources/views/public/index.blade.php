@@ -18,17 +18,16 @@
         @include('public.includes.top_views_3up_v1')
     </section>
     <!-- Global Modal -->
-    <div id="member-login-modal" style="display:none;" class="fixed inset-0 items-center justify-center bg-black/60 z-50">
-        <div class="bg-white rounded-xl shadow-xl w-[480px] max-w-[92%] relative">
+    <div id="member-login-modal" style="display:none;" class="fixed inset-0 z-50 items-center justify-center bg-black/60 p-4">
+        <div class="relative w-full max-w-[560px] overflow-hidden rounded-[22px] shadow-[0_30px_80px_rgba(0,0,0,.35)]">
             <button
                 type="button"
-                class="absolute top-3 right-4 text-2xl leading-none"
+                class="absolute right-4 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-[24px] leading-none text-white backdrop-blur-sm transition hover:bg-white/20"
                 onclick="document.getElementById('member-login-modal').style.display='none'"
             >×</button>
 
             <div class="member-login-modal-content"></div>
         </div>
     </div>
-
 </body>
 </html>

@@ -10,7 +10,7 @@
                     Welcome Back
                 </h2>
                 <p class="mt-3 max-w-[360px] text-[14px] leading-6 text-white/78">
-                    Log in to manage your flyer, website, and listing tools.
+                    Log in to manage your account.
                 </p>
             </div>
 
