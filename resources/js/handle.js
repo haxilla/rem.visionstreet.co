@@ -114,8 +114,10 @@ import { renderHTML, renderJSON, handleFormSubmission, buildEndpoint } from './u
         const modal = document.getElementById(modalId); 
         if (!modal) {
           console.log(modalId);
-          alert('error-line92-handle.js - No modal found for renderto id'); 
+          alert('error-line117-handle.js - No modal found for renderto id'); 
           return;}  
+
+        modal.style.display='flex';
 
 
       handled=true;}
