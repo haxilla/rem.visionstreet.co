@@ -23,6 +23,9 @@ Route::get('/login', fn () => redirect('/member/login'));
 Route::get('/member/login', [guestController::class, 'memberLoginForm'])->name('member.login');
 Route::post('/member/login', [guestController::class, 'memberLogin'])->name('member.login.submit');
 
+//modal
+Route::get('/member/login/modal', [guestController::class, 'memberLoginModal'])->name('member.login.modal');
+
 //route for multiple segments
 Route::get('/admin/{segments}', [adminController::class, 'segments'])
     ->where('segments', '.+');
