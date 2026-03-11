@@ -57,7 +57,11 @@ class guestController extends Controller
 
     public function memberLoginModal()
     {
-        return view('member.login_modal');
+        if ($request->header('X-Pageswap') === '1') {
+            return view('member.login_modal');
+        }
+
+        return redirect('/?login=1');
     }
 
     public function index(){
