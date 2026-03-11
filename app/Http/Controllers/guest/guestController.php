@@ -55,7 +55,7 @@ class guestController extends Controller
         ])->onlyInput('username');
     }
 
-    public function memberLoginModal()
+    public function memberLoginModal(Request $request)
     {
         if ($request->header('X-Pageswap') === '1') {
             return view('member.login_modal');
