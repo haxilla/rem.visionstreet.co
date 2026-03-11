@@ -1,10 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Login</title>
-</head>
-<body>
-
 <h2>Login</h2>
 
 <form method="POST" action="{{ route('member.login.submit') }}">
@@ -22,6 +15,3 @@
 
     <button type="submit">Login</button>
 </form>
-
-</body>
-</html>
