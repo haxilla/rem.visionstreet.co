@@ -9,7 +9,7 @@ use App\Http\Controllers\member\memberController;
 //index
 Route::get('/', [
   'as'   => 'public.index',
-  'uses' => '\App\Http\Controllers\public\indexController@index',
+  'uses' => '\App\Http\Controllers\guest\guestController@index',
 ]);
 
 //admin/login
