@@ -18,15 +18,15 @@
         @include('public.includes.top_views_3up_v1')
     </section>
     <!-- Global Modal -->
-    <div id="global-modal" style="display:none;" class="fixed inset-0 items-center justify-center bg-black/60 z-50">
+    <div id="member-login-modal" style="display:none;" class="fixed inset-0 items-center justify-center bg-black/60 z-50">
         <div class="bg-white rounded-xl shadow-xl w-[480px] max-w-[92%] relative">
             <button
                 type="button"
                 class="absolute top-3 right-4 text-2xl leading-none"
-                onclick="document.getElementById('global-modal').style.display='none'"
+                onclick="document.getElementById('member-login-modal').style.display='none'"
             >×</button>
 
-            <div id="global-modal-content"></div>
+            <div id="member-login-modal-content"></div>
         </div>
     </div>
 
