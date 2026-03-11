@@ -55,7 +55,7 @@ class guestController extends Controller
         ])->onlyInput('username');
     }
 
-    public function memberLoginModal()
+    public function memberLoginModal(Request $request)
     {
        return $request->ajax()
         // Do not visit modal route directly, 
