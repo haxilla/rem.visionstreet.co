@@ -3,24 +3,6 @@
     {{-- Top band --}}
     <div class="relative bg-gradient-to-r from-[#1b2f63] via-[#223a75] to-[#2a4486] px-6 py-5 sm:px-8">
 
-        {{-- Close button --}}
-        <button
-            type="button"
-            onclick="closeModal()"
-            class="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
-            aria-label="Close modal"
-        >
-            <svg xmlns="http://www.w3.org/2000/svg"
-                 class="h-5 w-5"
-                 fill="none"
-                 viewBox="0 0 24 24"
-                 stroke="currentColor"
-                 stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                      d="M6 18L18 6M6 6l12 12"/>
-            </svg>
-        </button>
-
         <div class="flex items-start justify-between gap-4 pr-12">
             <div>
                 <div class="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/65">
