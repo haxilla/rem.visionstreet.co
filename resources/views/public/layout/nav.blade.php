@@ -47,7 +47,12 @@
           <i class="ti-search text-[16px]"></i>
         </button>
 
-        <a href="#" class="text-[14px] font-medium text-white/80 hover:text-white transition">
+        <a href="#"
+        data-action="modal"
+        data-renderto="member-login-modal"
+        data-renderfrom="member.login"
+        data-renderas="html" 
+        class="text-[14px] font-medium text-white/80 hover:text-white transition">
           Log in
         </a>
 
