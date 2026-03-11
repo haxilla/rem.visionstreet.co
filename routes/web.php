@@ -18,8 +18,8 @@ Route::get('/admin/login', [guestController::class, 'adminLoginForm'])->name('ad
 Route::post('/admin/login', [guestController::class, 'adminLogin'])->name('admin.login.submit');
 
 //member/login
-Route::redirect('/member', '/member/login');
-Route::redirect('/login', '/member/login');
+Route::get('/member', fn () => redirect('/member/login'));
+Route::get('/login', fn () => redirect('/member/login'));
 Route::get('/member/login', [guestController::class, 'memberLoginForm'])->name('member.login');
 Route::post('/member/login', [guestController::class, 'memberLogin'])->name('member.login.submit');
 
