@@ -57,7 +57,11 @@ class guestController extends Controller
 
     public function memberLoginModal()
     {
-        return view('member.login_modal');
+       return $request->ajax()
+        // Do not visit modal route directly, 
+        // Redirect to index with modal query parameter
+        ? view('member.login-modal')
+        : redirect('/?modal=login');
     }
 
     public function index(){
