@@ -37,14 +37,12 @@ public function index()
             'V','W','X','Y','Z'
         ];
 
-
         $flyers = DB::connection('remuserdb')
             ->table('propflyers')
             ->whereNull('flyer_code')
-            ->orderBy('state')
+            ->whereNotNull('state')
             ->orderBy('id')
             ->get();
-
 
         foreach ($flyers as $flyer) {
 
@@ -61,7 +59,6 @@ public function index()
                     ->where('state', $state)
                     ->lockForUpdate()
                     ->first();
-
 
                 if (!$sequence) {
 

@@ -17,7 +17,7 @@ if (!Schema::hasColumn($tableName, 'state')) {
 $rules = [
     'AL' => ['al', 'alab'],
     'AK' => ['ak', 'alas'],
-    'AZ' => ['az', 'ari'],
+    'AZ' => ['az', 'ari','arz'],
     'AR' => ['ark'],
     'CA' => ['ca', 'cal'],
     'CO' => ['col'],
