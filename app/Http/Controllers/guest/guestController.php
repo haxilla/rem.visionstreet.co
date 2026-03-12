@@ -85,10 +85,10 @@ class guestController extends Controller
     public function segment(Request $request){
 
         // Route param: "segments" separates by section
-        $segmentsPath = trim((string) $request->route('segments', ''), '/');    
+        $segmentsPath = trim((string) $request->route('segment', ''), '/');    
 
         dd($segmentsPath);
-        
+
         $parts        = ($segmentsPath === '') ? [] : explode('/', $segmentsPath);
             
         //sets view names & app files
