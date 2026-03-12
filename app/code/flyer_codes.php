@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Schema;
 |--------------------------------------------------------------------------
 */
 
-if (!Schema::connection('remuserdb')->hasColumn('propflyers', 'flyer_code')) {
+if (!Schema::hasColumn('propflyers', 'flyer_code')) {
 
     /*
     |--------------------------------------------------------------------------
@@ -18,7 +18,7 @@ if (!Schema::connection('remuserdb')->hasColumn('propflyers', 'flyer_code')) {
     |--------------------------------------------------------------------------
     */
 
-    Schema::connection('remuserdb')->table('propflyers', function (Blueprint $table) {
+    Schema::table('propflyers', function (Blueprint $table) {
         $table->string('flyer_code', 50)->nullable()->after('state');
     });
 
@@ -28,8 +28,8 @@ if (!Schema::connection('remuserdb')->hasColumn('propflyers', 'flyer_code')) {
     |--------------------------------------------------------------------------
     */
 
-    if (!Schema::connection('remuserdb')->hasTable('flyer_codes')) {
-        Schema::connection('remuserdb')->create('flyer_codes', function (Blueprint $table) {
+    if (!Schema::hasTable('flyer_codes')) {
+        Schema::create('flyer_codes', function (Blueprint $table) {
             $table->id();
             $table->char('state', 2);
             $table->char('letters', 10)->default('A');
@@ -125,15 +125,13 @@ if (!Schema::connection('remuserdb')->hasColumn('propflyers', 'flyer_code')) {
 
             $newCode = $state . $letters . str_pad($number, 2, '0', STR_PAD_LEFT);
 
-            DB::connection('remuserdb')
-                ->table('propflyers')
+            DB::table('propflyers')
                 ->where('id', $flyer->id)
                 ->update([
                     'flyer_code' => $newCode,
                 ]);
 
-            DB::connection('remuserdb')
-                ->table('flyer_codes')
+            DB::table('flyer_codes')
                 ->where('state', $state)
                 ->update([
                     'letters' => $letters,
