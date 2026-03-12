@@ -103,7 +103,7 @@ class guestController extends Controller
 
         // full chrome + the same fragment on refresh/direct visit
         return response()
-            ->view($viewname, [         
+            ->view($viewName, [         
                 'data'        => $data,
                 'contentView' => $viewName,
             ])->header('Vary', 'X-Pageswap');
