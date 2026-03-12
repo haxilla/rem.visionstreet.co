@@ -51,8 +51,7 @@ if (!Schema::hasColumn('propflyers', 'flyer_code')) {
         'V','W','X','Y','Z'
     ];
 
-    $flyers = DB::connection('remuserdb')
-        ->table('propflyers')
+    $flyers = DB::table('propflyers')
         ->whereNull('flyer_code')
         ->whereNotNull('state')
         ->orderBy('id')
@@ -66,16 +65,15 @@ if (!Schema::hasColumn('propflyers', 'flyer_code')) {
             continue;
         }
 
-        DB::connection('remuserdb')->transaction(function () use ($flyer, $state, $allowedLetters) {
+        DB::transaction(function () use ($flyer, $state, $allowedLetters) {
 
-            $sequence = DB::connection('remuserdb')
-                ->table('flyer_codes')
+            $sequence = DB::table('flyer_codes')
                 ->where('state', $state)
                 ->lockForUpdate()
                 ->first();
 
             if (!$sequence) {
-                DB::connection('remuserdb')->table('flyer_codes')->insert([
+                DB::table('flyer_codes')->insert([
                     'state' => $state,
                     'letters' => 'A',
                     'number' => 0,
