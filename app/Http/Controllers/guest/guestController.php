@@ -81,10 +81,28 @@ class guestController extends Controller
 
     public function segment(Request $request){
 
-            // Route param: "segments" separates by section
-            $segmentsPath = trim((string) $request->route('segments', ''), '/');    
-            $parts        = ($segmentsPath === '') ? [] : explode('/', $segmentsPath);
-            dd($parts);
+        // Route param: "segments" separates by section
+        $segmentsPath = trim((string) $request->route('segments', ''), '/');    
+        $parts        = ($segmentsPath === '') ? [] : explode('/', $segmentsPath);
+            
+        //sets view names & app files
+        include('parts/dynamic_index.php');
+
+        // ---- partial vs full ----
+        $isPartial = $request->header('X-Pageswap') === '1';
+        if ($isPartial) {
+            // return just the fragment for pageswap
+            return response()
+                ->view($viewName, compact('data'))
+                ->header('Vary', 'X-Pageswap');}
+                // cache safety
+
+        // full chrome + the same fragment on refresh/direct visit
+        return response()
+            ->view('admin.frame', [         
+                'data'        => $data,
+                'contentView' => $viewName,
+            ])->header('Vary', 'X-Pageswap');
 
     }
 
