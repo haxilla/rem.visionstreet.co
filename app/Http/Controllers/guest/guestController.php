@@ -86,7 +86,7 @@ class guestController extends Controller
         $parts        = ($segmentsPath === '') ? [] : explode('/', $segmentsPath);
             
         //sets view names & app files
-        include('parts/dynamic_index.php');
+        include('../parts/dynamic_index.php');
 
         // ---- partial vs full ----
         $isPartial = $request->header('X-Pageswap') === '1';
