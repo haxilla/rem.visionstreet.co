@@ -10,6 +10,7 @@ class guestController extends Controller
     
     private const MAX_SEGMENTS = 5;
 
+
     public function adminLoginForm()
     {
         return view('admin.login');
@@ -85,6 +86,9 @@ class guestController extends Controller
 
         // Route param: "segments" separates by section
         $segmentsPath = trim((string) $request->route('segments', ''), '/');    
+
+        dd($segmentsPath);
+        
         $parts        = ($segmentsPath === '') ? [] : explode('/', $segmentsPath);
             
         //sets view names & app files
