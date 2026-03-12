@@ -6,7 +6,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class guestController extends Controller
-{
+{    
+    
+    private const MAX_SEGMENTS = 5;
 
     public function adminLoginForm()
     {
