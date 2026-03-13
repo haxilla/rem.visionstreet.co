@@ -6,11 +6,8 @@ if (!Schema::hasColumn('propflyers', 'url_slug')) {
     });
 }
 
-$rows = \Illuminate\Support\Facades\DB::table('propflyers')
-    ->get();
-
-dd($rows->count() . ' flyers need slugs');
-
+$rows = "hello"
+dd($rows);
 
 foreach ($rows as $row) {
 
