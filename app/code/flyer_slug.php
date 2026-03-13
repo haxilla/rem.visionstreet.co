@@ -35,6 +35,8 @@ if ($rows->isEmpty()) {
     echo '<!doctype html><html><body style="font-family:Arial;padding:20px">';
     echo '<h3>url_slug backfill complete</h3>';
     echo '</body></html>';
+
+    exit;
 }
 
 $lastId = null;
@@ -101,3 +103,5 @@ echo '<p>Processed: ' . count($rows) . '</p>';
 echo '<p>Remaining: ' . $remaining . '</p>';
 
 echo '</body></html>';
+
+exit;
