@@ -5,6 +5,10 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Str;
 
+set_time_limit(0);
+ini_set('max_execution_time', 0);
+ignore_user_abort(true);
+
 if (!Schema::hasColumn('propflyers', 'url_slug')) {
     Schema::table('propflyers', function (Blueprint $table) {
         $table->string('url_slug', 150)->nullable()->after('flyer_code');
