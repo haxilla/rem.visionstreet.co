@@ -64,6 +64,9 @@ foreach ($rows as $row) {
     }
 
     $slug = $baseSlug;
+
+    /* //for uniqueness, if needed 
+    // skipping for now 
     $i = 1;
 
     while (
@@ -75,6 +78,7 @@ foreach ($rows as $row) {
         $slug = $baseSlug . '-' . $i;
         $i++;
     }
+    */    
 
     DB::table('propflyers')
         ->where('id', $row->id)
