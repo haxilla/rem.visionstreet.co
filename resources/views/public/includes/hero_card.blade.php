@@ -28,10 +28,12 @@
 
                         $agentImg = null;
                         if ($the->theAgent->agtPhoto && $the->theAgent->theAgentCleanup) {
-                        $agentImg = "https://realtyrepublic.com/agentPhotos/{$the->theAgent->theAgentCleanup->newRemID}/{$the->theAgent->agtPhoto}";
+                            $agentImg = "https://realtyrepublic.com/agentPhotos/{$the->theAgent->theAgentCleanup->newRemID}/{$the->theAgent->agtPhoto}";
                         } elseif ($the->theAgent->agtPhoto) {
-                        $agentImg = "https://realtyemails.com/HQoffice/{$the->theOffice->officeID}/{$the->theAgent->agtPhoto}";
+                            $agentImg = "https://realtyemails.com/HQoffice/{$the->theOffice->officeID}/{$the->theAgent->agtPhoto}";
                         }
+
+                        $listingURL= "https://realtyrepublic.com/homedetails/{{$the->url_slug}}";
 
                         $street   = $the->xFullStreet;
                         $cityLine = "{$the->xCity}, {$the->xState} {$the->xxZip}";
