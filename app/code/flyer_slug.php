@@ -19,7 +19,7 @@ $rows = DB::table('propflyers')
         'xUnitNum',
         'xCity',
         'state',
-        'xZip'
+        'xxZip'
     ])
     ->whereNull('url_slug')
     ->get();
@@ -31,7 +31,7 @@ foreach ($rows as $row) {
     $unitNum   = trim((string) ($row->xUnitNum ?? ''));
     $city      = trim((string) ($row->xCity ?? ''));
     $state     = trim((string) ($row->state ?? ''));
-    $zip       = trim((string) ($row->xZip ?? ''));
+    $zip       = trim((string) ($row->xxZip ?? ''));
 
     $unit = trim($unitDesig . ' ' . $unitNum);
 
