@@ -8,7 +8,11 @@ if (!Schema::hasColumn('propflyers', 'url_slug')) {
 
 
 try {
-    $pdo = \Illuminate\Support\Facades\DB::connection()->getPdo();
+    $rows = \Illuminate\Support\Facades\DB::table('propflyers')
+    ->whereNull('url_slug')
+    ->count();
+
+dd($rows);
     dd('pdo connected');
 } catch (\Throwable $e) {
     echo '<pre>';
