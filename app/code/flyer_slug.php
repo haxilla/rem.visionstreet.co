@@ -1,14 +1,34 @@
 <?php
 
+
 if (!Schema::hasColumn('propflyers', 'url_slug')) {
     Schema::table('propflyers', function (Blueprint $table) {
         $table->string('url_slug', 150)->nullable()->after('flyer_code');
     });
 }
 
-$rows = "HELLO";
+<?php
 
-dd($rows);
+try {
+
+    $rows = \Illuminate\Support\Facades\DB::table('propflyers')
+        ->whereNull('url_slug')
+        ->get();
+
+    dd('query worked', $rows->count());
+
+} catch (\Throwable $e) {
+
+    echo "<pre>";
+    echo "MESSAGE:\n" . $e->getMessage() . "\n\n";
+    echo "FILE:\n" . $e->getFile() . "\n\n";
+    echo "LINE:\n" . $e->getLine() . "\n\n";
+    echo "TRACE:\n" . $e->getTraceAsString();
+    echo "</pre>";
+
+    exit;
+}
+
 
 
 foreach ($rows as $row) {
