@@ -47,6 +47,8 @@
                         $listingImg = "https://realtyrepublic.com/hqphotos/{$the->theMeta->zipDir}/{$the->theMeta->mlsDir}/{$photo}";
                     }
 
+                    $listingURL="https://realtyrepublic.com/homedetails/{$the->url_slug}
+
                     $agentImg = null;
                     if (!empty($the->theAgent?->agtPhoto) && !empty($the->theAgent?->theAgentCleanup?->newRemID)) {
                         $agentImg = "https://realtyrepublic.com/agentPhotos/{$the->theAgent->theAgentCleanup->newRemID}/{$the->theAgent->agtPhoto}";
@@ -67,11 +69,13 @@
                     {{-- Photo --}}
                     <div class="h-[230px] overflow-hidden rounded-[18px] bg-[#e8e8ec]">
                         @if($listingImg)
-                            <img
-                                src="{{ $listingImg }}"
-                                alt="{{ $street }}"
-                                class="h-full w-full object-cover transition duration-500 group-hover:scale-[1.035]"
-                            >
+                            <a href="{{ $listingURL }}" target="_blank">
+                                <img
+                                    src="{{ $listingImg }}"
+                                    alt="{{ $street }}"
+                                    class="h-full w-full object-cover transition duration-500 group-hover:scale-[1.035]"
+                                >
+                            </a>
                         @endif
                     </div>
 
