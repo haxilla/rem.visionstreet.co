@@ -7,7 +7,7 @@ if (!Schema::hasColumn('propflyers', 'url_slug')) {
     });
 }
 
-$rows = \DB::table('propflyers')
+$rows = \Illuminate\Support\Facades\DB::table('propflyers')
     ->whereNull('url_slug')
     ->get();
 
