@@ -1,57 +1,61 @@
 <?php
 
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Str;
+
 if (!Schema::hasColumn('propflyers', 'url_slug')) {
     Schema::table('propflyers', function (Blueprint $table) {
         $table->string('url_slug', 150)->nullable()->after('flyer_code');
     });
 }
 
-
-try {
-    $rows = \Illuminate\Support\Facades\DB::table('propflyers')
+$rows = DB::table('propflyers')
+    ->select([
+        'id',
+        'xFullStreet',
+        'xUnitDesig',
+        'xUnitNum',
+        'xCity',
+        'state',
+        'xZip'
+    ])
     ->whereNull('url_slug')
-    ->count();
-
-dd($rows);
-    dd('pdo connected');
-} catch (\Throwable $e) {
-    echo '<pre>';
-    echo $e->getMessage() . "\n\n";
-    echo $e->getFile() . ':' . $e->getLine();
-    echo '</pre>';
-    exit;
-}
+    ->get();
 
 foreach ($rows as $row) {
 
-    $street     = trim((string) ($row->xFullStreet ?? ''));
-    $unitDesig  = trim((string) ($row->xUnitDesig ?? ''));
-    $unitNum    = trim((string) ($row->xUnitNum ?? ''));
-    $city       = trim((string) ($row->xCity ?? ''));
-    $state      = trim((string) ($row->state ?? ''));
-    $zip        = trim((string) ($row->xZip ?? ''));
+    $street    = trim((string) ($row->xFullStreet ?? ''));
+    $unitDesig = trim((string) ($row->xUnitDesig ?? ''));
+    $unitNum   = trim((string) ($row->xUnitNum ?? ''));
+    $city      = trim((string) ($row->xCity ?? ''));
+    $state     = trim((string) ($row->state ?? ''));
+    $zip       = trim((string) ($row->xZip ?? ''));
 
     $unit = trim($unitDesig . ' ' . $unitNum);
 
     $streetWithUnit = $street;
 
     if ($unit !== '') {
+
         $streetLower = strtolower($street);
         $unitLower   = strtolower($unit);
 
         if (strpos($streetLower, $unitLower) === false) {
             $streetWithUnit = trim($street . ' ' . $unit);
         }
+
     }
 
     $base = implode(' ', array_filter([
         $streetWithUnit,
         $city,
         $state,
-        $zip,
+        $zip
     ]));
 
-    $baseSlug = \Illuminate\Support\Str::slug($base);
+    $baseSlug = Str::slug($base);
 
     if ($baseSlug === '') {
         $baseSlug = (string) $row->id;
@@ -73,6 +77,6 @@ foreach ($rows as $row) {
     DB::table('propflyers')
         ->where('id', $row->id)
         ->update([
-            'url_slug' => $slug,
+            'url_slug' => $slug
         ]);
 }
