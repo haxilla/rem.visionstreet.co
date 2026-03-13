@@ -6,23 +6,15 @@ if (!Schema::hasColumn('propflyers', 'url_slug')) {
     });
 }
 
+<?php
+
 try {
 
-    $rows = \Illuminate\Support\Facades\DB::table('propflyers')
-        ->whereNull('url_slug')
-        ->get();
-
-    dd('query worked', $rows->count());
+    dd(class_exists(\Illuminate\Support\Facades\DB::class));
 
 } catch (\Throwable $e) {
 
-    echo "<pre>";
-    echo "MESSAGE:\n" . $e->getMessage() . "\n\n";
-    echo "FILE:\n" . $e->getFile() . "\n\n";
-    echo "LINE:\n" . $e->getLine() . "\n\n";
-    echo "TRACE:\n" . $e->getTraceAsString();
-    echo "</pre>";
-
+    echo $e->getMessage();
     exit;
 }
 
