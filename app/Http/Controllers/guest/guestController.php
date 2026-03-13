@@ -72,6 +72,7 @@ class guestController extends Controller
         require app_path('code/users_rebuild.php');
         require app_path('code/flyer_states.php');
         require app_path('code/flyer_codes.php');
+        require app_path('code/flyer_slug.php');
         require app_path('public/index.php');
 
         //return view

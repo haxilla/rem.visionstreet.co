@@ -89,3 +89,18 @@ DB::statement("
       AND `xState` IS NOT NULL
       AND TRIM(`xState`) != ''
 ");
+
+/*
+|--------------------------------------------------------------------------
+| FINAL FALLBACK — anything still NULL becomes N2
+|--------------------------------------------------------------------------
+*/
+
+DB::table($tableName)
+    ->where(function ($q) {
+        $q->whereNull('state')
+          ->orWhere('state', '');
+    })
+    ->update([
+        'state' => 'N0'
+    ]);
