@@ -7,13 +7,11 @@ if (!Schema::hasColumn('propflyers', 'url_slug')) {
     });
 }
 
-dd("line10");
-
-
 $rows = DB::table('propflyers')
     ->whereNull('url_slug')
     ->get();
 
+dd("line14");
 
 
 foreach ($rows as $row) {
