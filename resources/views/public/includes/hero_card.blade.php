@@ -45,7 +45,7 @@
                     @endphp
 
                     <div class="swiper-slide">
-                        <a href="#">
+                        <a href="{{ $listingURL }}">
                             <div class="relative {{ $heroMinH }}">
 
                                 {{-- background photo link --}}
