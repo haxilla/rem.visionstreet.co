@@ -6,8 +6,10 @@ if (!Schema::hasColumn('propflyers', 'url_slug')) {
     });
 }
 
-$rows = "hello"
+$rows = "HELLO";
+
 dd($rows);
+
 
 foreach ($rows as $row) {
 
