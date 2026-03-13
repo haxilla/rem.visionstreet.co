@@ -6,13 +6,15 @@ if (!Schema::hasColumn('propflyers', 'url_slug')) {
     });
 }
 
+
 try {
-
-    dd(class_exists(\Illuminate\Support\Facades\DB::class));
-
+    $pdo = \Illuminate\Support\Facades\DB::connection()->getPdo();
+    dd('pdo connected');
 } catch (\Throwable $e) {
-
-    echo $e->getMessage();
+    echo '<pre>';
+    echo $e->getMessage() . "\n\n";
+    echo $e->getFile() . ':' . $e->getLine();
+    echo '</pre>';
     exit;
 }
 
