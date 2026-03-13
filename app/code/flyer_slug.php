@@ -1,6 +1,5 @@
 <?php
 
-
 if (!Schema::hasColumn('propflyers', 'url_slug')) {
     Schema::table('propflyers', function (Blueprint $table) {
         $table->string('url_slug', 150)->nullable()->after('flyer_code');
@@ -8,7 +7,6 @@ if (!Schema::hasColumn('propflyers', 'url_slug')) {
 }
 
 $rows = \Illuminate\Support\Facades\DB::table('propflyers')
-    ->whereNull('url_slug')
     ->get();
 
 dd($rows->count() . ' flyers need slugs');
