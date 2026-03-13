@@ -6,8 +6,6 @@ if (!Schema::hasColumn('propflyers', 'url_slug')) {
     });
 }
 
-<?php
-
 try {
 
     dd(class_exists(\Illuminate\Support\Facades\DB::class));
