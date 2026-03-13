@@ -27,8 +27,6 @@ $rows = DB::table('propflyers')
     ->orderBy('id')
     ->get();
 
-    dd($rows);
-
 foreach ($rows as $row) {
 
     $street    = trim((string) ($row->xFullStreet ?? ''));
