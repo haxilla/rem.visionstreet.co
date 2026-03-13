@@ -34,7 +34,6 @@
                             }
 
                             $listingURL= "https://realtyrepublic.com/homedetails/{$the->url_slug}";
-                            dd($the);
                             $street   = $the->xFullStreet;
                             $cityLine = "{$the->xCity}, {$the->xState} {$the->xxZip}";
                             $agentName  = $the->theAgent->agtFullName;
