@@ -7,11 +7,11 @@ if (!Schema::hasColumn('propflyers', 'url_slug')) {
     });
 }
 
-$rows = DB::table('propflyers')
+$rows = \DB::table('propflyers')
     ->whereNull('url_slug')
     ->get();
 
-dd("line14");
+dd($rows->count() . ' flyers need slugs');
 
 
 foreach ($rows as $row) {
