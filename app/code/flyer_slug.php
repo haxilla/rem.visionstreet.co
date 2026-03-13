@@ -66,6 +66,9 @@ foreach ($rows as $row) {
     }
 
     $slug = $baseSlug;
+
+    /* unique check - if the slug already exists for another flyer, 
+    append a number until we find a unique slug 
     $i = 1;
 
     while (
@@ -77,6 +80,7 @@ foreach ($rows as $row) {
         $slug = $baseSlug . '-' . $i;
         $i++;
     }
+    */
 
     DB::table('propflyers')
         ->where('id', $row->id)
