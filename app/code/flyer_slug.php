@@ -24,6 +24,7 @@ $rows = DB::table('propflyers')
         'xxZip'
     ])
     ->whereNull('url_slug')
+    ->whereNotNull('xFullStreet')
     ->orderBy('id')
     ->limit($batchSize)
     ->get();
