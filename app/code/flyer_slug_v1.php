@@ -5,7 +5,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Str;
 
-$batchSize = 25;
+set_time_limit(0);
+ini_set('max_execution_time', 0);
+ignore_user_abort(true);
 
 if (!Schema::hasColumn('propflyers', 'url_slug')) {
     Schema::table('propflyers', function (Blueprint $table) {
@@ -24,8 +26,6 @@ $rows = DB::table('propflyers')
         'xxZip'
     ])
     ->whereNull('url_slug')
-    ->orderBy('id')
-    ->limit($batchSize)
     ->get();
 
 foreach ($rows as $row) {
@@ -49,6 +49,7 @@ foreach ($rows as $row) {
         if (strpos($streetLower, $unitLower) === false) {
             $streetWithUnit = trim($street . ' ' . $unit);
         }
+
     }
 
     $base = implode(' ', array_filter([
@@ -65,6 +66,9 @@ foreach ($rows as $row) {
     }
 
     $slug = $baseSlug;
+
+    /* unique check - if the slug already exists for another flyer, 
+    append a number until we find a unique slug */
     $i = 1;
 
     while (
@@ -77,22 +81,10 @@ foreach ($rows as $row) {
         $i++;
     }
 
+    /* update table */
     DB::table('propflyers')
         ->where('id', $row->id)
         ->update([
             'url_slug' => $slug
         ]);
 }
-
-$remaining = DB::table('propflyers')
-    ->whereNull('url_slug')
-    ->count();
-
-if ($remaining > 0) {
-    echo '<!doctype html><html><head><meta http-equiv="refresh" content="0.5"></head><body>';
-    echo 'Processed ' . $batchSize . ' rows. Remaining: ' . $remaining;
-    echo '</body></html>';
-    exit;
-}
-
-echo 'url_slug backfill complete';
