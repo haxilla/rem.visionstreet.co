@@ -5,13 +5,13 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Str;
 
+$batchSize = 25;
+
 if (!Schema::hasColumn('propflyers', 'url_slug')) {
     Schema::table('propflyers', function (Blueprint $table) {
         $table->string('url_slug', 150)->nullable()->after('flyer_code');
     });
 }
-
-
 
 $rows = DB::table('propflyers')
     ->select([
@@ -27,7 +27,19 @@ $rows = DB::table('propflyers')
     ->whereNotNull('xFullStreet')
     ->where('xFullStreet', '!=', '')
     ->orderBy('id')
+    ->limit($batchSize)
     ->get();
+
+if ($rows->isEmpty()) {
+
+    echo '<!doctype html><html><body style="font-family:Arial;padding:20px">';
+    echo '<h3>url_slug backfill complete</h3>';
+    echo '</body></html>';
+
+    exit;
+}
+
+$lastId = null;
 
 foreach ($rows as $row) {
 
@@ -65,26 +77,29 @@ foreach ($rows as $row) {
         $baseSlug = (string) $row->id;
     }
 
-    $slug = $baseSlug;
-
-    /* //for uniqueness, if needed 
-    // skipping for now 
-    $i = 1;
-
-    while (
-        DB::table('propflyers')
-            ->where('url_slug', $slug)
-            ->where('id', '!=', $row->id)
-            ->exists()
-    ) {
-        $slug = $baseSlug . '-' . $i;
-        $i++;
-    }
-    */    
-
     DB::table('propflyers')
         ->where('id', $row->id)
         ->update([
-            'url_slug' => $slug
+            'url_slug' => $baseSlug
         ]);
+
+    $lastId = $row->id;
 }
+
+$remaining = DB::table('propflyers')
+    ->whereNull('url_slug')
+    ->count();
+
+echo '<!doctype html>';
+echo '<html><head>';
+echo '<meta http-equiv="refresh" content="0.5">';
+echo '</head><body style="font-family:Arial;padding:20px">';
+
+echo '<h3>Batch complete</h3>';
+echo '<p>Last ID: ' . $lastId . '</p>';
+echo '<p>Processed: ' . count($rows) . '</p>';
+echo '<p>Remaining: ' . $remaining . '</p>';
+
+echo '</body></html>';
+
+exit;
