@@ -22,83 +22,83 @@
                 <div class="swiper-wrapper">
 
                     @foreach($newAdds as $the)
-                    @php
-                        $photo = $the->thePhotos->where('def','=','1')->first()->photoName;
-                        $listingImg = "https://realtyrepublic.com/hqphotos/{$the->theMeta->zipDir}/{$the->theMeta->mlsDir}/{$photo}";
+                        @php
+                            $photo = $the->thePhotos->where('def','=','1')->first()->photoName;
+                            $listingImg = "https://realtyrepublic.com/hqphotos/{$the->theMeta->zipDir}/{$the->theMeta->mlsDir}/{$photo}";
 
-                        $agentImg = null;
-                        if ($the->theAgent->agtPhoto && $the->theAgent->theAgentCleanup) {
-                            $agentImg = "https://realtyrepublic.com/agentPhotos/{$the->theAgent->theAgentCleanup->newRemID}/{$the->theAgent->agtPhoto}";
-                        } elseif ($the->theAgent->agtPhoto) {
-                            $agentImg = "https://realtyemails.com/HQoffice/{$the->theOffice->officeID}/{$the->theAgent->agtPhoto}";
-                        }
+                            $agentImg = null;
+                            if ($the->theAgent->agtPhoto && $the->theAgent->theAgentCleanup) {
+                                $agentImg = "https://realtyrepublic.com/agentPhotos/{$the->theAgent->theAgentCleanup->newRemID}/{$the->theAgent->agtPhoto}";
+                            } elseif ($the->theAgent->agtPhoto) {
+                                $agentImg = "https://realtyemails.com/HQoffice/{$the->theOffice->officeID}/{$the->theAgent->agtPhoto}";
+                            }
 
-                        $listingURL= "https://realtyrepublic.com/homedetails/{{$the->url_slug}}";
+                            $listingURL= "https://realtyrepublic.com/homedetails/{{ $the->url_slug }}";
 
-                        $street   = $the->xFullStreet;
-                        $cityLine = "{$the->xCity}, {$the->xState} {$the->xxZip}";
-                        $agentName  = $the->theAgent->agtFullName;
-                        $officeName = $the->theOffice->officeName;
-                        $agentPhone = $the->theAgent->agtMainPhone;
+                            $street   = $the->xFullStreet;
+                            $cityLine = "{$the->xCity}, {$the->xState} {$the->xxZip}";
+                            $agentName  = $the->theAgent->agtFullName;
+                            $officeName = $the->theOffice->officeName;
+                            $agentPhone = $the->theAgent->agtMainPhone;
 
-                        $badgeText = $badgeText ?? 'Featured';
-                    @endphp
+                            $badgeText = $badgeText ?? 'Featured';
+                        @endphp
 
-                    <div class="swiper-slide">
-                        <a href="{{ $listingURL }}">
-                            <div class="relative {{ $heroMinH }}">
+                        <div class="swiper-slide">
+                            <a href="{{ $listingURL }}">
+                                <div class="relative {{ $heroMinH }}">
 
-                                {{-- background photo link --}}
+                                    {{-- background photo link --}}
 
-                                <img
-                                    src="{{ $listingImg }}"
-                                    alt="{{ $street }}"
-                                    class="absolute inset-0 h-full w-full object-cover"
-                                />
-
-                                {{-- readability overlay --}}
-                                <div class="absolute inset-0 bg-black/20"></div>
-
-                                {{-- top-left listing info --}}
-                                <div class="absolute left-6 top-6 z-10 text-white drop-shadow">
-                                    <div class="inline-flex items-center rounded-full bg-black/35 px-3 py-1 text-[11px] font-medium tracking-wide ring-1 ring-white/10 backdrop-blur-sm">
-                                        {{ $badgeText }}
-                                    </div>
-
-                                    <div class="mt-3 text-[15px] font-medium leading-snug">
-                                        {{ $street }}
-                                    </div>
-                                    <div class="mt-1 text-[12px] font-normal opacity-90">
-                                        {{ $cityLine }}
-                                    </div>
-                                </div>
-
-                                {{-- bottom-left agent card --}}
-                                <div class="absolute bottom-6 left-6 z-10 flex items-center gap-3 rounded-xl bg-black/40 px-3.5 py-3 text-white backdrop-blur-sm ring-1 ring-white/10">
-                                    @if($agentImg)
                                     <img
-                                        src="{{ $agentImg }}"
-                                        alt="{{ $agentName }}"
-                                        class="h-16 w-auto rounded-lg ring-1 ring-white/25 shadow-sm"
+                                        src="{{ $listingImg }}"
+                                        alt="{{ $street }}"
+                                        class="absolute inset-0 h-full w-full object-cover"
                                     />
-                                    @endif
 
-                                    <div class="leading-tight">
-                                        <div class="text-[13px] font-semibold">
-                                            {{ $agentName }}
+                                    {{-- readability overlay --}}
+                                    <div class="absolute inset-0 bg-black/20"></div>
+
+                                    {{-- top-left listing info --}}
+                                    <div class="absolute left-6 top-6 z-10 text-white drop-shadow">
+                                        <div class="inline-flex items-center rounded-full bg-black/35 px-3 py-1 text-[11px] font-medium tracking-wide ring-1 ring-white/10 backdrop-blur-sm">
+                                            {{ $badgeText }}
                                         </div>
-                                        <div class="mt-0.5 text-[12px] font-normal opacity-85">
-                                            {{ $officeName }}
+
+                                        <div class="mt-3 text-[15px] font-medium leading-snug">
+                                            {{ $street }}
                                         </div>
-                                        <div class="mt-1 text-[12px] font-normal opacity-85">
-                                            {{ $agentPhone }}
+                                        <div class="mt-1 text-[12px] font-normal opacity-90">
+                                            {{ $cityLine }}
                                         </div>
                                     </div>
-                                </div>
 
-                            </div>
-                        </a>
-                    </div>
+                                    {{-- bottom-left agent card --}}
+                                    <div class="absolute bottom-6 left-6 z-10 flex items-center gap-3 rounded-xl bg-black/40 px-3.5 py-3 text-white backdrop-blur-sm ring-1 ring-white/10">
+                                        @if($agentImg)
+                                        <img
+                                            src="{{ $agentImg }}"
+                                            alt="{{ $agentName }}"
+                                            class="h-16 w-auto rounded-lg ring-1 ring-white/25 shadow-sm"
+                                        />
+                                        @endif
+
+                                        <div class="leading-tight">
+                                            <div class="text-[13px] font-semibold">
+                                                {{ $agentName }}
+                                            </div>
+                                            <div class="mt-0.5 text-[12px] font-normal opacity-85">
+                                                {{ $officeName }}
+                                            </div>
+                                            <div class="mt-1 text-[12px] font-normal opacity-85">
+                                                {{ $agentPhone }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </a>
+                        </div>
                     @endforeach
 
                 </div>

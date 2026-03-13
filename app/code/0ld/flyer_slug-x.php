@@ -11,8 +11,6 @@ if (!Schema::hasColumn('propflyers', 'url_slug')) {
     });
 }
 
-
-
 $rows = DB::table('propflyers')
     ->select([
         'id',
