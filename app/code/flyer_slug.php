@@ -5,8 +5,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Str;
 
-$batchSize = 1;
-
 if (!Schema::hasColumn('propflyers', 'url_slug')) {
     Schema::table('propflyers', function (Blueprint $table) {
         $table->string('url_slug', 150)->nullable()->after('flyer_code');
@@ -26,7 +24,6 @@ $rows = DB::table('propflyers')
     ->whereNull('url_slug')
     ->whereNotNull('xFullStreet')
     ->orderBy('id')
-    ->limit($batchSize)
     ->get();
 
 foreach ($rows as $row) {
@@ -84,16 +81,3 @@ foreach ($rows as $row) {
             'url_slug' => $slug
         ]);
 }
-
-$remaining = DB::table('propflyers')
-    ->whereNull('url_slug')
-    ->count();
-
-if ($remaining > 0) {
-    echo '<!doctype html><html><head><meta http-equiv="refresh" content="0.5"></head><body>';
-    echo 'Processed ' . $batchSize . ' rows. Remaining: ' . $remaining;
-    echo '</body></html>';
-    exit;
-}
-
-echo 'url_slug backfill complete';
