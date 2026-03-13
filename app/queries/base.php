@@ -9,7 +9,7 @@ $base=propflyer::select(
   'id','propflyers.propagent_id','propflyers.created_at','creationDate',
   'xFullStreet','xCity','xState','xZip','xxZip','xBeds','xBaths','officeID',
   'xSqft','xxBeds','xxBaths','xxSqft','xYrBuilt','xxYrBuilt','xListPrice',
-  'xWebViews')
+  'xWebViews','url_slug','flyer_code')
 ->where(function($q)use($theDate){
   //either or created_at || creationDate
   $q->where('propflyers.created_at','>',"$theDate")
