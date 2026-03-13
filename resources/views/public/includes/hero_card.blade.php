@@ -33,7 +33,7 @@
                                 $agentImg = "https://realtyemails.com/HQoffice/{$the->theOffice->officeID}/{$the->theAgent->agtPhoto}";
                             }
 
-                            $listingURL= "https://realtyrepublic.com/homedetails/{{ $the->url_slug }}";
+                            $listingURL= "https://realtyrepublic.com/homedetails/{$the->url_slug}";
                             dd($listingURL);
                             $street   = $the->xFullStreet;
                             $cityLine = "{$the->xCity}, {$the->xState} {$the->xxZip}";
