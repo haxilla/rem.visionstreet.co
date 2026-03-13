@@ -23,8 +23,11 @@ $rows = DB::table('propflyers')
     ])
     ->whereNull('url_slug')
     ->whereNotNull('xFullStreet')
+    ->where('xFullStreet', '!=', '')
     ->orderBy('id')
     ->get();
+
+    dd($rows);
 
 foreach ($rows as $row) {
 
