@@ -1,66 +1,76 @@
 <?php
 
-if (!Schema::hasColumn('propflyers', 'url_slug')) {
-    Schema::table('propflyers', function (Blueprint $table) {
-        $table->string('url_slug', 150)->nullable()->after('flyer_code');
-    });
-}
+try {
 
-$rows = DB::table('propflyers')
-    ->whereNull('url_slug')
-    ->get();
+    if (!Schema::hasColumn('propflyers', 'url_slug')) {
+        Schema::table('propflyers', function (Blueprint $table) {
+            $table->string('url_slug', 150)->nullable()->after('flyer_code');
+        });
+    }
 
-foreach ($rows as $row) {
+    $rows = DB::table('propflyers')
+        ->whereNull('url_slug')
+        ->get();
 
-    $street     = trim((string) ($row->xFullStreet ?? ''));
-    $unitDesig  = trim((string) ($row->xUnitDesig ?? ''));
-    $unitNum    = trim((string) ($row->xUnitNum ?? ''));
-    $city       = trim((string) ($row->xCity ?? ''));
-    $state      = trim((string) ($row->state ?? ''));
-    $zip        = trim((string) ($row->xZip ?? ''));
+    foreach ($rows as $row) {
 
-    $unit = trim($unitDesig . ' ' . $unitNum);
+        $street     = trim((string) ($row->xFullStreet ?? ''));
+        $unitDesig  = trim((string) ($row->xUnitDesig ?? ''));
+        $unitNum    = trim((string) ($row->xUnitNum ?? ''));
+        $city       = trim((string) ($row->xCity ?? ''));
+        $state      = trim((string) ($row->state ?? ''));
+        $zip        = trim((string) ($row->xZip ?? ''));
 
-    $streetWithUnit = $street;
+        $unit = trim($unitDesig . ' ' . $unitNum);
 
-    if ($unit !== '') {
-        $streetLower = strtolower($street);
-        $unitLower   = strtolower($unit);
+        $streetWithUnit = $street;
 
-        if (strpos($streetLower, $unitLower) === false) {
-            $streetWithUnit = trim($street . ' ' . $unit);
+        if ($unit !== '') {
+            $streetLower = strtolower($street);
+            $unitLower   = strtolower($unit);
+
+            if (strpos($streetLower, $unitLower) === false) {
+                $streetWithUnit = trim($street . ' ' . $unit);
+            }
         }
-    }
 
-    $base = implode(' ', array_filter([
-        $streetWithUnit,
-        $city,
-        $state,
-        $zip,
-    ]));
+        $base = implode(' ', array_filter([
+            $streetWithUnit,
+            $city,
+            $state,
+            $zip,
+        ]));
 
-    $baseSlug = \Illuminate\Support\Str::slug($base);
+        $baseSlug = \Illuminate\Support\Str::slug($base);
 
-    if ($baseSlug === '') {
-        $baseSlug = (string) $row->id;
-    }
+        if ($baseSlug === '') {
+            $baseSlug = (string) $row->id;
+        }
 
-    $slug = $baseSlug;
-    $i = 1;
+        $slug = $baseSlug;
+        $i = 1;
 
-    while (
+        while (
+            DB::table('propflyers')
+                ->where('url_slug', $slug)
+                ->where('id', '!=', $row->id)
+                ->exists()
+        ) {
+            $slug = $baseSlug . '-' . $i;
+            $i++;
+        }
+
         DB::table('propflyers')
-            ->where('url_slug', $slug)
-            ->where('id', '!=', $row->id)
-            ->exists()
-    ) {
-        $slug = $baseSlug . '-' . $i;
-        $i++;
+            ->where('id', $row->id)
+            ->update([
+                'url_slug' => $slug,
+            ]);
     }
 
-    DB::table('propflyers')
-        ->where('id', $row->id)
-        ->update([
-            'url_slug' => $slug,
-        ]);
+} catch (\Throwable $e) {
+    dd([
+        'message' => $e->getMessage(),
+        'file'    => $e->getFile(),
+        'line'    => $e->getLine(),
+    ]);
 }
