@@ -86,6 +86,8 @@ foreach ($rows as $row) {
 
 $remaining = DB::table('propflyers')
     ->whereNull('url_slug')
+    ->whereNotNull('xFullStreet')
+    ->where('xFullStreet', '!=', '')
     ->count();
 
 echo '<!doctype html>';
@@ -99,5 +101,3 @@ echo '<p>Processed: ' . count($rows) . '</p>';
 echo '<p>Remaining: ' . $remaining . '</p>';
 
 echo '</body></html>';
-
-exit;
