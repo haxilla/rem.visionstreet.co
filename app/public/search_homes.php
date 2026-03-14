@@ -11,4 +11,6 @@ $searchAll = $searchAll
     ->paginate(12)
     ->withQueryString();
 
-dd($searchAll);
+$data= [
+    'searchAll' => $searchAll,
+];
