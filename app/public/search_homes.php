@@ -10,3 +10,5 @@ $searchAll = $searchAll
     ->orderBy('propflyers.created_at', 'desc')
     ->paginate(12)
     ->withQueryString();
+
+dd($searchAll);
