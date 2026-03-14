@@ -1,252 +1,306 @@
 @include('public.layout.head')
 
-<body data-section="admin" class="linkcheck relative bg-[#f3f4f7] min-h-screen font-sans text-slate-800 postgres">
+<body class="linkcheck relative bg-[#eef2f6] min-h-screen font-sans text-slate-800 postgres">
 
     @include('public.layout.nav')
 
     <main class="transition-all duration-300 min-h-screen pt-24 relative" :class="collapsed ? 'ml-20' : 'ml-64'">
-        <div class="mx-8 mr-8 lg:mx-10">
+        <div class="mx-6 lg:mx-10">
 
-            {{-- HERO --}}
-            <section class="overflow-hidden rounded-[30px] bg-gradient-to-br from-[#213c7a] via-[#2f4f95] to-[#36579f] shadow-[0_20px_60px_rgba(23,43,99,.18)]">
-                <div class="grid grid-cols-1 lg:grid-cols-[1.2fr_.8fr] items-stretch">
-                    <div class="relative min-h-[340px] lg:min-h-[420px]">
-                        <img
-                            src="{{ asset('images/featured-home-placeholder.jpg') }}"
-                            alt="Featured property"
-                            class="absolute inset-0 h-full w-full object-cover"
-                        />
-                        <div class="absolute inset-0 bg-gradient-to-r from-black/35 via-black/15 to-transparent"></div>
+            <div class="mx-auto max-w-[1320px]">
+                <div class="grid grid-cols-1 gap-8 xl:grid-cols-[280px_minmax(0,1fr)]">
 
-                        <div class="absolute left-6 top-6 z-10">
-                            <div class="inline-flex rounded-full bg-white/15 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-white ring-1 ring-white/20 backdrop-blur-sm">
-                                Recent Listings
+                    {{-- LEFT SIDEBAR --}}
+                    <aside class="space-y-6">
+
+                        <div class="rounded-[26px] border border-[#d8e0ec] bg-white p-6 shadow-[0_8px_24px_rgba(0,0,0,.05)]">
+                            <div class="text-center">
+                                <div class="text-[12px] font-semibold uppercase tracking-[0.22em] text-[#6a82b7]">
+                                    Realty Emails
+                                </div>
+
+                                <h2 class="mt-3 font-serif text-[32px] leading-none text-[#214e9b]">
+                                    Gallery
+                                </h2>
+
+                                <p class="mt-4 text-[15px] leading-7 text-slate-600">
+                                    View the latest e-flyers your members have created on the system.
+                                </p>
+
+                                <div class="mt-5 rounded-[18px] bg-[#f5f8fc] px-4 py-4 text-[14px] leading-6 text-slate-600">
+                                    Public examples of past e-flyers presented in a cleaner, updated layout.
+                                </div>
                             </div>
                         </div>
 
-                        <div class="absolute left-6 bottom-6 z-10 max-w-[320px] rounded-[20px] border border-white/10 bg-black/35 p-4 text-white shadow-xl backdrop-blur-md">
-                            <div class="text-[11px] uppercase tracking-[0.18em] text-white/70">RealtyEmails</div>
-                            <div class="mt-2 text-[20px] font-semibold leading-tight">Browse Newly Created E-Flyers</div>
-                            <div class="mt-2 text-[14px] leading-6 text-white/80">
-                                Explore recent property flyers in a cleaner, modern gallery experience.
+                        <div class="overflow-hidden rounded-[26px] border border-[#d8e0ec] bg-white shadow-[0_8px_24px_rgba(0,0,0,.05)]">
+                            <div class="bg-gradient-to-br from-[#214e9b] via-[#2a56ab] to-[#3e6fca] px-6 py-6 text-white text-center">
+                                <div class="text-[12px] font-semibold uppercase tracking-[0.22em] text-white/75">
+                                    Send an E-Flyer
+                                </div>
+
+                                <div class="mt-3 text-[18px] font-semibold leading-tight">
+                                    Premium Services<br>For Less
+                                </div>
+
+                                <div class="mt-5 inline-flex h-20 w-20 items-center justify-center rounded-full bg-[#f4b13d] text-[30px] font-bold text-white shadow-lg">
+                                    $9
+                                </div>
+
+                                <div class="mt-4 text-[13px] text-white/80">
+                                    as low as
+                                </div>
                             </div>
-                        </div>
-                    </div>
 
-                    <div class="flex items-center">
-                        <div class="w-full px-8 py-10 lg:px-12 lg:py-14 text-white">
-                            <div class="inline-flex rounded-full bg-white/10 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.28em] ring-1 ring-white/15">
-                                Slide Show Gallery
-                            </div>
+                            <div class="px-6 py-6">
+                                <ul class="space-y-3 text-[14px] leading-6 text-slate-600">
+                                    <li>Instant proof &amp; delivery</li>
+                                    <li>Seller sent a copy immediately</li>
+                                    <li>Flyers saved &amp; editable for resends</li>
+                                    <li>Upload unlimited photos</li>
+                                    <li>FREE web page slide show</li>
+                                    <li>FREE printable flyers</li>
+                                    <li>Personal contact copy center</li>
+                                </ul>
 
-                            <h1 class="mt-6 font-serif text-[42px] leading-[0.95] sm:text-[54px] lg:text-[62px]">
-                                View Homes<br>In Style
-                            </h1>
-
-                            <p class="mt-6 max-w-[500px] text-[16px] leading-8 text-white/82">
-                                See the latest e-flyers your members have created, presented in a modern searchable gallery with clean cards and pagination.
-                            </p>
-
-                            <div class="mt-8 flex flex-wrap gap-4">
-                                <a href="#results" class="inline-flex items-center justify-center rounded-full bg-white px-6 py-3 text-[14px] font-semibold text-[#27478d] shadow-md transition hover:-translate-y-[1px]">
-                                    Browse Listings
-                                </a>
-                                <a href="/pricing" class="inline-flex items-center justify-center rounded-full border border-white/25 bg-white/8 px-6 py-3 text-[14px] font-semibold text-white backdrop-blur-sm transition hover:bg-white/14">
+                                <a
+                                    href="/pricing"
+                                    class="mt-6 inline-flex w-full items-center justify-center rounded-full bg-[#214e9b] px-5 py-3 text-[14px] font-semibold text-white shadow-[0_10px_24px_rgba(33,78,155,.18)] transition hover:bg-[#193f84]"
+                                >
                                     View Pricing
                                 </a>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </section>
 
-            {{-- RESULTS HEADER --}}
-            <section id="results" class="pt-12 lg:pt-16">
-                <div class="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-                    <div>
-                        <div class="text-[12px] font-semibold uppercase tracking-[0.28em] text-[#4f6db5]">
-                            Property Gallery
+                        <div class="rounded-[26px] border border-[#d8e0ec] bg-white p-6 shadow-[0_8px_24px_rgba(0,0,0,.05)]">
+                            <div class="text-[12px] font-semibold uppercase tracking-[0.22em] text-[#6a82b7]">
+                                Results
+                            </div>
+
+                            <div class="mt-3 text-[26px] font-serif leading-none text-[#214e9b]">
+                                {{ $data['searchAll']->total() }}
+                            </div>
+
+                            <div class="mt-2 text-[14px] text-slate-600">
+                                total listings found
+                            </div>
+
+                            <div class="mt-5 rounded-[18px] bg-[#f5f8fc] px-4 py-4 text-[14px] text-slate-600">
+                                Page {{ $data['searchAll']->currentPage() }} of {{ $data['searchAll']->lastPage() }}
+                            </div>
                         </div>
-                        <h2 class="mt-3 font-serif text-[34px] leading-none text-[#21408a] sm:text-[46px]">
-                            Recent Listings
-                        </h2>
-                        <p class="mt-4 max-w-[700px] text-[15px] leading-7 text-slate-600">
-                            Showing recently created flyers from the last 30 days.
-                        </p>
-                    </div>
 
-                    <div class="flex flex-wrap items-center gap-3 text-[14px] text-slate-500">
-                        <div class="rounded-full border border-[#d7ddec] bg-white px-4 py-2 shadow-sm">
-                            {{ $data['searchAll']->total() }} total listings
+                    </aside>
+
+                    {{-- MAIN RESULTS --}}
+                    <section class="min-w-0">
+
+                        <div class="rounded-[28px] border border-[#d8e0ec] bg-white p-6 shadow-[0_8px_24px_rgba(0,0,0,.05)] lg:p-8">
+                            <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+                                <div>
+                                    <div class="text-[12px] font-semibold uppercase tracking-[0.24em] text-[#6a82b7]">
+                                        Slide Show Gallery
+                                    </div>
+
+                                    <h1 class="mt-3 font-serif text-[36px] leading-none text-[#214e9b] sm:text-[44px]">
+                                        Recent E-Flyers
+                                    </h1>
+
+                                    <p class="mt-4 max-w-[760px] text-[15px] leading-7 text-slate-600">
+                                        View the latest e-flyers your members have created on the system.
+                                        Only examples of past e-flyers — not intended as a public home search.
+                                    </p>
+                                </div>
+
+                                <div class="flex flex-wrap gap-3 text-[13px] text-slate-500">
+                                    <div class="rounded-full border border-[#d7ddec] bg-[#f8fafe] px-4 py-2">
+                                        Most Recent
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="rounded-full border border-[#d7ddec] bg-white px-4 py-2 shadow-sm">
-                            Page {{ $data['searchAll']->currentPage() }} of {{ $data['searchAll']->lastPage() }}
-                        </div>
-                    </div>
-                </div>
-            </section>
 
-            {{-- GRID --}}
-            <section class="pt-8 pb-14">
-                <div class="grid grid-cols-1 gap-8 xl:grid-cols-2 2xl:grid-cols-3">
+                        <div class="mt-6 space-y-5">
 
-                    @forelse($data['searchAll'] as $flyer)
-                        @php
-                            $street = trim($flyer->xFullStreet ?? '');
-                            $city   = trim($flyer->xCity ?? '');
-                            $state  = trim($flyer->xState ?? '');
-                            $zip    = trim($flyer->xZip ?? $flyer->xxZip ?? '');
+                            @forelse($data['searchAll'] as $the)
+                                @php
+                                    $photoObj = $the->thePhotos->where('def','=','1')->first();
+                                    $photo    = $photoObj?->photoName;
 
-                            $beds  = $flyer->xBeds ?: $flyer->xxBeds;
-                            $baths = $flyer->xBaths ?: $flyer->xxBaths;
-                            $sqft  = $flyer->xSqft ?: $flyer->xxSqft;
-                            $price = $flyer->xListPrice;
+                                    $listingImg = null;
+                                    if ($photo && !empty($the->theMeta?->zipDir) && !empty($the->theMeta?->mlsDir)) {
+                                        $listingImg = "https://realtyrepublic.com/hqphotos/{$the->theMeta->zipDir}/{$the->theMeta->mlsDir}/{$photo}";
+                                    }
 
-                            $agentName  = $flyer->theAgent->agtFullName ?? 'Listing Agent';
-                            $agentPhone = $flyer->theAgent->agtMainPhone ?? '';
-                            $agentPhoto = $flyer->theAgent->agtPhoto ?? '';
-                            $officeName = $flyer->theOffice->officeName ?? '';
+                                    $listingURL = !empty($the->url_slug)
+                                        ? "https://realtyrepublic.com/homedetails/{$the->url_slug}"
+                                        : '#';
 
-                            $slug = $flyer->url_slug ?? null;
-                            $code = $flyer->flyer_code ?? null;
+                                    $agentImg = null;
+                                    if (!empty($the->theAgent?->agtPhoto) && !empty($the->theAgent?->theAgentCleanup?->newRemID)) {
+                                        $agentImg = "https://realtyrepublic.com/agentPhotos/{$the->theAgent->theAgentCleanup->newRemID}/{$the->theAgent->agtPhoto}";
+                                    } elseif (!empty($the->theAgent?->agtPhoto) && !empty($the->theOffice?->officeID)) {
+                                        $agentImg = "https://realtyemails.com/HQoffice/{$the->theOffice->officeID}/{$the->theAgent->agtPhoto}";
+                                    }
 
-                            $viewUrl = $slug
-                                ? url('/' . ltrim($slug, '/'))
-                                : ($code ? url('/flyer/' . $code) : '#');
+                                    $street     = $the->xFullStreet ?? '';
+                                    $city       = $the->xCity ?? '';
+                                    $state      = $the->xState ?? '';
+                                    $zip        = $the->xZip ?? $the->xxZip ?? '';
+                                    $cityLine   = trim($city . ', ' . $state . ' ' . $zip, ', ');
 
-                            $photo = null;
+                                    $agentName  = $the->theAgent->agtFullName ?? '';
+                                    $officeName = $the->theOffice->officeName ?? '';
 
-                            if (!empty($flyer->theMeta->sk1 ?? null) && !empty($flyer->theMeta->mlsDir ?? null)) {
-                                $photo = asset('storage/' . trim($flyer->theMeta->mlsDir, '/') . '/' . ltrim($flyer->theMeta->sk1, '/'));
-                            }
+                                    $price      = $the->xPrice ?? $the->xListPrice ?? null;
+                                    $priceLabel = $price ? '$' . number_format((float) $price) : null;
 
-                            $hasPhoto = !empty($photo);
-                        @endphp
+                                    $beds       = $the->xBeds ?: $the->xxBeds;
+                                    $baths      = $the->xBaths ?: $the->xxBaths;
+                                    $sqft       = $the->xSqft ?: $the->xxSqft;
 
-                        <article class="group overflow-hidden rounded-[28px] border border-[#d9dfec] bg-white shadow-[0_12px_30px_rgba(32,56,117,.08)] transition duration-300 hover:-translate-y-[3px] hover:shadow-[0_20px_46px_rgba(32,56,117,.14)]">
-                            <div class="relative">
-                                <a href="{{ $viewUrl }}" class="block">
-                                    <div class="relative h-[240px] overflow-hidden bg-gradient-to-br from-[#e8edf8] to-[#dce5f5]">
-                                        @if($hasPhoto)
-                                            <img
-                                                src="{{ $photo }}"
-                                                alt="{{ $street }}"
-                                                class="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
-                                            />
-                                        @else
-                                            <div class="flex h-full w-full items-center justify-center text-center text-slate-400">
-                                                <div>
-                                                    <div class="text-[13px] uppercase tracking-[0.25em]">No Photo</div>
-                                                    <div class="mt-2 text-[15px]">Listing image coming soon</div>
+                                    $dateLabel  = !empty($the->created_at)
+                                        ? \Carbon\Carbon::parse($the->created_at)->format('M j, Y')
+                                        : null;
+                                @endphp
+
+                                <article class="overflow-hidden rounded-[26px] border border-[#d8e0ec] bg-white shadow-[0_8px_24px_rgba(0,0,0,.05)] transition hover:shadow-[0_18px_40px_rgba(0,0,0,.09)]">
+                                    <div class="grid grid-cols-1 md:grid-cols-[260px_minmax(0,1fr)]">
+
+                                        {{-- IMAGE --}}
+                                        <div class="relative bg-[#e8edf5]">
+                                            <a href="{{ $listingURL }}" target="_blank" class="block h-full">
+                                                <div class="h-[220px] md:h-full min-h-[220px] overflow-hidden">
+                                                    @if($listingImg)
+                                                        <img
+                                                            src="{{ $listingImg }}"
+                                                            alt="{{ $street }}"
+                                                            class="h-full w-full object-cover transition duration-500 hover:scale-[1.03]"
+                                                        >
+                                                    @else
+                                                        <div class="flex h-full w-full items-center justify-center text-center text-slate-400">
+                                                            <div>
+                                                                <div class="text-[12px] font-semibold uppercase tracking-[0.24em]">No Photo</div>
+                                                                <div class="mt-2 text-[14px]">Image unavailable</div>
+                                                            </div>
+                                                        </div>
+                                                    @endif
                                                 </div>
+                                            </a>
+                                        </div>
+
+                                        {{-- CONTENT --}}
+                                        <div class="p-5 lg:p-6">
+                                            <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                                                <div class="min-w-0">
+                                                    <a
+                                                        href="{{ $listingURL }}"
+                                                        target="_blank"
+                                                        class="block text-[24px] font-semibold leading-tight text-[#214e9b] transition hover:opacity-80"
+                                                    >
+                                                        {{ $street }}
+                                                    </a>
+
+                                                    <div class="mt-2 text-[15px] text-slate-600">
+                                                        {{ $cityLine }}
+                                                    </div>
+                                                </div>
+
+                                                @if($priceLabel)
+                                                    <div class="shrink-0 rounded-full bg-[#214e9b] px-4 py-2 text-[14px] font-semibold text-white shadow-sm">
+                                                        {{ $priceLabel }}
+                                                    </div>
+                                                @endif
                                             </div>
-                                        @endif
 
-                                        <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent"></div>
+                                            <div class="mt-5 flex flex-wrap gap-3">
+                                                <div class="rounded-full bg-[#f3f6fc] px-4 py-2 text-[14px] text-slate-700">
+                                                    {{ $beds ?: '—' }} bed
+                                                </div>
+                                                <div class="rounded-full bg-[#f3f6fc] px-4 py-2 text-[14px] text-slate-700">
+                                                    {{ $baths ?: '—' }} bath
+                                                </div>
+                                                <div class="rounded-full bg-[#f3f6fc] px-4 py-2 text-[14px] text-slate-700">
+                                                    {{ !empty($sqft) ? number_format((float) $sqft) : '—' }} sq ft
+                                                </div>
+                                                @if($dateLabel)
+                                                    <div class="rounded-full bg-[#f8fafc] px-4 py-2 text-[13px] text-slate-500">
+                                                        {{ $dateLabel }}
+                                                    </div>
+                                                @endif
+                                            </div>
 
-                                        <div class="absolute left-5 top-5">
-                                            <div class="inline-flex items-center rounded-full bg-white/14 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-white ring-1 ring-white/20 backdrop-blur-sm">
-                                                Recent Flyer
+                                            <div class="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                                                <div class="flex items-center gap-4 min-w-0">
+                                                    <div class="h-16 w-16 shrink-0 overflow-hidden rounded-[16px] bg-[#e7edf8] ring-1 ring-black/10">
+                                                        @if($agentImg)
+                                                            <img
+                                                                src="{{ $agentImg }}"
+                                                                alt="{{ $agentName }}"
+                                                                class="h-full w-full object-cover"
+                                                            >
+                                                        @else
+                                                            <div class="flex h-full w-full items-center justify-center text-[20px] font-semibold text-[#214e9b]">
+                                                                {{ $agentName ? strtoupper(substr($agentName, 0, 1)) : 'A' }}
+                                                            </div>
+                                                        @endif
+                                                    </div>
+
+                                                    <div class="min-w-0">
+                                                        <div class="text-[12px] text-slate-500">
+                                                            Listed by
+                                                        </div>
+
+                                                        <div class="truncate text-[18px] font-medium leading-tight text-[#214e9b]">
+                                                            {{ $agentName }}
+                                                        </div>
+
+                                                        @if($officeName)
+                                                            <div class="truncate text-[14px] text-slate-600">
+                                                                {{ $officeName }}
+                                                            </div>
+                                                        @endif
+                                                    </div>
+                                                </div>
+
+                                                <a
+                                                    href="{{ $listingURL }}"
+                                                    target="_blank"
+                                                    class="inline-flex items-center justify-center rounded-full border border-[#c9d5eb] bg-white px-5 py-3 text-[14px] font-semibold text-[#214e9b] transition hover:border-[#214e9b] hover:bg-[#f7faff]"
+                                                >
+                                                    View Listing
+                                                </a>
                                             </div>
                                         </div>
+                                    </div>
+                                </article>
 
-                                        <div class="absolute right-5 top-5 rounded-full bg-white/92 px-4 py-2 text-[14px] font-semibold text-[#24468d] shadow-lg">
-                                            @if(!empty($price))
-                                                ${{ number_format((float) $price) }}
-                                            @else
-                                                Call for price
-                                            @endif
-                                        </div>
-
-                                        <div class="absolute left-5 bottom-5 right-5 text-white">
-                                            <h3 class="text-[24px] font-semibold leading-tight drop-shadow-sm">
-                                                {{ $street ?: 'Property Listing' }}
-                                            </h3>
-                                            <div class="mt-2 text-[14px] text-white/85">
-                                                {{ collect([$city, $state, $zip])->filter()->implode(', ') }}
-                                            </div>
-                                        </div>
+                            @empty
+                                <div class="rounded-[26px] border border-dashed border-[#cfd9ea] bg-white px-8 py-16 text-center shadow-[0_8px_24px_rgba(0,0,0,.05)]">
+                                    <div class="text-[12px] font-semibold uppercase tracking-[0.24em] text-[#6a82b7]">
+                                        No Results
                                     </div>
-                                </a>
-                            </div>
-
-                            <div class="p-6">
-                                <div class="grid grid-cols-3 gap-3">
-                                    <div class="rounded-2xl bg-[#f5f7fc] px-4 py-3 text-center">
-                                        <div class="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#6780b8]">Beds</div>
-                                        <div class="mt-1 text-[20px] font-semibold text-[#233f84]">{{ $beds ?: '—' }}</div>
-                                    </div>
-                                    <div class="rounded-2xl bg-[#f5f7fc] px-4 py-3 text-center">
-                                        <div class="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#6780b8]">Baths</div>
-                                        <div class="mt-1 text-[20px] font-semibold text-[#233f84]">{{ $baths ?: '—' }}</div>
-                                    </div>
-                                    <div class="rounded-2xl bg-[#f5f7fc] px-4 py-3 text-center">
-                                        <div class="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#6780b8]">Sq Ft</div>
-                                        <div class="mt-1 text-[20px] font-semibold text-[#233f84]">
-                                            {{ !empty($sqft) ? number_format((float) $sqft) : '—' }}
-                                        </div>
-                                    </div>
+                                    <h3 class="mt-4 font-serif text-[36px] leading-none text-[#214e9b]">
+                                        No recent flyers found
+                                    </h3>
+                                    <p class="mx-auto mt-4 max-w-[560px] text-[15px] leading-7 text-slate-600">
+                                        There are no recent property flyers available to display right now.
+                                    </p>
                                 </div>
+                            @endforelse
 
-                                <div class="mt-6 flex items-center gap-4 rounded-[22px] border border-[#e0e6f2] bg-[#fafbfe] p-4">
-                                    <div class="h-14 w-14 overflow-hidden rounded-full bg-[#dce5f5] ring-2 ring-white shadow-sm shrink-0">
-                                        @if(!empty($agentPhoto))
-                                            <img src="{{ $agentPhoto }}" alt="{{ $agentName }}" class="h-full w-full object-cover">
-                                        @else
-                                            <div class="flex h-full w-full items-center justify-center text-[18px] font-semibold text-[#32539c]">
-                                                {{ strtoupper(substr($agentName, 0, 1)) }}
-                                            </div>
-                                        @endif
-                                    </div>
-
-                                    <div class="min-w-0">
-                                        <div class="truncate text-[16px] font-semibold text-[#1f3c82]">{{ $agentName }}</div>
-                                        @if($officeName)
-                                            <div class="truncate text-[14px] text-slate-500">{{ $officeName }}</div>
-                                        @endif
-                                        @if($agentPhone)
-                                            <div class="mt-1 text-[14px] text-slate-500">{{ $agentPhone }}</div>
-                                        @endif
-                                    </div>
-                                </div>
-
-                                <div class="mt-6 flex items-center justify-between gap-4">
-                                    <div class="text-[13px] text-slate-500">
-                                        {{ $flyer->created_at ? \Carbon\Carbon::parse($flyer->created_at)->format('M j, Y') : '' }}
-                                    </div>
-
-                                    <a
-                                        href="{{ $viewUrl }}"
-                                        class="inline-flex items-center justify-center rounded-full bg-[#2c4d94] px-5 py-3 text-[14px] font-semibold text-white shadow-[0_10px_22px_rgba(44,77,148,.22)] transition hover:bg-[#233f84]"
-                                    >
-                                        View Flyer
-                                    </a>
-                                </div>
-                            </div>
-                        </article>
-                    @empty
-                        <div class="col-span-full rounded-[28px] border border-dashed border-[#cdd7eb] bg-white px-8 py-16 text-center shadow-sm">
-                            <div class="text-[12px] font-semibold uppercase tracking-[0.28em] text-[#6d84bb]">
-                                No Results
-                            </div>
-                            <h3 class="mt-4 font-serif text-[34px] text-[#21408a]">No listings found</h3>
-                            <p class="mx-auto mt-4 max-w-[560px] text-[15px] leading-7 text-slate-500">
-                                There are no recent flyers to display right now.
-                            </p>
                         </div>
-                    @endforelse
+
+                        @if($data['searchAll']->hasPages())
+                            <div class="mt-8 rounded-[24px] border border-[#d8e0ec] bg-white px-6 py-5 shadow-[0_8px_24px_rgba(0,0,0,.05)]">
+                                {{ $data['searchAll']->links() }}
+                            </div>
+                        @endif
+
+                    </section>
 
                 </div>
-            </section>
-
-            {{-- PAGINATION --}}
-            @if($data['searchAll']->hasPages())
-                <section class="pb-20">
-                    <div class="rounded-[26px] border border-[#d9dfec] bg-white px-6 py-5 shadow-sm">
-                        {{ $data['searchAll']->links() }}
-                    </div>
-                </section>
-            @endif
+            </div>
 
         </div>
     </main>
