@@ -415,6 +415,5 @@ $searchValue = request('q', '');
 </main>
 
 @include('public.layout.footer')
-```
 
 </body>
