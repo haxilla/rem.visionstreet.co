@@ -5,7 +5,7 @@
     @include('public.layout.nav')
 
     <main class="transition-all duration-300 min-h-screen pt-24 relative" :class="collapsed ? 'ml-20' : 'ml-64'">
-        <div class="mx-8 lg:mx-10">
+        <div class="mx-8 mr-8 lg:mx-10">
 
             {{-- HERO --}}
             <section class="overflow-hidden rounded-[30px] bg-gradient-to-br from-[#213c7a] via-[#2f4f95] to-[#36579f] shadow-[0_20px_60px_rgba(23,43,99,.18)]">
@@ -44,8 +44,7 @@
                             </h1>
 
                             <p class="mt-6 max-w-[500px] text-[16px] leading-8 text-white/82">
-                                See the latest e-flyers your members have created, presented in a modern
-                                searchable gallery with clean cards and pagination.
+                                See the latest e-flyers your members have created, presented in a modern searchable gallery with clean cards and pagination.
                             </p>
 
                             <div class="mt-8 flex flex-wrap gap-4">
@@ -78,10 +77,10 @@
 
                     <div class="flex flex-wrap items-center gap-3 text-[14px] text-slate-500">
                         <div class="rounded-full border border-[#d7ddec] bg-white px-4 py-2 shadow-sm">
-                            {{ $searchAll->total() }} total listings
+                            {{ $data['searchAll']->total() }} total listings
                         </div>
                         <div class="rounded-full border border-[#d7ddec] bg-white px-4 py-2 shadow-sm">
-                            Page {{ $searchAll->currentPage() }} of {{ $searchAll->lastPage() }}
+                            Page {{ $data['searchAll']->currentPage() }} of {{ $data['searchAll']->lastPage() }}
                         </div>
                     </div>
                 </div>
@@ -91,17 +90,17 @@
             <section class="pt-8 pb-14">
                 <div class="grid grid-cols-1 gap-8 xl:grid-cols-2 2xl:grid-cols-3">
 
-                    @forelse($searchAll as $flyer)
+                    @forelse($data['searchAll'] as $flyer)
                         @php
                             $street = trim($flyer->xFullStreet ?? '');
                             $city   = trim($flyer->xCity ?? '');
                             $state  = trim($flyer->xState ?? '');
                             $zip    = trim($flyer->xZip ?? $flyer->xxZip ?? '');
 
-                            $beds   = $flyer->xBeds ?: $flyer->xxBeds;
-                            $baths  = $flyer->xBaths ?: $flyer->xxBaths;
-                            $sqft   = $flyer->xSqft ?: $flyer->xxSqft;
-                            $price  = $flyer->xListPrice;
+                            $beds  = $flyer->xBeds ?: $flyer->xxBeds;
+                            $baths = $flyer->xBaths ?: $flyer->xxBaths;
+                            $sqft  = $flyer->xSqft ?: $flyer->xxSqft;
+                            $price = $flyer->xListPrice;
 
                             $agentName  = $flyer->theAgent->agtFullName ?? 'Listing Agent';
                             $agentPhone = $flyer->theAgent->agtMainPhone ?? '';
@@ -241,10 +240,10 @@
             </section>
 
             {{-- PAGINATION --}}
-            @if($searchAll->hasPages())
+            @if($data['searchAll']->hasPages())
                 <section class="pb-20">
                     <div class="rounded-[26px] border border-[#d9dfec] bg-white px-6 py-5 shadow-sm">
-                        {{ $searchAll->links() }}
+                        {{ $data['searchAll']->links() }}
                     </div>
                 </section>
             @endif
