@@ -37,7 +37,7 @@ $priceLabel = function($item) {
 <div class="px-5 lg:px-10 py-8 max-w-[1400px] mx-auto">
 
 
-    {{-- ══ HERO: photo left, listing details right ════════════════════════ --}}
+    {{-- ══ HERO: full-bleed photo with overlay + search panel right ══════════ --}}
     @if($featured)
     @php
         $fImg    = $listingImg($featured);
@@ -48,74 +48,87 @@ $priceLabel = function($item) {
         $fCity   = trim("{$featured->xCity} {$featured->xState} {$featured->xxZip}");
     @endphp
 
-    <section class="bg-white rounded-2xl overflow-hidden shadow-md flex flex-col lg:flex-row mb-4">
+    <section class="rounded-2xl overflow-hidden shadow-md flex flex-col lg:flex-row mb-4" style="min-height: 380px;">
 
-        {{-- Left: property photo --}}
-        <div class="lg:w-[58%] shrink-0 relative">
+        {{-- Left: full-bleed photo with gradient overlay and text on top --}}
+        <div class="relative lg:w-[62%] shrink-0 flex flex-col justify-end" style="min-height: 380px;">
+
+            {{-- Background photo --}}
             @if($fImg)
                 <img src="{{ $fImg }}" alt="{{ $fStreet }}"
-                     class="w-full h-64 lg:h-full object-cover">
+                     class="absolute inset-0 w-full h-full object-cover">
             @else
-                <div class="w-full h-64 lg:h-full bg-[#1b2d6b]/10 flex items-center justify-center min-h-[320px]">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-16 h-16 text-[#1b2d6b]/20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
-                    </svg>
-                </div>
+                <div class="absolute inset-0 bg-[#1b2d6b]"></div>
             @endif
-            {{-- Featured badge overlaid on photo --}}
-            <div class="absolute top-4 left-4">
+
+            {{-- Gradient overlay: transparent top → dark bottom --}}
+            <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent"></div>
+
+            {{-- Featured badge top-left --}}
+            <div class="absolute top-4 left-4 z-10">
                 <span class="bg-[#1b2d6b] text-white text-[10px] font-bold tracking-widest uppercase px-3 py-1.5 rounded-full shadow">
                     Featured
                 </span>
             </div>
-        </div>
 
-        {{-- Right: details --}}
-        <div class="flex flex-col justify-between p-8 lg:p-10 lg:w-[42%]">
+            {{-- Listing info + agent anchored to bottom --}}
+            <div class="relative z-10 p-7">
 
-            <div>
-                <h1 class="text-2xl lg:text-[28px] font-bold text-[#1b2d6b] leading-snug">
+                {{-- Agent row --}}
+                <div class="flex items-center gap-3 mb-4">
+                    @if($fAgt)
+                        <img src="{{ $fAgt }}" alt="{{ $featured->theAgent->agtFullName }}"
+                             class="h-14 w-auto rounded-lg object-cover border-2 border-white/40 shadow-md shrink-0">
+                    @endif
+                    <div>
+                        <div class="text-white/60 text-[10px] font-bold tracking-widest uppercase">Listed by</div>
+                        <div class="text-white font-semibold text-sm leading-snug">{{ $featured->theAgent->agtFullName }}</div>
+                        <div class="text-white/60 text-xs">{{ $featured->theOffice->officeName ?? '' }}</div>
+                    </div>
+                </div>
+
+                {{-- Address + price --}}
+                <h1 class="text-2xl lg:text-3xl font-bold text-white leading-snug drop-shadow">
                     {{ $fStreet }}
                 </h1>
-                <div class="mt-1 text-slate-500 text-base">{{ $fCity }}</div>
-
+                <div class="text-white/75 text-base mt-0.5">{{ $fCity }}</div>
                 @if($fPrice)
-                    <div class="mt-4 text-3xl font-bold text-slate-800">{{ $fPrice }}</div>
+                    <div class="text-white font-bold text-2xl mt-2 drop-shadow">{{ $fPrice }}</div>
                 @endif
 
                 <a href="{{ $fURL }}" target="_blank"
-                   class="inline-flex items-center gap-2 mt-6 border-2 border-[#1b2d6b] text-[#1b2d6b] hover:bg-[#1b2d6b] hover:text-white font-semibold text-sm px-7 py-2.5 rounded-full transition-colors">
+                   class="inline-flex items-center gap-2 mt-4 bg-white hover:bg-slate-100 text-[#1b2d6b] font-bold text-sm px-6 py-2.5 rounded-full transition-colors shadow">
                     View Listing
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
                     </svg>
                 </a>
-            </div>
 
-            {{-- Agent --}}
-            <div class="mt-8 pt-6 border-t border-slate-100 flex items-center gap-4">
-                @if($fAgt)
-                    <img src="{{ $fAgt }}" alt="{{ $featured->theAgent->agtFullName }}"
-                         class="h-20 w-auto rounded-xl object-cover border border-slate-200 shadow-sm shrink-0">
-                @else
-                    <div class="h-20 w-16 rounded-xl bg-slate-100 flex items-center justify-center shrink-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                        </svg>
-                    </div>
-                @endif
-                <div>
-                    <div class="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-1">Listed by</div>
-                    <div class="font-semibold text-slate-800 text-sm leading-snug">
-                        {{ $featured->theAgent->agtFullName }}
-                    </div>
-                    <div class="text-xs text-slate-500 mt-0.5">
-                        {{ $featured->theOffice->officeName ?? '' }}
-                    </div>
-                </div>
             </div>
-
         </div>
+
+        {{-- Right: search panel --}}
+        <div class="bg-white lg:w-[38%] flex flex-col justify-center p-8 lg:p-10">
+            <div class="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-1">Browse Listings</div>
+            <h2 class="text-2xl font-bold text-[#1b2d6b] mb-2">Search Homes</h2>
+            <p class="text-sm text-slate-500 mb-6 leading-relaxed">Find listings by address, city, zip code, or agent name.</p>
+            <form method="GET" action="">
+                <div class="flex flex-col gap-3">
+                    <input
+                        type="text"
+                        name="q"
+                        value="{{ $searchValue }}"
+                        placeholder="Address, city, zip, agent…"
+                        class="w-full border border-slate-200 bg-slate-50 rounded-full px-5 py-3 text-sm text-slate-700 placeholder-slate-400 outline-none focus:border-[#1b2d6b] focus:ring-2 focus:ring-[#1b2d6b]/10 transition"
+                    >
+                    <button type="submit"
+                            class="w-full bg-[#1b2d6b] hover:bg-[#243d8f] text-white font-bold text-sm py-3 rounded-full transition-colors">
+                        Search Listings
+                    </button>
+                </div>
+            </form>
+        </div>
+
     </section>
 
     {{-- Pagination directly under featured --}}
@@ -124,30 +137,6 @@ $priceLabel = function($item) {
     </div>
 
     @endif
-
-
-    {{-- ══ SEARCH BAR: centered full-width row above the grid ═══════════════ --}}
-    <div class="flex justify-center mb-8">
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-5 w-full max-w-2xl">
-            <div class="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-1 text-center">Browse</div>
-            <div class="text-lg font-bold text-[#1b2d6b] mb-3 text-center">Search Listings</div>
-            <form method="GET" action="">
-                <div class="flex rounded-full overflow-hidden border border-slate-200 bg-slate-50">
-                    <input
-                        type="text"
-                        name="q"
-                        value="{{ $searchValue }}"
-                        placeholder="Search address, city, zip, agent…"
-                        class="flex-1 bg-transparent px-5 py-3 text-sm text-slate-700 placeholder-slate-400 outline-none"
-                    >
-                    <button type="submit"
-                            class="bg-[#1b2d6b] hover:bg-[#243d8f] text-white font-semibold text-sm px-7 py-3 rounded-full transition-colors m-0.5">
-                        Search
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
 
     {{-- ══ CONTENT GRID ════════════════════════════════════════════════════ --}}
     <div class="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-8">
