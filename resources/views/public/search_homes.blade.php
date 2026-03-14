@@ -50,8 +50,8 @@ $priceLabel = function($item) {
 
     <section class="rounded-2xl overflow-hidden shadow-md flex flex-col lg:flex-row mb-4" style="min-height: 380px;">
 
-        {{-- Left: full-bleed photo with gradient overlay and text on top --}}
-        <div class="relative lg:w-[62%] shrink-0 flex flex-col justify-end" style="min-height: 380px;">
+        {{-- Left: full-bleed photo, address top-left, agent pill bottom-left --}}
+        <div class="relative lg:w-[62%] shrink-0" style="min-height: 380px;">
 
             {{-- Background photo --}}
             @if($fImg)
@@ -61,50 +61,33 @@ $priceLabel = function($item) {
                 <div class="absolute inset-0 bg-[#1b2d6b]"></div>
             @endif
 
-            {{-- Gradient overlay: transparent top → dark bottom --}}
-            <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent"></div>
+            {{-- Subtle dark wash top-left only, so text is readable --}}
+            <div class="absolute inset-0 bg-gradient-to-br from-black/50 via-black/10 to-transparent"></div>
 
-            {{-- Featured badge top-left --}}
-            <div class="absolute top-4 left-4 z-10">
-                <span class="bg-[#1b2d6b] text-white text-[10px] font-bold tracking-widest uppercase px-3 py-1.5 rounded-full shadow">
-                    Featured
-                </span>
+            {{-- Address block: top-left --}}
+            <div class="absolute top-5 left-5 z-10">
+                <div class="text-[10px] font-bold tracking-widest uppercase text-white/70 mb-1">Featured</div>
+                <h1 class="text-lg font-bold text-white leading-snug drop-shadow">{{ $fStreet }}</h1>
+                <div class="text-white/80 text-sm">{{ $fCity }}</div>
+                @if($fPrice)
+                    <div class="text-white font-bold text-base mt-1 drop-shadow">{{ $fPrice }}</div>
+                @endif
             </div>
 
-            {{-- Listing info + agent anchored to bottom --}}
-            <div class="relative z-10 p-7">
-
-                {{-- Agent row --}}
-                <div class="flex items-center gap-3 mb-4">
+            {{-- Agent pill: bottom-left --}}
+            <div class="absolute bottom-5 left-5 z-10">
+                <div class="flex items-center gap-3 bg-black/45 backdrop-blur-sm rounded-xl px-4 py-2.5">
                     @if($fAgt)
                         <img src="{{ $fAgt }}" alt="{{ $featured->theAgent->agtFullName }}"
-                             class="h-14 w-auto rounded-lg object-cover border-2 border-white/40 shadow-md shrink-0">
+                             class="h-12 w-auto rounded-lg object-cover shrink-0">
                     @endif
                     <div>
-                        <div class="text-white/60 text-[10px] font-bold tracking-widest uppercase">Listed by</div>
                         <div class="text-white font-semibold text-sm leading-snug">{{ $featured->theAgent->agtFullName }}</div>
-                        <div class="text-white/60 text-xs">{{ $featured->theOffice->officeName ?? '' }}</div>
+                        <div class="text-white/65 text-xs">{{ $featured->theOffice->officeName ?? '' }}</div>
                     </div>
                 </div>
-
-                {{-- Address + price --}}
-                <h1 class="text-2xl lg:text-3xl font-bold text-white leading-snug drop-shadow">
-                    {{ $fStreet }}
-                </h1>
-                <div class="text-white/75 text-base mt-0.5">{{ $fCity }}</div>
-                @if($fPrice)
-                    <div class="text-white font-bold text-2xl mt-2 drop-shadow">{{ $fPrice }}</div>
-                @endif
-
-                <a href="{{ $fURL }}" target="_blank"
-                   class="inline-flex items-center gap-2 mt-4 bg-white hover:bg-slate-100 text-[#1b2d6b] font-bold text-sm px-6 py-2.5 rounded-full transition-colors shadow">
-                    View Listing
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                    </svg>
-                </a>
-
             </div>
+
         </div>
 
         {{-- Right: search panel --}}
