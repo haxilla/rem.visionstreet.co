@@ -126,33 +126,35 @@ $priceLabel = function($item) {
     @endif
 
 
+    {{-- ══ SEARCH BAR: centered full-width row above the grid ═══════════════ --}}
+    <div class="flex justify-center mb-8">
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-5 w-full max-w-2xl">
+            <div class="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-1 text-center">Browse</div>
+            <div class="text-lg font-bold text-[#1b2d6b] mb-3 text-center">Search Listings</div>
+            <form method="GET" action="">
+                <div class="flex rounded-full overflow-hidden border border-slate-200 bg-slate-50">
+                    <input
+                        type="text"
+                        name="q"
+                        value="{{ $searchValue }}"
+                        placeholder="Search address, city, zip, agent…"
+                        class="flex-1 bg-transparent px-5 py-3 text-sm text-slate-700 placeholder-slate-400 outline-none"
+                    >
+                    <button type="submit"
+                            class="bg-[#1b2d6b] hover:bg-[#243d8f] text-white font-semibold text-sm px-7 py-3 rounded-full transition-colors m-0.5">
+                        Search
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     {{-- ══ CONTENT GRID ════════════════════════════════════════════════════ --}}
     <div class="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-8">
 
 
         {{-- ── LISTINGS COLUMN ───────────────────────────────────────────── --}}
         <div>
-
-            {{-- Search box above listings --}}
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-5 mb-6">
-                <div class="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-1">Browse</div>
-                <div class="text-lg font-bold text-[#1b2d6b] mb-3">Search Listings</div>
-                <form method="GET" action="">
-                    <div class="flex rounded-full overflow-hidden border border-slate-200 bg-slate-50">
-                        <input
-                            type="text"
-                            name="q"
-                            value="{{ $searchValue }}"
-                            placeholder="Search address, city, zip, agent…"
-                            class="flex-1 bg-transparent px-5 py-3 text-sm text-slate-700 placeholder-slate-400 outline-none"
-                        >
-                        <button type="submit"
-                                class="bg-[#1b2d6b] hover:bg-[#243d8f] text-white font-semibold text-sm px-7 py-3 rounded-full transition-colors m-0.5">
-                            Search
-                        </button>
-                    </div>
-                </form>
-            </div>
 
             {{-- Section heading --}}
             <div class="flex items-baseline gap-3 mb-4">
