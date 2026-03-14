@@ -45,6 +45,8 @@ $appCandidates = [
     app_path("$renderPath.php"),
     app_path("$renderPath/index.php"),];
 
+dd($appCandidates);
+
 $data = null;
 foreach ($appCandidates as $p) {
     if (is_file($p))  { include $p; break; }}
