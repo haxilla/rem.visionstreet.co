@@ -164,12 +164,12 @@ $priceLabel = function($item) {
             <a href="{{ $url }}" target="_blank"
                class="flex bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-200/80 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 group">
 
-                {{-- Property photo: 4:3 rectangle, wider --}}
+                {{-- Property photo: fills full card height, wide rectangle --}}
                 @if($img)
                     <img src="{{ $img }}" alt="{{ $street }}"
-                         class="w-72 min-w-[18rem] h-[216px] object-cover group-hover:scale-[1.02] transition-transform duration-300 shrink-0">
+                         class="w-72 min-w-[18rem] self-stretch object-cover group-hover:scale-[1.02] transition-transform duration-300 shrink-0">
                 @else
-                    <div class="w-72 min-w-[18rem] h-[216px] bg-slate-100 flex items-center justify-center shrink-0">
+                    <div class="w-72 min-w-[18rem] self-stretch bg-slate-100 flex items-center justify-center shrink-0">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
                         </svg>
