@@ -6,412 +6,286 @@ $pageItems   = collect($paginator->items());
 $featured    = $pageItems->first();
 $listings    = $pageItems->slice(1);
 $searchValue = request('q', '');
+
+$listingImg = function($item) {
+    $photoObj = $item->thePhotos->where('def', '=', '1')->first();
+    $photo    = $photoObj?->photoName;
+    if ($photo && $item->theMeta?->zipDir && $item->theMeta?->mlsDir) {
+        return "https://realtyrepublic.com/hqphotos/{$item->theMeta->zipDir}/{$item->theMeta->mlsDir}/{$photo}";
+    }
+    return null;
+};
+
+$agentImg = function($item) {
+    if (!empty($item->theAgent?->agtPhoto) && !empty($item->theAgent?->theAgentCleanup?->newRemID)) {
+        return "https://realtyrepublic.com/agentPhotos/{$item->theAgent->theAgentCleanup->newRemID}/{$item->theAgent->agtPhoto}";
+    }
+    return null;
+};
+
+$priceLabel = function($item) {
+    $price = $item->xPrice ?? $item->xListPrice;
+    return $price ? '$' . number_format($price) : null;
+};
 @endphp
 
-<body data-section="admin" class="linkcheck relative min-h-screen bg-[#eef2f7] font-sans text-slate-800 postgres">
+<body data-section="admin" class="relative min-h-screen bg-slate-100 font-sans text-slate-800 postgres">
 
-```
 @include('public.layout.nav')
 
-<main class="transition-all duration-300 min-h-screen pt-24 relative" :class="collapsed ? 'ml-20' : 'ml-64'">
-    <div class="mx-5 lg:mx-10">
-        <div class="mx-auto max-w-[1450px]">
+<main class="transition-all duration-300 min-h-screen pt-24" :class="collapsed ? 'ml-20' : 'ml-64'">
+<div class="px-5 lg:px-10 py-8 max-w-[1400px] mx-auto">
 
-            <section class="relative overflow-hidden rounded-[34px] bg-gradient-to-br from-[#16336f] via-[#214893] to-[#3e67c8] shadow-[0_30px_80px_rgba(25,48,109,.22)]">
-                <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,.18),transparent_28%),radial-gradient(circle_at_bottom_left,rgba(255,255,255,.10),transparent_24%)]"></div>
-                <div class="absolute -left-24 top-10 h-64 w-64 rounded-full bg-white/8 blur-3xl"></div>
-                <div class="absolute right-10 bottom-0 h-48 w-48 rounded-full bg-white/10 blur-3xl"></div>
 
-                <div class="relative grid grid-cols-1 xl:grid-cols-[560px_minmax(0,1fr)] gap-8 items-stretch px-8 py-10">
+    {{-- ══ HERO ══════════════════════════════════════════════════════════ --}}
+    @if($featured)
+    @php
+        $fImg    = $listingImg($featured);
+        $fAgt    = $agentImg($featured);
+        $fPrice  = $priceLabel($featured);
+        $fURL    = "https://realtyrepublic.com/homedetails/{$featured->url_slug}";
+        $fStreet = $featured->xFullStreet;
+        $fCity   = trim("{$featured->xCity} {$featured->xState} {$featured->xxZip}");
+    @endphp
 
-                    <div class="flex flex-col justify-center text-white xl:pr-2">
-                        <div class="inline-flex items-center self-start rounded-full border border-white/20 bg-white/10 px-4 py-2 text-[11px] uppercase tracking-[0.25em] backdrop-blur-sm">
-                            Slide Show Gallery
-                        </div>
+    {{-- Hero card: photo left, details right --}}
+    <section class="bg-white rounded-3xl overflow-hidden shadow-xl flex flex-col lg:flex-row mb-6">
 
-                        <h1 class="mt-6 font-serif text-[52px] leading-[0.95]">
-                            Discover Homes
-                            <br>
-                            With Impact
-                        </h1>
-
-                        <p class="mt-5 max-w-[460px] text-[16px] leading-8 text-white/85">
-                            Browse recent Realty Emails listings in a richer gallery layout with a featured property, larger imagery, and a fast search experience.
-                        </p>
-
-                        <form method="GET" action="" class="mt-8 max-w-[560px]">
-                            <div class="overflow-hidden rounded-[22px] bg-white shadow-[0_18px_44px_rgba(0,0,0,.16)]">
-                                <div class="flex flex-col md:flex-row md:items-center">
-                                    <div class="flex min-w-0 flex-1 items-center px-5 py-4">
-                                        <svg class="mr-3 h-5 w-5 shrink-0 text-[#3659a8]" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                            <path fill-rule="evenodd" d="M8.5 3a5.5 5.5 0 1 0 3.471 9.768l3.63 3.631a.75.75 0 1 0 1.06-1.06l-3.63-3.631A5.5 5.5 0 0 0 8.5 3ZM4.5 8.5a4 4 0 1 1 8 0 4 4 0 0 1-8 0Z" clip-rule="evenodd"/>
-                                        </svg>
-
-                                        <input
-                                            type="text"
-                                            name="q"
-                                            value="{{ $searchValue }}"
-                                            placeholder="Search address, city, zip, agent..."
-                                            class="w-full border-0 bg-transparent p-0 text-[15px] text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-0"
-                                        >
-                                    </div>
-
-                                    <div class="px-4 pb-4 md:px-4 md:pb-0">
-                                        <button
-                                            type="submit"
-                                            class="inline-flex w-full items-center justify-center rounded-full bg-[#244a98] px-6 py-3 text-[14px] font-semibold text-white shadow-[0_12px_26px_rgba(36,74,152,.28)] transition hover:bg-[#1b3f88] md:w-auto"
-                                        >
-                                            Search Listings
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-
-                        <div class="mt-7 flex flex-wrap gap-3">
-                            <a href="#gallery" class="inline-flex items-center justify-center rounded-full bg-white px-5 py-3 text-[14px] font-semibold text-[#214893] shadow-[0_14px_34px_rgba(0,0,0,.15)]">
-                                Browse Gallery
-                            </a>
-
-                            <a href="/pricing" class="inline-flex items-center justify-center rounded-full border border-white/30 bg-white/10 px-5 py-3 text-[14px] font-semibold text-white backdrop-blur-sm">
-                                View Pricing
-                            </a>
-                        </div>
-                    </div>
-
-                    @if($featured)
-                        @php
-                            $photoObj = $featured->thePhotos->where('def','=','1')->first();
-                            $photo    = $photoObj?->photoName;
-
-                            $listingImg = null;
-                            if ($photo && $featured->theMeta?->zipDir && $featured->theMeta?->mlsDir) {
-                                $listingImg = "https://realtyrepublic.com/hqphotos/{$featured->theMeta->zipDir}/{$featured->theMeta->mlsDir}/{$photo}";
-                            }
-
-                            $listingURL = "https://realtyrepublic.com/homedetails/{$featured->url_slug}";
-
-                            $agentImg = null;
-                            if (!empty($featured->theAgent?->agtPhoto) && !empty($featured->theAgent?->theAgentCleanup?->newRemID)) {
-                                $agentImg = "https://realtyrepublic.com/agentPhotos/{$featured->theAgent->theAgentCleanup->newRemID}/{$featured->theAgent->agtPhoto}";
-                            }
-
-                            $street     = $featured->xFullStreet;
-                            $cityLine   = trim(($featured->xCity ?? '') . ' ' . ($featured->xState ?? '') . ' ' . ($featured->xxZip ?? ''));
-                            $price      = $featured->xPrice ?? $featured->xListPrice;
-                            $priceLabel = $price ? '$' . number_format($price) : null;
-                            $beds       = $featured->xBeds ?: $featured->xxBeds;
-                            $baths      = $featured->xBaths ?: $featured->xxBaths;
-                            $sqft       = $featured->xSqft ?: $featured->xxSqft;
-                        @endphp
-
-                        <div class="flex items-center">
-                            <div class="w-full overflow-hidden rounded-[30px] bg-white shadow-[0_26px_60px_rgba(11,27,68,.28)] ring-1 ring-white/30">
-                                <div class="relative">
-                                    <a href="{{ $listingURL }}" target="_blank" class="block bg-[#dfe7f6]">
-                                        @if($listingImg)
-                                            <img
-                                                src="{{ $listingImg }}"
-                                                alt="{{ $street }}"
-                                                class="h-[520px] w-full object-cover"
-                                            >
-                                        @else
-                                            <div class="flex h-[520px] items-center justify-center text-center text-slate-400">
-                                                <div>
-                                                    <div class="text-[12px] font-semibold uppercase tracking-[0.24em]">No Photo</div>
-                                                    <div class="mt-2 text-[14px]">Image unavailable</div>
-                                                </div>
-                                            </div>
-                                        @endif
-                                    </a>
-
-                                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/28 to-black/10"></div>
-
-                                    <div class="absolute inset-x-0 bottom-0 p-6 lg:p-7 text-white">
-                                        <div class="inline-flex rounded-full bg-white/14 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-white ring-1 ring-white/20 backdrop-blur-sm">
-                                            Featured Listing
-                                        </div>
-
-                                        <a href="{{ $listingURL }}" target="_blank" class="mt-4 block text-[30px] font-semibold leading-tight text-white hover:opacity-90">
-                                            {{ $street }}
-                                        </a>
-
-                                        <div class="mt-2 text-[15px] text-white/82">
-                                            {{ $cityLine }}
-                                        </div>
-
-                                        <div class="mt-4 flex flex-wrap items-center gap-3">
-                                            @if($priceLabel)
-                                                <span class="rounded-full bg-white px-4 py-2 text-[14px] font-semibold text-[#214e9b] shadow-sm">
-                                                    {{ $priceLabel }}
-                                                </span>
-                                            @endif
-                                            <span class="rounded-full bg-white/12 px-4 py-2 text-[13px] text-white ring-1 ring-white/18 backdrop-blur-sm">{{ $beds ?: '—' }} bed</span>
-                                            <span class="rounded-full bg-white/12 px-4 py-2 text-[13px] text-white ring-1 ring-white/18 backdrop-blur-sm">{{ $baths ?: '—' }} bath</span>
-                                            <span class="rounded-full bg-white/12 px-4 py-2 text-[13px] text-white ring-1 ring-white/18 backdrop-blur-sm">{{ !empty($sqft) ? number_format((float) $sqft) : '—' }} sq ft</span>
-                                        </div>
-
-                                        <div class="mt-5 flex items-center justify-between gap-4 border-t border-white/15 pt-5">
-                                            <div class="flex items-center gap-3 min-w-0">
-                                                @if($agentImg)
-                                                    <img src="{{ $agentImg }}" class="h-16 w-auto rounded-xl object-cover bg-white/10">
-                                                @endif
-
-                                                <div class="min-w-0">
-                                                    <div class="font-medium text-white">
-                                                        {{ $featured->theAgent->agtFullName }}
-                                                    </div>
-
-                                                    <div class="text-sm text-white/75">
-                                                        {{ $featured->theOffice->officeName ?? '' }}
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <span class="inline-flex items-center justify-center rounded-full bg-[#214e9b] px-5 py-3 text-[14px] font-semibold text-white shadow-[0_12px_26px_rgba(33,78,155,.22)]">
-                                                View Listing
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
-                                    </a>
-
-                                    <div class="flex flex-col justify-between p-6 lg:p-7">
-                                        <div>
-                                            <div class="inline-flex rounded-full bg-[#eef3fb] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#5d79b8]">
-                                                Featured Listing
-                                            </div>
-
-                                            <a href="{{ $listingURL }}" target="_blank" class="mt-4 block text-[28px] font-semibold leading-tight text-[#214e9b] hover:opacity-80">
-                                                {{ $street }}
-                                            </a>
-
-                                            <div class="mt-2 text-[15px] text-slate-600">
-                                                {{ $cityLine }}
-                                            </div>
-
-                                            @if($priceLabel)
-                                                <div class="mt-4 text-[28px] font-semibold text-slate-900">
-                                                    {{ $priceLabel }}
-                                                </div>
-                                            @endif
-
-                                            <div class="mt-5 flex flex-wrap gap-2">
-                                                <span class="rounded-full bg-[#f3f6fc] px-4 py-2 text-[13px] text-slate-700">{{ $beds ?: '—' }} bed</span>
-                                                <span class="rounded-full bg-[#f3f6fc] px-4 py-2 text-[13px] text-slate-700">{{ $baths ?: '—' }} bath</span>
-                                                <span class="rounded-full bg-[#f3f6fc] px-4 py-2 text-[13px] text-slate-700">{{ !empty($sqft) ? number_format((float) $sqft) : '—' }} sq ft</span>
-                                            </div>
-                                        </div>
-
-                                        <div class="mt-6 border-t border-slate-200 pt-5">
-                                            <div class="flex items-center gap-3">
-                                                @if($agentImg)
-                                                    <img src="{{ $agentImg }}" class="h-16 w-auto rounded-xl object-cover">
-                                                @endif
-
-                                                <div class="min-w-0">
-                                                    <div class="font-medium text-slate-900">
-                                                        {{ $featured->theAgent->agtFullName }}
-                                                    </div>
-
-                                                    <div class="text-sm text-gray-600">
-                                                        {{ $featured->theOffice->officeName ?? '' }}
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <a href="{{ $listingURL }}" target="_blank" class="mt-5 inline-flex items-center justify-center rounded-full bg-[#214e9b] px-5 py-3 text-[14px] font-semibold text-white shadow-[0_12px_26px_rgba(33,78,155,.22)]">
-                                                View Listing
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
-
+        {{-- Left: large property photo --}}
+        <div class="lg:w-2/3 shrink-0">
+            @if($fImg)
+                <img src="{{ $fImg }}" alt="{{ $fStreet }}"
+                     class="w-full h-72 lg:h-full object-cover">
+            @else
+                <div class="w-full h-72 lg:h-full bg-gradient-to-br from-slate-200 to-slate-300 flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-16 h-16 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                    </svg>
                 </div>
-            </section>
+            @endif
+        </div>
 
-            <div id="gallery" class="mt-10 grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_320px] gap-10">
+        {{-- Right: address, price, agent --}}
+        <div class="flex flex-col justify-between p-8 lg:p-10 lg:w-1/3">
 
-                <div class="space-y-8">
-                    @foreach($listings as $the)
-                        @php
-                            $photoObj = $the->thePhotos->where('def','=','1')->first();
-                            $photo    = $photoObj?->photoName;
+            <div>
+                <span class="text-[10px] font-bold tracking-[0.2em] uppercase text-slate-400">Featured Listing</span>
 
-                            $listingImg = null;
-                            if ($photo && $the->theMeta?->zipDir && $the->theMeta?->mlsDir) {
-                                $listingImg = "https://realtyrepublic.com/hqphotos/{$the->theMeta->zipDir}/{$the->theMeta->mlsDir}/{$photo}";
-                            }
+                <h1 class="mt-3 text-2xl lg:text-3xl font-bold text-slate-800 leading-snug">
+                    {{ $fStreet }}
+                </h1>
+                <div class="mt-1 text-slate-500 text-base">{{ $fCity }}</div>
 
-                            $listingURL = "https://realtyrepublic.com/homedetails/{$the->url_slug}";
+                @if($fPrice)
+                    <div class="mt-4 text-3xl font-bold text-slate-900">{{ $fPrice }}</div>
+                @endif
 
-                            $agentImg = null;
-                            if (!empty($the->theAgent?->agtPhoto) && !empty($the->theAgent?->theAgentCleanup?->newRemID)) {
-                                $agentImg = "https://realtyrepublic.com/agentPhotos/{$the->theAgent->theAgentCleanup->newRemID}/{$the->theAgent->agtPhoto}";
-                            }
+                <a href="{{ $fURL }}" target="_blank"
+                   class="inline-flex items-center gap-2 mt-6 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-sm px-6 py-3 rounded-full transition-colors shadow">
+                    View Listing
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                    </svg>
+                </a>
+            </div>
 
-                            $street     = $the->xFullStreet;
-                            $cityLine   = trim(($the->xCity ?? '') . ' ' . ($the->xState ?? '') . ' ' . ($the->xxZip ?? ''));
-                            $price      = $the->xPrice ?? $the->xListPrice;
-                            $priceLabel = $price ? '$' . number_format($price) : null;
-                            $beds       = $the->xBeds ?: $the->xxBeds;
-                            $baths      = $the->xBaths ?: $the->xxBaths;
-                            $sqft       = $the->xSqft ?: $the->xxSqft;
-                        @endphp
-
-                        <article class="overflow-hidden rounded-[28px] bg-white shadow-[0_14px_36px_rgba(23,43,99,.08)] ring-1 ring-black/5 transition hover:shadow-[0_24px_54px_rgba(23,43,99,.12)]">
-                            <div class="grid grid-cols-1 md:grid-cols-[320px_minmax(0,1fr)]">
-                                <a href="{{ $listingURL }}" target="_blank" class="block bg-[#dfe7f6] h-full">
-                                    @if($listingImg)
-                                        <img
-                                            src="{{ $listingImg }}"
-                                            alt="{{ $street }}"
-                                            class="h-[260px] md:h-full w-full object-cover"
-                                        >
-                                    @else
-                                        <div class="flex h-[260px] md:h-full items-center justify-center bg-[#dfe7f6] text-center text-slate-400">
-                                            <div>
-                                                <div class="text-[12px] font-semibold uppercase tracking-[0.24em]">No Photo</div>
-                                                <div class="mt-2 text-[14px]">Image unavailable</div>
-                                            </div>
-                                        </div>
-                                    @endif
-                                </a>
-
-                                <div class="flex flex-col justify-between p-6 lg:p-7">
-                                    <div>
-                                        <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                                            <div class="min-w-0">
-                                                <a href="{{ $listingURL }}" target="_blank" class="block text-[26px] font-semibold leading-tight text-[#214e9b] hover:opacity-80">
-                                                    {{ $street }}
-                                                </a>
-
-                                                <div class="mt-2 text-[15px] text-slate-600">
-                                                    {{ $cityLine }}
-                                                </div>
-                                            </div>
-
-                                            @if($priceLabel)
-                                                <div class="shrink-0 rounded-full bg-[#214e9b] px-4 py-2 text-[14px] font-semibold text-white shadow-sm">
-                                                    {{ $priceLabel }}
-                                                </div>
-                                            @endif
-                                        </div>
-
-                                        <div class="mt-5 flex flex-wrap gap-2">
-                                            <span class="rounded-full bg-[#f3f6fc] px-4 py-2 text-[13px] text-slate-700">{{ $beds ?: '—' }} bed</span>
-                                            <span class="rounded-full bg-[#f3f6fc] px-4 py-2 text-[13px] text-slate-700">{{ $baths ?: '—' }} bath</span>
-                                            <span class="rounded-full bg-[#f3f6fc] px-4 py-2 text-[13px] text-slate-700">{{ !empty($sqft) ? number_format((float) $sqft) : '—' }} sq ft</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="mt-6 flex items-center gap-4 border-t border-slate-200 pt-5">
-                                        @if($agentImg)
-                                            <img src="{{ $agentImg }}" class="h-16 w-auto rounded-xl object-cover">
-                                        @endif
-
-                                        <div class="min-w-0">
-                                            <div class="font-medium text-slate-900">
-                                                {{ $the->theAgent->agtFullName }}
-                                            </div>
-
-                                            <div class="text-sm text-gray-600">
-                                                {{ $the->theOffice->officeName ?? '' }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </article>
-                    @endforeach
-
-                    <div class="pt-2">
-                        {{ $paginator->withQueryString()->links() }}
+            {{-- Agent --}}
+            <div class="mt-8 pt-6 border-t border-slate-100 flex items-center gap-4">
+                @if($fAgt)
+                    <img src="{{ $fAgt }}" alt="{{ $featured->theAgent->agtFullName }}"
+                         class="h-24 w-auto rounded-xl object-cover border border-slate-200 shadow-sm shrink-0">
+                @else
+                    <div class="h-24 w-20 rounded-xl bg-slate-100 flex items-center justify-center shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                        </svg>
+                    </div>
+                @endif
+                <div>
+                    <div class="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-1">Listed by</div>
+                    <div class="font-semibold text-slate-800 text-sm leading-snug">
+                        {{ $featured->theAgent->agtFullName }}
+                    </div>
+                    <div class="text-xs text-slate-500 mt-0.5">
+                        {{ $featured->theOffice->officeName ?? '' }}
                     </div>
                 </div>
-
-
-
-                <aside class="space-y-6">
-                    <div class="overflow-hidden rounded-[28px] bg-white shadow-[0_14px_36px_rgba(23,43,99,.08)] ring-1 ring-black/5">
-                        <div class="bg-gradient-to-br from-[#214893] to-[#3a66c7] px-6 py-6 text-white">
-                            <div class="text-[11px] uppercase tracking-[0.24em] text-white/75">
-                                Free Trial Offer
-                            </div>
-
-                            <div class="mt-3 font-serif text-[34px] leading-none">
-                                Create Your
-                                <br>
-                                First Flyer Free
-                            </div>
-
-                            <p class="mt-4 text-[14px] leading-7 text-white/82">
-                                Launch a flyer in minutes and see how it looks before you ever buy credits.
-                            </p>
-                        </div>
-
-                        <div class="p-6">
-                            <form>
-                                <label class="text-[12px] font-semibold uppercase tracking-[0.18em] text-[#6b82b7]">
-                                    Email Address
-                                </label>
-
-                                <input
-                                    type="email"
-                                    placeholder="you@example.com"
-                                    class="mt-2 w-full rounded-[16px] border border-slate-200 px-4 py-3 text-[15px] outline-none transition focus:border-[#214e9b]"
-                                >
-
-                                <button class="mt-4 inline-flex w-full items-center justify-center rounded-full bg-[#214e9b] px-5 py-3 text-[14px] font-semibold text-white shadow-[0_12px_26px_rgba(33,78,155,.22)]">
-                                    Start Free Trial
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-
-                    <div class="rounded-[28px] bg-white p-6 shadow-[0_14px_36px_rgba(23,43,99,.08)] ring-1 ring-black/5">
-                        <div class="text-[12px] font-semibold uppercase tracking-[0.22em] text-[#6a82b7]">
-                            Quick Search
-                        </div>
-
-                        <div class="mt-3 text-[26px] font-serif leading-none text-[#214e9b]">
-                            {{ $paginator->total() }}
-                        </div>
-
-                        <div class="mt-2 text-[14px] text-slate-600">
-                            listings found
-                        </div>
-
-                        <form method="GET" action="" class="mt-5 space-y-3">
-                            <input
-                                type="text"
-                                name="q"
-                                value="{{ $searchValue }}"
-                                placeholder="City, zip, or address"
-                                class="w-full rounded-[16px] border border-slate-200 px-4 py-3 text-[15px] outline-none transition focus:border-[#214e9b]"
-                            >
-
-                            <button class="inline-flex w-full items-center justify-center rounded-full border border-[#cbd8ee] bg-[#f8fbff] px-5 py-3 text-[14px] font-semibold text-[#214e9b]">
-                                Search Listings
-                            </button>
-                        </form>
-
-                        <div class="mt-5 rounded-[18px] bg-[#f5f8fc] px-4 py-4 text-[14px] leading-7 text-slate-600">
-                            Page {{ $paginator->currentPage() }} of {{ $paginator->lastPage() }}
-                        </div>
-                    </div>
-                </aside>
-
             </div>
 
         </div>
+    </section>
+    @endif
+
+
+    {{-- ══ SEARCH BAR (below hero) ════════════════════════════════════════ --}}
+    <div class="mb-8">
+        <form method="GET" action="">
+            <div class="flex rounded-2xl overflow-hidden shadow-sm bg-white border border-slate-200">
+                <input
+                    type="text"
+                    name="q"
+                    value="{{ $searchValue }}"
+                    placeholder="Search address, city, zip, agent…"
+                    class="flex-1 px-5 py-4 text-sm text-slate-700 placeholder-slate-400 outline-none"
+                >
+                <button type="submit"
+                        class="bg-slate-800 hover:bg-slate-700 text-white font-semibold text-sm px-7 transition-colors">
+                    Search
+                </button>
+            </div>
+        </form>
     </div>
+
+
+    {{-- ══ CONTENT GRID ════════════════════════════════════════════════════ --}}
+    <div class="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-8">
+
+
+        {{-- ── LISTINGS ──────────────────────────────────────────────────── --}}
+        <div>
+            <div class="flex items-baseline gap-3 mb-5">
+                <h2 class="text-2xl font-bold text-slate-800">Latest Listings</h2>
+                <span class="text-xs font-semibold tracking-widest uppercase text-slate-400">
+                    {{ number_format($paginator->total()) }} properties
+                </span>
+            </div>
+
+            <div class="space-y-4">
+            @foreach($listings as $the)
+            @php
+                $img    = $listingImg($the);
+                $agt    = $agentImg($the);
+                $price  = $priceLabel($the);
+                $url    = "https://realtyrepublic.com/homedetails/{$the->url_slug}";
+                $street = $the->xFullStreet;
+                $city   = trim("{$the->xCity} {$the->xState} {$the->xxZip}");
+            @endphp
+
+            <a href="{{ $url }}" target="_blank"
+               class="flex bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-200/80 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 group">
+
+                {{-- Property photo: 4:3 rectangle, wider --}}
+                @if($img)
+                    <img src="{{ $img }}" alt="{{ $street }}"
+                         class="w-72 min-w-[18rem] h-[216px] object-cover group-hover:scale-[1.02] transition-transform duration-300 shrink-0">
+                @else
+                    <div class="w-72 min-w-[18rem] h-[216px] bg-slate-100 flex items-center justify-center shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                        </svg>
+                    </div>
+                @endif
+
+                {{-- Info: address + price top, agent bottom --}}
+                <div class="flex flex-col justify-between flex-1 px-6 py-5">
+
+                    <div>
+                        <div class="text-[17px] font-bold text-slate-800 leading-snug">{{ $street }}</div>
+                        <div class="text-sm text-slate-500 mt-0.5">{{ $city }}</div>
+                        @if($price)
+                            <div class="mt-2 text-xl font-bold text-slate-900">{{ $price }}</div>
+                        @endif
+                    </div>
+
+                    {{-- Agent below address --}}
+                    <div class="flex items-center gap-3 pt-4 border-t border-slate-100 mt-4">
+                        @if($agt)
+                            <img src="{{ $agt }}" alt="{{ $the->theAgent->agtFullName }}"
+                                 class="h-16 w-auto rounded-xl object-cover border border-slate-200 shadow-sm shrink-0">
+                        @else
+                            <div class="h-16 w-14 rounded-xl bg-slate-100 flex items-center justify-center shrink-0">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                                </svg>
+                            </div>
+                        @endif
+                        <div>
+                            <div class="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-0.5">Agent</div>
+                            <div class="text-sm font-semibold text-slate-700 leading-snug">
+                                {{ $the->theAgent->agtFullName }}
+                            </div>
+                            <div class="text-xs text-slate-400 mt-0.5">
+                                {{ $the->theOffice->officeName ?? '' }}
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </a>
+            @endforeach
+            </div>
+
+            <div class="mt-8">
+                {{ $paginator->withQueryString()->links() }}
+            </div>
+        </div>
+
+
+        {{-- ── SIDEBAR ────────────────────────────────────────────────────── --}}
+        <aside class="space-y-5">
+
+            {{-- Free trial CTA --}}
+            <div class="bg-gradient-to-br from-blue-900 to-blue-700 rounded-2xl p-6 text-white shadow-lg">
+                <div class="text-xs font-bold tracking-widest uppercase text-blue-300 mb-2">Get Started</div>
+                <div class="text-xl font-bold mb-1">Create a Free Flyer</div>
+                <p class="text-blue-200 text-sm leading-relaxed mb-5">
+                    Build a professional listing flyer in minutes. No credit card required.
+                </p>
+                <input
+                    type="email"
+                    placeholder="Your email address"
+                    class="w-full bg-white/15 border border-white/25 rounded-xl px-4 py-2.5 text-sm text-white placeholder-blue-300 outline-none focus:bg-white/20 transition-colors mb-3"
+                >
+                <button class="w-full bg-white hover:bg-slate-100 text-blue-900 font-bold text-sm py-3 rounded-xl transition-colors">
+                    Start Free →
+                </button>
+            </div>
+
+            {{-- Quick search --}}
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80">
+                <div class="text-xs font-bold tracking-widest uppercase text-slate-400 mb-1">Search</div>
+                <div class="text-lg font-bold text-slate-800 mb-4">Find a Listing</div>
+                <form method="GET" action="">
+                    <input
+                        type="text"
+                        name="q"
+                        value="{{ $searchValue }}"
+                        placeholder="City, zip, or agent…"
+                        class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-700 placeholder-slate-400 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition mb-3"
+                    >
+                    <button type="submit"
+                            class="w-full bg-slate-800 hover:bg-slate-700 text-white font-semibold text-sm py-3 rounded-xl transition-colors">
+                        Search Listings
+                    </button>
+                </form>
+            </div>
+
+            {{-- Stats --}}
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80">
+                <div class="text-xs font-bold tracking-widest uppercase text-slate-400 mb-1">Overview</div>
+                <div class="text-lg font-bold text-slate-800 mb-4">By the Numbers</div>
+                <div class="grid grid-cols-2 gap-3">
+                    @foreach([
+                        ['num' => number_format($paginator->total()), 'label' => 'Listings'],
+                        ['num' => '50+',  'label' => 'Markets'],
+                        ['num' => '24/7', 'label' => 'Live Data'],
+                        ['num' => 'Free', 'label' => 'To Start'],
+                    ] as $stat)
+                    <div class="bg-slate-50 rounded-xl p-3 text-center border border-slate-100">
+                        <div class="text-2xl font-bold text-blue-900">{{ $stat['num'] }}</div>
+                        <div class="text-[10px] font-semibold tracking-widest uppercase text-slate-400 mt-0.5">
+                            {{ $stat['label'] }}
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+
+        </aside>
+
+    </div>
+
+</div>
 </main>
 
 @include('public.layout.footer')
