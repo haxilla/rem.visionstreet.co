@@ -48,10 +48,10 @@ $priceLabel = function($item) {
         $fCity   = trim("{$featured->xCity} {$featured->xState} {$featured->xxZip}");
     @endphp
 
-    <section class="rounded-2xl overflow-hidden shadow-md flex flex-col lg:flex-row mb-4" style="min-height: 380px;">
+    <section class="rounded-2xl overflow-hidden shadow-md flex flex-col lg:flex-row mb-4" style="min-height: 520px;">
 
         {{-- Left: full-bleed photo, address top-left, agent pill bottom-left --}}
-        <div class="relative lg:w-[62%] shrink-0" style="min-height: 380px;">
+        <div class="relative lg:w-[62%] shrink-0" style="min-height: 520px;">
 
             {{-- Background photo --}}
             @if($fImg)
@@ -114,10 +114,7 @@ $priceLabel = function($item) {
 
     </section>
 
-    {{-- Pagination directly under featured --}}
-    <div class="mb-8 flex justify-center">
-        {{ $paginator->withQueryString()->links() }}
-    </div>
+
 
     @endif
 
@@ -128,12 +125,10 @@ $priceLabel = function($item) {
         {{-- ── LISTINGS COLUMN ───────────────────────────────────────────── --}}
         <div>
 
-            {{-- Section heading --}}
-            <div class="flex items-baseline gap-3 mb-4">
+            {{-- Section heading + pagination inline --}}
+            <div class="flex items-center justify-between mb-4">
                 <h2 class="text-xl font-bold text-[#1b2d6b]">Latest Listings</h2>
-                <span class="text-xs font-semibold tracking-widest uppercase text-slate-400">
-                    {{ number_format($paginator->total()) }} properties
-                </span>
+                {{ $paginator->withQueryString()->links() }}
             </div>
 
             {{-- Listing cards --}}
