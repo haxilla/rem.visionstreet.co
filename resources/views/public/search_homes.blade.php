@@ -227,28 +227,7 @@ $priceLabel = function($item) {
                 </button>
                 <p class="text-center text-white/40 text-[11px] mt-2">No credit card required · Launch in minutes</p>
             </div>
-
-            {{-- Stats --}}
-            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80">
-                <div class="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-1">Overview</div>
-                <div class="text-lg font-bold text-[#1b2d6b] mb-4">By the Numbers</div>
-                <div class="grid grid-cols-2 gap-3">
-                    @foreach([
-                        ['num' => number_format($paginator->total()), 'label' => 'Listings'],
-                        ['num' => '50+',  'label' => 'Markets'],
-                        ['num' => '24/7', 'label' => 'Live Data'],
-                        ['num' => 'Free', 'label' => 'To Start'],
-                    ] as $stat)
-                    <div class="bg-[#f0f2f7] rounded-xl p-3 text-center">
-                        <div class="text-2xl font-bold text-[#1b2d6b]">{{ $stat['num'] }}</div>
-                        <div class="text-[10px] font-semibold tracking-widest uppercase text-slate-400 mt-0.5">
-                            {{ $stat['label'] }}
-                        </div>
-                    </div>
-                    @endforeach
-                </div>
-            </div>
-
+            
         </aside>
 
     </div>
