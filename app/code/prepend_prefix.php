@@ -2,13 +2,7 @@
 
 // use array to prepend paths on deeper links
 $prepend = [
-    'projects' => 'admin',
-    'laravel'  => 'admin',
-    'task'     => 'admin.projects',
-    'comments' => 'admin.projects',
-    'postgres' => 'admin.data',
-    'mysql'    => 'admin.data',
-    'sitemap'  => 'admin.seo',];
+    'search'   => 'public',];
     /* 'redis' => 'admin.cache',*/
 
 $tmp   = strstr($renderfrom, '.', true);
