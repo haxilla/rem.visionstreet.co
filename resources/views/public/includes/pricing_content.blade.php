@@ -1,57 +1,47 @@
 @php
+    $singlePrice = 25;
+
     $plans = [
         [
             'name' => '1 Credit',
-            'price' => '$25',
-            'credits' => '1 E-Flyer Credit',
-            'desc' => 'A simple option for a single property flyer.',
+            'price' => 25,
+            'qty' => 1,
             'cta' => 'Buy 1 Credit',
-            'tag' => 'Starter',
             'featured' => false,
         ],
         [
             'name' => '3 Credits',
-            'price' => '$50',
-            'credits' => '3 E-Flyer Credits',
-            'desc' => 'Great for a few active listings and ongoing promotion.',
+            'price' => 50,
+            'qty' => 3,
             'cta' => 'Buy 3 Credits',
-            'tag' => 'Popular',
             'featured' => true,
         ],
         [
             'name' => '5 Credits',
-            'price' => '$75',
-            'credits' => '5 E-Flyer Credits',
-            'desc' => 'A strong value for agents who market regularly.',
+            'price' => 75,
+            'qty' => 5,
             'cta' => 'Buy 5 Credits',
-            'tag' => 'Best Value',
             'featured' => false,
         ],
         [
             'name' => '10 Credits',
-            'price' => '$100',
-            'credits' => '10 E-Flyer Credits',
-            'desc' => 'Ideal for consistent flyer creation across multiple listings.',
+            'price' => 100,
+            'qty' => 10,
             'cta' => 'Buy 10 Credits',
-            'tag' => 'Growth',
             'featured' => false,
         ],
         [
             'name' => '15 Credits',
-            'price' => '$135',
-            'credits' => '15 E-Flyer Credits',
-            'desc' => 'A smart choice for active agents and small teams.',
+            'price' => 135,
+            'qty' => 15,
             'cta' => 'Buy 15 Credits',
-            'tag' => 'Pro',
             'featured' => false,
         ],
         [
             'name' => '20 Credits',
-            'price' => '$160',
-            'credits' => '20 E-Flyer Credits',
-            'desc' => 'Best for high-volume flyer creation and maximum savings.',
+            'price' => 160,
+            'qty' => 20,
             'cta' => 'Buy 20 Credits',
-            'tag' => 'Agency',
             'featured' => false,
         ],
     ];
@@ -167,17 +157,19 @@
 
         <div class="mt-12 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
             @foreach($plans as $plan)
+                @php
+                    $per = $plan['price'] / $plan['qty'];
+                    $save = ($singlePrice * $plan['qty']) - $plan['price'];
+                @endphp
+
                 <div class="group relative overflow-hidden rounded-[28px] border {{ $plan['featured'] ? 'border-[#31559b]/30 bg-gradient-to-b from-white to-[#eef3ff]' : 'border-[#dbe3f2] bg-white' }} p-7 shadow-[0_16px_40px_rgba(31,54,105,0.08)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_22px_50px_rgba(31,54,105,0.12)]">
 
-                    @if($plan['featured'])
-                        <div class="absolute right-5 top-5 rounded-full bg-[#2c4d90] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-white shadow-md">
-                            Most Popular
-                        </div>
-                    @else
-                        <div class="absolute right-5 top-5 rounded-full bg-[#eef3fb] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-[#45629a]">
-                            {{ $plan['tag'] }}
-                        </div>
-                    @endif
+                    <div class="absolute right-5 top-5 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] shadow-sm {{ $plan['featured'] ? 'bg-[#2c4d90] text-white' : 'bg-[#eef3fb] text-[#45629a]' }}">
+                        ${{ number_format($per, 2) }}/flyer
+                        @if($plan['qty'] > 1)
+                            • Save ${{ number_format($save, 0) }}
+                        @endif
+                    </div>
 
                     <div class="pr-24">
                         <div class="text-[12px] font-semibold uppercase tracking-[0.22em] text-[#6b7f9e]">
@@ -186,17 +178,13 @@
 
                         <div class="mt-4 flex items-end gap-2">
                             <span class="font-serif text-[52px] leading-none text-[#1f3972]">
-                                {{ $plan['price'] }}
+                                ${{ $plan['price'] }}
                             </span>
                         </div>
 
                         <div class="mt-4 text-[17px] font-semibold text-[#2f4f8f]">
-                            {{ $plan['credits'] }}
+                            {{ $plan['qty'] }} E-Flyer Credit{{ $plan['qty'] > 1 ? 's' : '' }}
                         </div>
-
-                        <p class="mt-4 text-[15px] leading-7 text-[#5c6b84]">
-                            {{ $plan['desc'] }}
-                        </p>
                     </div>
 
                     <div class="mt-8">
