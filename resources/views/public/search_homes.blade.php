@@ -232,7 +232,7 @@
 
                                             <div class="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                                                 <div class="flex items-center gap-4 min-w-0">
-                                                    <div class="h-16 w-16 shrink-0 overflow-hidden rounded-[16px] bg-[#e7edf8] ring-1 ring-black/10">
+                                                    <div class="h-16 shrink-0 overflow-hidden rounded-[16px] bg-[#e7edf8] ring-1 ring-black/10">
                                                         @if($agentImg)
                                                             <img
                                                                 src="{{ $agentImg }}"
