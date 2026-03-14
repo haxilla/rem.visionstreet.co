@@ -23,12 +23,12 @@
           <span class="absolute left-1/2 -bottom-1 h-[2px] w-0 -translate-x-1/2 bg-white/60 rounded-full transition-all group-hover:w-8"></span>
         </a>
 
-        <a href="/search" class="relative group hover:text-white transition">
+        <a href="/viewhomes" class="relative group hover:text-white transition">
           Search Homes
           <span class="absolute left-1/2 -bottom-1 h-[2px] w-0 -translate-x-1/2 bg-white/60 rounded-full transition-all group-hover:w-8"></span>
         </a>
 
-        <a href="/demo" class="relative group hover:text-white transition">
+        <a href="/freetrial" class="relative group hover:text-white transition">
           Demo
           <span class="absolute left-1/2 -bottom-1 h-[2px] w-0 -translate-x-1/2 bg-white/60 rounded-full transition-all group-hover:w-8"></span>
         </a>
