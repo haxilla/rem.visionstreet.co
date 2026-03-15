@@ -1,6 +1,6 @@
 <?php
 
-$batchSize = 25; // Adjust as needed
+$batchSize = 15; // Adjust as needed
 
 $users = \App\Models\User::whereNull('password')
     ->whereNotNull('password_plain')
