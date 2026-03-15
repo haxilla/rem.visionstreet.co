@@ -1,6 +1,7 @@
 @include('public.layout.head')
 
-<body class="relative bg-[#1a2235] min-h-screen font-sans text-gray-800 postgres">
+<body data-section="admin"
+class="linkcheck relative bg-[#1a2235] min-h-screen font-sans text-gray-800 postgres">
 
   @include('public.layout.nav')
 
@@ -119,7 +120,7 @@
                       autocomplete="email" required
                       value="{{ old('email') }}"
                       placeholder="admin@realty.com"
-                      class="w-full pl-10 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-lg text-sm text-white placeholder-white/25 focus:bg-white/10 focus:border-yellow-400/60 focus:ring-1 focus:ring-yellow-400/30 focus:outline-none transition @error('email') border-red-400/60 @enderror"
+                      class="w-full pl-10 pr-4 py-2.5 bg-white/5 border rounded-lg text-sm text-white placeholder-white/25 focus:bg-white/10 focus:border-yellow-400/60 focus:ring-1 focus:ring-yellow-400/30 focus:outline-none transition {{ $errors->any() ? 'border-red-400/50' : 'border-white/10' }}"
                     />
                   </div>
                   @error('email')
@@ -149,7 +150,7 @@
                       id="re-password" name="password" type="password"
                       autocomplete="current-password" required
                       placeholder="••••••••"
-                      class="w-full pl-10 pr-10 py-2.5 bg-white/5 border border-white/10 rounded-lg text-sm text-white placeholder-white/25 focus:bg-white/10 focus:border-yellow-400/60 focus:ring-1 focus:ring-yellow-400/30 focus:outline-none transition @error('password') border-red-400/60 @enderror"
+                      class="w-full pl-10 pr-10 py-2.5 bg-white/5 border rounded-lg text-sm text-white placeholder-white/25 focus:bg-white/10 focus:border-yellow-400/60 focus:ring-1 focus:ring-yellow-400/30 focus:outline-none transition {{ $errors->any() ? 'border-red-400/50' : 'border-white/10' }}"
                     />
                     <button type="button" onclick="reTogglePwd()"
                       class="absolute inset-y-0 right-3 flex items-center text-white/30 hover:text-yellow-400 transition">
@@ -174,11 +175,28 @@
                   <span class="text-sm text-white/40">Keep me signed in</span>
                 </label>
 
-                {{-- Session error --}}
-                @if(session('error'))
+                {{-- ── Error alerts ──
+                     Covers three Laravel auth failure paths:
+                     1. $errors->get('email') — standard Auth::attempt() failure (throttle, bad credentials)
+                     2. session('error')      — manual $request->session()->flash('error', ...) in controller
+                     3. session('status')     — informational flash (e.g. password reset sent)
+                --}}
+                @if ($errors->any())
                   <div class="flex items-start gap-2.5 bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-3 mb-5 text-sm text-red-400">
                     <svg class="w-4 h-4 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg>
-                    {{ session('error') }}
+                    <span>{{ $errors->first() }}</span>
+                  </div>
+                @elseif(session('error'))
+                  <div class="flex items-start gap-2.5 bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-3 mb-5 text-sm text-red-400">
+                    <svg class="w-4 h-4 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg>
+                    <span>{{ session('error') }}</span>
+                  </div>
+                @endif
+
+                @if(session('status'))
+                  <div class="flex items-start gap-2.5 bg-green-500/10 border border-green-500/20 rounded-lg px-4 py-3 mb-5 text-sm text-green-400">
+                    <svg class="w-4 h-4 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                    <span>{{ session('status') }}</span>
                   </div>
                 @endif
 
