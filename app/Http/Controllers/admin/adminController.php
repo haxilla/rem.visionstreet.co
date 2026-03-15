@@ -12,8 +12,7 @@ class adminController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth');
-        $this->middleware('role:admin,super');
+        $this->middleware('auth:admin');
     }
 
     public function segments(Request $request)
