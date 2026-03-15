@@ -1,7 +1,7 @@
 @include('public.layout.head')
 
-<body data-section="admin"
-class="linkcheck relative bg-[#1a2235] min-h-screen font-sans text-gray-800 postgres">
+<body
+class="relative bg-[#1a2235] min-h-screen font-sans text-gray-800 postgres">
 
   @include('public.layout.nav')
 
