@@ -15,13 +15,16 @@ class adminController extends Controller
         $this->middleware('auth:admin');
     }
 
+    
+
     public function segments(Request $request)
     {
-        // Route param: "segments" separates by section
         $segmentsPath = trim((string) $request->route('segments', ''), '/');    
         $parts        = ($segmentsPath === '') ? [] : explode('/', $segmentsPath);
 
-        //sets view names & app files
+        // Prepend 'admin' so dynamic_index resolves to admin.* views
+        array_unshift($parts, 'admin');
+
         require_once __DIR__ . '/../parts/dynamic_index.php';
 
         // ---- partial vs full ----
