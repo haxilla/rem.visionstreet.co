@@ -1,6 +1,7 @@
 @include('public.layout.head')
 
-<body class="relative bg-[#1a2235] min-h-screen font-sans text-gray-800 postgres">
+<body data-section="admin"
+class="linkcheck relative bg-[#1a2235] min-h-screen font-sans text-gray-800 postgres">
 
   @include('public.layout.nav')
 
@@ -115,7 +116,7 @@
                       </svg>
                     </span>
                     <input
-                      id="email" name="email" type="email"
+                      id="email" name="username" type="email"
                       autocomplete="email" required
                       value="{{ old('email') }}"
                       placeholder="admin@realty.com"
