@@ -7,6 +7,9 @@ use Illuminate\Notifications\Notifiable;
 
 class Admin extends Authenticatable
 {
+
+    protected $table = 'admins';
+    
     use Notifiable;
 
     protected $fillable = [
