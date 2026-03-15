@@ -78,7 +78,7 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
                       <label for="password" class="block text-xs font-semibold text-gray-500 uppercase tracking-wider">
                         Password
                       </label>
-                      <a href="{{ route('password.request') }}"
+                      <a href="#"
                          class="text-xs text-gray-400 hover:text-gray-900 transition-colors duration-150">
                         Forgot password?
                       </a>
