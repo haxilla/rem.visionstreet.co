@@ -9,7 +9,7 @@ class Admin extends Authenticatable
 {
 
     protected $table = 'admins';
-    
+
     use Notifiable;
 
     protected $fillable = [
@@ -29,9 +29,7 @@ class Admin extends Authenticatable
 
     protected function casts(): array
     {
-        return [
-            'password' => 'hashed',
-        ];
+        return [];
     }
 
     public function getEmailForPasswordReset(): string
