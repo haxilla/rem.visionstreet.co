@@ -22,7 +22,7 @@ class adminController extends Controller
         $parts        = ($segmentsPath === '') ? [] : explode('/', $segmentsPath);
 
         //sets view names & app files
-        dd("admin $parts");
+        dd($parts);
         
     }   
 
