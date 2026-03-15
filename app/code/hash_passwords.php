@@ -33,7 +33,7 @@ echo '<html><head>';
 echo '<meta http-equiv="refresh" content="0.5">';
 echo '</head><body style="font-family:Arial;padding:20px">';
 
-echo '<h3>Batch complete</h3>';
+echo '<h3>PASSWORD HASH Batching IN PROGRESS</h3>';
 echo '<p>Processed: ' . count($users) . '</p>';
 echo '<p>Remaining: ' . $remaining . '</p>';
 
