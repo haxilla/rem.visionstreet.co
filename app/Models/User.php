@@ -17,6 +17,10 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
+
+    protected $table="propagents";
+    protected $guard='member';
+
     protected $fillable = [
         'name',
         'email',
@@ -46,7 +50,4 @@ class User extends Authenticatable
         ];
     }
 
-    public function theAgent(){
-        return $this->hasOne('App\Models\Core\Propagent','id','id');
-    }
 }

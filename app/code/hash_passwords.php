@@ -2,9 +2,9 @@
 
 $batchSize = 5; // Adjust as needed
 
-$users = \App\Models\User::whereNull('password')
-    ->whereNotNull('password_plain')
-    ->where('password_plain', '!=', '')
+$users = \App\Models\Core\Propagents::whereNull('password')
+    ->whereNotNull('agtPswd')
+    ->where('agtPswd', '!=', '')
     ->limit($batchSize)
     ->get();
 
@@ -18,14 +18,14 @@ if ($users->isEmpty()) {
 }
 
 foreach ($users as $user) {
-    $user->password = \Hash::make($user->password_plain);
+    $user->password = \Hash::make($user->agtPswd);
     $user->save();
 }
 
-$remaining = DB::table('users')
+$remaining = DB::table('propagents')
     ->whereNull('password')
-    ->whereNotNull('password_plain')
-    ->where('password_plain', '!=', '')
+    ->whereNotNull('agtPswd')
+    ->where('agtPswd', '!=', '')
     ->count();
 
 echo '<!doctype html>';
