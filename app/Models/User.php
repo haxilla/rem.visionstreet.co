@@ -47,6 +47,6 @@ class User extends Authenticatable
     }
 
     public function theAgent(){
-        return $this->hasOne('App\Models\Core\Propagent','propagent_id','id');
+        return $this->hasOne('App\Models\Core\Propagent','id','id');
     }
 }
