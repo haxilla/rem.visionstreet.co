@@ -109,6 +109,8 @@ $completeCampsQuery = propdeliv::select(
 ->limit(10)
 ->get();
 
+dd($completeCampsQuery);
+
 $completeCampsMap = $completeCampsQuery->map(function ($item) {
     return [
         'campLabel'    => $item->campLabel,
