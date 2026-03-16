@@ -232,7 +232,7 @@
                     @endif
 
                     {{-- Form --}}
-                    <form method="POST" action="{{ route('login') }}" novalidate class="space-y-5">
+                    <form method="POST" action="{{ route('member.login') }}" novalidate class="space-y-5">
                         @csrf
 
                         {{-- Email --}}
@@ -302,7 +302,7 @@
                                 >
                                 Keep me signed in
                             </label>
-                            <a href="{{ route('password.request') }}" class="text-[13px] font-semibold text-brand-blue hover:underline">
+                            <a href="#" class="text-[13px] font-semibold text-brand-blue hover:underline">
                                 Forgot password?
                             </a>
                         </div>
@@ -328,7 +328,7 @@
                     {{-- Register CTA --}}
                     <p class="text-center text-[14px] text-slate-500">
                         Not a member yet?
-                        <a href="{{ route('register') }}" class="ml-1 font-semibold text-brand-blue hover:underline">
+                        <a href="#" class="ml-1 font-semibold text-brand-blue hover:underline">
                             Create a free account →
                         </a>
                     </p>
