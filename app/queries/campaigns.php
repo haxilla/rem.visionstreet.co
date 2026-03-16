@@ -28,8 +28,6 @@ $waitingCampsQuery = propdelivnow::select(
 ->whereNotNull('emRequest')
 ->whereNull('emStart')
 ->whereNull('emComplete')
-->where('propagent_id', '=', "$umid")
-->where('propflyer_id', '=', "$idFly")
 ->orderBy('emRequest')
 ->get();
 
@@ -69,8 +67,6 @@ $inProgressCampsQuery = propdelivnow::select(
 ->whereNotNull('emRequest')
 ->whereNotNull('emStart')
 ->whereNull('emComplete')
-->where('propagent_id', '=', "$umid")
-->where('propflyer_id', '=', "$idFly")
 ->orderBy('emRequest')
 ->get();
 
@@ -109,8 +105,6 @@ $completeCampsQuery = propdeliv::select(
 )
 ->whereNotNull('emComplete')
 ->where('emComplete', '>', $theDate)
-->where('propagent_id', '=', "$umid")
-->where('propflyer_id', '=', "$idFly")
 ->orderBy('emComplete', 'desc')
 ->limit(10)
 ->get();
