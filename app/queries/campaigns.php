@@ -104,7 +104,6 @@ $completeCampsQuery = Propdelivnow::select(
     'emSubject'
 )
 ->whereNotNull('emComplete')
-->where('emComplete', '>', $theDate)
 ->orderBy('emComplete', 'desc')
 ->limit(10)
 ->get();
