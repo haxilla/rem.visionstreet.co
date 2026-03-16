@@ -2,8 +2,8 @@
 
 // use array to prepend paths on deeper links
 $prepend = [
-    'search_homes'   => 'public',];
-    /* 'redis' => 'admin.cache',*/
+    'search_homes'  => 'public',
+    'about'         => 'public',];
 
 $tmp   = strstr($renderfrom, '.', true);
 $first = ($tmp !== false) ? $tmp : $renderfrom;
