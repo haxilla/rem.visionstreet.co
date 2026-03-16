@@ -29,10 +29,14 @@
             </div>
         @endif
 
-        <form data-action="handle" data-renderto="pageswap" data-renderfrom="auth.member.login" data-renderas="html" class="space-y-5">
+        <form data-action="handle" class="space-y-5">
             @csrf
-
+            <input type="hidden" name="renderto" value="modal_message">
+            <input type="hidden" name="renderfrom" value="auth.member.login">
+            <input type="hidden" name="renderas" value="html">
             <div>
+
+                <div class="modal_message"></div>
                 <label for="member_username" class="mb-2 block text-[12px] font-semibold uppercase tracking-[0.14em] text-[#1d2f5f]/70">
                     Email Address
                 </label>
