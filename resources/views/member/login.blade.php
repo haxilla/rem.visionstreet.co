@@ -8,7 +8,7 @@
 --}}
 
 @php
-    $slides = $data['slides'];
+    $slides = $slides ?? collect();
     $cards  = [];
 
     foreach ($slides->take(4) as $the) {
@@ -92,24 +92,9 @@
 
 <body class="min-h-full font-body bg-slate-100">
 
-    {{-- ── Page wrapper ─────────────────────────────── --}}
     <div class="flex min-h-screen items-center justify-center px-6 py-16">
 
-        @include('public.layout.nav')
-
         <div class="w-full max-w-5xl">
-
-            {{-- ── Logo above everything ──────────────────── --}}
-            <div class="mb-10 flex items-center justify-center gap-3">
-                <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-gold">
-                    <svg class="h-5 w-5 fill-white" viewBox="0 0 24 24">
-                        <path d="M12 2L2 9.5V22h7v-7h6v7h7V9.5L12 2z"/>
-                    </svg>
-                </div>
-                <span class="font-display text-[26px] font-bold tracking-tight text-brand-bluedark">
-                    Realty<span class="text-brand-gold">Emails</span>
-                </span>
-            </div>
 
             {{-- ── Two-column card ─────────────────────────── --}}
             <div class="grid grid-cols-1 overflow-hidden rounded-3xl shadow-2xl shadow-brand-bluedark/20 lg:grid-cols-2">
@@ -119,10 +104,22 @@
                 ════════════════════════════════════════ --}}
                 <div class="bg-brand-bluedark px-10 py-12">
 
+                    {{-- Logo lives here now --}}
+                    <div class="mb-8 flex items-center gap-3">
+                        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-gold flex-shrink-0">
+                            <svg class="h-5 w-5 fill-white" viewBox="0 0 24 24">
+                                <path d="M12 2L2 9.5V22h7v-7h6v7h7V9.5L12 2z"/>
+                            </svg>
+                        </div>
+                        <span class="font-display text-[22px] font-bold tracking-tight text-white">
+                            Realty<span class="text-brand-gold">Emails</span>
+                        </span>
+                    </div>
+
                     <p class="mb-1 text-[11px] font-semibold uppercase tracking-[.14em] text-brand-gold">
                         Latest Listings
                     </p>
-                    <h2 class="font-display text-[30px] font-semibold leading-tight text-white">
+                    <h2 class="font-display text-[28px] font-semibold leading-tight text-white">
                         What's new on<br>RealtyEmails today.
                     </h2>
 
@@ -130,7 +127,7 @@
                         @if(count($cards))
                             @foreach($cards as $i => $card)
                                 <div
-                                    class="group flex gap-4 items-start animate-fadein"
+                                    class="flex gap-4 items-start animate-fadein"
                                     style="animation-delay: {{ $i * 80 }}ms"
                                 >
                                     {{-- Photo --}}
@@ -168,16 +165,14 @@
                                     </div>
                                 </div>
 
-                                {{-- Divider between cards --}}
                                 @if(!$loop->last)
-                                    <div class="border-t border-white/8"></div>
+                                    <div class="border-t border-white/10"></div>
                                 @endif
                             @endforeach
                         @else
-                            {{-- Fallback skeleton cards --}}
                             @foreach(range(1,4) as $n)
                                 <div class="flex gap-4 items-start">
-                                    <div class="h-20 w-28 flex-shrink-0 rounded-xl bg-brand-bluemid/60 animate-pulse"></div>
+                                    <div class="h-20 w-28 flex-shrink-0 rounded-xl bg-white/10 animate-pulse"></div>
                                     <div class="flex-1 pt-1 space-y-2">
                                         <div class="h-4 w-3/4 rounded bg-white/10 animate-pulse"></div>
                                         <div class="h-3 w-1/2 rounded bg-white/8 animate-pulse"></div>
@@ -185,7 +180,7 @@
                                     </div>
                                 </div>
                                 @if($n < 4)
-                                    <div class="border-t border-white/8"></div>
+                                    <div class="border-t border-white/10"></div>
                                 @endif
                             @endforeach
                         @endif
@@ -339,7 +334,7 @@
 
             </div>
 
-            {{-- ── Footer note ─────────────────────────────── --}}
+            {{-- Footer --}}
             <p class="mt-8 text-center text-[12px] text-slate-400">
                 © {{ date('Y') }} RealtyEmails. All rights reserved.
             </p>
