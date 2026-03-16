@@ -121,7 +121,7 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
                 <a href="#" class="hover:text-white transition-colors duration-200">Pricing</a>
                 <a href="#" class="hover:text-white transition-colors duration-200">About</a>
             </div>
-            <a href="{{ route('register') }}" class="hidden md:inline-flex items-center gap-2 text-sm font-medium px-5 py-2 rounded-full bg-gold text-ink hover:bg-gold-light transition-colors duration-200">
+            <a href="#" class="hidden md:inline-flex items-center gap-2 text-sm font-medium px-5 py-2 rounded-full bg-gold text-ink hover:bg-gold-light transition-colors duration-200">
                 Start free
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
             </a>
