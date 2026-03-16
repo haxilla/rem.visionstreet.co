@@ -365,7 +365,7 @@
         {{-- Register CTA --}}
         <p class="text-center text-[14px] text-slate-500">
             Not a member yet?
-            <a href="{{ route('register') }}" class="ml-1 font-semibold text-brand-blue hover:underline">
+            <a href="#" class="ml-1 font-semibold text-brand-blue hover:underline">
                 Create a free account →
             </a>
         </p>
