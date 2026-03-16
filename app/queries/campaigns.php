@@ -98,6 +98,7 @@ $completeCampsQuery = propdeliv::select(
     'campLabel',
     'authorized',
     'emStart',
+    'emComplete',
     'cid',
     'emArea',
     'emArea_display',
@@ -117,6 +118,7 @@ $completeCampsMap = $completeCampsQuery->map(function ($item) {
         'emSubject'    => $item->emSubject,
         'emArea'       => $item->emArea,
         'emStart'      => $item->emStart,
+        'emComplete'   => $item->emComplete,
         'emRequest'    => $item->emRequest,
         'cid'          => $item->cid,
     ];
