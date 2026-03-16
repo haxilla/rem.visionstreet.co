@@ -269,7 +269,7 @@
         @endif
 
         {{-- Form --}}
-        <form method="POST" action="{{ route('login') }}" novalidate class="space-y-5">
+        <form method="POST" action="{{ route('member.login') }}" novalidate class="space-y-5">
             @csrf
 
             {{-- Email --}}
