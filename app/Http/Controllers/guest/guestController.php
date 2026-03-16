@@ -53,19 +53,18 @@ class guestController extends Controller
     public function memberLogin(Request $request)
     {
         $credentials = $request->validate([
-            'username' => ['required', 'email'],
+            'xxAgtUname' => ['required', 'email'],
             'password' => ['required'],
         ]);
 
         if (Auth::guard('member')->attempt($credentials)) {
             $request->session()->regenerate();
-
             return redirect()->intended('/member/dashboard');
         }
 
         return back()->withErrors([
-            'username' => 'Invalid credentials.',
-        ])->onlyInput('username');
+            'xxAgtUname' => 'Invalid credentials.',
+        ])->onlyInput('xxAgtUname');
     }
 
     public function memberLoginModal(Request $request)

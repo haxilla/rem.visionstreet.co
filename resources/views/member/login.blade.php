@@ -242,9 +242,9 @@
                             <div class="relative">
                                 <input
                                     type="email"
-                                    id="username"
-                                    name="username"
-                                    value="{{ old('username') }}"
+                                    id="xxAgtUname"
+                                    name="xxAgtUname"
+                                    value="{{ old('xxAgtUname') }}"
                                     placeholder="you@example.com"
                                     autocomplete="email"
                                     required
