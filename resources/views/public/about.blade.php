@@ -152,7 +152,7 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
                 RealtyEmails combines stunning listing templates with intelligent drip automation — so agents close more deals by staying top of mind, effortlessly.
             </p>
             <div class="flex flex-col sm:flex-row gap-4 animate-fade-up" style="animation-delay:0.3s; opacity:0; animation-fill-mode:forwards;">
-                <a href="{{ route('register') }}" class="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-gold text-ink font-medium hover:bg-gold-light transition-all duration-200 text-sm">
+                <a href="#" class="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-gold text-ink font-medium hover:bg-gold-light transition-all duration-200 text-sm">
                     Get started free
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
                 </a>
