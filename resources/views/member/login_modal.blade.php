@@ -29,7 +29,7 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('member.login.submit') }}" class="space-y-5">
+        <form data-action="handle" data-renderto="pageswap" data-renderfrom="auth.member.login" data-renderas="html" class="space-y-5">
             @csrf
 
             <div>
