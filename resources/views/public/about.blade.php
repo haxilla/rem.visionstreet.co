@@ -11,12 +11,17 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
       <div class="pageswap p-6 w-full">
 {{-- ABOUT PAGE - REALTYEMAILS STYLE / RESTRAINED VERSION --}}
 @php
-    $heroImg   = 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1800&q=80';
-    $storyImg  = 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1400&q=80';
     $brandBlue   = '#243f86';
     $brandBlue2  = '#2d4f9d';
     $brandText   = '#24428b';
     $brandMuted  = '#66779a';
+
+    $heroImg     = 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1600&q=80';
+    $storyImg    = 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80';
+    $agentsImg   = 'https://images.unsplash.com/photo-1560520653-9e0e4c89eb11?auto=format&fit=crop&w=1200&q=80';
+    $listingImg1 = 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=1000&q=80';
+    $listingImg2 = 'https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1000&q=80';
+    $listingImg3 = 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1000&q=80';
 @endphp
 
 <div class="w-full bg-[#f4f5f8] text-[#1f2f57]">
