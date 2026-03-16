@@ -349,11 +349,11 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
                     Join 12,000+ agents using RealtyEmails to win more listings and close more deals.
                 </p>
                 <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                    <a href="{{ route('register') }}" class="inline-flex items-center justify-center gap-2 px-10 py-4 rounded-full bg-gold text-ink font-medium hover:bg-gold-light transition-all duration-200">
+                    <a href="#" class="inline-flex items-center justify-center gap-2 px-10 py-4 rounded-full bg-gold text-ink font-medium hover:bg-gold-light transition-all duration-200">
                         Start free — no credit card
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
                     </a>
-                    <a href="{{ route('demo') }}" class="inline-flex items-center justify-center gap-2 px-10 py-4 rounded-full border border-white/15 text-white/60 hover:text-white hover:border-white/25 transition-all duration-200 font-light">
+                    <a href="#" class="inline-flex items-center justify-center gap-2 px-10 py-4 rounded-full border border-white/15 text-white/60 hover:text-white hover:border-white/25 transition-all duration-200 font-light">
                         Book a demo
                     </a>
                 </div>
