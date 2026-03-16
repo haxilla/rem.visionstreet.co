@@ -24,5 +24,3 @@ $slides=$slides
 $data=[
     'slides'=>$slides,
 ];
-
-dd($data);
