@@ -29,7 +29,11 @@
             </div>
         @endif
 
-        <form data-action="handle" class="space-y-5">
+        <form data-action="handle" 
+            data-renderto="modal_message"
+            data-renderfrom="auth.member.login"
+            data-renderas="html" 
+            class="space-y-5">
             @csrf
             <input type="hidden" name="renderto" value="modal_message">
             <input type="hidden" name="renderfrom" value="auth.member.login">
