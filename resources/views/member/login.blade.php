@@ -339,7 +339,7 @@
                     >
                     Keep me signed in
                 </label>
-                <a href="{{ route('password.request') }}" class="text-[13px] font-semibold text-brand-blue hover:underline">
+                <a href="#" class="text-[13px] font-semibold text-brand-blue hover:underline">
                     Forgot password?
                 </a>
             </div>
