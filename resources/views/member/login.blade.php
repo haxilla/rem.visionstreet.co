@@ -8,7 +8,7 @@
 --}}
 
 @php
-    $slides = $slides ?? collect();
+    $slides = $data['slides'];
     $cards  = [];
 
     foreach ($slides->take(4) as $the) {
