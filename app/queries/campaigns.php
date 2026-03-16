@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Core\Propdeliv;
 use App\Models\Core\Propdelivnow;
 use Carbon\Carbon;
 
@@ -91,7 +90,7 @@ $inProgressFlyerCamps = $inProgressCampsMap->groupBy('propflyer_id');
 | Completed within last 7 days
 */
 
-$completeCampsQuery = propdeliv::select(
+$completeCampsQuery = Propdelivnow::select(
     'propflyer_id',
     'propagent_id',
     'emRequest',
@@ -105,6 +104,7 @@ $completeCampsQuery = propdeliv::select(
     'emSubject'
 )
 ->whereNotNull('emComplete')
+->where('emComplete', '>', $theDate)
 ->orderBy('emComplete', 'desc')
 ->limit(10)
 ->get();
