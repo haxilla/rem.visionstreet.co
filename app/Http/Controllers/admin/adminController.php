@@ -15,8 +15,6 @@ class adminController extends Controller
         $this->middleware('auth:admin');
     }
 
-    
-
     public function segments(Request $request)
     {
         $segmentsPath = trim((string) $request->route('segments', ''), '/');    

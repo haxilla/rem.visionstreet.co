@@ -27,9 +27,12 @@ class guestController extends Controller
             'adminEmail' => $credentials['username'],
             'password'   => $credentials['password'],
         ])) {
-            $request->session()->regenerate();
 
+            /*
+            $request->session()->regenerate();
             return redirect()->intended('/admin/dashboard');
+            */
+            return redirect()->('/admin/dashboard');
         }
 
         return back()->withErrors([
