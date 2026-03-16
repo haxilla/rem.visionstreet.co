@@ -29,10 +29,10 @@ class guestController extends Controller
         ])) {
 
             /*
-            $request->session()->regenerate();
             return redirect()->intended('/admin/dashboard');
             */
-            return redirect()->intended('/admin/dashboard');
+            $request->session()->regenerate();
+            return redirect('/admin/dashboard');
         }
 
         return back()->withErrors([
