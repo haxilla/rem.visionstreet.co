@@ -8,7 +8,7 @@
 --}}
 
 @php
-    $slides = $slides ?? collect();
+    $slides = $data['slides'];
     $cards  = [];
 
     foreach ($slides->take(4) as $the) {
@@ -91,6 +91,8 @@
 </head>
 
 <body class="min-h-full font-body bg-slate-100">
+
+    @include('public.layout.nav')
 
     <div class="flex min-h-screen items-center justify-center px-6 py-16">
 
