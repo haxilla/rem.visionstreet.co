@@ -95,6 +95,8 @@
     {{-- ── Page wrapper ─────────────────────────────── --}}
     <div class="flex min-h-screen items-center justify-center px-6 py-16">
 
+        @include('public.layout.nav')
+
         <div class="w-full max-w-5xl">
 
             {{-- ── Logo above everything ──────────────────── --}}
