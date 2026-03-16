@@ -2,7 +2,8 @@
 
 $batchSize = 5; // Adjust as needed
 
-$users = \App\Models\Core\Propagents::whereNull('password')
+$users = DB::table('propagents')
+    ->whereNull('password')
     ->whereNotNull('agtPswd')
     ->where('agtPswd', '!=', '')
     ->limit($batchSize)
