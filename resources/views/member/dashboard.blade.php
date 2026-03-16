@@ -11,7 +11,7 @@ class="relative bg-white min-h-screen font-sans text-gray-800">
       <div class="pageswap p-6 w-full">
 
         <h1 class="text-2xl font-semibold text-gray-800">Member Dashboard</h1>
-        <p class="text-gray-500 mt-1">Welcome back, {{ Auth::guard('member')->user()->username }}.</p>
+        <p class="text-gray-500 mt-1">Welcome back, {{ Auth::guard('member')->user()->theAgent->agtFullName}}.</p>
 
       </div>
     </div>

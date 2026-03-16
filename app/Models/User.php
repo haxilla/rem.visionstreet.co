@@ -45,4 +45,8 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function theAgent(){
+        return $this->hasOne('App\Models\Core\Propagent','propagent_id','id');
+    }
 }
