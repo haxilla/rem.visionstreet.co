@@ -6,7 +6,9 @@
 //from this table
 namespace App\Models\Core;
 
-class Propdelivnow extends \App\Model
+use Illuminate\Database\Eloquent\Model;
+
+class Propdelivnow extends Model
 {
    protected $table        = 'propdelivnow';
    protected $dates        = ['emRequest','emStart','emComplete','created_at',

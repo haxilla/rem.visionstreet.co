@@ -2,7 +2,9 @@
 
 namespace App\Models\Core;
 
-class Propdeliv extends \App\Model
+use Illuminate\Database\Eloquent\Model;
+
+class Propdeliv extends Model
 {
    protected $primaryKey   = 'cid';
    protected $dates = ['emRequest','emStart','emComplete',
