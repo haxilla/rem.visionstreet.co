@@ -9,7 +9,7 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
   :class="collapsed ? 'ml-20' : 'ml-64'">
     <div class="ml-8 mr-8 lg:ml-10 lg:mr-10">
       <div class="pageswap p-6 w-full">
-        THIS IS THE DEMO PAGE
+        THIS IS WHERE THE ABOUT PAGE CONTENT STARTS.  ALREADY HAS NAV BAR, FOOTER, AND ALL THE OTHER STUFF.  JUST NEED TO FILL IN 
       </div>
     </div>
   </main>
