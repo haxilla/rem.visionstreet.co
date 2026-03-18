@@ -37,6 +37,8 @@ $propInfo=Propflyer::select(
 }])
 ->first();
 
+
+dd($propInfo);
 /*
 $newRemID=propagentmeta::where('propagent_id','=',"$umid")
 ->pluck('newRemID')
