@@ -6,8 +6,6 @@
     $graphic_style      = $propInfo->theStyle->graphic_style;
     $hlGraphic          = $graphic_words.'_'.$graphic_textcolor.'_'.$graphic_style.'x.png';
 
-    dd($hlGraphic);
-    
 @endphp
 
 <div>
