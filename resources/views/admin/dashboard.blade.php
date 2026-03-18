@@ -306,7 +306,9 @@ class="relative bg-white min-h-screen font-sans text-gray-800">
                     <div class="border rounded p-3 mb-2">
 
                         <div class="font-medium">
-                            Flyer {{ $flyerId }}
+                            <a href="/flyer/{{ $flyerId }}">
+                                Flyer {{ $flyerId }}
+                            </a>
                         </div>
 
                         <div class="text-sm text-gray-600">
