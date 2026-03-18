@@ -20,4 +20,5 @@ $theHeadline=$propInfo['xHeadline'];
 if(!$theHeadline){
     $theHeadline=$propInfo['xxHeadline'];}
 
-dd($propInfo->theAgent);
+$agentInfo=$propInfo->theAgent;
+
