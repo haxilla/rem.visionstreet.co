@@ -19,3 +19,5 @@ $hlGraphic          = $graphic_words.'_'.$graphic_textcolor.'_'.$graphic_style.'
 $theHeadline=$propInfo['xHeadline'];
 if(!$theHeadline){
     $theHeadline=$propInfo['xxHeadline'];}
+
+dd($propInfo->theAgent);
