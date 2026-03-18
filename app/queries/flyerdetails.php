@@ -1,6 +1,6 @@
 <?php
 // get model
-use App\Modelss\Cores\Propflyers;
+use App\Models\Core\Propflyer;
 
 
 if(!$flyerId){
