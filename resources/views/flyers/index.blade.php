@@ -1,6 +1,7 @@
 @php 
     $fromURL='https://www.realtyrepublic.com';
     $display="screen";
+    $enc=0;
 
     $totalPhotos = $propInfo->thePhotos
     ->where('resized','=','500')
