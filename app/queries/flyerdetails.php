@@ -7,7 +7,7 @@ if(!$flyerId){
    dd('error-line7-queries/flyerdetails.php');}
 
 // query
-$propInfo=Propflyers::select(
+$propInfo=Propflyer::select(
    'id','propagent_id','officeID','xFullStreet',
    'xListPrice','xCity','xState','xZip','xHeadline',
    'xMlsNum','xBeds','xxBeds','xBaths','xxBaths',
