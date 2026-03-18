@@ -22,4 +22,5 @@ if(!$theHeadline){
     $theHeadline=$propInfo['xxHeadline'];}
 
 $agentInfo=$propInfo->theAgent;
+$officeInfo=$propInfo->theOffice;
 
