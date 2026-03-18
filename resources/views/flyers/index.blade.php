@@ -1,5 +1,9 @@
 @php 
     $fromURL='https://www.realtyrepublic.com';
+
+    dd($propInfo);
+
+    $hlGraphic           = $graphic_words.'_'.$graphic_textcolor.'_'.$graphic_style.'x.png';
 @endphp
 
 <div>
