@@ -108,7 +108,13 @@ data-flyerbackground="{{$propInfo->theStyle
                   vertical-align:top;">
                      <div style="padding:7px;
                      padding-right:10px;">
-                        <a href="#" target="_blank">
+                        <a href="{{URL::route('public.pubShowThePhoto',['enc'=>$enc,
+                        'photoID'=>$propInfo->thePhotos
+                        ->where('def','=','1')
+                        ->where('resized','=','500')
+                        ->first()
+                        ->photoID])}}"
+                        target="_blank">
                            <img
                            src="{{$fromURL}}/hqphotos/{{$propInfo
                             ->theMeta->zipDir}}/{{$propInfo
@@ -152,7 +158,14 @@ data-flyerbackground="{{$propInfo->theStyle
                                     <div style="padding:2.5px;">
                                        @if($propInfo->thePhotos->sortBy('ord')->take(1)->first())
                                           @if($display==='email')
-                                             <a href="#" target="_blank">
+                                             <a href="{{URL::route('public.pubShowThePhoto',[
+                                                'enc'=>$enc,
+
+                                                'photoID'=>$propInfo->thePhotos
+                                                    ->where('resized','=','500')
+                                                   ->sortBy('ord')
+                                                   ->take(1)
+                                                   ->first()->photoID])}}">
                                                 <img
                                                 src="{{$fromURL1}}/hqphotos/{{$propInfo
                                                   ->theMeta->zipDir}}/{{$propInfo
@@ -187,7 +200,13 @@ data-flyerbackground="{{$propInfo->theStyle
                                     ->slice(1)->take(1))
                                        <div style="padding:2.5px;">
                                           @if($display==='email')
-                                             <a href="#">
+                                             <a href="{{URL::route('public.pubShowThePhoto',[
+                                              'enc'=>$enc,
+                                              'photoID'=>$propInfo->thePhotos
+                                              ->where('resized','=','500')
+                                              ->sortBy('ord')
+                                              ->slice(1)->take(1)
+                                              ->first()->photoID])}}">
                                                   <img
                                                   src="{{$fromURL}}/hqphotos/{{$propInfo
                                                   ->theMeta->zipDir}}/{{$propInfo
@@ -225,7 +244,12 @@ data-flyerbackground="{{$propInfo->theStyle
                                     ->take(1)->first())
                                        <div style="padding:2.5px;">
                                           @if($display==='email')
-                                             <a href="#" target="_blank">
+                                             <a href="{{URL::route('public.pubShowThePhoto',['enc'=>$enc,
+                                             'photoID'=>$propInfo->thePhotos
+                                                  ->where('resized','=','500')
+                                                   ->sortBy('ord')
+                                                   ->slice(2)->take(1)
+                                                   ->first()->photoID])}}">
                                                 <img
                                                 src="{{$fromURL}}/hqphotos/{{$propInfo
                                                   ->theMeta->zipDir}}/{{$propInfo
@@ -261,7 +285,11 @@ data-flyerbackground="{{$propInfo->theStyle
                                     ->slice(3)->take(1)->first())
                                        <div style="padding:2.5px;">
                                           @if($display==='email')
-                                             <a href="#" target="_blank">
+                                             <a href="{{URL::route('public.pubShowThePhoto',['enc'=>$enc,
+                                             'photoID'=>$propInfo->thePhotos
+                                                   ->sortBy('ord')
+                                                   ->slice(3)->take(1)
+                                                   ->first()->photoID])}}">
                                                 <img
                                                 src="{{$fromURL}}/hqphotos/{{$propInfo
                                                   ->theMeta->zipDir}}/{{$propInfo
@@ -299,7 +327,12 @@ data-flyerbackground="{{$propInfo->theStyle
                                     ->take(1)->first())
                                        <div style="padding:2.5px;">
                                           @if($display==='email')
-                                             <a href="#" target="_blank">
+                                             <a href="{{URL::route('public.pubShowThePhoto',[
+                                             'enc'=>$enc,'photoID'=>$propInfo->thePhotos
+                                                ->where('resized','=','500')
+                                                   ->sortBy('ord')
+                                                   ->slice(4)->take(1)
+                                                   ->first()->photoID])}}">
                                                 <img
                                                 src="{{$fromURL}}/hqphotos/{{$propInfo
                                                   ->theMeta->zipDir}}/{{$propInfo
@@ -335,7 +368,12 @@ data-flyerbackground="{{$propInfo->theStyle
                                     ->take(1)->first())
                                        <div style="padding:2.5px;">
                                           @if($display==='email')
-                                             <a href="#" target="_blank">
+                                             <a href="{{URL::route('pubShowPhoto',['enc'=>$enc,
+                                             'photoID'=>$propInfo->thePhotos
+                                             ->where('resized','=','500')
+                                             ->sortBy('ord')
+                                             ->slice(5)->take(1)
+                                             ->first()->photoID])}}">
                                                 <img
                                                 src="{{$fromURL}}/hqphotos/{{$propInfo
                                                 ->theMeta->zipDir}}/{{$propInfo
@@ -371,7 +409,8 @@ data-flyerbackground="{{$propInfo->theStyle
                                     ->take(1)->first())
                                        <div style="padding:2.5px;">
                                           @if($display==='email')
-                                             <a href="#" target="_blank">
+                                             <a href="{{URL::route('pubShowPhoto',['enc'=>$enc,'photoID'=>$propInfo->thePhotos->slice(6)
+                                                ->take(1)->first()->photoID])}}">
                                                 <img
                                                 src="{{$fromURL}}/hqphotos/{{$propInfo
                                                   ->theMeta->zipDir}}/{{$propInfo
@@ -406,7 +445,11 @@ data-flyerbackground="{{$propInfo->theStyle
                                     ->first())
                                        <div style="padding:2.5px;">
                                           @if($display==='email')
-                                             <a href="#" target="_blank">
+                                             <a href="{{URL::route('pubShowPhoto',['enc'=>$enc,'photoID'=>$propInfo->thePhotos
+                                               ->where('resized','=','500')
+                                                   ->sortBy('ord')
+                                                   ->slice(7)->take(1)
+                                                   ->first()->photoID])}}">
                                                 <img
                                                 src="{{$fromURL}}/hqphotos/{{$propInfo
                                                   ->theMeta->zipDir}}/{{$propInfo
@@ -443,7 +486,11 @@ data-flyerbackground="{{$propInfo->theStyle
                                     ->take(1)->first())
                                        <div style="padding:2.5px;">
                                           @if($display==='email')
-                                             <a href="#" target="_blank">
+                                             <a href="{{URL::route('public.pubShowThePhoto',['enc'=>$enc,'photoID'=>$propInfo->thePhotos
+                                               ->where('resized','=','500')
+                                                ->sortby('ord')
+                                                ->slice(8)->take(1)
+                                                ->first()->photoID])}}">
                                                 <img
                                                 src="{{$fromURL}}/hqphotos/{{$propInfo
                                                   ->theMeta->zipDir}}/{{$propInfo
@@ -477,7 +524,12 @@ data-flyerbackground="{{$propInfo->theStyle
                                     ->take(1)->first())
                                        <div style="padding:2.5px;">
                                           @if($display==='email')
-                                             <a href="#" target="_blank">
+                                             <a href="{{URL::route('public.pubShowThePhoto',
+                                             ['enc'=>$enc,'photoID'=>$propInfo->thePhotos
+                                             ->where('resized','=','500')
+                                                   ->sortBy('ord')
+                                                   ->slice(9)->take(1)
+                                                   ->first()->photoID])}}">
                                                 <img
                                                 src="{{$fromURL}}/hqphotos/{{$zipDir}}/{{$mlsDir}}/{{$propInfo->thePhotos
                                                   ->where('resized','=','500')

@@ -119,7 +119,10 @@ data-flyerbackground="{{$propInfo->theStyle
                            border-spacing:0;border-collapse:collapse;">
                            <td style="padding:0;margin:0;">
                               <div style="padding:5px;">
-                                 <a href="#" target="_blank">
+                                 <a href="{{URL::route('public.pubShowThePhoto',
+                                 ['enc'=>$enc,'photoID'=>$propInfo->thePhotos
+                                 ->where('def','=','1')->first()->photoID])}}"
+                                 target="_blank">
                                     <img src="{{$fromURL}}/hqphotos/{{$propInfo
                                       ->theMeta->zipDir}}/{{$propInfo
                                       ->theMeta->mlsDir}}/{{$propInfo
@@ -149,7 +152,12 @@ data-flyerbackground="{{$propInfo->theStyle
                               <td width="50%" style="padding:0;margin:0;">
                                  <div style="padding:3.5px;padding-left:7px;padding-top:7px;
                                  text-align:center;" class="overlayContainer">
-                                    <a href="#" target="_blank">
+                                    <a href="{{ URL::route('public.pubShowThePhoto',
+                                    ['enc'=>$enc,'photoID'=>$propInfo->thePhotos
+                                    ->where('resized','=','500')
+                                    ->sortBy('ord')
+                                    ->first()
+                                    ->photoID])}}" target="_blank">
                                        <img
                                        style="@if($propInfo->thePhotos
                                           ->where('resized','=','500')
@@ -180,7 +188,9 @@ data-flyerbackground="{{$propInfo->theStyle
                                        ->sortBy('ord')
                                        ->slice(1)
                                        ->take(1) as $ps)
-                                       <a href="#" target="_blank">
+                                       <a href="{{URL::route('public.pubShowThePhoto',
+                                       ['enc'=>$enc,'photoID'=>$ps->photoID])}}"
+                                       target="_blank">
                                           <img
                                           style="@if($ps->orient=='wide')
                                             width:100%;
@@ -209,7 +219,8 @@ data-flyerbackground="{{$propInfo->theStyle
                                     ->where('resized','=','500')
                                     ->sortBy('ord')
                                     ->slice(2)->take(1) as $ps)
-                                       <a href="#" target="_blank">
+                                       <a href="{{ URL::route('public.pubShowThePhoto',
+                                       ['enc'=>$enc,'photoID'=>$ps->photoID])}}">
                                           <img
                                           style="@if($ps->orient=='wide')
                                             width:100%;
@@ -233,7 +244,8 @@ data-flyerbackground="{{$propInfo->theStyle
                                     ->where('resized','=','500')
                                     ->sortBy('ord')
                                     ->slice(3)->take(1) as $ps)
-                                       <a href="#" target="_blank">
+                                       <a href="{{URL::route('public.pubShowThePhoto',
+                                       ['enc'=>$enc,'photoID'=>$ps->photoID]) }}">
                                           <img
                                           style="@if($ps->orient=='wide')
                                             width:100%;
@@ -275,7 +287,8 @@ data-flyerbackground="{{$propInfo->theStyle
                                     ->where('resized','=','500')
                                     ->sortBy('ord')
                                     ->slice(4)->take(1) as $ps)
-                                       <a href="#" target="_blank">
+                                       <a href="{{ URL::route('public.pubShowThePhoto',
+                                       ['enc'=>$enc,'photoID'=>$ps->photoID]) }}">
                                           <img src="{{$fromURL}}/hqphotos/{{$propInfo
                                             ->theMeta->zipDir}}/{{$propInfo
                                             ->theMeta->mlsDir}}/{{$ps->photoName}}"
@@ -298,7 +311,8 @@ data-flyerbackground="{{$propInfo->theStyle
                                     ->where('resized','=','500')
                                     ->sortBy('ord')
                                     ->slice(5)->take(1) as $ps)
-                                       <a href="#" target="_blank">
+                                       <a href="{{ URL::route('public.pubShowThePhoto',['enc'=>$enc,
+                                       'photoID'=>$ps->photoID])}}">
                                           <img src="{{$fromURL}}/hqphotos/{{$propInfo
                                             ->theMeta->zipDir}}/{{$propInfo
                                             ->theMeta->mlsDir}}/{{$ps->photoName}}"
@@ -328,7 +342,8 @@ data-flyerbackground="{{$propInfo->theStyle
                                     ->where('resized','=','500')
                                     ->sortBy('ord')
                                     ->slice(6)->take(1) as $ps)
-                                       <a href="#" target="_blank">
+                                       <a href="{{ URL::route('public.pubShowThePhoto',
+                                       ['enc'=>$enc,'photoID'=>$ps->photoID]) }}">
                                           <img src="{{$fromURL}}/hqphotos/{{$propInfo
                                             ->theMeta->zipDir}}/{{$propInfo
                                             ->theMeta->mlsDir}}/{{$ps->photoName}}"
@@ -351,7 +366,8 @@ data-flyerbackground="{{$propInfo->theStyle
                                     ->where('resized','=','500')
                                     ->sortBy('ord')
                                     ->slice(7)->take(1) as $ps)
-                                       <a href="#" target="_blank">
+                                       <a href="{{URL::route('public.pubShowThePhoto',['enc'=>$enc,
+                                       'photoID'=>$ps->photoID]) }}">
                                           <img src="{{$fromURL}}/hqphotos/{{$propInfo
                                             ->theMeta->zipDir}}/{{$propInfo
                                             ->theMeta->mlsDir}}/{{$ps->photoName}}"

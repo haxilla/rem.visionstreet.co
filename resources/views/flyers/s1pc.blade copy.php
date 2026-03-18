@@ -121,7 +121,11 @@ data-flyerbackground="{{$propInfo
             width:100%;"
           @endif>
           <div style="padding:5px;box-sizing:content-box;">
-            <a href="#"
+            <a href="{{ URL::route('public.pubShowThePhoto',['enc'=>$enc,
+            'photoID'=>$propInfo->thePhotos
+            ->where('def','=','1')
+            ->where('resized','=','500')
+            ->first()->photoID]) }}"
             target="_blank">
               <img src="{{$fromURL}}/hqphotos/{{$propInfo
                 ->theMeta->zipDir}}/{{$propInfo
@@ -248,7 +252,8 @@ data-flyerbackground="{{$propInfo
                 background-color:#fff;
                 margin-bottom:5px;"
               @endif>
-              <a href="#" target="_blank">
+              <a href="{{URL::route('public.pubShowThePhoto',['enc'=>$enc,
+              'photoID'=>$the->photoID])}}" target="_blank">
                 <img
                 src="{{$fromURL}}/hqphotos/{{$propInfo
                   ->theMeta->zipDir}}/{{$propInfo
