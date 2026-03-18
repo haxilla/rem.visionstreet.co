@@ -1,7 +1,7 @@
 <div style="font-size:9pt !important;font-weight:bold;
 text-align:right;padding-right:25px;padding-top:10px;
 padding-bottom:10px;text-decoration:underline;">
-  <a href="{{URL::route('public.pubMoreInfo',['enc'=>$enc])}}"
+  <a href="#"
   style="text-decoration:underline;
   font-weight:bold;
   @if($propInfo->theStyle->accentbars=='ffc60b')
