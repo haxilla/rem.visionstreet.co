@@ -125,6 +125,8 @@ class guestController extends Controller
 
     public function flyerDetail($flyerId)
     {
-        include app_path('queries/flyerdetails.php');   }
+        include app_path('queries/flyerdetails.php');
+        return view('flyers.index',compact('propInfo'));
+   }
 
 }
