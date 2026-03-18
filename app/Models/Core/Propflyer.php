@@ -32,7 +32,7 @@ class Propflyer extends Model{
     }
 
     public function theMap(){
-        return $this->hasOne('App\Modelss\Cores\Propmappings','propflyer_id','id');
+        return $this->hasOne('App\Models\Core\Propmapping','propflyer_id','id');
     }
 
     public function theRemarks(){
