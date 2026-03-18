@@ -3,6 +3,10 @@
 @endphp
 
 <div>
+    YOURE ON THE FLYERS INDEX PAGE
+</div>
+
+<div>
     @include('flyers.s1pc')
 </div>
 <div>

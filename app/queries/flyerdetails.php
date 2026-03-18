@@ -37,8 +37,6 @@ $propInfo=Propflyer::select(
 }])
 ->first();
 
-dd($propInfo);
-
 return view('flyers.index',compact('propInfo'));
 
 /*
