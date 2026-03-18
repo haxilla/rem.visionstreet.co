@@ -22,7 +22,7 @@ margin-top:0;margin-bottom:0;">
          <div style="float:right;padding-right:25px;">
             @if($propInfo['xVirtualTour'])
                <div style="padding:7px;display:inline-block;">
-                  <a href="{{URL::route('public.pubVtour',['enc'=>$enc,])}}"
+                  <a href="#"
                   style="color:#{{$propInfo->theStyle->accentbars}};
                   font-weight:bold;text-decoration:none;
                   font-size:10pt;"
@@ -33,7 +33,7 @@ margin-top:0;margin-bottom:0;">
             @endif
             @if($propInfo['xMlsLink'])
                <div style="padding:7px;display:inline-block;">
-                  <a href="{{URL::route('public.pubMlsLink',['enc'=>$enc,])}}"
+                  <a href="#"
                   style="color:#{{$propInfo->theStyle->accentbars}};
                   font-weight:bold;text-decoration:none;font-size:10pt;"
                   class="accent_text" target="_blank">
