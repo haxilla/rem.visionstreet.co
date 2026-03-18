@@ -2,6 +2,10 @@
     $fromURL='https://www.realtyrepublic.com';
     $display="screen";
 
+    $totalPhotos = $propInfo->thePhotos
+    ->where('resized','=','500')
+    ->count();
+
     $graphic_words      = $propInfo->theStyle->graphic_words;
     $graphic_textcolor  = $propInfo->theStyle->graphic_textcolor;
     $graphic_style      = $propInfo->theStyle->graphic_style;
