@@ -18,7 +18,7 @@
       </div>
       <div class="dontScalePubRemarks accent_text" style="text-align:right;
       padding:20px;padding-right:25px;">
-         <a href="{{URL::route('public.pubMoreInfo',['enc'=>$enc,])}}"
+         <a href="#"
          style="font-weight:bold;color:#{{$propInfo->theStyle->accentbars}};
          font-size:10pt;"
          class="accent_text" target="_blank">
