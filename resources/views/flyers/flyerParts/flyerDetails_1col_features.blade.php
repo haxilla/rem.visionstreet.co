@@ -48,7 +48,7 @@
       </div>
       <div style="text-align:right;padding:20px;
       padding-right:25px;">
-         <a href="{{URL::route('public.pubMoreInfo',['enc'=>$enc,])}}"
+         <a href="#"
             style="color:#{{$propInfo->theStyle->accentbars}};font-weight:bold;
             font-size:10pt;" target="_blank"
             class="accent_text"
