@@ -2,6 +2,11 @@
 // get model
 use App\models\core\propflyer;
 use App\models\core\propagentmeta;
+
+if(!$flyerId){
+   dd('error-line7-queries/flyerdetails.php');
+}
+
 // query
 $propInfo=propflyer::select(
    'id','propagent_id','officeID','xFullStreet',
@@ -9,7 +14,7 @@ $propInfo=propflyer::select(
    'xMlsNum','xBeds','xxBeds','xBaths','xxBaths',
    'xSqft','xxSqft','xYrBuilt','xVirtualTour',
    'xMlsLink','xxHeadline')
-->where('id','=',"$idFly")
+->where('id','=',"$flyerId")
 ->with(['theRemarks'=>function($q){
    $q->select('propflyer_id','xb1','xb2','xb3','xb4',
       'xb5','xb6','xb7','xb8','xPubRemarks');}])
