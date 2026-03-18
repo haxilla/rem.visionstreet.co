@@ -8,7 +8,7 @@ background-color:#f9f9f9;">
       @if($totalPhotos>1)
          <td>
             <div style="padding:7px;">
-               <a href="{{URL::route('public.pubShowAllPhotos',['enc'=>$enc,])}}"
+               <a href="#"
                style="color:#{{$propInfo->theStyle->accentbars}};
                font-weight:bold;text-decoration:none;"
                class="accent_text" target="_blank">
@@ -20,7 +20,7 @@ background-color:#f9f9f9;">
       @if($propInfo['xMlsLink'])
          <td>
             <div style="padding:7px;">
-               <a href="{{URL::route('public.pubMlsLink',['enc'=>$enc,])}}"
+               <a href="#"
                style="color:#{{$propInfo->theStyle->accentbars}};
                font-weight:bold;text-decoration:none;"
                class="accent_text" target="_blank">
@@ -32,7 +32,7 @@ background-color:#f9f9f9;">
       @if($propInfo['xVirtualTour'])
          <td>
             <div style="padding:7px;">
-               <a href="{{URL::route('public.pubVtour',['enc'=>$enc,])}}"
+               <a href="#"
                style="color:#{{$propInfo->theStyle->accentbars}};
                font-weight:bold;text-decoration:none;"
                class="accent_text" target="_blank">
