@@ -2,7 +2,6 @@
 // get model
 use App\Models\Core\Propflyer;
 
-
 if(!$flyerId){
    dd('error-line7-queries/flyerdetails.php');}
 
@@ -37,6 +36,8 @@ $propInfo=Propflyer::select(
    $q->select('propflyer_id','xIntersection');
 }])
 ->first();
+
+return view('flyers.index',compact('propInfo'));
 
 /*
 $newRemID=propagentmeta::where('propagent_id','=',"$umid")

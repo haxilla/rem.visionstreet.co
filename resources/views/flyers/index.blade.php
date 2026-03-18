@@ -1,0 +1,19 @@
+@php 
+    $fromURL='https://www.realtyrepublic.com';
+@endphp
+
+<div>
+    @include('flyers.s1pc')
+</div>
+<div>
+    @include('flyers.s2pb')
+</div>
+<div>
+    @include('flyers.s3pt')
+</div>
+<div>
+    @include('flyers.s4sp')
+</div>
+<div>
+    @include('flyers.s5pt')
+</div>
