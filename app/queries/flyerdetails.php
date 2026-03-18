@@ -1,7 +1,7 @@
 <?php
 // get model
-use App\models\core\propflyer;
-use App\models\core\propagentmeta;
+use App\Modelss\Cores\Propflyers;
+
 
 if(!$flyerId){
    dd('error-line7-queries/flyerdetails.php');
