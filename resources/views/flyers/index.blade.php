@@ -16,8 +16,10 @@
     $theHeadline=$propInfo['xHeadline'];
     if(!$theHeadline){
         $theHeadline=$propInfo['xxHeadline'];}
-
+        
 @endphp
+
+@include('flyers.flyerParts.countBullets')
 
 <div>
     YOURE ON THE FLYERS INDEX PAGE
