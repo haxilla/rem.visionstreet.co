@@ -77,7 +77,7 @@ font-family:arial;">
         </div>
         <div>
           <a style="color:#333;font-weight:bold;"
-            href="{{ URL::route('pubEmailMe',['enc'=>$enc,'id'=>$id]) }}">Email Me
+            href="#">Email Me
           </a>
         </div>
       </div>
@@ -87,7 +87,7 @@ font-family:arial;">
         <div>
           @if($agentInfo->agtLogo)
           <img
-              src="{{ $fromURL3 }}/hqoffice/{{ $officeInfo->officeID }}/logos/{{ $agentInfo->agtLogo }}"
+              src="{{ $fromURL }}/hqoffice/{{ $officeInfo->officeID }}/logos/{{ $agentInfo->agtLogo }}"
               style="width:100%;">
           @endif
         </div>
