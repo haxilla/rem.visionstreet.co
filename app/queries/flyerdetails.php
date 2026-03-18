@@ -49,4 +49,4 @@ if(!$propInfo){
    dd('error-line45-flyerdetails.php');
    
    
-dd('propinfo: ' . $propInfo);}
+dd('propinfo: ' . $propInfo);
