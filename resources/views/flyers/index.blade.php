@@ -1,5 +1,6 @@
 @php 
     $fromURL='https://www.realtyrepublic.com';
+    $display="screen";
 
     $graphic_words      = $propInfo->theStyle->graphic_words;
     $graphic_textcolor  = $propInfo->theStyle->graphic_textcolor;
