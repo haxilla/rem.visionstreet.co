@@ -37,6 +37,8 @@ $propInfo=Propflyer::select(
 }])
 ->first();
 
+dd($propInfo);
+
 return view('flyers.index',compact('propInfo'));
 
 /*
@@ -48,6 +50,3 @@ $newRemID=propagentmeta::where('propagent_id','=',"$umid")
 //error if none
 if(!$propInfo){
    dd('error-line45-flyerdetails.php');}
-   
-   
-dd($propInfo);
