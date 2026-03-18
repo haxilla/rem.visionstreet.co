@@ -378,7 +378,7 @@ data-flyerbackground="{{$propInfo->theStyle
                         <tr>
                            <td style="padding:0;margin:0;">
                               <div style="max-width:100%;padding:5px;">
-                                 @include('flyers.contactBanner.agtContactBanner')
+                                 @include('flyers.flyerParts.agtContactBanner')
                               </div>
                            </td>
                         </tr>
