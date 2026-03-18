@@ -6,7 +6,7 @@ padding-right:10px;">
     <div style="text-align:center;border:1px solid #{{$propInfo->theStyle->accentbars}};
     margin-top:7px;margin-bottom:7px;padding-top:15px;padding-bottom:15px;
     border-radius:5px;" class="accent_border">
-      <a href="{{URL::route('public.pubShowAllPhotos',['enc'=>$enc])}}"
+      <a href="#"
       style="font-weight:bold;text-decoration:none;
       color:#{{$propInfo->theStyle->accentbars}};
       font-size:12pt;"
