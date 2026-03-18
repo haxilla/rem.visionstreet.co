@@ -4,11 +4,10 @@ use App\Models\Core\Propflyer;
 
 
 if(!$flyerId){
-   dd('error-line7-queries/flyerdetails.php');
-}
+   dd('error-line7-queries/flyerdetails.php');}
 
 // query
-$propInfo=propflyer::select(
+$propInfo=Propflyers::select(
    'id','propagent_id','officeID','xFullStreet',
    'xListPrice','xCity','xState','xZip','xHeadline',
    'xMlsNum','xBeds','xxBeds','xBaths','xxBaths',
