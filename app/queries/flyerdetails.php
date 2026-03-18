@@ -37,9 +37,6 @@ $propInfo=Propflyer::select(
 }])
 ->first();
 
-//$hlGraphic           = $graphic_words.'_'.$graphic_textcolor.'_'.$graphic_style.'x.png';
-
-dd($propInfo);
 /*
 $newRemID=propagentmeta::where('propagent_id','=',"$umid")
 ->pluck('newRemID')
