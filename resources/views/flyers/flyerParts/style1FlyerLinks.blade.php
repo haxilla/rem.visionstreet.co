@@ -14,8 +14,7 @@
     text-align:center;
   @endif">
     <div style="display:inline-block;">
-      <a href="{{ URL::route('public.pubShowAllPhotos',
-      ['enc'=>$enc])}}"
+      <a href="#"
       style="@if($propInfo->theStyle->accentbars=='ffc60b')
         color:#333333;
       @else
