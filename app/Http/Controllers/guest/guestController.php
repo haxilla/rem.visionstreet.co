@@ -123,4 +123,9 @@ class guestController extends Controller
 
     }
 
+    public function flyerDetail($flyerId)
+    {
+        dd($flyerId);
+    }
+
 }
