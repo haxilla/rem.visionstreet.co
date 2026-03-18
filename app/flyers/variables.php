@@ -3,6 +3,7 @@
 include('countBullets.php');
 
 $fromURL='https://www.realtyrepublic.com';
+$fromURL2='https://www.realtyrepublic.com';
 $display="screen";
 $enc=0;
 
