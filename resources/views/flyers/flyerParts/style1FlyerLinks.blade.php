@@ -34,7 +34,7 @@
         |
       </div>
       <div style="display:inline-block;">
-        <a href="{{URL::route('public.pubMlsLink',['enc'=>$enc,])}}"
+        <a href="#"
         style="font-size:10pt;
         color:#{{$propInfo->theStyle->headline_bar_text}};
         text-decoration:none;" target="_blank">
