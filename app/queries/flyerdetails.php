@@ -46,7 +46,7 @@ $newRemID=propagentmeta::where('propagent_id','=',"$umid")
 
 //error if none
 if(!$propInfo){
-   dd('error-line45-flyerdetails.php');
+   dd('error-line45-flyerdetails.php');}
    
    
 dd('propinfo: ' . $propInfo);
