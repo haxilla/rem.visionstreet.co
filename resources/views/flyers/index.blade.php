@@ -13,24 +13,25 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
             @php 
                 include(app_path().'/flyers/variables.php');
             @endphp
-
-            <div>
-                YOURE ON THE FLYERS INDEX PAGE
-            </div>
-            <div>
-                @include('flyers.s1pc')
-            </div>
-            <div>
-                @include('flyers.s2pb')
-            </div>
-            <div>
-                @include('flyers.s3pt')
-            </div>
-            <div>
-                @include('flyers.s4sp')
-            </div>
-            <div>
-                @include('flyers.s5pt')
+            <div style="max-width: 600px; margin: 0 auto;">
+                <div>
+                    YOURE ON THE FLYERS INDEX PAGE
+                </div>
+                <div>
+                    @include('flyers.s1pc')
+                </div>
+                <div>
+                    @include('flyers.s2pb')
+                </div>
+                <div>
+                    @include('flyers.s3pt')
+                </div>
+                <div>
+                    @include('flyers.s4sp')
+                </div>
+                <div>
+                    @include('flyers.s5pt')
+                </div>
             </div>
         </div>
     </div>
