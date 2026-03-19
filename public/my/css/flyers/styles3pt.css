@@ -1,0 +1,133 @@
+/** Style 3 **/
+
+td.style3GraphicFrame{
+  padding:0;
+  margin:0;
+  width:40%
+}
+
+td.style3AddressFrame{
+  padding:20px;
+  padding-right:25px;
+  padding-left:0;
+  width:60%;
+  text-align:right;
+}
+
+.style3FlyerAddress{
+  font-size:13pt;
+  font-weight:bold;
+}
+
+.style3FlyerAddressCSZ{
+  font-size:10pt;
+}
+
+.style3FlyerLinks{
+  width:100%;
+  text-align:center;
+  font-size:10pt;
+  padding:3px;
+}
+
+.style3DefPhotoTD{
+  width:65%;
+  padding:0;
+  margin:0;
+  vertical-align:top;
+}
+
+.style3FeaturesTD{
+  width:35%;
+  padding:0;
+  margin:0;
+  vertical-align:top;
+}
+
+.style3DefPhotoDiv{
+  padding:7px;
+  padding-right:0;
+}
+
+.style3DefPhotoImg{
+  height:275px;
+  display:block;
+  margin-left:auto;
+  margin-right:auto;
+  max-width:100%;
+  border-radius:5px;
+}
+
+.style3Thumbs{
+  padding-right:1.5px;
+  box-sizing:content-box;
+  display:inline-block;
+}
+
+.style3Thumbs:hover{
+  cursor:pointer;
+}
+
+.style3ThumbsImg{
+  max-width:78px;
+  height:52px;
+  display:block;
+  margin-left:auto;
+  margin-right:auto;
+  border-radius:3px;
+}
+
+.style3FeaturesFrame{
+  font-size:10pt;
+  color:#333;
+  padding-left:7px;
+  padding-right:7px;
+}
+
+.style3FeaturesRounded{
+  background-color:#eee;
+  height:228px;
+  box-sizing:content-box;
+  border-bottom-left-radius:10px;
+  border-bottom-right-radius:10px;
+  line-height:1.70;
+  padding:0;
+}
+
+.style3LinksFrame{
+  padding:5px;
+}
+
+.style3Link{
+  padding:10px;
+  font-size:10pt;
+  color:#333;
+}
+
+.style3Link:hover{
+  color:#333;
+  text-decoration:none;
+}
+
+.style3ThumbFrame{
+  padding-left:7px;
+  box-sizing:content-box;
+}
+
+.style3ClickThumb{
+  background-color:#eee;
+  padding:10px;
+  font-size:10pt;
+  margin:10px;
+  margin-top:10px;
+  margin-bottom:0;
+}
+
+.style3PubRemarks{
+  padding:25px;
+  padding-top:10px;
+  line-height:1.65;
+  padding-bottom:5px;
+}
+
+/** End Style 3 NORMAL  **/

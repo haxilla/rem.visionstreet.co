@@ -1,0 +1,81 @@
+.bannerOffice{font-size:.9rem;}
+#bannerOfficeName{font-size:.9rem;}
+.flyerIcons{max-height:30px;}
+.flyerLinksAlt1{width:100%;margin:15px;margin-top:0;margin-bottom:0;}
+.forMoreInfoContact{padding:15px;font-size:10pt;}
+
+.styleNumber{
+   display:inline-block;
+   padding-top:5px;
+   padding-bottom:5px;
+   padding-left:30px;
+   padding-right:30px;
+}
+
+.styleNumber:hover{
+   background-color:#dff0d8;
+   cursor:pointer;
+}
+
+.chooseAndContinue1,.chooseAndContinue2,
+.chooseAndContinue3,.chooseAndContinue4,
+.chooseAndContinue5{
+   display:none;
+   padding:5px;
+   padding-left:10px;
+   padding-right:10px;
+   margin-left:20px;
+   border:1px solid #eee;
+   border:1px solid #dff0d8;
+   background-color:#fff;
+   border-radius:5px;
+   color:#3c763d;
+}
+
+.chooseAndExit{
+   padding-top:7px;
+   padding-bottom:7px;
+   margin-left:20px;
+   border:1px solid #eee;
+   padding-left:20px;
+   padding-right:20px;
+   border:1px solid #dff0d8;
+   color:#3c763d;
+}
+
+.chooseAndContinue1 a, .chooseAndContinue2 a,
+.chooseAndContinue3 a, .chooseAndContinue4 a,
+.chooseAndContinue5 a, .chooseAndExit a{
+   text-decoration:none;
+   color:#3c763d;
+}
+
+.chooseAndContinue1:hover,.chooseAndContinue2:hover,
+.chooseAndContinue3:hover,.chooseAndContinue4:hover,
+.chooseAndContinue5:hover{
+   background-color:#dff0d8;
+   cursor:pointer;
+}
+
+.chooseHeadline{
+   background-color:#ffffff;
+}
+
+.chooseColors{
+   background-color:#ffffff;
+}
+
+.chooseHeadline:hover{
+   background-color:#dff0d8;
+   cursor:pointer;
+}
+
+.chooseColors:hover{
+   background-color:#dff0d8;
+   cursor:pointer;
+   margin-top:0;
+}
+
+#style1Div_fp,#style2Div_fp,#style3Div_fp,#style4Div_fp,#style5Div_fp{
+   display:none;
+}

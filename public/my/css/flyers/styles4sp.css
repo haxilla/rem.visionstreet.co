@@ -1,0 +1,95 @@
+td.style4GraphicTD{
+  width:40%;
+}
+
+td.style4AddressTD{
+  padding:20px;
+  padding-right:25px;
+  padding-left:0;
+  width:60%;
+}
+
+.style4Address{
+  font-size:13pt;
+  font-weight:bold;
+}
+
+.style4AddressCSZ{
+  font-size:10pt;
+}
+
+td.style4FeaturesTD{
+  padding:0;
+  margin:0;
+  vertical-align:top;
+  width:35%;
+}
+
+td.style4DefaultPhotoTD{
+  vertical-align:top;
+  padding:0;
+  margin:0;
+  width:65%;
+}
+
+.style4DefaultPhotoDiv{
+  padding:7px;
+  box-sizing:content-box;
+  padding-left:0;
+  padding-bottom:0;
+}
+
+.style4DefaultImg{
+  width:100%;
+  border-radius:5px;
+}
+
+.style4OtherPhotosDiv{
+  padding:5px;
+}
+
+.style4OtherPhotosImg{
+  max-width:100%;
+  height:130px;
+  display:block;
+  margin:auto;
+}
+
+.style4FeaturesFrame{
+  padding:10px;
+  font-size:10pt;
+}
+
+.style4FeaturesRounded{
+  border-radius:10px;
+  border-top-left-radius:0;
+  border-top-right-radius:0;
+  background-color:#eee;
+  padding:15px;
+  padding-top:10px;
+  font-size:10pt;
+  height:157px;
+  box-sizing:content-box;
+  line-height:1.70;
+}
+
+.style4Link{
+  color:#333;
+  font-size:10pt;
+}
+
+.style4LinkDiv{
+  padding:5px;
+}
+
+.style4PubRemarks{
+  padding:10px;
+  padding-top:10px;
+  padding-bottom:0;
+  line-height:1.65;
+  text-align:left;
+  max-height:110px;
+  overflow:hidden;
+}
+
+/** End of Style 4 NORMAL**/

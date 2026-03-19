@@ -1,0 +1,116 @@
+/** Style5 **/
+td.style5GraphicTD{
+  width:40%;
+}
+
+td.style5AddressTD{
+  width:60%;
+  padding:20px;
+  padding-right:25px;
+  padding-left:0;
+}
+
+.style5Address{
+  font-size:13pt;
+  font-weight:bold;
+}
+
+.style5AddressCSZ{
+  font-size:10pt;
+}
+
+td.style5DefPhotoTD{
+  width:75%;
+  margin:0;
+  padding:0;
+  vertical-align:top;
+}
+
+td.style5AllPhotosTD{
+  width:25%;
+  margin:0;
+  padding:0;
+  vertical-align:top;
+}
+
+.style5LinksFrame1{
+  padding:5px;
+}
+
+.style5DefPhotoDiv{
+  padding:7px;
+  padding-right:10px;
+}
+
+.style5DefPhotoImg{
+  max-width:100%;
+  height:297px;
+  display:block;
+}
+
+.style5LinkDiv{
+  padding:5px;
+}
+
+.style5Link{
+  color:#333;
+  font-size:10pt;
+}
+
+.style5ClickThumb{
+  padding:10px;
+  font-size:9pt;
+  text-align:center;
+  padding-bottom:5px;
+}
+
+.style5ThumbFrameBox{
+  border:1px solid #ebebeb;
+  margin-right:10px;
+  padding:2.5px;
+}
+
+.style5ThumbDiv{
+  padding:2.5px;
+}
+
+.style5ThumbImg{
+  max-width:100%;
+  height:45px;
+  margin:auto;
+  display:block;
+}
+
+.style5LeftBulletTD{
+  vertical-align:top;
+  padding-left:15px;
+  width:50%;
+}
+
+.style5RightBulletTD{
+  vertical-align:top;
+  padding-left:15px;
+  width:50%;
+}
+
+.style5FeaturesBar{
+  color:#fff;
+  padding:5px;
+  padding-left:15px;
+  font-size:14pt;
+}
+
+.style5FeaturesFrame{
+  padding:10px;
+  padding-top:0;
+  font-size:12pt;
+}
+
+.style5PubRemarks{
+  line-height:2;
+  padding:15px;
+  font-size:12pt;
+  padding-bottom:0;
+}
+
+/** end Normal Style5 **/
