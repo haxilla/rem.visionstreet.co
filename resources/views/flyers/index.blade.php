@@ -15,7 +15,7 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
             @endphp
             <div style="max-width: 600px; margin: 0 auto;">
                 <div>
-                    YOURE ON THE FLYERS INDEX PAGE
+                    YOURE ON THE FLYERS INDEX PAGE {{ $template }}
                 </div>
                 <div>
                     @include('flyers.s1pc')

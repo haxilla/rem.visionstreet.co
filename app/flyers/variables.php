@@ -11,6 +11,7 @@ $totalPhotos = $propInfo->thePhotos
 ->where('resized','=','500')
 ->count();
 
+$template           = $propInfo->theStyle->template;
 $graphic_words      = $propInfo->theStyle->graphic_words;
 $graphic_textcolor  = $propInfo->theStyle->graphic_textcolor;
 $graphic_style      = $propInfo->theStyle->graphic_style;
