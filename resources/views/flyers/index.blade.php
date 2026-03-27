@@ -14,6 +14,9 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
                 include(app_path().'/flyers/variables.php');
             @endphp
             <div style="max-width: 600px; margin: 0 auto;">
+                <div>
+                    YOURE ON THE FLYERS INDEX PAGE {{ $template }}
+                </div>
 
                 <div style="display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap;">
                     <button class="flyer-btn" data-target="s1pc">S1PC</button>
