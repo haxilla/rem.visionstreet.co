@@ -82,23 +82,42 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
                             <button class="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-2 rounded-lg transition-colors">Apply</button>
                         </div>
 
+                        {{-- THIS IS THE ONLY edit-colors div --}}
                         <div id="edit-colors" class="editor-panel hidden">
-                            <p class="text-xs text-gray-500 mb-2">Primary color</p>
-                            <div class="flex items-center gap-2">
-                                <input type="color" value="#2563eb" class="w-10 h-9 rounded border border-gray-200 cursor-pointer p-0.5">
-                                <input type="text" value="#2563eb" class="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+
+                            <p class="text-xs font-medium text-gray-500 mb-2">Background</p>
+                            <div class="flex flex-wrap gap-1 mb-4">
+                                <a href="/mdbxMember/colorChoice/{{$propInfo->theMeta->sk1}}/b/eeeeee" class="block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#eeeeee;" title="#eeeeee"></a>
+                                <a href="/mdbxMember/colorChoice/{{$propInfo->theMeta->sk1}}/b/cccccc" class="block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#cccccc;" title="#cccccc"></a>
+                                @if($template == '1pc')
+                                    <a href="/mdbxMember/colorChoice/{{$propInfo->theMeta->sk1}}/b/999999" class="block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#999999;" title="#999999"></a>
+                                @endif
+                                <a href="/mdbxMember/colorChoice/{{$propInfo->theMeta->sk1}}/b/000066" class="block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#000066;" title="#000066"></a>
+                                <a href="/mdbxMember/colorChoice/{{$propInfo->theMeta->sk1}}/b/996600" class="block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#996600;" title="#996600"></a>
+                                <a href="/mdbxMember/colorChoice/{{$propInfo->theMeta->sk1}}/b/990000" class="block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#990000;" title="#990000"></a>
+                                <a href="/mdbxMember/colorChoice/{{$propInfo->theMeta->sk1}}/b/000000" class="block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#000000;" title="#000000"></a>
                             </div>
-                            <p class="text-xs text-gray-500 mt-3 mb-2">Secondary color</p>
-                            <div class="flex items-center gap-2">
-                                <input type="color" value="#111827" class="w-10 h-9 rounded border border-gray-200 cursor-pointer p-0.5">
-                                <input type="text" value="#111827" class="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+
+                            <p class="text-xs font-medium text-gray-500 mb-2">Accents</p>
+
+                            <p class="text-xs text-gray-400 mb-1">Light</p>
+                            <div class="flex flex-wrap gap-1 mb-3">
+                                <a href="#" class="block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#ffffff;" title="#ffffff"></a>
+                                <a href="#" class="block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#eeeeee;" title="#eeeeee"></a>
+                                <a href="#" class="block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#ffffcc;" title="#ffffcc"></a>
                             </div>
-                            <p class="text-xs text-gray-500 mt-3 mb-2">Background color</p>
-                            <div class="flex items-center gap-2">
-                                <input type="color" value="#ffffff" class="w-10 h-9 rounded border border-gray-200 cursor-pointer p-0.5">
-                                <input type="text" value="#ffffff" class="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+
+                            <p class="text-xs text-gray-400 mb-1">Dark</p>
+                            <div class="flex flex-wrap gap-1">
+                                <a href="#" class="block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#ffc60b;" title="#ffc60b"></a>
+                                <a href="#" class="block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#990000;" title="#990000"></a>
+                                <a href="#" class="block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#000066;" title="#000066"></a>
+                                <a href="#" class="block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#00aeef;" title="#00aeef"></a>
+                                <a href="/mdbxMember/colorChoice/{{$propInfo->theMeta->sk1}}/t/60b67b" class="block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#60b67b;" title="#60b67b"></a>
+                                <a href="#" class="block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#f0535b;" title="#f0535b"></a>
+                                <a href="#" class="block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#ff0000;" title="#ff0000"></a>
                             </div>
-                            <button class="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-2 rounded-lg transition-colors">Apply</button>
+
                         </div>
 
                     </div>
@@ -144,63 +163,11 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
                     tab.addEventListener('click', () => switchEditorTab(tab.dataset.panel));
                 });
 
-                // Activate first tab by default
                 switchEditorTab('edit-headline');
-
-                // Sync color picker <-> hex input
-                document.querySelectorAll('#edit-colors input[type=color]').forEach(picker => {
-                    const textInput = picker.nextElementSibling;
-                    picker.addEventListener('input', () => textInput.value = picker.value);
-                    textInput.addEventListener('input', () => {
-                        if (/^#[0-9a-f]{6}$/i.test(textInput.value)) picker.value = textInput.value;
-                    });
-                });
 
             });
         </script>
     </div>
-
-<div id="edit-colors" class="editor-panel hidden">
-
-    {{-- Background swatches --}}
-    <p class="text-xs font-medium text-gray-500 mb-2">Background</p>
-    <div class="flex flex-wrap gap-1 mb-4">
-        <a href="/mdbxMember/colorChoice/{{$propInfo->theMeta->sk1}}/b/eeeeee" class="color-swatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#eeeeee;" title="#eeeeee"></a>
-        <a href="/mdbxMember/colorChoice/{{$propInfo->theMeta->sk1}}/b/cccccc" class="color-swatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#cccccc;" title="#cccccc"></a>
-        @if($template == '1pc')
-            <a href="/mdbxMember/colorChoice/{{$propInfo->theMeta->sk1}}/b/999999" class="color-swatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#999999;" title="#999999"></a>
-        @endif
-        <a href="/mdbxMember/colorChoice/{{$propInfo->theMeta->sk1}}/b/000066" class="color-swatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#000066;" title="#000066"></a>
-        <a href="/mdbxMember/colorChoice/{{$propInfo->theMeta->sk1}}/b/996600" class="color-swatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#996600;" title="#996600"></a>
-        <a href="/mdbxMember/colorChoice/{{$propInfo->theMeta->sk1}}/b/990000" class="color-swatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#990000;" title="#990000"></a>
-        <a href="/mdbxMember/colorChoice/{{$propInfo->theMeta->sk1}}/b/000000" class="color-swatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#000000;" title="#000000"></a>
-    </div>
-
-    {{-- Accent swatches --}}
-    <p class="text-xs font-medium text-gray-500 mb-2">Accents</p>
-
-    {{-- Light accents --}}
-    <p class="text-xs text-gray-400 mb-1">Light</p>
-    <div class="flex flex-wrap gap-1 mb-3">
-        <a href="#" class="color-swatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#ffffff;" title="#ffffff"></a>
-        <a href="#" class="color-swatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#eeeeee;" title="#eeeeee"></a>
-        <a href="#" class="color-swatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#ffffcc;" title="#ffffcc"></a>
-    </div>
-
-    {{-- Dark accents --}}
-    <p class="text-xs text-gray-400 mb-1">Dark</p>
-    <div class="flex flex-wrap gap-1 mb-4">
-        <a href="#" class="color-swatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#ffc60b;" title="#ffc60b"></a>
-        <a href="#" class="color-swatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#990000;" title="#990000"></a>
-        <a href="#" class="color-swatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#000066;" title="#000066"></a>
-        <a href="#" class="color-swatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#00aeef;" title="#00aeef"></a>
-        <a href="/mdbxMember/colorChoice/{{$propInfo->theMeta->sk1}}/t/60b67b" class="color-swatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#60b67b;" title="#60b67b"></a>
-        <a href="#" class="color-swatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#f0535b;" title="#f0535b"></a>
-        <a href="#" class="color-swatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#ff0000;" title="#ff0000"></a>
-    </div>
-
-</div>
-
   </main>
   @include('public.layout.footer')
 </body>
