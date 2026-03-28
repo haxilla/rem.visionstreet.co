@@ -160,190 +160,45 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
         </script>
     </div>
 
-    <div class="fixed-top pb-2 z-depth-1 pt-1 editColorsTopNav"
-style="background-color:rgba(255,255,255,0.9)">
-    <div class="container row" style="padding-left:0;padding-right:0;">
-        <div class="col-lg-1 col-md-1 col-sm-1 col-1">
-            <div class="colorsLargeIcon pl-1">
-                <i class="mt-2 fa fa-2x fa-paint-brush">
-                </i>
-            </div>
-            <div class="colorsSmallIcon pl-1">
-                <i class="mt-2 fa fa-paint-brush">
-                </i>
-            </div>
-        </div>
-        <div class="col-xl-7 col-lg-7 col-md-9 col-sm-9 col-10"
-        style="padding-left:1rem;padding-right:0;">
-            <div class="text-dark2" >
-                <div>
-                    <div>
-                        <div class="colorTitle">
-                            Background
-                        </div>
-                        <div id="background_swatches" style="display:inline-block;">
-                         <a href="/mdbxMember/colorChoice/{{$propInfo->theMeta->sk1}}/b/eeeeee"
-                         style="text-decoration:none;"
-                         class="colorswatch">
-                           <img src="/images/color_schemes/swatch_eeeeee.gif"
-                             width="20"
-                             height="20"
-                             border="1" />
-                         </a>
-                        <a href="/mdbxMember/colorChoice/{{$propInfo->theMeta->sk1}}/b/cccccc"
-                        style="text-decoration:none;"
-                        class="colorswatch">
-                            <img src="/images/color_schemes/swatch_cccccc.gif"
-                            width="20"
-                            height="20"
-                            border="1" />
-                        </a>
-                        @if($template == 's1pc')
-                            <a href="/mdbxMember/colorChoice/{{$propInfo->theMeta->sk1}}/b/999999"
-                            style="text-decoration:none;"
-                            class="colorswatch">
-                                <img src="/images/color_schemes/swatch_999999.gif"
-                                width="20"
-                                height="20"
-                                border="1" />
-                            </a>
-                        @endif
-                        <a href="/mdbxMember/colorChoice/{{$propInfo->theMeta->sk1}}/b/000066"
-                        style="text-decoration:none;"
-                        class="colorswatch">
-                            <img src="/images/color_schemes/swatch_006.gif"
-                            width="20"
-                            height="20"
-                            border="1" />
-                        </a>
-                        <a href="/mdbxMember/colorChoice/{{$propInfo->theMeta->sk1}}/b/996600"
-                        style="text-decoration:none;"
-                        class="colorswatch">
-                            <img src="/images/color_schemes/swatch_996600.gif"
-                            width="20"
-                            height="20"
-                            border="1" />
-                        </a>
-                        <a href="/mdbxMember/colorChoice/{{$propInfo->theMeta->sk1}}/b/990000"
-                        style="text-decoration:none;"
-                        class="colorswatch">
-                            <img src="/images/color_schemes/swatch_990000.gif"
-                            width="20"
-                            height="20"
-                            border="1" />
-                        </a>
-                        <a href="/mdbxMember/colorChoice/{{$propInfo->theMeta->sk1}}/b/000000"
-                        style="text-decoration:none;"
-                        class="colorswatch">
-                            <img src="/images/color_schemes/swatch_000000.gif"
-                             width="20"
-                             height="20"
-                             border="1" />
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="text-dark2">
-            <div class="colorTitle">
-                Accents
-            </div>
-            <div id="text_swatches" style="display:inline-block;">
-                <div class="minColors lightColors">
-                    <a href="/mdbxMember/colorChoice/{{$propInfo->theMeta->sk1}}/t/ffffff"
-                    style="text-decoration:none;"
-                    class="colorswatch noLight">
-                        <img src="/images/color_schemes/swatch_ffffff.gif"
-                        width="20"
-                        height="20"
-                        border="1"
-                        style="border:1px solid #cccccc;"/>
-                    </a>
-                    <a href="/mdbxMember/colorChoice/{{$propInfo->theMeta->sk1}}/t/eeeeee"
-                    style="text-decoration:none;"
-                    class="colorswatch noLight">
-                        <img src="/images/color_schemes/swatch_eeeeee.gif"
-                         width="20"
-                         height="20"
-                         border="1" />
-                    </a>
-                    <a href="/mdbxMember/colorChoice/{{$propInfo->theMeta->sk1}}/t/ffffcc"
-                    style="text-decoration:none;"
-                    class="colorswatch noLight">
-                        <img src="/images/color_schemes/swatch_ffffcc.gif"
-                        width="20"
-                        height="20"
-                        border="1" />
-                    </a>
-                </div>
-                <div style="display:inline-block;" class="darkColors">
-                    <a href="/mdbxMember/colorChoice/{{$propInfo->theMeta->sk1}}/t/ffc60b"
-                    style="text-decoration:none;"
-                    class="colorswatch noDark">
-                     <img src="/images/color_schemes/swatch_ffc60b.gif"
-                       width="20"
-                       height="20"
-                       border="1" />
-                    </a>
-                    <a href="/mdbxMember/colorChoice/{{$propInfo->theMeta->sk1}}/t/990000"
-                    style="text-decoration:none;"
-                    class="colorswatch noDark">
-                     <img src="/images/color_schemes/swatch_990000.gif"
-                       width="20"
-                       height="20"
-                       border="1" />
-                    </a>
-                    <a href="/mdbxMember/colorChoice/{{$propInfo->theMeta->sk1}}/t/000066"
-                    style="text-decoration:none;"
-                    class="colorswatch noDark">
-                     <img src="/images/color_schemes/swatch_006.gif"
-                       width="20"
-                       height="20"
-                       border="1" />
-                    </a>
-                    <a href="/mdbxMember/colorChoice/{{$propInfo->theMeta->sk1}}/t/00aeef"
-                    style="text-decoration:none;"
-                    class="colorswatch noDark">
-                     <img src="/images/color_schemes/swatch_00aeef.gif"
-                       width="20"
-                       height="20"
-                       border="1" />
-                    </a>
-                    <a href="/mdbxMember/colorChoice/{{$propInfo->theMeta->sk1}}/t/60b67b"
-                    style="text-decoration:none;"
-                    class="colorswatch noDark">
-                     <img src="/images/color_schemes/swatch_60b67b.gif"
-                       width="20"
-                       height="20"
-                       border="1" />
-                    </a>
-                    <a href="/mdbxMember/colorChoice/{{$propInfo->theMeta->sk1}}/t/f0535b"
-                    style="text-decoration:none;"
-                    class="colorswatch noDark">
-                     <img src="/images/color_schemes/swatch_f0535b.gif"
-                       width="20"
-                       height="20"
-                       border="1" />
-                    </a>
-                    <a href="/mdbxMember/colorChoice/{{$propInfo->theMeta->sk1}}/t/ff0000"
-                    style="text-decoration:none;"
-                    class="colorswatch noDark">
-                     <img src="/images/color_schemes/swatch_ff0000.gif"
-                       width="20"
-                       height="20"
-                       border="1" />
-                    </a>
-                </div>
-            </div>
-        </div>
+<div id="edit-colors" class="editor-panel hidden">
+
+    {{-- Background swatches --}}
+    <p class="text-xs font-medium text-gray-500 mb-2">Background</p>
+    <div class="flex flex-wrap gap-1 mb-4">
+        <a href="/mdbxMember/colorChoice/{{$propInfo->theMeta->sk1}}/b/eeeeee" class="color-swatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#eeeeee;" title="#eeeeee"></a>
+        <a href="/mdbxMember/colorChoice/{{$propInfo->theMeta->sk1}}/b/cccccc" class="color-swatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#cccccc;" title="#cccccc"></a>
+        @if($template == '1pc')
+            <a href="/mdbxMember/colorChoice/{{$propInfo->theMeta->sk1}}/b/999999" class="color-swatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#999999;" title="#999999"></a>
+        @endif
+        <a href="/mdbxMember/colorChoice/{{$propInfo->theMeta->sk1}}/b/000066" class="color-swatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#000066;" title="#000066"></a>
+        <a href="/mdbxMember/colorChoice/{{$propInfo->theMeta->sk1}}/b/996600" class="color-swatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#996600;" title="#996600"></a>
+        <a href="/mdbxMember/colorChoice/{{$propInfo->theMeta->sk1}}/b/990000" class="color-swatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#990000;" title="#990000"></a>
+        <a href="/mdbxMember/colorChoice/{{$propInfo->theMeta->sk1}}/b/000000" class="color-swatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#000000;" title="#000000"></a>
     </div>
-    <div class="col-lg-1 col-md-1 col-sm-1 col-1"
-    style="padding-left:0;padding-right:0;">
-        <div class="colorsCompleteButton menuCompleteButton z-depth-1 hoverable mr-5">
-            <i title="Click when finished"
-            class="fa fa-check"></i>
-        </div>
+
+    {{-- Accent swatches --}}
+    <p class="text-xs font-medium text-gray-500 mb-2">Accents</p>
+
+    {{-- Light accents --}}
+    <p class="text-xs text-gray-400 mb-1">Light</p>
+    <div class="flex flex-wrap gap-1 mb-3">
+        <a href="#" class="color-swatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#ffffff;" title="#ffffff"></a>
+        <a href="#" class="color-swatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#eeeeee;" title="#eeeeee"></a>
+        <a href="#" class="color-swatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#ffffcc;" title="#ffffcc"></a>
     </div>
+
+    {{-- Dark accents --}}
+    <p class="text-xs text-gray-400 mb-1">Dark</p>
+    <div class="flex flex-wrap gap-1 mb-4">
+        <a href="#" class="color-swatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#ffc60b;" title="#ffc60b"></a>
+        <a href="#" class="color-swatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#990000;" title="#990000"></a>
+        <a href="#" class="color-swatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#000066;" title="#000066"></a>
+        <a href="#" class="color-swatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#00aeef;" title="#00aeef"></a>
+        <a href="/mdbxMember/colorChoice/{{$propInfo->theMeta->sk1}}/t/60b67b" class="color-swatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#60b67b;" title="#60b67b"></a>
+        <a href="#" class="color-swatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#f0535b;" title="#f0535b"></a>
+        <a href="#" class="color-swatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#ff0000;" title="#ff0000"></a>
+    </div>
+
 </div>
 
   </main>
