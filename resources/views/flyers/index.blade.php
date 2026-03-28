@@ -87,15 +87,15 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
 
                             <p class="text-xs font-medium text-gray-500 mb-2">Background</p>
                             <div class="flex flex-wrap gap-1 mb-4">
-                                <a href="/mdbxMember/colorChoice/{{$propInfo->theMeta->sk1}}/b/eeeeee" class="block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#eeeeee;" title="#eeeeee"></a>
-                                <a href="/mdbxMember/colorChoice/{{$propInfo->theMeta->sk1}}/b/cccccc" class="block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#cccccc;" title="#cccccc"></a>
+                                <a href="#" class="block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#eeeeee;" title="#eeeeee"></a>
+                                <a href="#" class="block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#cccccc;" title="#cccccc"></a>
                                 @if($template == '1pc')
-                                    <a href="/mdbxMember/colorChoice/{{$propInfo->theMeta->sk1}}/b/999999" class="block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#999999;" title="#999999"></a>
+                                    <a href="#" class="block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#999999;" title="#999999"></a>
                                 @endif
-                                <a href="/mdbxMember/colorChoice/{{$propInfo->theMeta->sk1}}/b/000066" class="block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#000066;" title="#000066"></a>
-                                <a href="/mdbxMember/colorChoice/{{$propInfo->theMeta->sk1}}/b/996600" class="block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#996600;" title="#996600"></a>
-                                <a href="/mdbxMember/colorChoice/{{$propInfo->theMeta->sk1}}/b/990000" class="block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#990000;" title="#990000"></a>
-                                <a href="/mdbxMember/colorChoice/{{$propInfo->theMeta->sk1}}/b/000000" class="block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#000000;" title="#000000"></a>
+                                <a href="#" class="block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#000066;" title="#000066"></a>
+                                <a href="#" class="block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#996600;" title="#996600"></a>
+                                <a href="#" class="block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#990000;" title="#990000"></a>
+                                <a href="#" class="block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#000000;" title="#000000"></a>
                             </div>
 
                             <p class="text-xs font-medium text-gray-500 mb-2">Accents</p>
@@ -113,7 +113,7 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
                                 <a href="#" class="block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#990000;" title="#990000"></a>
                                 <a href="#" class="block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#000066;" title="#000066"></a>
                                 <a href="#" class="block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#00aeef;" title="#00aeef"></a>
-                                <a href="/mdbxMember/colorChoice/{{$propInfo->theMeta->sk1}}/t/60b67b" class="block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#60b67b;" title="#60b67b"></a>
+                                <a href="#" class="block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#60b67b;" title="#60b67b"></a>
                                 <a href="#" class="block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#f0535b;" title="#f0535b"></a>
                                 <a href="#" class="block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" style="background:#ff0000;" title="#ff0000"></a>
                             </div>
