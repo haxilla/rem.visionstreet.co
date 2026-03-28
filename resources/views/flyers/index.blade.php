@@ -198,7 +198,7 @@ style="background-color:rgba(255,255,255,0.9)">
                             height="20"
                             border="1" />
                         </a>
-                        @if($theTemplate == 's1pc')
+                        @if($template == 's1pc')
                             <a href="/mdbxMember/colorChoice/{{$propInfo->theMeta->sk1}}/b/999999"
                             style="text-decoration:none;"
                             class="colorswatch">
