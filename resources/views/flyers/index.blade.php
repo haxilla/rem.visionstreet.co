@@ -88,13 +88,11 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
                             <p class="text-xs font-medium text-gray-500 mb-2">Background</p>
                             <div class="flex flex-wrap gap-1 mb-4">
                                 <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" 
-                                style="background-light:#eeeeee;" data-style="background:#eeeeee;"></a>
+                                style="background:#eeeeee;" data-style="background" data-scheme="light" data-color="eeeeee"></a>
                                 <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" 
-                                style="background-light:#cccccc;" data-style="background:#cccccc;"></a>
-                                @if($template == '1pc')
-                                    <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" 
-                                    style="background:#999999;" data-style="background" data-scheme="dark" data-color="999999"></a>
-                                @endif
+                                style="background:#cccccc;" data-style="background" data-scheme="light" data-color="cccccc"></a>
+                                <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" 
+                                style="background:#999999;" data-style="background" data-scheme="dark" data-color="999999"></a>
                                 <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" 
                                 style="background:#000066;" data-style="background" data-scheme="dark" data-color="000066"></a>
                                 <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" 
