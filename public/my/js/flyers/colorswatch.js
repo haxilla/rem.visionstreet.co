@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
    function applySwatch(sw) {
 
-      console.log(sw.dataset);
+      console.log(sw.dataset.style);
       // values from swatch
       var flyer_background  = normalizeHex(sw.dataset.flyerBackground);
       var headline_text     = normalizeHex(sw.dataset.headlineText);
