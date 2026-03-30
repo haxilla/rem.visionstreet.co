@@ -12,23 +12,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
    function applySwatch(sw) {
 
-      console.log(sw.dataset.style);
       // values from swatch
-      var flyer_background  = normalizeHex(sw.dataset.flyerBackground);
-      var headline_text     = normalizeHex(sw.dataset.headlineText);
-      var headline_bar_bg   = normalizeHex(sw.dataset.headlineBarBg);
-      var headline_bar_text = normalizeHex(sw.dataset.headlineBarText);
-      var accent_text       = normalizeHex(sw.dataset.accentText);
-      var accent_bars       = normalizeHex(sw.dataset.accentBars);
-      var graphic_textcolor = normalizeHex(sw.dataset.graphicTextcolor);
+      var style   =  sw.dataset.style;
+      var scheme  =  sw.dataset.scheme;
+      var color   =  sw.dataset.color;
 
-      var hlGraphic   = sw.dataset.hlGraphic || '';
-      var noDark      = parseInt(sw.dataset.noDark || '0', 10);
-      var noLight     = parseInt(sw.dataset.noLight || '0', 10);
+      console.log('Applying swatch:', { style, color, scheme });
 
       // --------------------------
       // APPLY COLORS
       // --------------------------
+
+      if(style=='background'){
+         document.querySelectorAll('.flyer_background').forEach(el => {
+            el.style.backgroundColor = '#' + color;
+         });
+
+      }
 
       if (flyer_background) {
          document.querySelectorAll('.flyer_background').forEach(function (el) {

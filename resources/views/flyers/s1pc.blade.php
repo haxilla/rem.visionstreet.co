@@ -17,10 +17,7 @@
 <div style="border-top-left-radius:10px;font-family:arial;
 border-top-right-radius:10px;width:100%;line-height:1.52;
 background-color:#{{$propInfo->theStyle->flyer_background}};
-box-sizing:content-box;" class="flyer_background"
-data-template="{{$propInfo->theStyle->template}}"
-data-flyerbackground="{{$propInfo
-->theStyle->flyer_background}}">
+box-sizing:content-box;" class="flyer_background">
   <!--- header table -->
   <table style="width:100%;table-layout:fixed;
   box-sizing:content-box;border-collapse:collapse;">
@@ -31,11 +28,7 @@ data-flyerbackground="{{$propInfo
               ->theStyle->graphic_words}}/{{$propInfo
               ->theStyle->graphic_style}}/{{$hlGraphic}}"
             style="max-width:100%;"
-            class="hlGraphic"
-            data-fromURL="{{$fromURL}}"
-            data-graphicwords="{{$propInfo->theStyle->graphic_words}}"
-            data-graphicstyle="{{$propInfo->theStyle->graphic_style}}"
-            data-graphictextcolor="{{$propInfo->theStyle->graphic_textcolor}}">
+            class="hlGraphic">
         </div>
       </td >
       <td style="width:40%;margin-right:55px;">
@@ -48,8 +41,7 @@ data-flyerbackground="{{$propInfo
             <div class="headline_text"
             style="padding-left:25px;
             max-height:70px;
-            overflow:hidden;"
-            data-headlinetext="{{$propInfo->theStyle->headline_text}}">
+            overflow:hidden;">
               {!! $theHeadline !!}
             </div>
         </div>
