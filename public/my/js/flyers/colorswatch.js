@@ -33,6 +33,10 @@ document.addEventListener('DOMContentLoaded', function () {
             el.style.backgroundColor = '#' + color;
          });
 
+         document.querySelectorAll('.accent_bars').forEach(el => {
+            el.style.backgroundColor = '#' + color;
+         });
+
          document.querySelectorAll('.flyer_background_border, .flyer_border').forEach(function (el) {
             el.style.border = '1px solid #' + color;
          });
