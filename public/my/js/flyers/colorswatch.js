@@ -17,6 +17,11 @@ document.addEventListener('DOMContentLoaded', function () {
       var scheme  =  sw.dataset.scheme;
       var color   =  sw.dataset.color;
 
+      //get current headline graphic URL
+      const img = document.querySelector('.hlGraphic');
+      const headline_graphic_url = img.src;
+
+      console.log(headline_graphic_url);
       console.log('Applying swatch:', { style, color, scheme });
 
       // --------------------------
