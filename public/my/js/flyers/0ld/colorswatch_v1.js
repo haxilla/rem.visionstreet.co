@@ -46,10 +46,9 @@ document.addEventListener('DOMContentLoaded', function () {
                el.style.color = '#333333';
             });
          }
+
       }
 
-
-/*
       if (flyer_background) {
          document.querySelectorAll('.flyer_background').forEach(function (el) {
             el.style.backgroundColor = '#' + flyer_background;
@@ -180,6 +179,5 @@ document.addEventListener('DOMContentLoaded', function () {
       setDisplay('.lightColors', 'none');
       setDisplay('.darkColors', '');
    }
-*/
 
 });
