@@ -28,6 +28,10 @@ document.addEventListener('DOMContentLoaded', function () {
             el.style.backgroundColor = '#' + color;
          });
 
+         document.querySelectorAll('.flyer_background_border, .flyer_border').forEach(function (el) {
+            el.style.border = '1px solid #' + color;
+         });
+
       }
 
       if (flyer_background) {
@@ -39,9 +43,6 @@ document.addEventListener('DOMContentLoaded', function () {
             el.style.border = '1px solid #' + flyer_background;
          });
 
-         document.querySelectorAll('#theBackground').forEach(function (el) {
-            el.value = flyer_background;
-         });
       }
 
       if (headline_bar_bg) {
