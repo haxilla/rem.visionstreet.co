@@ -60,6 +60,7 @@ document.addEventListener('DOMContentLoaded', function () {
    document.querySelectorAll('.colorswatch').forEach(function (sw) {
       sw.addEventListener('click', function (e) {
          e.preventDefault();
+         console.log('Swatch clicked:', this);
          applySwatch(this);
       });
    });
