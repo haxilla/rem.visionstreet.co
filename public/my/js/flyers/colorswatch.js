@@ -23,6 +23,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
       console.log(headline_graphic_url);
       console.log('Applying swatch:', { style, color, scheme });
+      //get current headline_bar_bg color
+      const headline_bar_bg = window.getComputedStyle(
+         document.querySelector('.headline_bar_bg')
+      ).backgroundColor;
+
+      const headline_bar_bg_hex = "#" + headline_bar_bg
+         .match(/\d+/g)
+         .slice(0, 3)
+         .map(x => (+x).toString(16).padStart(2, '0'))
+         .join('');
+
+      console.log(headline_bar_bg_hex);
 
       // --------------------------
       // APPLY COLORS
@@ -45,18 +57,7 @@ document.addEventListener('DOMContentLoaded', function () {
             document.querySelectorAll('.headline_text').forEach(el => {
                el.style.color = '#ffffff';
             });
-            //get current headline_bar_bg color
-            const headline_bar_bg = window.getComputedStyle(
-               document.querySelector('.headline_bar_bg')
-            ).backgroundColor;
 
-            const headline_bar_bg_hex = "#" + headline_bar_bg
-               .match(/\d+/g)
-               .slice(0, 3)
-               .map(x => (+x).toString(16).padStart(2, '0'))
-               .join('');
-
-            console.log(headline_bar_bg_hex);
 
 
 
