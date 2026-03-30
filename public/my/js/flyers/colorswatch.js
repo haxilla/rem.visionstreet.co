@@ -32,6 +32,12 @@ document.addEventListener('DOMContentLoaded', function () {
             el.style.border = '1px solid #' + color;
          });
 
+         if(color !== 'cccccc' && color !== 'eeeeee'){
+            document.querySelectorAll('.headline_text').forEach(el => {
+               el.style.color = '#ffffff';
+            });
+         }
+
       }
 
       if (flyer_background) {
