@@ -36,6 +36,10 @@ document.addEventListener('DOMContentLoaded', function () {
             document.querySelectorAll('.headline_text').forEach(el => {
                el.style.color = '#ffffff';
             });
+         }else{
+            document.querySelectorAll('.headline_text').forEach(el => {
+               el.style.color = '#333333';
+            });
          }
 
       }
