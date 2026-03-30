@@ -49,6 +49,17 @@ document.addEventListener('DOMContentLoaded', function () {
       }
    }
 
+   // --------------------------
+   // CLICK HANDLER
+   // --------------------------
+
+   document.querySelectorAll('.colorswatch').forEach(function (sw) {
+      sw.addEventListener('click', function (e) {
+         e.preventDefault();
+         applySwatch(this);
+      });
+   });
+
 /*
       if (flyer_background) {
          document.querySelectorAll('.flyer_background').forEach(function (el) {
