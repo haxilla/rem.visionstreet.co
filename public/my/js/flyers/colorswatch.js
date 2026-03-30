@@ -45,6 +45,13 @@ document.addEventListener('DOMContentLoaded', function () {
             document.querySelectorAll('.headline_text').forEach(el => {
                el.style.color = '#ffffff';
             });
+            //get current headline_bar_bg color
+            const headline_bar_bg = window.getComputedStyle(document.querySelector('.headline_bar_bg')).backgroundColor;
+            //if headline_bar_bg is light, change headline_bar_text to dark
+            console.log('Current headline_bar_bg:', headline_bar_bg);
+
+
+            
          }else{
             document.querySelectorAll('.headline_text').forEach(el => {
                el.style.color = '#333333';
