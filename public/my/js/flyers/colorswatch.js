@@ -1,13 +1,13 @@
 document.addEventListener('DOMContentLoaded', function () {
 
-   function normalizeHex(val) {
-      return (val || '').replace('#', '').trim();
-   }
+   function rgbToHex(rgbString) {
+      const values = rgbString.match(/\d+/g);
+      if (!values) return null;
 
-   function setDisplay(selector, value) {
-      document.querySelectorAll(selector).forEach(function (el) {
-         el.style.display = value;
-      });
+      return "#" + values
+         .slice(0, 3)
+         .map(v => Number(v).toString(16).padStart(2, "0"))
+         .join("");
    }
 
    function applySwatch(sw) {
@@ -27,11 +27,7 @@ document.addEventListener('DOMContentLoaded', function () {
       ).backgroundColor;
 
       //convert to hex
-      const old_headline_bar_bg = "#" + headline_bar_bg
-      .match(/\d+/g)
-      .slice(0, 3)
-      .map(x => (+x).toString(16).padStart(2, '0'))
-      .join('');
+      const old_headline_bar_bg = rgbToHex(headline_bar_bg);
 
       console.log(old_headline_bar_bg);
       console.log(headline_graphic_url);
