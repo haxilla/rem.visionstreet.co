@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
       const values = rgbString.match(/\d+/g);
       if (!values) return null;
 
-      return "#" + values
+      return values
          .slice(0, 3)
          .map(v => Number(v).toString(16).padStart(2, "0"))
          .join("");
