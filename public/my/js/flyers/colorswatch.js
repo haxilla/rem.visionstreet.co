@@ -21,20 +21,22 @@ document.addEventListener('DOMContentLoaded', function () {
       const img = document.querySelector('.hlGraphic');
       const headline_graphic_url = img.src;
 
-      console.log(headline_graphic_url);
-      console.log('Applying swatch:', { style, color, scheme });
-      //get current headline_bar_bg color
+      //get current headline bar bg color
       const headline_bar_bg = window.getComputedStyle(
          document.querySelector('.headline_bar_bg')
       ).backgroundColor;
 
-      const headline_bar_bg_hex = "#" + headline_bar_bg
-         .match(/\d+/g)
-         .slice(0, 3)
-         .map(x => (+x).toString(16).padStart(2, '0'))
-         .join('');
+      //convert to hex
+      const old_headline_bar_bg = "#" + headline_bar_bg
+      .match(/\d+/g)
+      .slice(0, 3)
+      .map(x => (+x).toString(16).padStart(2, '0'))
+      .join('');
 
-      console.log(headline_bar_bg_hex);
+      console.log(old_headline_bar_bg);
+      console.log(headline_graphic_url);
+      console.log('Applying swatch:', { style, color, scheme });
+
 
       // --------------------------
       // APPLY COLORS
@@ -57,10 +59,6 @@ document.addEventListener('DOMContentLoaded', function () {
             document.querySelectorAll('.headline_text').forEach(el => {
                el.style.color = '#ffffff';
             });
-
-
-
-
             
          }else{
             document.querySelectorAll('.headline_text').forEach(el => {
