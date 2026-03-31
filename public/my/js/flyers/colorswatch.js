@@ -26,10 +26,17 @@ document.addEventListener('DOMContentLoaded', function () {
          document.querySelector('.headline_bar_bg')
       ).backgroundColor;
 
+      //get current headline bar bg color
+      const flyer_bg = window.getComputedStyle(
+         document.querySelector('.flyer_background')
+      ).backgroundColor;
+      
+
       //convert to hex
       const old_headline_bar_bg = rgbToHex(headline_bar_bg);
+      const old_flyer_bg = rgbToHex(flyer_bg);
 
-      console.log(old_headline_bar_bg);
+      console.log(old_headline_bar_bg,old_flyer_bg);
       console.log(headline_graphic_url);
       console.log('Applying swatch:', { style, color, scheme });
 
