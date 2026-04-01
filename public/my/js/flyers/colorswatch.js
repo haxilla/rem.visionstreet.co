@@ -101,7 +101,12 @@ document.addEventListener('DOMContentLoaded', function () {
                el.style.color = '#ffffff';
             });
          }else{
-
+            document.querySelectorAll('.headline_bar_bg').forEach(el => {
+               el.style.backgroundColor = '#333333';
+            });
+            document.querySelectorAll('.headline_bar_text').forEach(el => {
+               el.style.color = '#ffffff';
+            });
          }
       }
    }
