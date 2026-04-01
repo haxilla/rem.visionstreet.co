@@ -77,7 +77,15 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log('Dark background chosen, showing light colors');
 
             if(old_headline_bar_bg !== 'ffffff' && old_headline_bar_bg !== 'eeeeee' && old_headline_bar_bg !== 'ffffcc'){
-               console.log('set to #eeeeee');
+
+               document.querySelectorAll('.headline_bar_bg').forEach(el => {
+                  el.style.backgroundColor = '#eeeeee';
+               });
+
+               document.querySelectorAll('.headline_bar_text').forEach(el => {
+                  el.style.color = '#' + color;
+               });
+               
             }else{
                console.log('leave headline bar bg as is, already light');
             };
