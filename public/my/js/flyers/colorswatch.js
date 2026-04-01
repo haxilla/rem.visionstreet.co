@@ -73,11 +73,14 @@ document.addEventListener('DOMContentLoaded', function () {
          flyer_background === '990000' ||
          flyer_background === '000066' ||
          flyer_background === '000000' ) {
-
+            console.log('Dark background detected, showing light colors');
             if(old_headline_bar_bg !== 'cccccc' && old_headline_bar_bg !== 'eeeeee' && old_flyer_bg !== 'ffffff'){
+               console.log('Previous background was dark, resetting headline bar bg to light');
                document.querySelectorAll('.headline_bar_bg').forEach(el => {
                   el.style.backgroundColor = '#cccccc';
                }
+         }else{
+            console.log('Previous background was light, no need to reset headline bar bg');
          }
    }
 
