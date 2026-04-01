@@ -86,10 +86,6 @@ document.addEventListener('DOMContentLoaded', function () {
                   el.style.backgroundColor = '#eeeeee';
                });
 
-               document.querySelectorAll('.headline_bar_text').forEach(el => {
-                  el.style.color = '#' + color;
-               });
-
             }else{
                console.log('leave headline bar bg as is, already light');
             };
