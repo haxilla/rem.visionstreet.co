@@ -71,11 +71,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
          if (flyer_background === '996600' ||
          flyer_background === '990000' ||
-         flyer_background === '999999' ||
          flyer_background === '000066' ||
-         flyer_background === '000000' ||
-         flyer_background === '333333') {
-            
+         flyer_background === '000000' ||) {
+
             if(old_headline_bar_bg !== 'cccccc' && old_headline_bar_bg !== 'eeeeee' && old_flyer_bg !== 'ffffff'){
                document.querySelectorAll('.headline_bar_bg').forEach(el => {
                   el.style.backgroundColor = '#cccccc';
