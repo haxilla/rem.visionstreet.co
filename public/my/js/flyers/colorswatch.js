@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', function () {
                el.style.backgroundColor = '#333333';
             });
             document.querySelectorAll('.headline_bar_text').forEach(el => {
-               el.style.backgroundColor = '#ffffff';
+               el.style.color = '#ffffff';
             });
          }else{
 
