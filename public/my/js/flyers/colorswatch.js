@@ -76,6 +76,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
             console.log('Dark background chosen, showing light colors');
 
+            document.querySelectorAll('.headline_bar_text').forEach(el => {
+               el.style.color = '#' + color;
+            });
+
             if(old_headline_bar_bg !== 'ffffff' && old_headline_bar_bg !== 'eeeeee' && old_headline_bar_bg !== 'ffffcc'){
 
                document.querySelectorAll('.headline_bar_bg').forEach(el => {
@@ -85,7 +89,7 @@ document.addEventListener('DOMContentLoaded', function () {
                document.querySelectorAll('.headline_bar_text').forEach(el => {
                   el.style.color = '#' + color;
                });
-               
+
             }else{
                console.log('leave headline bar bg as is, already light');
             };
