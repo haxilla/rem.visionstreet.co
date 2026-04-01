@@ -89,8 +89,15 @@ document.addEventListener('DOMContentLoaded', function () {
             }else{
                console.log('leave headline bar bg as is, already light');
             };
+         }else if(color==='999999'){
+            document.querySelectorAll('.headline_bar_bg').forEach(el => {
+               el.style.backgroundColor = '#333333';
+            });
+            document.querySelectorAll('.headline_bar_text').forEach(el => {
+               el.style.backgroundColor = '#ffffff';
+            });
          }else{
-            console.log('Previous background' + old_flyer_bg + ' was light, no need to reset headline bar bg');
+
          }
       }
    }
