@@ -69,10 +69,10 @@ document.addEventListener('DOMContentLoaded', function () {
             });
          }
 
-         if (flyer_background === '996600' ||
-         flyer_background === '990000' ||
-         flyer_background === '000066' ||
-         flyer_background === '000000' ) {
+         if (old_flyer_background === '996600' ||
+         old_flyer_background === '990000' ||
+         old_flyer_background === '000066' ||
+         old_flyer_background === '000000' ) {
             console.log('Dark background detected, showing light colors');
             if(old_headline_bar_bg !== 'cccccc' && old_headline_bar_bg !== 'eeeeee' && old_flyer_bg !== 'ffffff'){
                console.log('Previous background was dark, resetting headline bar bg to light');
