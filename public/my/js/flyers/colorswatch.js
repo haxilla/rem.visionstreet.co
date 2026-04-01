@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function () {
             el.style.border = '1px solid #' + color;
          });
 
-         if(color !== 'cccccc' && color !== 'eeeeee'){
+         if(color !== 'cccccc' && color !== 'eeeeee' && color !== '999999'){
             document.querySelectorAll('.headline_text').forEach(el => {
                el.style.color = '#ffffff';
             });
@@ -75,15 +75,12 @@ document.addEventListener('DOMContentLoaded', function () {
          old_flyer_bg === '000000' ) {
             console.log('Dark background detected, showing light colors');
             if(old_headline_bar_bg !== 'cccccc' && old_headline_bar_bg !== 'eeeeee' && old_flyer_bg !== 'ffffff'){
-               console.log('Previous background was dark, resetting headline bar bg to light');
-               document.querySelectorAll('.headline_bar_bg').forEach(el => {
-                  el.style.backgroundColor = '#cccccc';
-               });
+               console.log('Previous background' + old_flyer_bg + ' was dark, resetting headline bar bg to light');
             }else{
-               console.log('Previous headline_bar_bg was light, no need to reset headline bar bg');
+               console.log('Previous headline_bar_bg' + old_headline_bar_bg + ' was light, no need to reset headline bar bg');
             };
          }else{
-            console.log('Previous background was light, no need to reset headline bar bg');
+            console.log('Previous background' + old_flyer_bg + ' was light, no need to reset headline bar bg');
          }
       }
    }
