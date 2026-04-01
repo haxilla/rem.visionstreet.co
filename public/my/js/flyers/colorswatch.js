@@ -78,7 +78,10 @@ document.addEventListener('DOMContentLoaded', function () {
                console.log('Previous background was dark, resetting headline bar bg to light');
                document.querySelectorAll('.headline_bar_bg').forEach(el => {
                   el.style.backgroundColor = '#cccccc';
-               }
+               });
+            }else{
+               console.log('Previous headline_bar_bg was light, no need to reset headline bar bg');
+            };
          }else{
             console.log('Previous background was light, no need to reset headline bar bg');
          }
