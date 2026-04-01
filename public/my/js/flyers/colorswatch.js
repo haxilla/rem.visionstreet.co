@@ -69,15 +69,17 @@ document.addEventListener('DOMContentLoaded', function () {
             });
          }
 
-         if (old_flyer_bg === '996600' ||
-         old_flyer_bg === '990000' ||
-         old_flyer_bg === '000066' ||
-         old_flyer_bg === '000000' ) {
-            console.log('Dark background detected, showing light colors');
-            if(old_headline_bar_bg !== 'cccccc' && old_headline_bar_bg !== 'eeeeee' && old_flyer_bg !== 'ffffff'){
-               console.log('Previous background' + old_flyer_bg + ' was dark, resetting headline bar bg to light');
+         if (color === '996600' ||
+         color === '990000' ||
+         color === '000066' ||
+         color === '000000' ) {
+
+            console.log('Dark background chosen, showing light colors');
+
+            if(old_headline_bar_bg !== 'ffffff' && old_headline_bar_bg !== 'eeeeee' && old_headline_bar_bg !== 'ffffcc'){
+               console.log('set to #eeeeee');
             }else{
-               console.log('Previous headline_bar_bg' + old_headline_bar_bg + ' was light, no need to reset headline bar bg');
+               console.log('leave headline bar bg as is, already light');
             };
          }else{
             console.log('Previous background' + old_flyer_bg + ' was light, no need to reset headline bar bg');
