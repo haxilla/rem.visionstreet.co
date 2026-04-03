@@ -187,12 +187,14 @@ document.addEventListener('DOMContentLoaded', function () {
             document.querySelectorAll('.headline_bar_text').forEach(el => {
                el.style.color = '#ffffff';
             });
+            document.querySelectorAll('.accent_bars').forEach(el => {
+               el.style.color = '#333333';
+            });
             
             // hide light accents
             document.querySelectorAll('.light-accents').forEach(el => {
                el.style.display = 'none';
             });
-
             // show dark accents
             document.querySelectorAll('.dark-accents').forEach(el => {
                el.style.display = '';
