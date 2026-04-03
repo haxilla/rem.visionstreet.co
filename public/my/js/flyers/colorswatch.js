@@ -10,6 +10,10 @@ document.addEventListener('DOMContentLoaded', function () {
          .join("");
    }
 
+   function updateColorInUrl(url, hex) {
+      return url.replace(/_(.*?)_/, `_${hex}_`);
+   }
+
    function applySwatch(sw) {
 
       // values from swatch
@@ -119,6 +123,12 @@ document.addEventListener('DOMContentLoaded', function () {
             document.querySelectorAll('.dark-accents').forEach(el => {
                el.style.display = '';
             });
+
+         }else if (color === 'eeeeee' && headline_graphic_url.includes('_ffffff_')) {         
+
+            //console.log (change from white to 333333, show dark colors');
+
+
          }else{
             document.querySelectorAll('.headline_bar_bg').forEach(el => {
                el.style.backgroundColor = '#333333';
