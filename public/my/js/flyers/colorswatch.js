@@ -149,7 +149,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
          }else if (color === 'eeeeee') {         
 
-             if(headline_graphic_url.includes('_ffffff_')){
+            document.querySelectorAll('.accent_bars').forEach(el => {
+               el.style.backgroundColor = '#333333';
+            });
+
+            if(headline_graphic_url.includes('_ffffff_')){
+
                const img = document.querySelector('.hlGraphic');
 
                // set new color from white to dark
@@ -162,14 +167,7 @@ document.addEventListener('DOMContentLoaded', function () {
                );
 
                // apply it back
-               img.src = updatedUrl;
-             }
-
-             if (old_accent_bars === 'eeeeee') {
-               document.querySelectorAll('.accent_bars').forEach(el => {
-                  el.style.backgroundColor = '#333333';
-               });
-             }
+               img.src = updatedUrl;}
 
             // hide light accents
             document.querySelectorAll('.light-accents').forEach(el => {
