@@ -34,14 +34,21 @@ document.addEventListener('DOMContentLoaded', function () {
       const flyer_bg = window.getComputedStyle(
          document.querySelector('.flyer_background')
       ).backgroundColor;
+
+      //get current headline bar bg color
+      const accent_bars = window.getComputedStyle(
+         document.querySelector('.accent_bars')
+      ).backgroundColor;
       
 
       //convert to hex
       const old_headline_bar_bg = rgbToHex(headline_bar_bg);
       const old_flyer_bg = rgbToHex(flyer_bg);
+      const old_accent_bars = rgbToHex(accent_bars);
 
       console.log(old_headline_bar_bg,old_flyer_bg);
       console.log(headline_graphic_url);
+      console.log(old_accent_bars);
       console.log('Applying swatch:', { style, color, scheme });
 
 
@@ -140,22 +147,39 @@ document.addEventListener('DOMContentLoaded', function () {
                img.src = updatedUrl;
             }
 
-         }else if (color === 'eeeeee' && headline_graphic_url.includes('_ffffff_')) {         
+         }else if (color === 'eeeeee') {         
 
-            const img = document.querySelector('.hlGraphic');
+             if(headline_graphic_url.includes('_ffffff_')){
+               const img = document.querySelector('.hlGraphic');
 
-            // set new color from white to dark
-            let newColor = '333333'; // or from your swatch
+               // set new color from white to dark
+               let newColor = '333333'; // or from your swatch
 
-            // replace the color in the URL
-            const updatedUrl = headline_graphic_url.replace(
-               /_([0-9a-fA-F]{6})_/,
-               `_${newColor}_`
-            );
+               // replace the color in the URL
+               const updatedUrl = headline_graphic_url.replace(
+                  /_([0-9a-fA-F]{6})_/,
+                  `_${newColor}_`
+               );
 
-            // apply it back
-            img.src = updatedUrl;
+               // apply it back
+               img.src = updatedUrl;
+             }
 
+             if (old_accent_bars === 'eeeeee') {
+               document.querySelectorAll('.accent_bars').forEach(el => {
+                  el.style.backgroundColor = '#333333';
+               });
+             }
+
+            // hide light accents
+            document.querySelectorAll('.light-accents').forEach(el => {
+               el.style.display = 'none';
+            });
+
+            // show dark accents
+            document.querySelectorAll('.dark-accents').forEach(el => {
+               el.style.display = '';
+            });
 
          }else{
 
@@ -165,7 +189,8 @@ document.addEventListener('DOMContentLoaded', function () {
             document.querySelectorAll('.headline_bar_text').forEach(el => {
                el.style.color = '#ffffff';
             });
-                                    // hide light accents
+            
+            // hide light accents
             document.querySelectorAll('.light-accents').forEach(el => {
                el.style.display = 'none';
             });
