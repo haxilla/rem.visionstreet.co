@@ -124,6 +124,22 @@ document.addEventListener('DOMContentLoaded', function () {
                el.style.display = '';
             });
 
+            if(headline_graphic_url.includes('_333333_')){
+
+               const img = document.querySelector('.hlGraphic');
+               // set new color from dark to light
+               let newColor = 'ffffff';
+                // or from your swatch - you could also have a data attribute on the swatch for this
+
+               // replace the color in the URL
+               const updatedUrl = headline_graphic_url.replace(
+                  /_([0-9a-fA-F]{6})_/,
+                  `_${newColor}_`
+               );
+
+               img.src = updatedUrl;
+            }
+
          }else if (color === 'eeeeee' && headline_graphic_url.includes('_ffffff_')) {         
 
             const img = document.querySelector('.hlGraphic');
@@ -136,7 +152,7 @@ document.addEventListener('DOMContentLoaded', function () {
                /_([0-9a-fA-F]{6})_/,
                `_${newColor}_`
             );
-            
+
             // apply it back
             img.src = updatedUrl;
 
