@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // hide light accents
             document.querySelectorAll('.light-accents').forEach(el => {
-               el.style.display = '';
+               el.style.display = 'none';
             });
 
             // show dark accents
