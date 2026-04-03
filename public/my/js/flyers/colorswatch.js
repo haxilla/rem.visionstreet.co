@@ -190,6 +190,9 @@ document.addEventListener('DOMContentLoaded', function () {
             document.querySelectorAll('.accent_bars').forEach(el => {
                el.style.color = '#333333';
             });
+            document.querySelectorAll('.accent_link').forEach(el => {
+               el.style.color = '#333333';
+            });
             
             // hide light accents
             document.querySelectorAll('.light-accents').forEach(el => {
