@@ -126,6 +126,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
          }else if (color === 'eeeeee' && headline_graphic_url.includes('_ffffff_')) {         
 
+            const img = document.querySelector('.hlGraphic');
+
             // set new color from white to dark
             let newColor = '333333'; // or from your swatch
 
@@ -134,8 +136,9 @@ document.addEventListener('DOMContentLoaded', function () {
                /_([0-9a-fA-F]{6})_/,
                `_${newColor}_`
             );
+            
             // apply it back
-            console.log ('Updated URL:', updatedUrl);
+            img.src = updatedUrl;
 
 
          }else{
