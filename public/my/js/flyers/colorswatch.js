@@ -126,7 +126,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
          }else if (color === 'eeeeee' && headline_graphic_url.includes('_ffffff_')) {         
 
-            //console.log (change from white to 333333, show dark colors');
+            // set new color from white to dark
+            let newColor = '333333'; // or from your swatch
+
+            // replace the color in the URL
+            const updatedUrl = headline_graphic_url.replace(/_(.*?)_/, `_${newColor}_`);
+
+            // apply it back
+            el.src = updatedUrl;//console.log (change from white to 333333, show dark colors');
 
 
          }else{
