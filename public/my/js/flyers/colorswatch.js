@@ -137,6 +137,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
          }else{
+            
             document.querySelectorAll('.headline_bar_bg').forEach(el => {
                el.style.backgroundColor = '#333333';
             });
@@ -152,6 +153,8 @@ document.addEventListener('DOMContentLoaded', function () {
             document.querySelectorAll('.dark-accents').forEach(el => {
                el.style.display = '';
             });
+
+            console.log('final else);
          }
       }
    }
