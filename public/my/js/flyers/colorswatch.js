@@ -149,8 +149,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
          }else if (color === 'eeeeee') {         
 
+            //background of accent bars
             document.querySelectorAll('.accent_bars').forEach(el => {
                el.style.backgroundColor = '#333333';
+            });
+            //text separator
+            document.querySelectorAll('.accent_bars').forEach(el => {
+               el.style.color = '#ffffff';
+            });
+            //hyperlinks
+            document.querySelectorAll('.accent_link').forEach(el => {
+               el.style.color = '#ffffff';
             });
 
             if(headline_graphic_url.includes('_ffffff_')){
