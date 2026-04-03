@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const updatedUrl = headline_graphic_url.replace(/_(.*?)_/, `_${newColor}_`);
 
             // apply it back
-            console.log (updatedUrl);
+            console.log ('Updated URL:', updatedUrl);
 
 
          }else{
