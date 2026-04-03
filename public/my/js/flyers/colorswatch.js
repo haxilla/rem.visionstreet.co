@@ -130,8 +130,10 @@ document.addEventListener('DOMContentLoaded', function () {
             let newColor = '333333'; // or from your swatch
 
             // replace the color in the URL
-            const updatedUrl = headline_graphic_url.replace(/_(.*?)_/, `_${newColor}_`);
-
+            const updatedUrl = headline_graphic_url.replace(
+               /_([0-9a-fA-F]{6})_/,
+               `_${newColor}_`
+            );
             // apply it back
             console.log ('Updated URL:', updatedUrl);
 
