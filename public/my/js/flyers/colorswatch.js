@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const updatedUrl = headline_graphic_url.replace(/_(.*?)_/, `_${newColor}_`);
 
             // apply it back
-            el.src = updatedUrl;//console.log (change from white to 333333, show dark colors');
+            headline_graphic_url.src = updatedUrl;
 
 
          }else{
