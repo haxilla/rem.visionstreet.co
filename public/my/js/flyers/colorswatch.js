@@ -109,12 +109,31 @@ document.addEventListener('DOMContentLoaded', function () {
             document.querySelectorAll('.headline_text').forEach(el => {
                el.style.color = '#ffffff';
             });
+
+            // hide light accents
+            document.querySelectorAll('.light-accents').forEach(el => {
+               el.style.display = '';
+            });
+
+            // show dark accents
+            document.querySelectorAll('.dark-accents').forEach(el => {
+               el.style.display = '';
+            });
          }else{
             document.querySelectorAll('.headline_bar_bg').forEach(el => {
                el.style.backgroundColor = '#333333';
             });
             document.querySelectorAll('.headline_bar_text').forEach(el => {
                el.style.color = '#ffffff';
+            });
+                                    // hide light accents
+            document.querySelectorAll('.light-accents').forEach(el => {
+               el.style.display = 'none';
+            });
+
+            // show dark accents
+            document.querySelectorAll('.dark-accents').forEach(el => {
+               el.style.display = '';
             });
          }
       }
