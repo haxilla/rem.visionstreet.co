@@ -35,7 +35,7 @@
       </div>
       <div style="display:inline-block;">
         <a href="#"
-        style="font-size:10pt;
+        style="font-size:9pt;font-weight:bold;
         color:#{{$propInfo->theStyle->headline_bar_text}};
         text-decoration:none;" target="_blank"
         class="accent_link">
