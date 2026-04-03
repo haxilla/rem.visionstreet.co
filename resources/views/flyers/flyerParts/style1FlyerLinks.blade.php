@@ -37,7 +37,8 @@
         <a href="#"
         style="font-size:10pt;
         color:#{{$propInfo->theStyle->headline_bar_text}};
-        text-decoration:none;" target="_blank">
+        text-decoration:none;" target="_blank"
+        class="accent_link">
             MLS Link
         </a>
       </div>
