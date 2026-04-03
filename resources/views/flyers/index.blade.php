@@ -105,8 +105,8 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
 
                             <p class="text-xs font-medium text-gray-500 mb-2">Accents</p>
 
-                            <p class="text-xs text-gray-400 mb-1">Light</p>
-                            <div class="flex flex-wrap gap-1 mb-3">
+                            <p class="light-accents text-xs text-gray-400 mb-1">Light</p>
+                            <div class="light-accents flex flex-wrap gap-1 mb-3">
                                 <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" 
                                 style="background:#ffffff;" data-style="accent" data-scheme="light" data-color="ffffff"></a>
                                 <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" 
@@ -115,8 +115,8 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
                                 style="background:#ffffcc;" data-style="accent" data-scheme="light" data-color="ffffcc"></a>
                             </div>
 
-                            <p class="text-xs text-gray-400 mb-1">Dark</p>
-                            <div class="flex flex-wrap gap-1">
+                            <p class="dark-accents text-xs text-gray-400 mb-1">Dark</p>
+                            <div class="dark-accents flex flex-wrap gap-1">
                                 <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" 
                                 style="background:#ffc60b;" data-style="accent" data-scheme="dark" data-color="ffc60b"></a>
                                 <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" 

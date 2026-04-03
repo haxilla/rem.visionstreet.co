@@ -75,6 +75,15 @@ document.addEventListener('DOMContentLoaded', function () {
          color === '000000' ) {
 
             console.log('Dark background chosen, showing light colors');
+            // hide light accents
+            document.querySelectorAll('.light-accents').forEach(el => {
+               el.style.display = '';
+            });
+
+            // show dark accents
+            document.querySelectorAll('.dark-accents').forEach(el => {
+               el.style.display = 'none';
+            });
 
             document.querySelectorAll('.headline_bar_text').forEach(el => {
                el.style.color = '#' + color;
