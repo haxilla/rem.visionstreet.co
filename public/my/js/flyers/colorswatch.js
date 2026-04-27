@@ -129,10 +129,6 @@ document.addEventListener('DOMContentLoaded', function () {
                );
             });
 
-            document.querySelectorAll('.accent_bars').forEach(el => {
-               el.style.backgroundColor = '#' + color;
-            });
-
          }else if(color==='999999'){
 
             console.log('Medium background chosen, showing light colors'); 
@@ -246,6 +242,10 @@ document.addEventListener('DOMContentLoaded', function () {
                /_([0-9a-fA-F]{6})_/,
                `_${color}_`
             );
+         });
+
+         document.querySelectorAll('.accent_bars').forEach(el => {
+            el.style.backgroundColor = '#' + color;
          });
 
       }
