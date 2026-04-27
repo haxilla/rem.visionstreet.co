@@ -50,10 +50,11 @@ document.addEventListener('DOMContentLoaded', function () {
       const old_flyer_bg = rgbToHex(flyer_bg);
       const old_accent_bars = rgbToHex(accent_bars);
 
-      console.log(old_headline_bar_bg,old_flyer_bg);
-      console.log(headline_graphic_url);
-      console.log(old_accent_bars);
-      console.log('color:',color);
+      console.log('old_headline_bar_Bg:', old_headline_bar_bg);
+      console.log('old_flyer_bg:', old_flyer_bg);
+      console.log('headline_graphic_url:', headline_graphic_url);
+      console.log('old_accent_bars:', old_accent_bars);
+      console.log('color:', color);
       console.log('Applying swatch:', { style, color, scheme });
 
       // --------------------------
@@ -104,7 +105,8 @@ document.addEventListener('DOMContentLoaded', function () {
                el.style.color = '#' + color;
             });
 
-            if(old_headline_bar_bg !== 'ffffff' && old_headline_bar_bg !== 'eeeeee' && old_headline_bar_bg !== 'ffffcc'){
+            if(old_headline_bar_bg !== 'ffffff' && old_headline_bar_bg !== 'eeeeee' 
+            && old_headline_bar_bg !== 'ffffcc'){
 
                document.querySelectorAll('.headline_bar_bg').forEach(el => {
                   el.style.backgroundColor = '#eeeeee';
@@ -209,8 +211,8 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log('final else');
          }
       }else{
-         
-         console.log('Style is not background, no changes applied');
+
+
 
       }
    }
