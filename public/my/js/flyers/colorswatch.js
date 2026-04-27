@@ -143,6 +143,12 @@ document.addEventListener('DOMContentLoaded', function () {
                            });
                         }
 
+                        if(old_headline_bar_bg === 'ffffcc'){
+                           document.querySelectorAll('.headline_bar_text').forEach(el => {
+                              el.style.color = '#333333';
+                           });
+                        }
+
                         document.querySelectorAll('.headline_text').forEach(el => {
                            el.style.color = '#ffffff';
                         });
