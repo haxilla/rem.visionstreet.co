@@ -133,12 +133,17 @@ document.addEventListener('DOMContentLoaded', function () {
                }else if(color==='999999'){
 
                         console.log('Medium background chosen, showing light colors'); 
-                        document.querySelectorAll('.headline_bar_bg').forEach(el => {
-                           el.style.backgroundColor = '#333333';
-                        });
-                        document.querySelectorAll('.headline_bar_text').forEach(el => {
-                           el.style.color = '#ffffff';
-                        });
+
+                        if(old_headline_bar_bg === 'ffffff' && old_headline_bar_bg === 'eeeeee' 
+                        && old_headline_bar_bg === 'ffffcc'){
+                           document.querySelectorAll('.headline_bar_bg').forEach(el => {
+                              el.style.backgroundColor = '#333333';
+                           });
+                           document.querySelectorAll('.headline_bar_text').forEach(el => {
+                              el.style.color = '#ffffff';
+                           });
+                        }
+
                         document.querySelectorAll('.headline_text').forEach(el => {
                            el.style.color = '#ffffff';
                         });
