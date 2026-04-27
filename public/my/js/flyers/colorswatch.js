@@ -215,8 +215,6 @@ document.addEventListener('DOMContentLoaded', function () {
             document.querySelectorAll('.accent_link').forEach(el => {
                el.style.color = '#333333';
             });
-
-
             
             // hide light accents
             document.querySelectorAll('.light-accents').forEach(el => {
@@ -233,6 +231,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
          document.querySelectorAll('.headline_bar_bg').forEach(el => {
             el.style.backgroundColor = color;
+         });
+
+         document.querySelectorAll('.hlGraphic').forEach(img => {
+            img.src = img.src.replace(
+               /_([0-9a-fA-F]{6})_/,
+               `_${color}_`
+            );
          });
 
       }
