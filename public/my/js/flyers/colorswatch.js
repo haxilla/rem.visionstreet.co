@@ -53,6 +53,7 @@ document.addEventListener('DOMContentLoaded', function () {
       console.log(old_headline_bar_bg,old_flyer_bg);
       console.log(headline_graphic_url);
       console.log(old_accent_bars);
+      console.log('color:',color);
       console.log('Applying swatch:', { style, color, scheme });
 
       // --------------------------
@@ -112,7 +113,9 @@ document.addEventListener('DOMContentLoaded', function () {
             }else{
                console.log('leave headline bar bg as is, already light');
             };
+
          }else if(color==='999999'){
+
             console.log('Medium background chosen, showing light colors'); 
             document.querySelectorAll('.headline_bar_bg').forEach(el => {
                el.style.backgroundColor = '#333333';
@@ -180,7 +183,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
 
          }else{
-
+            
             document.querySelectorAll('.headline_bar_bg').forEach(el => {
                el.style.backgroundColor = '#333333';
             });
@@ -205,6 +208,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
             console.log('final else');
          }
+      }else{
+         
+         console.log('Style is not background, no changes applied');
+
       }
    }
 
