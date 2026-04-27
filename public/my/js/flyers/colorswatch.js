@@ -270,6 +270,18 @@ document.addEventListener('DOMContentLoaded', function () {
                   el.style.backgroundColor = '#' + color;
                });
 
+               if(color === 'ffc60b'){
+                  document.querySelectorAll('.headline_bar_text').forEach(el => {
+                     el.style.color = '#333333';
+                  });
+                  document.querySelectorAll('.accent_link').forEach(el => {
+                     el.style.color = '#333333';
+                  });
+                  document.querySelectorAll('.accent_bars').forEach(el => {
+                     el.style.color = '#333333';
+                  });
+               }
+
       }
    }
 
