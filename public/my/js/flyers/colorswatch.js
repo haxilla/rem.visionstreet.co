@@ -62,191 +62,198 @@ document.addEventListener('DOMContentLoaded', function () {
       // --------------------------
 
       if(style=='background'){
-         document.querySelectorAll('.flyer_background').forEach(el => {
-            el.style.backgroundColor = '#' + color;
-         });
 
-         document.querySelectorAll('.accent_bars').forEach(el => {
-            el.style.backgroundColor = '#' + color;
-         });
-
-         document.querySelectorAll('.flyer_background_border, .flyer_border').forEach(function (el) {
-            el.style.border = '1px solid #' + color;
-         });
-
-         if(color !== 'cccccc' && color !== 'eeeeee' && color !== '999999'){
-            document.querySelectorAll('.headline_text').forEach(el => {
-               el.style.color = '#ffffff';
-            });
-            
-         }else{
-            document.querySelectorAll('.headline_text').forEach(el => {
-               el.style.color = '#333333';
-            });
-         }
-
-         if (color === '996600' ||
-         color === '990000' ||
-         color === '000066' ||
-         color === '000000' ) {
-
-            console.log('Dark background chosen, showing light colors');
-            // hide light accents
-            document.querySelectorAll('.light-accents').forEach(el => {
-               el.style.display = '';
-            });
-
-            // show dark accents
-            document.querySelectorAll('.dark-accents').forEach(el => {
-               el.style.display = 'none';
-            });
-
-            document.querySelectorAll('.headline_bar_text').forEach(el => {
-               el.style.color = '#' + color;
-            });
-
-            if(old_headline_bar_bg !== 'ffffff' && old_headline_bar_bg !== 'eeeeee' 
-            && old_headline_bar_bg !== 'ffffcc'){
-
-               document.querySelectorAll('.headline_bar_bg').forEach(el => {
-                  el.style.backgroundColor = '#eeeeee';
+               document.querySelectorAll('.flyer_background').forEach(el => {
+                  el.style.backgroundColor = '#' + color;
                });
 
-            }else{
-               console.log('leave headline bar bg as is, already light');
-            };
+               document.querySelectorAll('.accent_bars').forEach(el => {
+                  el.style.backgroundColor = '#' + color;
+               });
 
-            document.querySelectorAll('.hlGraphic').forEach(img => {
-               img.src = img.src.replace(
-                  /_([0-9a-fA-F]{6})_/,
-                  (match, currentColor) => {
-                     currentColor = currentColor.toLowerCase();
+               document.querySelectorAll('.flyer_background_border, .flyer_border').forEach(function (el) {
+                  el.style.border = '1px solid #' + color;
+               });
 
-                     return ['ffffff', 'ffffcc', 'eeeeee'].includes(currentColor)
-                        ? match            // leave as-is
-                        : `_ffffff_`;      // force to white
-                  }
-               );
-            });
-
-         }else if(color==='999999'){
-
-            console.log('Medium background chosen, showing light colors'); 
-            document.querySelectorAll('.headline_bar_bg').forEach(el => {
-               el.style.backgroundColor = '#333333';
-            });
-            document.querySelectorAll('.headline_bar_text').forEach(el => {
-               el.style.color = '#ffffff';
-            });
-            document.querySelectorAll('.headline_text').forEach(el => {
-               el.style.color = '#ffffff';
-            });
-
-            // hide light accents
-            document.querySelectorAll('.light-accents').forEach(el => {
-               el.style.display = 'none';
-            });
-
-            // show dark accents
-            document.querySelectorAll('.dark-accents').forEach(el => {
-               el.style.display = '';
-            });
-
-            document.querySelectorAll('.hlGraphic').forEach(img => {
-               if (img.src.includes('_333333_')) {
-                  img.src = img.src.replace(
-                     /_([0-9a-fA-F]{6})_/,
-                     `_ffffff_`
-                  );
+               if(color !== 'cccccc' && color !== 'eeeeee' && color !== '999999'){
+                        document.querySelectorAll('.headline_text').forEach(el => {
+                           el.style.color = '#ffffff';
+                        });
+                  
+               }else{
+                        document.querySelectorAll('.headline_text').forEach(el => {
+                           el.style.color = '#333333';
+                        });
                }
-            });
 
-         }else if (color === 'eeeeee') {         
+               if (color === '996600' ||
+               color === '990000' ||
+               color === '000066' ||
+               color === '000000' ) {
 
-            //background of accent bars
-            console.log('Light background chosen, showing dark colors');
+                        console.log('Dark background chosen, showing light colors');
+                        // hide light accents
+                        document.querySelectorAll('.light-accents').forEach(el => {
+                           el.style.display = '';
+                        });
 
-            document.querySelectorAll('.accent_bars').forEach(el => {
-               el.style.backgroundColor = '#333333';
-            });
-            //text separator
-            document.querySelectorAll('.accent_bars').forEach(el => {
-               el.style.color = '#ffffff';
-            });
-            //hyperlinks
-            document.querySelectorAll('.accent_link').forEach(el => {
-               el.style.color = '#ffffff';
-            });
+                        // show dark accents
+                        document.querySelectorAll('.dark-accents').forEach(el => {
+                           el.style.display = 'none';
+                        });
 
-            document.querySelectorAll('.headline_bar_bg').forEach(el => {
-               el.style.backgroundColor = '#333333';
-            });
+                        document.querySelectorAll('.headline_bar_text').forEach(el => {
+                           el.style.color = '#' + color;
+                        });
 
-            document.querySelectorAll('.headline_bar_text').forEach(el => {
-               el.style.color = '#ffffff';
-            });
+                        if(old_headline_bar_bg !== 'ffffff' && old_headline_bar_bg !== 'eeeeee' 
+                        && old_headline_bar_bg !== 'ffffcc'){
 
-            document.querySelectorAll('.hlGraphic').forEach(img => {
-               if (img.src.includes('_ffffff_')) {
-                  img.src = img.src.replace(
-                     /_([0-9a-fA-F]{6})_/,
-                     `_333333_`
-                  );
+                                 document.querySelectorAll('.headline_bar_bg').forEach(el => {
+                                    el.style.backgroundColor = '#eeeeee';
+                                 });
+
+                        }else{
+                                 console.log('leave headline bar bg as is, already light');
+                        };
+
+                        document.querySelectorAll('.hlGraphic').forEach(img => {
+                           img.src = img.src.replace(
+                              /_([0-9a-fA-F]{6})_/,
+                              (match, currentColor) => {
+                                 currentColor = currentColor.toLowerCase();
+
+                                 return ['ffffff', 'ffffcc', 'eeeeee'].includes(currentColor)
+                                    ? match            // leave as-is
+                                    : `_ffffff_`;      // force to white
+                              }
+                           );
+                        });
+
+               }else if(color==='999999'){
+
+                        console.log('Medium background chosen, showing light colors'); 
+                        document.querySelectorAll('.headline_bar_bg').forEach(el => {
+                           el.style.backgroundColor = '#333333';
+                        });
+                        document.querySelectorAll('.headline_bar_text').forEach(el => {
+                           el.style.color = '#ffffff';
+                        });
+                        document.querySelectorAll('.headline_text').forEach(el => {
+                           el.style.color = '#ffffff';
+                        });
+
+                        // hide light accents
+                        document.querySelectorAll('.light-accents').forEach(el => {
+                           el.style.display = 'none';
+                        });
+
+                        // show dark accents
+                        document.querySelectorAll('.dark-accents').forEach(el => {
+                           el.style.display = '';
+                        });
+
+                        document.querySelectorAll('.hlGraphic').forEach(img => {
+                           if (img.src.includes('_333333_')) {
+                              img.src = img.src.replace(
+                                 /_([0-9a-fA-F]{6})_/,
+                                 `_ffffff_`
+                              );
+                           }
+                        });
+
+               }else if (color === 'eeeeee') {         
+
+                        //background of accent bars
+                        console.log('Light background chosen, showing dark colors');
+
+                        document.querySelectorAll('.accent_bars').forEach(el => {
+                           el.style.backgroundColor = '#333333';
+                        });
+                        //text separator
+                        document.querySelectorAll('.accent_bars').forEach(el => {
+                           el.style.color = '#ffffff';
+                        });
+                        //hyperlinks
+                        document.querySelectorAll('.accent_link').forEach(el => {
+                           el.style.color = '#ffffff';
+                        });
+
+
+                        if(old_headline_bar_bg === 'ffffff' && old_headline_bar_bg === 'eeeeee' 
+                        && old_headline_bar_bg === 'ffffcc'){
+                           document.querySelectorAll('.headline_bar_bg').forEach(el => {
+                              el.style.backgroundColor = '#333333';
+                           });
+                           document.querySelectorAll('.headline_bar_text').forEach(el => {
+                              el.style.color = '#ffffff';
+                           });
+                        }
+
+                        document.querySelectorAll('.hlGraphic').forEach(img => {
+                           if (img.src.includes('_ffffff_')) {
+                              img.src = img.src.replace(
+                                 /_([0-9a-fA-F]{6})_/,
+                                 `_333333_`
+                              );
+                           }
+                        });
+
+                        // hide light accents
+                        document.querySelectorAll('.light-accents').forEach(el => {
+                           el.style.display = 'none';
+                        });
+
+                        // show dark accents
+                        document.querySelectorAll('.dark-accents').forEach(el => {
+                           el.style.display = '';
+                        });
+
+               }else{
+               //any background color other than those specified above
+
+                        document.querySelectorAll('.headline_bar_bg').forEach(el => {
+                           el.style.backgroundColor = '#333333';
+                        });
+                        document.querySelectorAll('.headline_bar_text').forEach(el => {
+                           el.style.color = '#ffffff';
+                        });
+                        document.querySelectorAll('.accent_bars').forEach(el => {
+                           el.style.color = '#333333';
+                        });
+                        document.querySelectorAll('.accent_link').forEach(el => {
+                           el.style.color = '#333333';
+                        });
+                        
+                        // hide light accents
+                        document.querySelectorAll('.light-accents').forEach(el => {
+                           el.style.display = 'none';
+                        });
+                        // show dark accents
+                        document.querySelectorAll('.dark-accents').forEach(el => {
+                           el.style.display = '';
+                        });
+
+                        console.log('final else');
                }
-            });
 
-            // hide light accents
-            document.querySelectorAll('.light-accents').forEach(el => {
-               el.style.display = 'none';
-            });
-
-            // show dark accents
-            document.querySelectorAll('.dark-accents').forEach(el => {
-               el.style.display = '';
-            });
-
-         }else{
-            
-            document.querySelectorAll('.headline_bar_bg').forEach(el => {
-               el.style.backgroundColor = '#333333';
-            });
-            document.querySelectorAll('.headline_bar_text').forEach(el => {
-               el.style.color = '#ffffff';
-            });
-            document.querySelectorAll('.accent_bars').forEach(el => {
-               el.style.color = '#333333';
-            });
-            document.querySelectorAll('.accent_link').forEach(el => {
-               el.style.color = '#333333';
-            });
-            
-            // hide light accents
-            document.querySelectorAll('.light-accents').forEach(el => {
-               el.style.display = 'none';
-            });
-            // show dark accents
-            document.querySelectorAll('.dark-accents').forEach(el => {
-               el.style.display = '';
-            });
-
-            console.log('final else');
-         }
       }else{
+      //accents
 
-         document.querySelectorAll('.headline_bar_bg').forEach(el => {
-            el.style.backgroundColor = color;
-         });
+               document.querySelectorAll('.headline_bar_bg').forEach(el => {
+                  el.style.backgroundColor = color;
+               });
 
-         document.querySelectorAll('.hlGraphic').forEach(img => {
-            img.src = img.src.replace(
-               /_([0-9a-fA-F]{6})_/,
-               `_${color}_`
-            );
-         });
+               document.querySelectorAll('.hlGraphic').forEach(img => {
+                  img.src = img.src.replace(
+                     /_([0-9a-fA-F]{6})_/,
+                     `_${color}_`
+                  );
+               });
 
-         document.querySelectorAll('.accent_bars').forEach(el => {
-            el.style.backgroundColor = '#' + color;
-         });
+               document.querySelectorAll('.accent_bars').forEach(el => {
+                  el.style.backgroundColor = '#' + color;
+               });
 
       }
    }
