@@ -179,7 +179,6 @@ document.addEventListener('DOMContentLoaded', function () {
                            el.style.color = '#ffffff';
                         });
 
-
                         if(old_headline_bar_bg === 'ffffff' && old_headline_bar_bg === 'eeeeee' 
                         && old_headline_bar_bg === 'ffffcc'){
                            document.querySelectorAll('.headline_bar_bg').forEach(el => {
@@ -212,19 +211,22 @@ document.addEventListener('DOMContentLoaded', function () {
                }else{
                //any background color other than those specified above
 
-                        document.querySelectorAll('.headline_bar_bg').forEach(el => {
-                           el.style.backgroundColor = '#333333';
-                        });
-                        document.querySelectorAll('.headline_bar_text').forEach(el => {
-                           el.style.color = '#ffffff';
-                        });
-                        document.querySelectorAll('.accent_bars').forEach(el => {
-                           el.style.color = '#333333';
-                        });
-                        document.querySelectorAll('.accent_link').forEach(el => {
-                           el.style.color = '#333333';
-                        });
-                        
+                        if(old_headline_bar_bg === 'ffffff' && old_headline_bar_bg === 'eeeeee' 
+                        && old_headline_bar_bg === 'ffffcc'){
+                              document.querySelectorAll('.headline_bar_bg').forEach(el => {
+                                 el.style.backgroundColor = '#333333';
+                              });
+                              document.querySelectorAll('.headline_bar_text').forEach(el => {
+                                 el.style.color = '#ffffff';
+                              });
+                              document.querySelectorAll('.accent_bars').forEach(el => {
+                                 el.style.color = '#333333';
+                              });
+                              document.querySelectorAll('.accent_link').forEach(el => {
+                                 el.style.color = '#333333';
+                              });
+                        }
+
                         // hide light accents
                         document.querySelectorAll('.light-accents').forEach(el => {
                            el.style.display = 'none';
