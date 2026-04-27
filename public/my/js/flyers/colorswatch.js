@@ -128,19 +128,15 @@ document.addEventListener('DOMContentLoaded', function () {
             */
 
             document.querySelectorAll('.hlGraphic').forEach(img => {
-               const match = img.src.match(/_([0-9a-fA-F]{6})_/);
-
-               if (!match) return;
-
-               const currentColor = match[1].toLowerCase();
-
-               // skip these colors
-               if (['ffffff', 'ffffcc', 'eeeeee'].includes(currentColor)) return;
-
-               // replace with clicked color
                img.src = img.src.replace(
                   /_([0-9a-fA-F]{6})_/,
-                  `_${color}_`
+                  (match, currentColor) => {
+                     currentColor = currentColor.toLowerCase();
+
+                     return ['ffffff', 'ffffcc', 'eeeeee'].includes(currentColor)
+                        ? match            // leave as-is
+                        : `_ffffff_`;      // force to white
+                  }
                );
             });
 
