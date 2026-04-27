@@ -149,7 +149,7 @@ document.addEventListener('DOMContentLoaded', function () {
                            });
                            document.querySelectorAll('.accent_bars').forEach(el => {
                               el.style.color = '#333333';
-                           }
+                           });
                         }
 
                         document.querySelectorAll('.headline_text').forEach(el => {
