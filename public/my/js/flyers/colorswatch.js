@@ -116,6 +116,15 @@ document.addEventListener('DOMContentLoaded', function () {
                console.log('leave headline bar bg as is, already light');
             };
 
+            document.querySelectorAll('.hlGraphic').forEach(img => {
+               if (img.src.includes('_333333_')) {
+                  img.src = img.src.replace(
+                     /_([0-9a-fA-F]{6})_/,
+                     `_ffffff_`
+                  );
+               }
+            });
+
          }else if(color==='999999'){
 
             console.log('Medium background chosen, showing light colors'); 
@@ -206,6 +215,8 @@ document.addEventListener('DOMContentLoaded', function () {
             document.querySelectorAll('.accent_link').forEach(el => {
                el.style.color = '#333333';
             });
+
+
             
             // hide light accents
             document.querySelectorAll('.light-accents').forEach(el => {
