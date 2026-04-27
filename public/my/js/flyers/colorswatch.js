@@ -270,7 +270,7 @@ document.addEventListener('DOMContentLoaded', function () {
                   el.style.backgroundColor = '#' + color;
                });
 
-               if(color === 'ffc60b'){
+               if(color === 'ffc60b'|| color == 'ffffcc'){
                   document.querySelectorAll('.headline_bar_text').forEach(el => {
                      el.style.color = '#333333';
                   });
