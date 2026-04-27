@@ -163,7 +163,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                         // show dark accents
                         document.querySelectorAll('.dark-accents').forEach(el => {
-                           el.style.display = '';
+                           el.style.display = '';  dfdfd
                         });
 
                         document.querySelectorAll('.hlGraphic').forEach(img => {
