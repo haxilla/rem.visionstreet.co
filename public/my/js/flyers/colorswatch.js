@@ -116,6 +116,7 @@ document.addEventListener('DOMContentLoaded', function () {
                console.log('leave headline bar bg as is, already light');
             };
 
+            /*
             document.querySelectorAll('.hlGraphic').forEach(img => {
                if (img.src.includes('_333333_')) {
                   img.src = img.src.replace(
@@ -123,6 +124,24 @@ document.addEventListener('DOMContentLoaded', function () {
                      `_ffffff_`
                   );
                }
+            });
+            */
+
+            document.querySelectorAll('.hlGraphic').forEach(img => {
+               const match = img.src.match(/_([0-9a-fA-F]{6})_/);
+
+               if (!match) return;
+
+               const currentColor = match[1].toLowerCase();
+
+               // skip these colors
+               if (['ffffff', 'ffffcc', 'eeeeee'].includes(currentColor)) return;
+
+               // replace with clicked color
+               img.src = img.src.replace(
+                  /_([0-9a-fA-F]{6})_/,
+                  `_${color}_`
+               );
             });
 
          }else if(color==='999999'){
