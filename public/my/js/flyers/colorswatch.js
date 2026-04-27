@@ -116,17 +116,6 @@ document.addEventListener('DOMContentLoaded', function () {
                console.log('leave headline bar bg as is, already light');
             };
 
-            /*
-            document.querySelectorAll('.hlGraphic').forEach(img => {
-               if (img.src.includes('_333333_')) {
-                  img.src = img.src.replace(
-                     /_([0-9a-fA-F]{6})_/,
-                     `_ffffff_`
-                  );
-               }
-            });
-            */
-
             document.querySelectorAll('.hlGraphic').forEach(img => {
                img.src = img.src.replace(
                   /_([0-9a-fA-F]{6})_/,
@@ -138,6 +127,10 @@ document.addEventListener('DOMContentLoaded', function () {
                         : `_ffffff_`;      // force to white
                   }
                );
+            });
+
+            document.querySelectorAll('.accent_bars').forEach(el => {
+               el.style.backgroundColor = '#' + color;
             });
 
          }else if(color==='999999'){
