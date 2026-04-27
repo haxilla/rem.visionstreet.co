@@ -134,8 +134,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                         console.log('Medium background chosen, showing light colors'); 
 
-                        if(old_headline_bar_bg === 'ffffff' || old_headline_bar_bg === 'eeeeee' 
-                        || old_headline_bar_bg === 'ffffcc'){
+                        if(old_headline_bar_bg === 'ffffff' || old_headline_bar_bg === 'eeeeee'){
                            document.querySelectorAll('.headline_bar_bg').forEach(el => {
                               el.style.backgroundColor = '#333333';
                            });
