@@ -165,6 +165,14 @@ document.addEventListener('DOMContentLoaded', function () {
                el.style.color = '#ffffff';
             });
 
+            document.querySelectorAll('.headline_bar_bg').forEach(el => {
+               el.style.backgroundColor = '#333333';
+            });
+
+            document.querySelectorAll('.headline_bar_text').forEach(el => {
+               el.style.color = '#ffffff';
+            });
+
             document.querySelectorAll('.hlGraphic').forEach(img => {
                if (img.src.includes('_ffffff_')) {
                   img.src = img.src.replace(
