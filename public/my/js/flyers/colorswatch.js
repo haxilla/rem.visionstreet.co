@@ -232,7 +232,7 @@ document.addEventListener('DOMContentLoaded', function () {
       }else{
 
          document.querySelectorAll('.headline_bar_bg').forEach(el => {
-            el.style.color = color;
+            el.style.backgroundColor = color;
          });
 
       }
