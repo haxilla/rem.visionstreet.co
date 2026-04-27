@@ -146,6 +146,8 @@ document.addEventListener('DOMContentLoaded', function () {
          }else if (color === 'eeeeee') {         
 
             //background of accent bars
+            console.log('Light background chosen, showing dark colors');
+
             document.querySelectorAll('.accent_bars').forEach(el => {
                el.style.backgroundColor = '#333333';
             });
