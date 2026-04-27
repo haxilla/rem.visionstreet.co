@@ -25,6 +25,10 @@ document.addEventListener('DOMContentLoaded', function () {
       const img = document.querySelector('.hlGraphic');
       const headline_graphic_url = img.src;
 
+      const headlineGraphics = document.querySelectorAll('.hlGraphic');
+      const firstHeadlineGraphic = headlineGraphics[0];
+      const headline_graphic_url = firstHeadlineGraphic ? firstHeadlineGraphic.src : '';
+
       //get current headline bar bg color
       const headline_bar_bg = window.getComputedStyle(
          document.querySelector('.headline_bar_bg')
@@ -50,7 +54,6 @@ document.addEventListener('DOMContentLoaded', function () {
       console.log(headline_graphic_url);
       console.log(old_accent_bars);
       console.log('Applying swatch:', { style, color, scheme });
-
 
       // --------------------------
       // APPLY COLORS
@@ -131,21 +134,14 @@ document.addEventListener('DOMContentLoaded', function () {
                el.style.display = '';
             });
 
-            if(headline_graphic_url.includes('_333333_')){
-
-               const img = document.querySelector('.hlGraphic');
-               // set new color from dark to light
-               let newColor = 'ffffff';
-                // or from your swatch - you could also have a data attribute on the swatch for this
-
-               // replace the color in the URL
-               const updatedUrl = headline_graphic_url.replace(
-                  /_([0-9a-fA-F]{6})_/,
-                  `_${newColor}_`
-               );
-
-               img.src = updatedUrl;
-            }
+            document.querySelectorAll('.hlGraphic').forEach(img => {
+               if (img.src.includes('_333333_')) {
+                  img.src = img.src.replace(
+                     /_([0-9a-fA-F]{6})_/,
+                     `_ffffff_`
+                  );
+               }
+            });
 
          }else if (color === 'eeeeee') {         
 
@@ -162,21 +158,14 @@ document.addEventListener('DOMContentLoaded', function () {
                el.style.color = '#ffffff';
             });
 
-            if(headline_graphic_url.includes('_ffffff_')){
-
-               const img = document.querySelector('.hlGraphic');
-
-               // set new color from white to dark
-               let newColor = '333333'; // or from your swatch
-
-               // replace the color in the URL
-               const updatedUrl = headline_graphic_url.replace(
-                  /_([0-9a-fA-F]{6})_/,
-                  `_${newColor}_`
-               );
-
-               // apply it back
-               img.src = updatedUrl;}
+            document.querySelectorAll('.hlGraphic').forEach(img => {
+               if (img.src.includes('_ffffff_')) {
+                  img.src = img.src.replace(
+                     /_([0-9a-fA-F]{6})_/,
+                     `_333333_`
+                  );
+               }
+            });
 
             // hide light accents
             document.querySelectorAll('.light-accents').forEach(el => {
