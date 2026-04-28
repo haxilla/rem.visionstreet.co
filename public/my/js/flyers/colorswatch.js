@@ -160,10 +160,9 @@ document.addEventListener('DOMContentLoaded', function () {
                         document.querySelectorAll('.light-accents').forEach(el => {
                            el.style.display = 'none';
                         });
-
                         // show dark accents
                         document.querySelectorAll('.dark-accents').forEach(el => {
-                           el.style.display = '';  dfdfd
+                           el.style.display = '';
                         });
 
                         document.querySelectorAll('.hlGraphic').forEach(img => {
