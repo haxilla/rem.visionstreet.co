@@ -203,7 +203,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         }
 
                         document.querySelectorAll('.hlGraphic').forEach(img => {
-                           if (img.src.includes('_ffffff_')) {
+                           if (img.src.includes('_ffffff_') || img.src.includes('_ffffcc_') ) {
                               img.src = img.src.replace(
                                  /_([0-9a-fA-F]{6})_/,
                                  `_333333_`
@@ -280,6 +280,7 @@ document.addEventListener('DOMContentLoaded', function () {
                   document.querySelectorAll('.accent_bars').forEach(el => {
                      el.style.color = '#333333';
                   });
+
                }else{
                   
                   document.querySelectorAll('.headline_bar_text').forEach(el => {
