@@ -72,6 +72,12 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
                                 <option value="openhouse">Open House</option>
                                 <option value="reduced">Reduced</option>
                             </select>
+                             <select id="headlineStyle">
+                                <option value="">-- Select Style --</option>
+                                <option value="bold">Bold</option>
+                                <option value="3d">3D</option>
+                                <option value="ul">Underline</option>
+                            </select>
                         </div>
 
                         <div id="edit-text" class="editor-panel hidden">
