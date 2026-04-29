@@ -58,6 +58,7 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
 
                         <div id="edit-headline" class="editor-panel">
                             <select id="headlineSelect">
+                                <option value="">-- Select headline --</option>
                                 <option value="acreage">Acreage</option>
                                 <option value="agentbonus">Agent Bonus</option>
                                 <option value="amazingviews">Amazing Views</option>
