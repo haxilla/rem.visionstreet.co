@@ -57,11 +57,21 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
                     <div class="p-4">
 
                         <div id="edit-headline" class="editor-panel">
-                            <p class="text-xs text-gray-500 mb-2">Main headline</p>
-                            <input type="text" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter headline...">
-                            <p class="text-xs text-gray-500 mt-3 mb-2">Sub headline</p>
-                            <input type="text" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter sub headline...">
-                            <button class="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-2 rounded-lg transition-colors">Apply</button>
+                            <select id="headlineSelect">
+                                <option value="acreage">Acreage</option>
+                                <option value="agentbonus">Agent Bonus</option>
+                                <option value="amazingviews">Amazing Views</option>
+                                <option value="backonmarket">Back On Market</option>
+                                <option value="bankowned">Bank Owned</option>
+                                <option value="greatbuy">Great Buy</option>
+                                <option value="horseproperty">Horse Property</option>
+                                <option value="justlisted">Just Listed</option>
+                                <option value="modelcloseout">Model Closeout</option>
+                                <option value="mustsee">Must See</option>
+                                <option value="old">Old</option>
+                                <option value="openhouse">Open House</option>
+                                <option value="reduced">Reduced</option>
+                            </select>
                         </div>
 
                         <div id="edit-text" class="editor-panel hidden">
