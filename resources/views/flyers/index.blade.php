@@ -69,7 +69,6 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
                                 <option value="justlisted">Just Listed</option>
                                 <option value="modelcloseout">Model Closeout</option>
                                 <option value="mustsee">Must See</option>
-                                <option value="old">Old</option>
                                 <option value="openhouse">Open House</option>
                                 <option value="reduced">Reduced</option>
                             </select>
