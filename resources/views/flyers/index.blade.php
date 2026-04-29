@@ -195,7 +195,9 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
         </script>
     </div>
   </main>
-  <script src="/my/js/flyers/colorswatch.js"></script>
+  <script src="/my/js/flyers/colorswatch.js"></script>  
+  <script src="/my/js/flyers/headline.js"></script>
+
   @include('public.layout.footer')
 </body>
 </html>
