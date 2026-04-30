@@ -24,11 +24,11 @@
                     @foreach($newAdds as $the)
                         @php
                             $photo = $the->thePhotos->where('def','=','1')->first()->photoName;
-                            $listingImg = "/hqphotos/{$the->theMeta->zipDir}/{$the->theMeta->mlsDir}/{$photo}";
+                            $listingImg = "https://realtyrepublic.com/hqphotos/{$the->theMeta->zipDir}/{$the->theMeta->mlsDir}/{$photo}";
 
                             $agentImg = null;
                             if ($the->theAgent->agtPhoto && $the->theAgent->theAgentCleanup) {
-                                $agentImg = "/agentPhotos/{$the->theAgent->theAgentCleanup->newRemID}/{$the->theAgent->agtPhoto}";
+                                $agentImg = "https://realtyrepublic.com/agentPhotos/{$the->theAgent->theAgentCleanup->newRemID}/{$the->theAgent->agtPhoto}";
                             } elseif ($the->theAgent->agtPhoto) {
                                 $agentImg = "https://realtyemails.com/HQoffice/{$the->theOffice->officeID}/{$the->theAgent->agtPhoto}";
                             }
