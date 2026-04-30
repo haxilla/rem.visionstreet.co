@@ -27,7 +27,12 @@ Route::post('/member/login', [guestController::class, 'memberLogin'])->name('mem
 Route::get('/member/login/modal', [guestController::class, 'memberLoginModal'])->name('member.login.modal');
 
 //flyer detail
-Route::get('/flyer/{flyerId}', [guestController::class, 'flyerDetail'])->name('flyer.detail');
+Route::get('/homedetails/{flyerslug}', 
+[guestController::class, 'publicDetails'])->name('public.details');
+
+//flyer detail
+Route::get('/flyer/{flyerId}', 
+[guestController::class, 'flyerDetail'])->name('flyer.detail');
 
 //route for multiple segments
 Route::get('/admin/{segments}', [adminController::class, 'segments'])
