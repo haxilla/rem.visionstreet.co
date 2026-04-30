@@ -4,11 +4,15 @@ document.getElementById('headlineSelect').addEventListener('change', function ()
     document.querySelectorAll('.hlGraphic').forEach(img => {
         const currentSrc = img.src;
 
-        // extract color between _ and _
-        const match = currentSrc.match(/_([0-9a-fA-F]{6})_/);
-        const color = match ? match[1] : 'ffffff'; // fallback if not found
+        // extract color
+        const colorMatch = currentSrc.match(/_([0-9a-fA-F]{6})_/);
+        const color = colorMatch ? colorMatch[1] : 'ffffff';
 
-        img.src = `https://www.realtyrepublic.com/images/headline_graphics/${selected}/ul/${selected}_${color}_ulx.png`;
+        // extract style (ul, bold, 3d)
+        const styleMatch = currentSrc.match(/_([a-z0-9]+)x\.png$/i);
+        const style = styleMatch ? styleMatch[1] : 'ul';
+
+        img.src = `https://www.realtyrepublic.com/images/headline_graphics/${selected}/${style}/${selected}_${color}_${style}x.png`;
     });
 });
 
