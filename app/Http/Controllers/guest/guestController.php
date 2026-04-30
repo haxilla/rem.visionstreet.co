@@ -132,6 +132,7 @@ class guestController extends Controller
 
     public function publicDetails($flyerslug)
     {
+        dd($flyerslug);
         include app_path('queries/flyerslug.php');
         return view('public.details',compact('details'));
     }
