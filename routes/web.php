@@ -24,7 +24,8 @@ Route::get('/member/login', [guestController::class, 'memberLoginForm'])->name('
 Route::post('/member/login', [guestController::class, 'memberLogin'])->name('member.login.submit');
 
 //modal
-Route::get('/member/login/modal', [guestController::class, 'memberLoginModal'])->name('member.login.modal');
+Route::get('/member/login/modal', 
+[guestController::class, 'memberLoginModal'])->name('member.login.modal');
 
 //flyer detail
 Route::get('/homedetails/{flyerslug}', 
