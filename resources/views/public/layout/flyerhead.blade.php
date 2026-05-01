@@ -27,4 +27,11 @@
     .font-display{ font-family: var(--font-display); }
   </style>
 
+  <link rel="stylesheet" type="text/css" href="/my/css/flyers/styles1pc.css">
+  <link rel="stylesheet" type="text/css" href="/my/css/flyers/styles2pb.css">
+  <link rel="stylesheet" type="text/css" href="/my/css/flyers/styles3pt.css">
+  <link rel="stylesheet" type="text/css" href="/my/css/flyers/styles4sp.css">
+  <link rel="stylesheet" type="text/css" href="/my/css/flyers/styles5pt.css">
+  <link rel="stylesheet" type="text/css" href="/my/css/flyers/flyerPreviews.css">
+
 </head>

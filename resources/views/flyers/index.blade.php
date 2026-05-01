@@ -1,4 +1,4 @@
-@include('public.layout.head')
+@include('public.layout.flyerhead')
 
 <body data-section="admin" 
 class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres">

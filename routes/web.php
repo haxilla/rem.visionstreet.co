@@ -20,16 +20,16 @@ Route::post('/admin/login', [guestController::class, 'adminLogin'])->name('admin
 //member/login
 Route::get('/member', fn () => redirect('/member/login'));
 Route::get('/login', fn () => redirect('/member/login'));
-Route::get('/member/login', [guestController::class, 'memberLoginForm'])->name('member.login');
-Route::post('/member/login', [guestController::class, 'memberLogin'])->name('member.login.submit');
+Route::get('/member/login', 
+[guestController::class, 'memberLoginForm'])->name('member.login');
+Route::post('/member/login', 
+[guestController::class, 'memberLogin'])->name('member.login.submit');
 
-//modal
-Route::get('/member/login/modal',[guestController::class, 'memberLoginModal'])->name('member.login.modal');
 
-//flyer detail
-Route::get('/homedetails/{flyerslug}',[guestController::class, 'publicDetails'])->name('public.details');
-
-//flyer detail
+//public details
+Route::get('/homedetails/{flyerslug}',
+[guestController::class, 'publicDetails'])->name('public.details');
+//flyer details
 Route::get('/flyer/{flyerId}', [guestController::class, 'flyerDetail'])->name('flyer.detail');
 
 //route for multiple segments
