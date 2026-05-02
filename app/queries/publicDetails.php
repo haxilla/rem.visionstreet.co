@@ -5,7 +5,7 @@ Use App\Models\Core\Propflyer;
 // query
 $details=Propflyer::select(
    'id','propagent_id','officeID','xFullStreet',
-   'xListPrice','xCity','xState','xZip','xHeadline',
+   'xListPrice','xCity','xState','xZip','xxZip','xHeadline',
    'xMlsNum','xBeds','xxBeds','xBaths','xxBaths',
    'xSqft','xxSqft','xYrBuilt','xVirtualTour',
    'xMlsLink','xxHeadline')
