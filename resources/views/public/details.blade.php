@@ -17,8 +17,10 @@
     $baths = $details->xxBaths ?: $details->xBaths;
     $sqft = $details->xxSqft ?: $details->xSqft;
     $year = $details->xxYrBuilt ?: $details->xYrBuilt;
+    $zip = $details->xxZip ?: $details->xZip;
+    $mls = $details->xMlsNum;
 
-    $photoPath = fn ($photo) => "/photos/{$photo->photoName}";
+    $photoPath = fn ($photo) => "/hqphotos/{$zip}/{$mls}/{$photo->photoName}";
 @endphp
 
 <section class="max-w-[1280px] mx-auto px-4 py-4 text-slate-950">

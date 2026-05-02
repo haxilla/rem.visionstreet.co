@@ -17,12 +17,6 @@ $details=Propflyer::select(
    $q->select('propflyer_id','photoName',
       'photoID','def','ord','orient','resized')
       ->where('resized','=','500');}])
-->with(['theStyle'=>function($q){
-   $q->select('propflyer_id','graphic_words',
-      'graphic_textcolor','graphic_style','colors_chosen',
-      'flyer_background','template','headline_text','headline_chosen',
-      'headline_bar_bg','accentbars','headline_bar_text',
-      'virtualTour_chosen','mlsLink_chosen');}])
 ->with(['theAgent'=>function($q){
    $q->select('id','agtPhoto','agtLogo','officeID',
       'agtFullName','agtDesigs','agtMainPhone');}])
