@@ -9,7 +9,7 @@ $details=Propflyer::select(
    'xMlsNum','xBeds','xxBeds','xBaths','xxBaths',
    'xSqft','xxSqft','xYrBuilt','xVirtualTour',
    'xMlsLink','xxHeadline')
-->where('id','=',"$flyerId")
+->where('url_slug','=',"$flyerslug")
 ->with(['theRemarks'=>function($q){
    $q->select('propflyer_id','xb1','xb2','xb3','xb4',
       'xb5','xb6','xb7','xb8','xPubRemarks');}])
