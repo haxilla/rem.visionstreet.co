@@ -27,5 +27,3 @@ $details=Propflyer::select(
    $q->select('propflyer_id','xIntersection');
 }])
 ->first();
-
-dd($details);
