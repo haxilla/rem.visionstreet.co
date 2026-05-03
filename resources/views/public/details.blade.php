@@ -17,8 +17,8 @@
     $baths = $details->xxBaths ?: $details->xBaths;
     $sqft = $details->xxSqft ?: $details->xSqft;
     $year = $details->xxYrBuilt ?: $details->xYrBuilt;
-    $zip = $details->xxZip;
-    $mls = $details->xMlsNum;
+    $zip = $details->theMeta->zipDir ?? '';
+    $mls = $details->theMeta->mlsDir ?? '';
 
     $photoPath = fn ($photo) => "https://realtyrepublic.com/hqphotos/{$zip}/{$mls}/{$photo->photoName}";
 @endphp
