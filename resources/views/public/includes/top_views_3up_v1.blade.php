@@ -158,7 +158,7 @@
                         $listingImg = "https://realtyrepublic.com/hqphotos/{$the->theMeta->zipDir}/{$the->theMeta->mlsDir}/{$photo}";
                     }
 
-                    $listingURL="https://realtyrepublic.com/homedetails/{$the->url_slug}";
+                    $listingURL="/homedetails/{$the->url_slug}";
 
                     $agentImg = null;
                     if (!empty($the->theAgent?->agtPhoto) && !empty($the->theAgent?->theAgentCleanup?->newRemID)) {
