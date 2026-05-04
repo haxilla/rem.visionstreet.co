@@ -4,7 +4,7 @@
 
 <body class="min-h-screen bg-white pt-[50px] linkcheck">
     @include('public.layout.nav')
-</body>
+
 
 @php
     $photos = $details->thePhotos ?? collect();
@@ -181,5 +181,6 @@
     </div>
 
 </section>
-
+@vite(['resources/js/listing-photo-modal.js'])
+</body>
 </html>
