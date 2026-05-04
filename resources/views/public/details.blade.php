@@ -181,6 +181,6 @@
     </div>
 
 </section>
-@vite(['resources/js/listing-photo-modal.js'])
+@vite(['resources/js/photo-modal.js'])
 </body>
 </html>
