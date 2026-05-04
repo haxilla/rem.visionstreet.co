@@ -5,50 +5,72 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/thumbs';
 
-export default function initPhotoModal() {
+document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('photoModal');
     if (!modal) return;
 
     const closeBtn = document.getElementById('photoModalClose');
 
-    const thumbSwiper = new Swiper('.photo-modal-thumbs', {
-        modules: [Thumbs],
-        slidesPerView: 6,
-        spaceBetween: 10,
-        watchSlidesProgress: true,
-    });
+    let mainSwiper = null;
+    let thumbSwiper = null;
 
-    const mainSwiper = new Swiper('.photo-modal-main', {
-        modules: [Navigation, Thumbs, Keyboard],
-        slidesPerView: 1,
-        navigation: {
-            nextEl: '.photo-modal-next',
-            prevEl: '.photo-modal-prev',
-        },
-        keyboard: { enabled: true },
-        thumbs: { swiper: thumbSwiper },
-    });
+    function initSwipers() {
+        if (mainSwiper) return;
 
-    document.querySelectorAll('[data-photo-open]').forEach((el) => {
-        el.addEventListener('click', () => {
-            const index = parseInt(el.dataset.photoOpen, 10) || 0;
+        thumbSwiper = new Swiper('.photo-modal-thumbs', {
+            modules: [Thumbs],
+            slidesPerView: 6,
+            spaceBetween: 10,
+            watchSlidesProgress: true,
+        });
 
-            modal.classList.remove('hidden');
-            document.body.classList.add('overflow-hidden');
+        mainSwiper = new Swiper('.photo-modal-main', {
+            modules: [Navigation, Thumbs, Keyboard],
+            slidesPerView: 1,
+            spaceBetween: 20,
+            keyboard: {
+                enabled: true,
+                onlyInViewport: false,
+            },
+            navigation: {
+                nextEl: '.photo-modal-next',
+                prevEl: '.photo-modal-prev',
+            },
+            thumbs: {
+                swiper: thumbSwiper,
+            },
+        });
+    }
+
+    function openModal(index) {
+        modal.classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
+
+        initSwipers();
+
+        requestAnimationFrame(() => {
+            mainSwiper.update();
+            thumbSwiper.update();
 
             mainSwiper.slideTo(index, 0);
             thumbSwiper.slideTo(index, 0);
         });
-    });
+    }
 
     function closeModal() {
         modal.classList.add('hidden');
         document.body.classList.remove('overflow-hidden');
     }
 
+    document.querySelectorAll('[data-photo-open]').forEach((el) => {
+        el.addEventListener('click', () => {
+            openModal(parseInt(el.dataset.photoOpen, 10) || 0);
+        });
+    });
+
     closeBtn?.addEventListener('click', closeModal);
 
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') closeModal();
     });
-}
+});
