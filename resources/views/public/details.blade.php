@@ -241,7 +241,7 @@
 
     <div class="swiper photo-modal-main h-[calc(100vh-150px)] pt-16">
         <div class="swiper-wrapper">
-            @foreach($photos as $photo)
+            @foreach($modalPhotos as $photo)
                 <div class="swiper-slide !flex items-center justify-center">
                     <img
                         src="{{ $photoPath($photo) }}"
