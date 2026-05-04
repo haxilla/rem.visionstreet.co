@@ -16,7 +16,7 @@ $details=Propflyer::select(
 ->with(['thePhotos'=>function($q){
    $q->select('propflyer_id','photoName',
       'photoID','def','ord','orient','resized')
-      ->where('resized','=','500');}])
+      ->orderBy('ord');}])
 ->with(['theMeta'=>function($q){
    $q->select('propflyer_id','zipDir','mlsDir','sk1');}])
 ->with(['theAgent'=>function($q){

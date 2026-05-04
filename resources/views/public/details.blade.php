@@ -7,16 +7,38 @@
 
 
 @php
-    $photos = $details->thePhotos ?? collect();
+    $allPhotos = $details->thePhotos ?? collect();
 
-    $hero = $photos->where('def', 1)->first() ?? $photos->first();
-    $thumbs = $photos->where('photoID', '!=', $hero?->photoID)->take(4);
+    // GRID = small (500)
+    $gridPhotos = $allPhotos->where('resized', '500')->values();
+
+    // MODAL = best available
+    $modalPhotos = $allPhotos->where('resized', '1000')->values();
+
+    if ($modalPhotos->isEmpty()) {
+        $modalPhotos = $allPhotos->filter(fn($p) => empty($p->resized))->values();
+    }
+
+    if ($modalPhotos->isEmpty()) {
+        $modalPhotos = $gridPhotos;
+    }
+
+    if ($gridPhotos->isEmpty()) {
+        $gridPhotos = $modalPhotos;
+    }
+
+    $hero = $gridPhotos->where('def', 1)->first() ?? $gridPhotos->first();
+
+    $thumbs = $gridPhotos
+        ->where('photoID', '!=', $hero?->photoID)
+        ->take(4);
 
     $price = number_format($details->xListPrice ?? 0);
     $beds = $details->xxBeds ?: $details->xBeds;
     $baths = $details->xxBaths ?: $details->xBaths;
     $sqft = $details->xxSqft ?: $details->xSqft;
     $year = $details->xxYrBuilt ?: $details->xYrBuilt;
+
     $zip = $details->theMeta->zipDir ?? '';
     $mls = $details->theMeta->mlsDir ?? '';
 
@@ -55,9 +77,13 @@
                     >
 
                     @if($loop->last)
-                        <button class="absolute bottom-4 right-4 bg-white rounded-md px-5 py-3 text-sm font-bold shadow-lg flex items-center gap-2">
+                        <button 
+                        type="button"
+                        data-photo-open="0"
+                        class="absolute bottom-4 right-4 bg-white rounded-md px-5 py-3 text-sm font-bold shadow-lg flex items-center gap-2">
+
                             <span class="text-xl leading-none">▦</span>
-                            See all {{ $photos->count() }} photos
+                            See all {{ $modalPhotos->count() }} photos
                         </button>
                     @endif
                 </div>
@@ -230,7 +256,7 @@
     <div class="absolute bottom-0 left-0 right-0 z-30 h-[110px] bg-black px-6 py-4">
         <div class="swiper photo-modal-thumbs max-w-5xl mx-auto">
             <div class="swiper-wrapper">
-                @foreach($photos as $photo)
+                @foreach($modalPhotos as $photo)
                     <div class="swiper-slide cursor-pointer opacity-60">
                         <img
                             src="{{ $photoPath($photo) }}"
