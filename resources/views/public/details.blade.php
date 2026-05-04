@@ -32,7 +32,8 @@
             @if($hero)
                 <img
                     src="{{ $photoPath($hero) }}"
-                    class="w-full h-full object-cover"
+                    class="w-full h-full object-cover cursor-pointer"
+                    data-photo-open="0"
                     alt="{{ $details->xFullStreet }}"
                 >
             @endif
@@ -48,7 +49,8 @@
                 <div class="relative bg-slate-200 overflow-hidden">
                     <img
                         src="{{ $photoPath($photo) }}"
-                        class="w-full h-full object-cover"
+                        class="w-full h-full object-cover cursor-pointer"
+                        data-photo-open="{{ $loop->iteration }}"
                         alt=""
                     >
 
