@@ -183,6 +183,67 @@
     </div>
 
 </section>
+<div id="photoModal" class="hidden fixed inset-0 z-[9999] bg-black/95">
+
+    <div class="absolute top-4 left-4 right-4 z-20 flex items-center justify-between">
+        <button
+            id="photoModalClose"
+            type="button"
+            class="bg-white text-slate-900 rounded-full px-5 py-2 font-bold shadow"
+        >
+            ✕ Close
+        </button>
+
+        <div class="text-white font-semibold">
+            {{ $details->xFullStreet }}
+        </div>
+    </div>
+
+    <button
+        type="button"
+        class="photo-modal-prev absolute left-4 top-1/2 z-20 -translate-y-1/2 bg-white/90 rounded-full w-12 h-12 text-3xl"
+    >
+        ‹
+    </button>
+
+    <button
+        type="button"
+        class="photo-modal-next absolute right-4 top-1/2 z-20 -translate-y-1/2 bg-white/90 rounded-full w-12 h-12 text-3xl"
+    >
+        ›
+    </button>
+
+    <div class="swiper photo-modal-main h-[calc(100vh-130px)] pt-16">
+        <div class="swiper-wrapper">
+            @foreach($photos as $photo)
+                <div class="swiper-slide flex items-center justify-center px-16">
+                    <img
+                        src="{{ $photoPath($photo) }}"
+                        class="max-h-full max-w-full object-contain"
+                        alt=""
+                    >
+                </div>
+            @endforeach
+        </div>
+    </div>
+
+    <div class="absolute bottom-0 left-0 right-0 z-20 bg-black/80 px-6 py-4">
+        <div class="swiper photo-modal-thumbs max-w-5xl mx-auto">
+            <div class="swiper-wrapper">
+                @foreach($photos as $photo)
+                    <div class="swiper-slide cursor-pointer opacity-60 hover:opacity-100">
+                        <img
+                            src="{{ $photoPath($photo) }}"
+                            class="h-20 w-full object-cover rounded"
+                            alt=""
+                        >
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
+
+</div>
 @vite(['resources/js/photo-modal.js'])
 </body>
 </html>
