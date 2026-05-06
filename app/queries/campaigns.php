@@ -12,17 +12,18 @@ $theDate = Carbon::today()->subDays(7);
 | Requested, not started, not completed
 */
 
-$waitingCampsQuery = propdelivnow::select(
-    'propflyer_id',
-    'propagent_id',
-    'emRequest',
-    'campLabel',
-    'authorized',
-    'emStart',
-    'cid',
-    'emArea',
-    'emArea_display',
-    'emSubject'
+$waitingCampsQuery = propdelivnow::with('theFlyer')
+    ->select(
+        'propflyer_id',
+        'propagent_id',
+        'emRequest',
+        'campLabel',
+        'authorized',
+        'emStart',
+        'cid',
+        'emArea',
+        'emArea_display',
+        'emSubject'
 )
 ->whereNotNull('emRequest')
 ->whereNull('emStart')
@@ -51,17 +52,18 @@ $waitingFlyerCamps = $waitingCampsMap->groupBy('propflyer_id');
 | Requested, started, not completed
 */
 
-$inProgressCampsQuery = propdelivnow::select(
-    'propflyer_id',
-    'propagent_id',
-    'emRequest',
-    'campLabel',
-    'authorized',
-    'emStart',
-    'cid',
-    'emArea',
-    'emArea_display',
-    'emSubject'
+$inProgressCampsQuery = propdelivnow::with('theFlyer')
+    select(
+        'propflyer_id',
+        'propagent_id',
+        'emRequest',
+        'campLabel',
+        'authorized',
+        'emStart',
+        'cid',
+        'emArea',
+        'emArea_display',
+        'emSubject'
 )
 ->whereNotNull('emRequest')
 ->whereNotNull('emStart')
@@ -90,18 +92,19 @@ $inProgressFlyerCamps = $inProgressCampsMap->groupBy('propflyer_id');
 | Completed within last 7 days
 */
 
-$completeCampsQuery = Propdelivnow::select(
-    'propflyer_id',
-    'propagent_id',
-    'emRequest',
-    'campLabel',
-    'authorized',
-    'emStart',
-    'emComplete',
-    'cid',
-    'emArea',
-    'emArea_display',
-    'emSubject'
+$completeCampsQuery = Propdelivnow::with('theFlyer')
+    ->select(
+        'propflyer_id',
+        'propagent_id',
+        'emRequest',
+        'campLabel',
+        'authorized',
+        'emStart',
+        'emComplete',
+        'cid',
+        'emArea',
+        'emArea_display',
+        'emSubject'
 )
 ->whereNotNull('emComplete')
 ->orderBy('emComplete', 'desc')
@@ -132,3 +135,5 @@ $completeFlyerCamps = $completeCampsMap->groupBy('propflyer_id');
 $campaignsWaiting       = $waitingCampsQuery->count();
 $campaignsInProgress    = $inProgressCampsQuery->count();
 $campaignsCompleted     = $completeCampsQuery->count();
+
+dd($campaignsWaiting, $campaignsInProgress, $campaignsCompleted);
