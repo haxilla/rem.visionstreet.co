@@ -231,7 +231,7 @@ class="relative bg-white min-h-screen font-sans text-gray-800">
                     <div class="border rounded p-3 mb-2">
 
                         <div class="font-medium">
-                            Flyer {{ $flyerId }}
+                            Flyer {{ $flyerId }}: {{ $first['address'] ?? 'No Address' }}
                         </div>
 
                         <div class="text-sm text-gray-600">
@@ -264,7 +264,7 @@ class="relative bg-white min-h-screen font-sans text-gray-800">
 
                         <div class="font-medium">
                             <a href="/flyer/{{ $flyerId }}">
-                                Flyer {{ $flyerId }}
+                                Flyer {{ $flyerId }}: {{ $first['address'] ?? 'No Address' }}
                             </a>
                         </div>
 
