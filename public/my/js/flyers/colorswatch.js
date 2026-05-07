@@ -295,7 +295,7 @@ document.addEventListener('DOMContentLoaded', function () {
                      el.style.color = '#ffffff';
                   });
                   document.querySelectorAll('.accent_text').forEach(el => {
-                     el.style.backgroundColor = color;
+                     el.style.color = color;
                   });
 
 
