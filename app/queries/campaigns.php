@@ -136,4 +136,5 @@ $campaignsWaiting       = $waitingCampsQuery->count();
 $campaignsInProgress    = $inProgressCampsQuery->count();
 $campaignsCompleted     = $completeCampsQuery->count();
 
-dd($campaignsWaiting, $campaignsInProgress, $campaignsCompleted);
+dd($campaignsWaiting, $campaignsInProgress, 
+$campaignsCompleted,$completeCampsQuery);
