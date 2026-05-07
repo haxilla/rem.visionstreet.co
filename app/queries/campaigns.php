@@ -53,7 +53,7 @@ $waitingFlyerCamps = $waitingCampsMap->groupBy('propflyer_id');
 */
 
 $inProgressCampsQuery = propdelivnow::with('theFlyer')
-    select(
+    ->select(
         'propflyer_id',
         'propagent_id',
         'emRequest',
