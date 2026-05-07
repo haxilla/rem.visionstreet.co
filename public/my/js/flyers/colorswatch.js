@@ -287,6 +287,12 @@ document.addEventListener('DOMContentLoaded', function () {
                      el.style.color = '#333333';
                   });
 
+               }else if(color === 'ffffff' 
+                  || color === 'eeeeee' 
+                  || color === 'ffffcc'){
+
+                     console.log('Light accent chosen, showing dark colors');
+
                }else{
                   
                   document.querySelectorAll('.headline_bar_text').forEach(el => {
