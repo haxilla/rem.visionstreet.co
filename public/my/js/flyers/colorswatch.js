@@ -237,6 +237,9 @@ document.addEventListener('DOMContentLoaded', function () {
                               document.querySelectorAll('.accent_link').forEach(el => {
                                  el.style.color = '#333333';
                               });
+                              document.querySelectorAll('.accent_text').forEach(el => {
+                                 el.style.color = color;
+                              });
                         }
 
                         // hide light accents
