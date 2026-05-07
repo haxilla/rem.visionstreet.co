@@ -279,6 +279,9 @@ document.addEventListener('DOMContentLoaded', function () {
                   document.querySelectorAll('.accent_bars').forEach(el => {
                      el.style.color = '#333333';
                   });
+                  document.querySelectorAll('.accent_text').forEach(el => {
+                     el.style.color = '#333333';
+                  });
 
                }else{
                   
@@ -290,6 +293,9 @@ document.addEventListener('DOMContentLoaded', function () {
                   });
                   document.querySelectorAll('.accent_bars').forEach(el => {
                      el.style.color = '#ffffff';
+                  });
+                  document.querySelectorAll('.accent_text').forEach(el => {
+                     el.style.backgroundColor = color;
                   });
 
 
