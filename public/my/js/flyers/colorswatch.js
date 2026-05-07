@@ -222,7 +222,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
                }else{
                //any background color other than those specified above
-
+                        document.querySelectorAll('.accent_text').forEach(el => {
+                           el.style.color = color;
+                        });
                         if(old_headline_bar_bg === 'ffffff' || old_headline_bar_bg === 'eeeeee' 
                         || old_headline_bar_bg === 'ffffcc'){
                               document.querySelectorAll('.headline_bar_bg').forEach(el => {
@@ -236,9 +238,6 @@ document.addEventListener('DOMContentLoaded', function () {
                               });
                               document.querySelectorAll('.accent_link').forEach(el => {
                                  el.style.color = '#333333';
-                              });
-                              document.querySelectorAll('.accent_text').forEach(el => {
-                                 el.style.color = color;
                               });
                         }
 
