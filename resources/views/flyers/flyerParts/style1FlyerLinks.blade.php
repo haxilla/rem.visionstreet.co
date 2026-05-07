@@ -15,11 +15,7 @@
   @endif">
     <div style="display:inline-block;">
       <a href="#"
-      style="@if($propInfo->theStyle->accentbars=='ffc60b')
-        color:#333333;
-      @else
-        color:#ffffff;
-      @endif
+      style="color:#{{$propInfo->theStyle->headline_bar_text}};
       font-size:9pt;font-weight:bold;
       text-decoration:none;" target="_blank"
       class="accent_link">
@@ -27,7 +23,8 @@
       </a>
     </div>
     @if($propInfo['xMlsLink'])
-      <div style="display:inline-block;
+      <div style="color:#{{$propInfo->theStyle->headline_bar_text}};
+      display:inline-block;
       padding:5px;
       padding-top:0;
       padding-bottom:0;">
@@ -35,7 +32,8 @@
       </div>
       <div style="display:inline-block;">
         <a href="#"
-        style="font-size:9pt;font-weight:bold;
+        style="color:#{{$propInfo->theStyle->headline_bar_text}};
+        font-size:9pt;font-weight:bold;
         color:#{{$propInfo->theStyle->headline_bar_text}};
         text-decoration:none;" target="_blank"
         class="accent_link">
@@ -45,7 +43,8 @@
     @endif
     @if($propInfo['xVirtualTour'])
       <div class="style1LinkDivider"
-      style="display:inline-block;
+      style="color:#{{$propInfo->theStyle->headline_bar_text}};
+      display:inline-block;
       padding:5px;
       padding-top:0;
       padding-bottom:0;">
@@ -53,7 +52,8 @@
       </div>
       <div style="display:inline-block;">
         <a href="#"
-        style="font-size:10pt;
+        style="  
+        font-size:10pt;
         color:#{{$propInfo->theStyle->headline_bar_text}};
         text-decoration:none;" target="_blank">
             Virtual Tour
