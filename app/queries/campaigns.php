@@ -140,4 +140,4 @@ $campaignsInProgress    = $inProgressCampsQuery->count();
 $campaignsCompleted     = $completeCampsQuery->count();
 
 dd($campaignsWaiting, $campaignsInProgress, 
-$campaignsCompleted,$completeCampsQuery);
+$campaignsCompleted,$completeCampsMap, $inProgressCampsMap, $waitingCampsMap);
