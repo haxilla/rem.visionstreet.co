@@ -5,6 +5,8 @@ if ($agentInfo->agtPhoto && $agentInfo->theAgentCleanup) {
 } elseif ($agentInfo->agtPhoto) {
     $agentImg = "https://realtyemails.com/HQoffice/{$officeInfo->officeID}/{$agentInfo->agtPhoto}";
 }
+
+officeLogo="https://realtyrepublic.com/officeLogos/{$officeInfo->officeID}/{$officeInfo->officeLogo}";
 @endphp
 
 <div style="background-color:#f9f9f9;line-height:1.45;color:#333;
@@ -88,7 +90,7 @@ font-family:arial;">
         <div>
           @if($agentInfo->agtLogo)
           <img
-              src="{{ $fromURL }}/hqoffice/{{ $officeInfo->officeID }}/logos/{{ $agentInfo->agtLogo }}"
+              src="{{ $officeLogo }}"
               style="width:100%;">
           @endif
         </div>
