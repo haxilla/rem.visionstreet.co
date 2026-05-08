@@ -8,7 +8,7 @@ if ($agentInfo->agtPhoto && $agentInfo->theAgentCleanup) {
     $agentImg = "https://realtyemails.com/HQoffice/{$officeInfo->officeID}/{$agentInfo->agtPhoto}";
 }
 
-$officeLogo="https://realtyrepublic.com/officeLogos/{$officeInfo->officeID}/{$officeInfo->logo}";
+$officeLogo="https://realtyrepublic.com/officeLogos/{$officeInfo->officeID}/{$agentInfo->agtLogo}";
 @endphp
 
 <div style="background-color:#f9f9f9;line-height:1.45;color:#333;
