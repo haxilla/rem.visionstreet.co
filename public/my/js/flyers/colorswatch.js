@@ -291,7 +291,7 @@ document.addEventListener('DOMContentLoaded', function () {
                   || color === 'eeeeee' 
                   || color === 'ffffcc'){
 
-                     console.log('Light accent chosen, showing dark colors');
+                     console.log('do not change');
 
                }else{
                   

@@ -1,3 +1,11 @@
+@php
+if ($the->theAgent->agtPhoto && $the->theAgent->theAgentCleanup) {
+    $agentImg = "https://realtyrepublic.com/agentPhotos/{$the->theAgent->theAgentCleanup->newRemID}/{$the->theAgent->agtPhoto}";
+} elseif ($the->theAgent->agtPhoto) {
+    $agentImg = "https://realtyemails.com/HQoffice/{$the->theOffice->officeID}/{$the->theAgent->agtPhoto}";
+}
+@endphp
+
 <div style="background-color:#f9f9f9;line-height:1.45;color:#333;
 font-family:arial;">
 <table style="text-align:left;width:100%;">
@@ -22,7 +30,7 @@ font-family:arial;">
       <div style="width:100%;">
         @if($agentInfo->agtPhoto)
         <img
-          src="{{$fromURL2}}/hqoffice/{{ $officeInfo->officeID }}/{{ $agentInfo->agtPhoto }}"
+          src="{{ $agentImg }}"
           class="agentImage"
           @if($display=='email')
             style="display:block;
