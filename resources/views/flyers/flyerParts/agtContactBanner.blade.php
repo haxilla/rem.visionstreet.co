@@ -1,8 +1,9 @@
+
 @php
-if ($the->theAgent->agtPhoto && $the->theAgent->theAgentCleanup) {
-    $agentImg = "https://realtyrepublic.com/agentPhotos/{$the->theAgent->theAgentCleanup->newRemID}/{$the->theAgent->agtPhoto}";
-} elseif ($the->theAgent->agtPhoto) {
-    $agentImg = "https://realtyemails.com/HQoffice/{$the->theOffice->officeID}/{$the->theAgent->agtPhoto}";
+if ($agentInfo->agtPhoto && $agentInfo->theAgentCleanup) {
+    $agentImg = "https://realtyrepublic.com/agentPhotos/{$agentInfo->theAgentCleanup->newRemID}/{$agentInfo->agtPhoto}";
+} elseif ($agentInfo->agtPhoto) {
+    $agentImg = "https://realtyemails.com/HQoffice/{$officeInfo->officeID}/{$agentInfo->agtPhoto}";
 }
 @endphp
 
