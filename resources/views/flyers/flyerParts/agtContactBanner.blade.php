@@ -93,7 +93,7 @@ font-family:arial;">
           @if($agentInfo->agtLogo)
           <img
               src="{{ $officeLogo }}"
-              style="max-width:100%;height:100px;">
+              style="max-width:100%;max-height:100px;">
           @endif
         </div>
       </div>
