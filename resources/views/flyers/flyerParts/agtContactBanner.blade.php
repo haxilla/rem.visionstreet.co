@@ -31,7 +31,7 @@ font-family:arial;">
           class="agentImage"
             style="display:block;
             max-width:100%;
-            max-height:135px;
+            max-height:90px;
             padding-left:15px;">
         @endif
       </div>
