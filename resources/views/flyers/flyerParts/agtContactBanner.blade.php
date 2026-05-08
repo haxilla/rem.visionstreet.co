@@ -86,14 +86,13 @@ font-family:arial;">
         </div>
       </div>
     </td>
-    <td style="vertical-align:bottom;width:15%;
+    <td style="vertical-align:bottom;width:20%;
     padding-right:15px;text-align:right;">
       <div>
         <div>
           @if($agentInfo->agtLogo)
           <img
-              src="{{ $officeLogo }}"
-              style="width:150px;">
+              src="{{ $officeLogo }}">
           @endif
         </div>
       </div>
