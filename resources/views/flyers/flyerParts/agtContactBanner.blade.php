@@ -33,12 +33,10 @@ font-family:arial;">
         <img
           src="{{ $agentImg }}"
           class="agentImage"
-          @if($display=='email')
             style="display:block;
             max-width:100%;
             max-height:135px;
-            padding-left:15px;"
-          @endif>
+            padding-left:15px;">
         @endif
       </div>
     </td>
