@@ -13,10 +13,8 @@ font-family:arial;">
   <tr>
     <td colspan="4">
       <div class="flyerForMoreInfo"
-        @if($display=='email')
           style="padding:15px;
-          font-size:10pt;"
-        @endif>
+          font-size:10pt;">
         For More information contact:
       </div>
     </td>
@@ -24,10 +22,8 @@ font-family:arial;">
   <tr>
     @if($agentInfo->agtPhoto)
     <td class="agentPhotoSection"
-      @if($display=='email')
         style="vertical-align:bottom;
-        width:20%;"
-      @endif>
+        width:20%;">
       <div style="width:100%;">
         @if($agentInfo->agtPhoto)
         <img
@@ -42,14 +38,12 @@ font-family:arial;">
     </td>
     @endif
     <td class="agentInfoSection"
-      @if($display=='email')
         style="vertical-align:bottom;
         margin:0;
         padding:0;
         width:50%;
         padding-left:15px;
-        font-size:10pt;"
-      @endif>
+        font-size:10pt;">
       <div>
         <div>
           <div style="display:inline-block;font-weight:bold;" id="bannerAgtFullName">
