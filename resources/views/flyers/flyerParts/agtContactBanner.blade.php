@@ -1,5 +1,7 @@
 
 @php
+
+dd($officeInfo,$agentInfo);
 if ($agentInfo->agtPhoto && $agentInfo->theAgentCleanup) {
     $agentImg = "https://realtyrepublic.com/agentPhotos/{$agentInfo->theAgentCleanup->newRemID}/{$agentInfo->agtPhoto}";
 } elseif ($agentInfo->agtPhoto) {
