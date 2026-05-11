@@ -205,15 +205,18 @@
             </div>
 
             <hr class="my-8 border-slate-300 max-w-[760px]">
-            <iframe
-                width="100%"
-                height="450"
-                class="w-full rounded-xl"
-                style="border:0;"
-                loading="lazy"
-                allowfullscreen
-                src="https://www.google.com/maps?q={{ $mapAddress }}&output=embed">
-            </iframe>
+
+            <div class="max-w-[760px] mb-6 rounded-xl overflow-hidden border border-slate-200">
+                <iframe
+                    width="100%"
+                    height="450"
+                    class="w-full rounded-xl"
+                    style="border:0;"
+                    loading="lazy"
+                    allowfullscreen
+                    src="https://www.google.com/maps?q={{ $mapAddress }}&output=embed">
+                </iframe>
+            </div>
             <hr class="my-8 border-slate-300 max-w-[760px]">
 
 
