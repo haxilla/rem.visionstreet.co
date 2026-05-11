@@ -7,7 +7,6 @@
 
 
 @php
-    dd($details);
     $allPhotos = $details->thePhotos ?? collect();
 
     // GRID = small (500)
@@ -148,7 +147,7 @@
 
                 <div class="bg-slate-100 rounded px-4 py-4 flex items-center gap-3">
                     <span class="text-xl">⌂</span>
-                    <span>{{ $details->xb1 }}</span>
+                    <span>{{ $details->theRemarks->xb1 }}</span>
                 </div>
 
                 <div class="bg-slate-100 rounded px-4 py-4 flex items-center gap-3">
