@@ -7,6 +7,7 @@
 
 
 @php
+    dd($details);
     $allPhotos = $details->thePhotos ?? collect();
 
     // GRID = small (500)
