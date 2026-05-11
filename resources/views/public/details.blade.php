@@ -191,6 +191,64 @@
         </main>
 
         {{-- Sidebar --}}
+
+        <div style="margin:0; padding:20px; background:#f5f5f5; display:flex; justify-content:center;">
+
+        <div style="width:240px; font-family:'Georgia',serif; background:#fff; border:1px solid #ddd; border-radius:4px; overflow:hidden; box-shadow: 2px 4px 16px rgba(0,0,0,0.10);">
+
+            <div style="background:#1a3a5c; padding:22px 16px 14px; text-align:center;">
+            <p style="color:#c8a84b; font-size:11px; letter-spacing:2px; text-transform:uppercase; margin:0 0 4px; font-family:Arial,sans-serif; font-weight:700;">Send an E-Flyer</p>
+            <p style="color:#e8e0d0; font-size:11px; letter-spacing:1px; text-transform:uppercase; margin:0 0 12px; font-family:Arial,sans-serif;">Starting at</p>
+            <div style="width:72px; height:72px; background:#c8a84b; border-radius:50%; margin:0 auto 10px; display:flex; align-items:center; justify-content:center; border:3px solid #fff;">
+                <span style="color:#1a3a5c; font-size:28px; font-weight:700; font-family:Arial,sans-serif; line-height:1;">$9</span>
+            </div>
+            </div>
+
+            <div style="background:#c8a84b; padding:10px 16px; text-align:center;">
+            <p style="margin:0; color:#1a3a5c; font-size:11px; letter-spacing:2px; text-transform:uppercase; font-weight:700; font-family:Arial,sans-serif;">Premium Services for Less</p>
+            </div>
+
+            <div style="background:#fff; padding:14px 18px 6px;">
+            <ul style="list-style:none; margin:0; padding:0;">
+                <li style="display:flex; align-items:flex-start; gap:8px; padding:6px 0; border-bottom:1px solid #f0ede6; font-family:Arial,sans-serif; font-size:12.5px; color:#2c2c2a;">
+                <span style="color:#c8a84b; font-weight:700; margin-top:1px;">&#10003;</span> Instant Proof &amp; Delivery
+                </li>
+                <li style="display:flex; align-items:flex-start; gap:8px; padding:6px 0; border-bottom:1px solid #f0ede6; font-family:Arial,sans-serif; font-size:12.5px; color:#2c2c2a;">
+                <span style="color:#c8a84b; font-weight:700; margin-top:1px;">&#10003;</span> Instant Copy to Home Seller
+                </li>
+                <li style="display:flex; align-items:flex-start; gap:8px; padding:6px 0; border-bottom:1px solid #f0ede6; font-family:Arial,sans-serif; font-size:12.5px; color:#2c2c2a;">
+                <span style="color:#c8a84b; font-weight:700; margin-top:1px;">&#10003;</span> Flyers Saved &amp; Editable for Resends
+                </li>
+                <li style="display:flex; align-items:flex-start; gap:8px; padding:6px 0; border-bottom:1px solid #f0ede6; font-family:Arial,sans-serif; font-size:12.5px; color:#2c2c2a;">
+                <span style="color:#c8a84b; font-weight:700; margin-top:1px;">&#10003;</span> Upload Unlimited Photos
+                </li>
+                <li style="display:flex; align-items:flex-start; gap:8px; padding:6px 0; border-bottom:1px solid #f0ede6; font-family:Arial,sans-serif; font-size:12.5px; color:#2c2c2a;">
+                <span style="color:#c8a84b; font-weight:700; margin-top:1px;">&#10003;</span> FREE Web Page Slide Show
+                </li>
+                <li style="display:flex; align-items:flex-start; gap:8px; padding:6px 0; border-bottom:1px solid #f0ede6; font-family:Arial,sans-serif; font-size:12.5px; color:#2c2c2a;">
+                <span style="color:#c8a84b; font-weight:700; margin-top:1px;">&#10003;</span> FREE Page View Reports
+                </li>
+                <li style="display:flex; align-items:flex-start; gap:8px; padding:6px 0; border-bottom:1px solid #f0ede6; font-family:Arial,sans-serif; font-size:12.5px; color:#2c2c2a;">
+                <span style="color:#c8a84b; font-weight:700; margin-top:1px;">&#10003;</span> Personal Contact Copy Center
+                </li>
+                <li style="display:flex; align-items:flex-start; gap:8px; padding:6px 0; font-family:Arial,sans-serif; font-size:12.5px; color:#2c2c2a;">
+                <span style="color:#c8a84b; font-weight:700; margin-top:1px;">&#10003;</span> Multiple Flyer Templates
+                </li>
+            </ul>
+            </div>
+
+            <div style="padding:6px 18px 4px; text-align:center;">
+            <p style="margin:0; font-family:Arial,sans-serif; font-size:13px; font-weight:700; color:#1a3a5c; letter-spacing:1px; text-transform:uppercase;">And More!</p>
+            </div>
+
+            <div style="padding:12px 16px 18px;">
+            <a href="#" style="display:block; width:100%; background:#1a3a5c; color:#fff; text-decoration:none; text-align:center; border-radius:3px; padding:11px 0; font-family:Arial,sans-serif; font-size:12px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; box-sizing:border-box;">Get Started</a>
+            </div>
+
+        </div>
+
+        </div>
+
         <aside class="lg:pt-0">
             <div class="border border-slate-300 rounded-xl p-5 sticky top-5">
                 <button class="w-full bg-blue-600 hover:bg-blue-700 text-white rounded px-4 py-5 font-bold leading-tight">
