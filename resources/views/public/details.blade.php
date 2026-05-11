@@ -42,6 +42,13 @@
     $mls = $details->theMeta->mlsDir ?? '';
 
     $photoPath = fn ($photo) => "https://realtyrepublic.com/hqphotos/{$zip}/{$mls}/{$photo->photoName}";
+
+    $mapAddress = urlencode(
+        $details->xFullStreet . ', ' .
+        $details->xCity . ', ' .
+        $details->xState . ' ' .
+        $details->xZip
+    );
 @endphp
 
 <style>
@@ -198,6 +205,17 @@
             </div>
 
             <hr class="my-8 border-slate-300 max-w-[760px]">
+            <iframe
+                width="100%"
+                height="450"
+                class="w-full rounded-xl"
+                style="border:0;"
+                loading="lazy"
+                allowfullscreen
+                src="https://www.google.com/maps?q={{ $mapAddress }}&output=embed">
+            </iframe>
+            <hr class="my-8 border-slate-300 max-w-[760px]">
+
 
             {{-- Remarks --}}
             <section class="max-w-[760px]">
