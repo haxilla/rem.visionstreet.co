@@ -6,7 +6,7 @@
     @include('public.layout.nav')
 
 @php
-    dd($details);
+
     $allPhotos = $details->thePhotos ?? collect();
 
     // GRID = small (500)
@@ -50,6 +50,23 @@
         $details->xState . ' ' .
         $details->xZip
     );
+
+        $agent = $details->theAgent ?? null;
+    $office = $details->theOffice ?? null;
+
+    $agentImg = null;
+
+    if ($agent?->agtPhoto && $agent?->theAgentCleanup) {
+        $agentImg = "https://realtyrepublic.com/agentPhotos/{$agent->theAgentCleanup->newRemID}/{$agent->agtPhoto}";
+    } elseif ($agent?->agtPhoto && $office?->officeID) {
+        $agentImg = "https://realtyemails.com/HQoffice/{$office->officeID}/{$agent->agtPhoto}";
+    }
+
+    $officeLogo = null;
+
+    if ($agent?->agtLogo && $office?->officeID) {
+        $officeLogo = "https://realtyrepublic.com/officeLogos/{$office->officeID}/{$agent->agtLogo}";
+    }
 @endphp
 
 <style>
@@ -281,6 +298,63 @@
                     </button>
                 </div>
             </aside>
+
+            @if($agent)
+    <div class="rounded-2xl bg-white shadow p-5">
+        <div class="flex items-start gap-4">
+
+            @if($agentImg)
+                <img
+                    src="{{ $agentImg }}"
+                    alt="{{ $agent->agtFullName }}"
+                    class="w-20 h-20 rounded-full object-cover bg-slate-100"
+                >
+            @endif
+
+            <div class="flex-1">
+                <div class="text-lg font-bold text-slate-900">
+                    {{ $agent->agtFullName }}
+                </div>
+
+                @if($agent->agtDesignations)
+                    <div class="text-sm text-slate-500">
+                        {{ $agent->agtDesignations }}
+                    </div>
+                @endif
+
+                @if($agent->agtMainPhone)
+                    <div class="mt-2 text-sm font-semibold text-slate-800">
+                        {{ $agent->agtMainPhone }}
+                    </div>
+                @endif
+
+                @if($office?->officeName)
+                    <div class="mt-2 text-sm text-slate-600">
+                        {{ $office->officeName }}
+                    </div>
+                @endif
+
+                @if($office?->officeAddress1 || $office?->officeCity)
+                    <div class="text-sm text-slate-500">
+                        {{ $office->officeAddress1 }}
+                        {{ $office->officeCity }},
+                        {{ $office->officeState }}
+                        {{ $office->officeZip }}
+                    </div>
+                @endif
+            </div>
+
+            @if($officeLogo)
+                <img
+                    src="{{ $officeLogo }}"
+                    alt="{{ $office?->officeName }}"
+                    class="w-24 max-h-16 object-contain"
+                >
+            @endif
+
+        </div>
+    </div>
+@endif
 
         </div>{{-- end right column --}}
 
