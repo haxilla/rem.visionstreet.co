@@ -152,27 +152,27 @@
 
                 <div class="bg-slate-100 rounded px-4 py-4 flex items-center gap-3">
                     <span class="text-xl">⚒</span>
-                    <span>Built in {{ $year }}</span>
+                    <span>{{ $details->theRemarks->xb2 }}</span>
                 </div>
 
                 <div class="bg-slate-100 rounded px-4 py-4 flex items-center gap-3">
                     <span class="text-xl">♙</span>
-                    <span>0.44 Acres Lot</span>
+                    <span>{{ $details->theRemarks->xb3 }}</span>
                 </div>
 
                 <div class="bg-slate-100 rounded px-4 py-4 flex items-center gap-3">
                     <span class="text-xl">▰</span>
-                    <span>$-- Zestimate®</span>
+                    <span>{{ $details->theRemarks->xb4 }}</span>
                 </div>
 
                 <div class="bg-slate-100 rounded px-4 py-4 flex items-center gap-3">
                     <span class="text-xl">▥</span>
-                    <span>$283/sqft</span>
+                    <span>{{ $details->theRemarks->xb5 }}</span>
                 </div>
 
                 <div class="bg-slate-100 rounded px-4 py-4 flex items-center gap-3">
                     <span class="text-xl">♧</span>
-                    <span>$427/mo HOA</span>
+                    <span>{{ $details->theRemarks->xb6 }}</span>
                 </div>
 
             </div>
