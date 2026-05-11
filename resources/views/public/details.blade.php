@@ -253,52 +253,6 @@
         <div class="flex flex-col gap-4">
 
             {{-- E-Flyer Sidebar --}}
-            <div class="sdb">
-                <div class="sdb-top">
-                    <p class="sdb-eyebrow">For Real Estate Agents</p>
-                    <p class="sdb-headline">Email your listing to thousands of interested buyers &amp; agents — instantly</p>
-                    <div class="sdb-badge"><span class="sdb-price">$9</span></div>
-                    <p class="sdb-from">Starting at just $9</p>
-                </div>
-
-                <div class="sdb-band"><p>Premium Services for Less</p></div>
-
-                <div class="sdb-list">
-                    <ul>
-                        <li><span class="sdb-check">&#10003;</span> Instant Proof &amp; Delivery</li>
-                        <li><span class="sdb-check">&#10003;</span> Instant Copy to Home Seller</li>
-                        <li><span class="sdb-check">&#10003;</span> Flyers Saved &amp; Editable for Resends</li>
-                        <li><span class="sdb-check">&#10003;</span> Upload Unlimited Photos</li>
-                        <li><span class="sdb-check">&#10003;</span> FREE Web Page Slide Show</li>
-                        <li><span class="sdb-check">&#10003;</span> FREE Page View Reports</li>
-                        <li><span class="sdb-check">&#10003;</span> Personal Contact Copy Center</li>
-                        <li><span class="sdb-check">&#10003;</span> Multiple Flyer Templates</li>
-                    </ul>
-                </div>
-
-                <div class="sdb-more">And More!</div>
-
-                <div class="sdb-cta">
-                    <a href="#" class="sdb-btn">Send My Listing Now</a>
-                </div>
-            </div>
-
-            {{-- Contact / Tour sidebar --}}
-            <aside>
-                <div class="border border-slate-300 rounded-xl p-5 sticky top-5">
-                    <button class="w-full bg-blue-600 hover:bg-blue-700 text-white rounded px-4 py-5 font-bold leading-tight">
-                        Request a tour
-                        <span class="block text-sm font-medium">
-                            as early as tomorrow at 11:00 am
-                        </span>
-                    </button>
-
-                    <button class="w-full mt-4 border border-blue-600 text-blue-700 rounded px-4 py-4 font-bold">
-                        Contact agent
-                    </button>
-                </div>
-            </aside>
-
             <div class="rounded-2xl bg-white shadow p-6 max-w-sm text-center">
 
                 @if($agentImg)
@@ -347,7 +301,40 @@
                         {{ $office->officeCity }}, {{ $office->officeState }} {{ $office->officeZip }}
                     </div>
                 @endif
+                <button class="w-full mt-4 border border-blue-600 text-blue-700 rounded px-4 py-4 font-bold">
+                    Contact agent
+                </button>
 
+            </div>
+
+            <div class="sdb">
+                <div class="sdb-top">
+                    <p class="sdb-eyebrow">For Real Estate Agents</p>
+                    <p class="sdb-headline">Email your listing to thousands of interested buyers &amp; agents — instantly</p>
+                    <div class="sdb-badge"><span class="sdb-price">$9</span></div>
+                    <p class="sdb-from">Starting at just $9</p>
+                </div>
+
+                <div class="sdb-band"><p>Premium Services for Less</p></div>
+
+                <div class="sdb-list">
+                    <ul>
+                        <li><span class="sdb-check">&#10003;</span> Instant Proof &amp; Delivery</li>
+                        <li><span class="sdb-check">&#10003;</span> Instant Copy to Home Seller</li>
+                        <li><span class="sdb-check">&#10003;</span> Flyers Saved &amp; Editable for Resends</li>
+                        <li><span class="sdb-check">&#10003;</span> Upload Unlimited Photos</li>
+                        <li><span class="sdb-check">&#10003;</span> FREE Web Page Slide Show</li>
+                        <li><span class="sdb-check">&#10003;</span> FREE Page View Reports</li>
+                        <li><span class="sdb-check">&#10003;</span> Personal Contact Copy Center</li>
+                        <li><span class="sdb-check">&#10003;</span> Multiple Flyer Templates</li>
+                    </ul>
+                </div>
+
+                <div class="sdb-more">And More!</div>
+
+                <div class="sdb-cta">
+                    <a href="#" class="sdb-btn">Send My Listing Now</a>
+                </div>
             </div>
 
         </div>{{-- end right column --}}
