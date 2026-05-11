@@ -299,62 +299,56 @@
                 </div>
             </aside>
 
-            @if($agent)
-    <div class="rounded-2xl bg-white shadow p-5">
-        <div class="flex items-start gap-4">
+            <div class="rounded-2xl bg-white shadow p-6 max-w-sm text-center">
 
-            @if($agentImg)
-                <img
-                    src="{{ $agentImg }}"
-                    alt="{{ $agent->agtFullName }}"
-                    class="w-20 h-20 rounded-full object-cover bg-slate-100"
-                >
-            @endif
+                @if($agentImg)
+                    <img
+                        src="{{ $agentImg }}"
+                        alt="{{ $agent->agtFullName }}"
+                        class="w-24 h-24 rounded-full object-cover mx-auto bg-slate-100"
+                    >
+                @endif
 
-            <div class="flex-1">
-                <div class="text-lg font-bold text-slate-900">
+                <div class="mt-4 text-2xl font-bold text-slate-900">
                     {{ $agent->agtFullName }}
                 </div>
 
                 @if($agent->agtDesignations)
-                    <div class="text-sm text-slate-500">
+                    <div class="mt-1 text-sm text-slate-500">
                         {{ $agent->agtDesignations }}
                     </div>
                 @endif
 
                 @if($agent->agtMainPhone)
-                    <div class="mt-2 text-sm font-semibold text-slate-800">
+                    <div class="mt-3 text-lg font-semibold text-slate-800">
                         {{ $agent->agtMainPhone }}
                     </div>
                 @endif
 
+                @if($officeLogo)
+                    <div class="mt-5">
+                        <img
+                            src="{{ $officeLogo }}"
+                            alt="{{ $office?->officeName }}"
+                            class="h-14 mx-auto object-contain"
+                        >
+                    </div>
+                @endif
+
                 @if($office?->officeName)
-                    <div class="mt-2 text-sm text-slate-600">
+                    <div class="mt-5 text-base font-semibold text-slate-800">
                         {{ $office->officeName }}
                     </div>
                 @endif
 
                 @if($office?->officeAddress1 || $office?->officeCity)
-                    <div class="text-sm text-slate-500">
-                        {{ $office->officeAddress1 }}
-                        {{ $office->officeCity }},
-                        {{ $office->officeState }}
-                        {{ $office->officeZip }}
+                    <div class="mt-2 text-sm text-slate-500 leading-relaxed">
+                        {{ $office->officeAddress1 }}<br>
+                        {{ $office->officeCity }}, {{ $office->officeState }} {{ $office->officeZip }}
                     </div>
                 @endif
+
             </div>
-
-            @if($officeLogo)
-                <img
-                    src="{{ $officeLogo }}"
-                    alt="{{ $office?->officeName }}"
-                    class="w-24 max-h-16 object-contain"
-                >
-            @endif
-
-        </div>
-    </div>
-@endif
 
         </div>{{-- end right column --}}
 
