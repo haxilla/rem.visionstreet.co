@@ -252,18 +252,18 @@
         {{-- Right column: e-flyer widget + contact sidebar --}}
         <div class="flex flex-col gap-4">
 
-            {{-- E-Flyer Sidebar --}}
-            <div class="rounded-2xl bg-white shadow p-6 max-w-sm text-center">
+            {{-- Agent Info--}}
+            <div class="rounded-2xl bg-white border border-slate-300 shadow-sm p-6 max-w-sm text-center">
 
                 @if($agentImg)
                     <img
                         src="{{ $agentImg }}"
                         alt="{{ $agent->agtFullName }}"
-                        class="w-24 h-24 rounded-full object-cover mx-auto bg-slate-100"
+                        class="w-28 h-28 rounded-full object-contain mx-auto bg-slate-100 p-1"
                     >
                 @endif
 
-                <div class="mt-4 text-2xl font-bold text-slate-900">
+                <div class="mt-5 text-2xl font-bold text-slate-900">
                     {{ $agent->agtFullName }}
                 </div>
 
@@ -274,7 +274,7 @@
                 @endif
 
                 @if($agent->agtMainPhone)
-                    <div class="mt-3 text-lg font-semibold text-slate-800">
+                    <div class="mt-4 text-xl font-medium text-slate-700">
                         {{ $agent->agtMainPhone }}
                     </div>
                 @endif
@@ -284,13 +284,13 @@
                         <img
                             src="{{ $officeLogo }}"
                             alt="{{ $office?->officeName }}"
-                            class="h-14 mx-auto object-contain"
+                            class="h-16 mx-auto object-contain"
                         >
                     </div>
                 @endif
 
                 @if($office?->officeName)
-                    <div class="mt-5 text-base font-semibold text-slate-800">
+                    <div class="mt-5 text-lg font-semibold text-slate-800">
                         {{ $office->officeName }}
                     </div>
                 @endif
@@ -301,12 +301,18 @@
                         {{ $office->officeCity }}, {{ $office->officeState }} {{ $office->officeZip }}
                     </div>
                 @endif
-                <button class="w-full mt-4 border border-blue-600 text-blue-700 rounded px-4 py-4 font-bold">
-                    Contact agent
-                </button>
+
+                <div class="mt-6">
+                    <a
+                        href="tel:{{ preg_replace('/[^0-9]/', '', $agent->agtMainPhone) }}"
+                        class="inline-flex items-center justify-center w-full rounded-xl border border-blue-600 text-blue-600 font-semibold px-5 py-3 hover:bg-blue-600 hover:text-white transition"
+                    >
+                        Contact agent
+                    </a>
+                </div>
 
             </div>
-
+            {{-- Promo --}}
             <div class="sdb">
                 <div class="sdb-top">
                     <p class="sdb-eyebrow">For Real Estate Agents</p>
