@@ -99,7 +99,7 @@
 
             <div class="mb-3">
                 <span class="inline-block bg-red-100 text-red-700 text-sm font-bold px-2 py-1 rounded">
-                    Price cut: $20K (4/1)
+                    Special statement goes here
                 </span>
             </div>
 
@@ -147,7 +147,7 @@
 
                 <div class="bg-slate-100 rounded px-4 py-4 flex items-center gap-3">
                     <span class="text-xl">⌂</span>
-                    <span>Single Family Residence</span>
+                    <span>{{ $details->xb1 }}</span>
                 </div>
 
                 <div class="bg-slate-100 rounded px-4 py-4 flex items-center gap-3">
