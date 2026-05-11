@@ -5,7 +5,6 @@
 <body class="min-h-screen bg-white pt-[50px] linkcheck">
     @include('public.layout.nav')
 
-
 @php
     $allPhotos = $details->thePhotos ?? collect();
 
@@ -45,6 +44,27 @@
     $photoPath = fn ($photo) => "https://realtyrepublic.com/hqphotos/{$zip}/{$mls}/{$photo->photoName}";
 @endphp
 
+<style>
+.sdb { width: 100%; font-family: Arial, sans-serif; background: #fff; border: 1px solid #ddd; box-sizing: border-box; overflow: hidden; }
+.sdb-top { background: #0d2d6e; padding: 24px 20px 18px; text-align: center; }
+.sdb-eyebrow { color: #f0c040; font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; font-weight: 700; margin: 0 0 6px; }
+.sdb-headline { color: #fff; font-size: 15px; font-weight: 700; line-height: 1.35; margin: 0 0 14px; }
+.sdb-badge { width: 80px; height: 80px; background: #f0c040; border-radius: 50%; margin: 0 auto 6px; display: flex; align-items: center; justify-content: center; border: 3px solid rgba(255,255,255,0.3); }
+.sdb-price { color: #0d2d6e; font-size: 30px; font-weight: 700; line-height: 1; }
+.sdb-from { color: rgba(255,255,255,0.75); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; margin: 4px 0 0; }
+.sdb-band { background: #f0c040; padding: 9px 16px; text-align: center; }
+.sdb-band p { margin: 0; color: #0d2d6e; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; }
+.sdb-list { background: #fff; padding: 14px 18px 8px; }
+.sdb-list ul { list-style: none; margin: 0; padding: 0; }
+.sdb-list li { display: flex; align-items: flex-start; gap: 8px; padding: 6px 0; border-bottom: 1px solid #eef0f5; font-size: 12px; color: #222; line-height: 1.4; }
+.sdb-list li:last-child { border-bottom: none; }
+.sdb-check { color: #f0c040; font-weight: 900; font-size: 14px; flex-shrink: 0; }
+.sdb-more { text-align: center; padding: 2px 0 8px; font-size: 12px; font-weight: 700; color: #0d2d6e; letter-spacing: 1px; text-transform: uppercase; }
+.sdb-cta { padding: 10px 16px 18px; }
+.sdb-btn { display: block; width: 100%; background: #f0c040; color: #0d2d6e; text-decoration: none; text-align: center; border-radius: 3px; padding: 12px 0; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; box-sizing: border-box; }
+.sdb-btn:hover { background: #e6b800; }
+</style>
+
 <section class="max-w-[1280px] mx-auto px-4 py-4 text-slate-950">
 
     {{-- Photo grid --}}
@@ -77,11 +97,10 @@
                     >
 
                     @if($loop->last)
-                        <button 
-                        type="button"
-                        data-photo-open="0"
-                        class="absolute bottom-4 right-4 bg-white rounded-md px-5 py-3 text-sm font-bold shadow-lg flex items-center gap-2">
-
+                        <button
+                            type="button"
+                            data-photo-open="0"
+                            class="absolute bottom-4 right-4 bg-white rounded-md px-5 py-3 text-sm font-bold shadow-lg flex items-center gap-2">
                             <span class="text-xl leading-none">▦</span>
                             See all {{ $modalPhotos->count() }} photos
                         </button>
@@ -92,9 +111,10 @@
 
     </div>
 
-    {{-- Main content --}}
+    {{-- Main content + right column --}}
     <div class="grid grid-cols-1 lg:grid-cols-[1fr_260px] gap-9 mt-6">
 
+        {{-- Left: main content --}}
         <main>
 
             <div class="mb-3">
@@ -190,78 +210,62 @@
 
         </main>
 
-        {{-- Sidebar --}}
+        {{-- Right column: e-flyer widget + contact sidebar --}}
+        <div class="flex flex-col gap-4">
 
-            <style>
-            .sdb { width: 100%; font-family: Arial, sans-serif; background: #fff; border: 1px solid #ddd; box-sizing: border-box; overflow: hidden; }
-            .sdb-top { background: #0d2d6e; padding: 24px 20px 18px; text-align: center; }
-            .sdb-eyebrow { color: #f0c040; font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; font-weight: 700; margin: 0 0 6px; }
-            .sdb-headline { color: #fff; font-size: 15px; font-weight: 700; line-height: 1.35; margin: 0 0 14px; }
-            .sdb-badge { width: 80px; height: 80px; background: #f0c040; border-radius: 50%; margin: 0 auto 6px; display: flex; align-items: center; justify-content: center; border: 3px solid rgba(255,255,255,0.3); }
-            .sdb-price { color: #0d2d6e; font-size: 30px; font-weight: 700; line-height: 1; }
-            .sdb-from { color: rgba(255,255,255,0.75); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; margin: 4px 0 0; }
-            .sdb-band { background: #f0c040; padding: 9px 16px; text-align: center; }
-            .sdb-band p { margin: 0; color: #0d2d6e; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; }
-            .sdb-list { background: #fff; padding: 14px 18px 8px; }
-            .sdb-list ul { list-style: none; margin: 0; padding: 0; }
-            .sdb-list li { display: flex; align-items: flex-start; gap: 8px; padding: 6px 0; border-bottom: 1px solid #eef0f5; font-size: 12px; color: #222; line-height: 1.4; }
-            .sdb-list li:last-child { border-bottom: none; }
-            .sdb-check { color: #f0c040; font-weight: 900; font-size: 14px; flex-shrink: 0; }
-            .sdb-more { text-align: center; padding: 2px 0 8px; font-size: 12px; font-weight: 700; color: #0d2d6e; letter-spacing: 1px; text-transform: uppercase; }
-            .sdb-cta { padding: 10px 16px 18px; }
-            .sdb-btn { display: block; width: 100%; background: #f0c040; color: #0d2d6e; text-decoration: none; text-align: center; border-radius: 3px; padding: 12px 0; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; box-sizing: border-box; }
-            .sdb-btn:hover { background: #e6b800; }
-            </style>
-
+            {{-- E-Flyer Sidebar --}}
             <div class="sdb">
-            <div class="sdb-top">
-                <p class="sdb-eyebrow">For Real Estate Agents</p>
-                <p class="sdb-headline">Email your listing to thousands of interested buyers &amp; agents — instantly</p>
-                <div class="sdb-badge"><span class="sdb-price">$9</span></div>
-                <p class="sdb-from">Starting at just $9</p>
+                <div class="sdb-top">
+                    <p class="sdb-eyebrow">For Real Estate Agents</p>
+                    <p class="sdb-headline">Email your listing to thousands of interested buyers &amp; agents — instantly</p>
+                    <div class="sdb-badge"><span class="sdb-price">$9</span></div>
+                    <p class="sdb-from">Starting at just $9</p>
+                </div>
+
+                <div class="sdb-band"><p>Premium Services for Less</p></div>
+
+                <div class="sdb-list">
+                    <ul>
+                        <li><span class="sdb-check">&#10003;</span> Instant Proof &amp; Delivery</li>
+                        <li><span class="sdb-check">&#10003;</span> Instant Copy to Home Seller</li>
+                        <li><span class="sdb-check">&#10003;</span> Flyers Saved &amp; Editable for Resends</li>
+                        <li><span class="sdb-check">&#10003;</span> Upload Unlimited Photos</li>
+                        <li><span class="sdb-check">&#10003;</span> FREE Web Page Slide Show</li>
+                        <li><span class="sdb-check">&#10003;</span> FREE Page View Reports</li>
+                        <li><span class="sdb-check">&#10003;</span> Personal Contact Copy Center</li>
+                        <li><span class="sdb-check">&#10003;</span> Multiple Flyer Templates</li>
+                    </ul>
+                </div>
+
+                <div class="sdb-more">And More!</div>
+
+                <div class="sdb-cta">
+                    <a href="#" class="sdb-btn">Send My Listing Now</a>
+                </div>
             </div>
 
-            <div class="sdb-band"><p>Premium Services for Less</p></div>
+            {{-- Contact / Tour sidebar --}}
+            <aside>
+                <div class="border border-slate-300 rounded-xl p-5 sticky top-5">
+                    <button class="w-full bg-blue-600 hover:bg-blue-700 text-white rounded px-4 py-5 font-bold leading-tight">
+                        Request a tour
+                        <span class="block text-sm font-medium">
+                            as early as tomorrow at 11:00 am
+                        </span>
+                    </button>
 
-            <div class="sdb-list">
-                <ul>
-                <li><span class="sdb-check">&#10003;</span> Instant Proof &amp; Delivery</li>
-                <li><span class="sdb-check">&#10003;</span> Instant Copy to Home Seller</li>
-                <li><span class="sdb-check">&#10003;</span> Flyers Saved &amp; Editable for Resends</li>
-                <li><span class="sdb-check">&#10003;</span> Upload Unlimited Photos</li>
-                <li><span class="sdb-check">&#10003;</span> FREE Web Page Slide Show</li>
-                <li><span class="sdb-check">&#10003;</span> FREE Page View Reports</li>
-                <li><span class="sdb-check">&#10003;</span> Personal Contact Copy Center</li>
-                <li><span class="sdb-check">&#10003;</span> Multiple Flyer Templates</li>
-                </ul>
-            </div>
+                    <button class="w-full mt-4 border border-blue-600 text-blue-700 rounded px-4 py-4 font-bold">
+                        Contact agent
+                    </button>
+                </div>
+            </aside>
 
-            <div class="sdb-more">And More!</div>
+        </div>{{-- end right column --}}
 
-            <div class="sdb-cta">
-                <a href="#" class="sdb-btn">Send My Listing Now</a>
-            </div>
-            </div>
-
-
-        <aside class="lg:pt-0">
-            <div class="border border-slate-300 rounded-xl p-5 sticky top-5">
-                <button class="w-full bg-blue-600 hover:bg-blue-700 text-white rounded px-4 py-5 font-bold leading-tight">
-                    Request a tour
-                    <span class="block text-sm font-medium">
-                        as early as tomorrow at 11:00 am
-                    </span>
-                </button>
-
-                <button class="w-full mt-4 border border-blue-600 text-blue-700 rounded px-4 py-4 font-bold">
-                    Contact agent
-                </button>
-            </div>
-        </aside>
-
-    </div>
+    </div>{{-- end main grid --}}
 
 </section>
+
 <div id="photoModal" class="hidden fixed inset-0 z-[9999] bg-black">
 
     <div class="absolute top-0 left-0 right-0 z-30 h-16 bg-black flex items-center justify-between px-5">
@@ -323,6 +327,7 @@
     </div>
 
 </div>
+
 @vite(['resources/js/photo-modal.js'])
 </body>
 </html>
