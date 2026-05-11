@@ -192,62 +192,57 @@
 
         {{-- Sidebar --}}
 
-        <div style="margin:0; padding:20px; background:#f5f5f5; display:flex; justify-content:center;">
+            <style>
+            .sdb { width: 100%; font-family: Arial, sans-serif; background: #fff; border: 1px solid #ddd; box-sizing: border-box; overflow: hidden; }
+            .sdb-top { background: #0d2d6e; padding: 24px 20px 18px; text-align: center; }
+            .sdb-eyebrow { color: #f0c040; font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; font-weight: 700; margin: 0 0 6px; }
+            .sdb-headline { color: #fff; font-size: 15px; font-weight: 700; line-height: 1.35; margin: 0 0 14px; }
+            .sdb-badge { width: 80px; height: 80px; background: #f0c040; border-radius: 50%; margin: 0 auto 6px; display: flex; align-items: center; justify-content: center; border: 3px solid rgba(255,255,255,0.3); }
+            .sdb-price { color: #0d2d6e; font-size: 30px; font-weight: 700; line-height: 1; }
+            .sdb-from { color: rgba(255,255,255,0.75); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; margin: 4px 0 0; }
+            .sdb-band { background: #f0c040; padding: 9px 16px; text-align: center; }
+            .sdb-band p { margin: 0; color: #0d2d6e; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; }
+            .sdb-list { background: #fff; padding: 14px 18px 8px; }
+            .sdb-list ul { list-style: none; margin: 0; padding: 0; }
+            .sdb-list li { display: flex; align-items: flex-start; gap: 8px; padding: 6px 0; border-bottom: 1px solid #eef0f5; font-size: 12px; color: #222; line-height: 1.4; }
+            .sdb-list li:last-child { border-bottom: none; }
+            .sdb-check { color: #f0c040; font-weight: 900; font-size: 14px; flex-shrink: 0; }
+            .sdb-more { text-align: center; padding: 2px 0 8px; font-size: 12px; font-weight: 700; color: #0d2d6e; letter-spacing: 1px; text-transform: uppercase; }
+            .sdb-cta { padding: 10px 16px 18px; }
+            .sdb-btn { display: block; width: 100%; background: #f0c040; color: #0d2d6e; text-decoration: none; text-align: center; border-radius: 3px; padding: 12px 0; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; box-sizing: border-box; }
+            .sdb-btn:hover { background: #e6b800; }
+            </style>
 
-        <div style="width:240px; font-family:'Georgia',serif; background:#fff; border:1px solid #ddd; border-radius:4px; overflow:hidden; box-shadow: 2px 4px 16px rgba(0,0,0,0.10);">
+            <div class="sdb">
+            <div class="sdb-top">
+                <p class="sdb-eyebrow">For Real Estate Agents</p>
+                <p class="sdb-headline">Email your listing to thousands of interested buyers &amp; agents — instantly</p>
+                <div class="sdb-badge"><span class="sdb-price">$9</span></div>
+                <p class="sdb-from">Starting at just $9</p>
+            </div>
 
-            <div style="background:#1a3a5c; padding:22px 16px 14px; text-align:center;">
-            <p style="color:#c8a84b; font-size:11px; letter-spacing:2px; text-transform:uppercase; margin:0 0 4px; font-family:Arial,sans-serif; font-weight:700;">Send an E-Flyer</p>
-            <p style="color:#e8e0d0; font-size:11px; letter-spacing:1px; text-transform:uppercase; margin:0 0 12px; font-family:Arial,sans-serif;">Starting at</p>
-            <div style="width:72px; height:72px; background:#c8a84b; border-radius:50%; margin:0 auto 10px; display:flex; align-items:center; justify-content:center; border:3px solid #fff;">
-                <span style="color:#1a3a5c; font-size:28px; font-weight:700; font-family:Arial,sans-serif; line-height:1;">$9</span>
+            <div class="sdb-band"><p>Premium Services for Less</p></div>
+
+            <div class="sdb-list">
+                <ul>
+                <li><span class="sdb-check">&#10003;</span> Instant Proof &amp; Delivery</li>
+                <li><span class="sdb-check">&#10003;</span> Instant Copy to Home Seller</li>
+                <li><span class="sdb-check">&#10003;</span> Flyers Saved &amp; Editable for Resends</li>
+                <li><span class="sdb-check">&#10003;</span> Upload Unlimited Photos</li>
+                <li><span class="sdb-check">&#10003;</span> FREE Web Page Slide Show</li>
+                <li><span class="sdb-check">&#10003;</span> FREE Page View Reports</li>
+                <li><span class="sdb-check">&#10003;</span> Personal Contact Copy Center</li>
+                <li><span class="sdb-check">&#10003;</span> Multiple Flyer Templates</li>
+                </ul>
+            </div>
+
+            <div class="sdb-more">And More!</div>
+
+            <div class="sdb-cta">
+                <a href="#" class="sdb-btn">Send My Listing Now</a>
             </div>
             </div>
 
-            <div style="background:#c8a84b; padding:10px 16px; text-align:center;">
-            <p style="margin:0; color:#1a3a5c; font-size:11px; letter-spacing:2px; text-transform:uppercase; font-weight:700; font-family:Arial,sans-serif;">Premium Services for Less</p>
-            </div>
-
-            <div style="background:#fff; padding:14px 18px 6px;">
-            <ul style="list-style:none; margin:0; padding:0;">
-                <li style="display:flex; align-items:flex-start; gap:8px; padding:6px 0; border-bottom:1px solid #f0ede6; font-family:Arial,sans-serif; font-size:12.5px; color:#2c2c2a;">
-                <span style="color:#c8a84b; font-weight:700; margin-top:1px;">&#10003;</span> Instant Proof &amp; Delivery
-                </li>
-                <li style="display:flex; align-items:flex-start; gap:8px; padding:6px 0; border-bottom:1px solid #f0ede6; font-family:Arial,sans-serif; font-size:12.5px; color:#2c2c2a;">
-                <span style="color:#c8a84b; font-weight:700; margin-top:1px;">&#10003;</span> Instant Copy to Home Seller
-                </li>
-                <li style="display:flex; align-items:flex-start; gap:8px; padding:6px 0; border-bottom:1px solid #f0ede6; font-family:Arial,sans-serif; font-size:12.5px; color:#2c2c2a;">
-                <span style="color:#c8a84b; font-weight:700; margin-top:1px;">&#10003;</span> Flyers Saved &amp; Editable for Resends
-                </li>
-                <li style="display:flex; align-items:flex-start; gap:8px; padding:6px 0; border-bottom:1px solid #f0ede6; font-family:Arial,sans-serif; font-size:12.5px; color:#2c2c2a;">
-                <span style="color:#c8a84b; font-weight:700; margin-top:1px;">&#10003;</span> Upload Unlimited Photos
-                </li>
-                <li style="display:flex; align-items:flex-start; gap:8px; padding:6px 0; border-bottom:1px solid #f0ede6; font-family:Arial,sans-serif; font-size:12.5px; color:#2c2c2a;">
-                <span style="color:#c8a84b; font-weight:700; margin-top:1px;">&#10003;</span> FREE Web Page Slide Show
-                </li>
-                <li style="display:flex; align-items:flex-start; gap:8px; padding:6px 0; border-bottom:1px solid #f0ede6; font-family:Arial,sans-serif; font-size:12.5px; color:#2c2c2a;">
-                <span style="color:#c8a84b; font-weight:700; margin-top:1px;">&#10003;</span> FREE Page View Reports
-                </li>
-                <li style="display:flex; align-items:flex-start; gap:8px; padding:6px 0; border-bottom:1px solid #f0ede6; font-family:Arial,sans-serif; font-size:12.5px; color:#2c2c2a;">
-                <span style="color:#c8a84b; font-weight:700; margin-top:1px;">&#10003;</span> Personal Contact Copy Center
-                </li>
-                <li style="display:flex; align-items:flex-start; gap:8px; padding:6px 0; font-family:Arial,sans-serif; font-size:12.5px; color:#2c2c2a;">
-                <span style="color:#c8a84b; font-weight:700; margin-top:1px;">&#10003;</span> Multiple Flyer Templates
-                </li>
-            </ul>
-            </div>
-
-            <div style="padding:6px 18px 4px; text-align:center;">
-            <p style="margin:0; font-family:Arial,sans-serif; font-size:13px; font-weight:700; color:#1a3a5c; letter-spacing:1px; text-transform:uppercase;">And More!</p>
-            </div>
-
-            <div style="padding:12px 16px 18px;">
-            <a href="#" style="display:block; width:100%; background:#1a3a5c; color:#fff; text-decoration:none; text-align:center; border-radius:3px; padding:11px 0; font-family:Arial,sans-serif; font-size:12px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; box-sizing:border-box;">Get Started</a>
-            </div>
-
-        </div>
-
-        </div>
 
         <aside class="lg:pt-0">
             <div class="border border-slate-300 rounded-xl p-5 sticky top-5">
