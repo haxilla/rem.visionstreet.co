@@ -33,14 +33,15 @@ $waitingCampsQuery = propdelivnow::with('theFlyer')
 
 $waitingCampsMap = $waitingCampsQuery->map(function ($item) {
     return [
-        'address'      => $item->theFlyer->xFullStreet,
-        'campLabel'    => $item->campLabel,
-        'propflyer_id' => $item->propflyer_id,
-        'emSubject'    => $item->emSubject,
-        'emArea'       => $item->emArea,
-        'emStart'      => $item->emStart,
-        'emRequest'    => $item->emRequest,
-        'cid'          => $item->cid,
+        'flyer'         => $item->theFlyer
+        'address'       => $item->theFlyer->xFullStreet,
+        'campLabel'     => $item->campLabel,
+        'propflyer_id'  => $item->propflyer_id,
+        'emSubject'     => $item->emSubject,
+        'emArea'        => $item->emArea,
+        'emStart'       => $item->emStart,
+        'emRequest'     => $item->emRequest,
+        'cid'           => $item->cid,
     ];
 });
 
@@ -74,6 +75,7 @@ $inProgressCampsQuery = propdelivnow::with('theFlyer')
 
 $inProgressCampsMap = $inProgressCampsQuery->map(function ($item) {
     return [
+        'flyer'        => $item->theFlyer,
         'address'      => $item->theFlyer->xFullStreet ?? 'No Address',
         'campLabel'    => $item->campLabel,
         'propflyer_id' => $item->propflyer_id,
@@ -115,6 +117,7 @@ $completeCampsQuery = Propdelivnow::with('theFlyer')
 
 $completeCampsMap = $completeCampsQuery->map(function ($item) {
     return [
+        'flyer'        => $item->theFlyer,
         'address'      => $item->theFlyer->xFullStreet ?? 'N/A',
         'campLabel'    => $item->campLabel,
         'propflyer_id' => $item->propflyer_id,
