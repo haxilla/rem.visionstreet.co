@@ -31,6 +31,7 @@
 
                         {{-- HEADER --}}
                         <div class="rounded-[24px] bg-white px-8 py-7 shadow-[0_12px_35px_rgba(15,23,42,0.06)]">
+
                             <div class="text-[12px] font-semibold uppercase tracking-[0.22em] text-[#214e9b]/70">
                                 Dashboard
                             </div>
@@ -42,13 +43,17 @@
                             <p class="mt-2 text-[14px] text-slate-600">
                                 Campaign status summary
                             </p>
+
                         </div>
 
                         {{-- STATUS CARDS --}}
                         <div class="mt-8 grid grid-cols-1 gap-6 xl:grid-cols-3">
 
+                            {{-- WAITING --}}
                             <div class="rounded-[24px] bg-white p-6 shadow">
+
                                 <div class="flex justify-between">
+
                                     <div>
                                         <div class="text-xs uppercase tracking-wider text-amber-600">
                                             Campaign Status
@@ -62,6 +67,7 @@
                                     <span class="bg-amber-100 text-amber-700 text-xs px-3 py-1 rounded-full">
                                         Waiting
                                     </span>
+
                                 </div>
 
                                 <div class="mt-6 text-4xl font-semibold">
@@ -72,10 +78,14 @@
                                     Flyer groups:
                                     {{ $waitingFlyerCamps->count() }}
                                 </div>
+
                             </div>
 
+                            {{-- IN PROGRESS --}}
                             <div class="rounded-[24px] bg-white p-6 shadow">
+
                                 <div class="flex justify-between">
+
                                     <div>
                                         <div class="text-xs uppercase tracking-wider text-blue-700">
                                             Campaign Status
@@ -89,6 +99,7 @@
                                     <span class="bg-blue-100 text-blue-700 text-xs px-3 py-1 rounded-full">
                                         Active
                                     </span>
+
                                 </div>
 
                                 <div class="mt-6 text-4xl font-semibold">
@@ -99,10 +110,14 @@
                                     Flyer groups:
                                     {{ $inProgressFlyerCamps->count() }}
                                 </div>
+
                             </div>
 
+                            {{-- COMPLETED --}}
                             <div class="rounded-[24px] bg-white p-6 shadow">
+
                                 <div class="flex justify-between">
+
                                     <div>
                                         <div class="text-xs uppercase tracking-wider text-emerald-700">
                                             Campaign Status
@@ -116,6 +131,7 @@
                                     <span class="bg-emerald-100 text-emerald-700 text-xs px-3 py-1 rounded-full">
                                         Done
                                     </span>
+
                                 </div>
 
                                 <div class="mt-6 text-4xl font-semibold">
@@ -126,6 +142,7 @@
                                     Flyer groups:
                                     {{ $completeFlyerCamps->count() }}
                                 </div>
+
                             </div>
 
                         </div>
@@ -220,48 +237,10 @@
                                                         </div>
                                                     </div>
 
-                                                    <button
-                                                        type="button"
-                                                        class="campaign-toggle flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 text-sm font-semibold text-slate-600 hover:bg-slate-200"
-                                                    >
+                                                    <div class="text-sm text-slate-400">
                                                         {{ $campaigns->count() }} campaigns
-                                                        <span class="campaign-arrow transition-transform">▼</span>
-                                                    </button>
-
-                                                </div>
-
-                                                <div class="campaign-details hidden mt-4 border-t border-slate-200 pt-4">
-                                                    <div class="space-y-2">
-
-                                                        @foreach($campaigns as $campaign)
-
-                                                            <div class="rounded-xl bg-slate-50 p-3 text-sm text-slate-700">
-
-                                                                <div>
-                                                                    <strong>Requested:</strong>
-                                                                    {{ $campaign['emRequest'] ?? 'N/A' }}
-                                                                </div>
-
-                                                                <div>
-                                                                    <strong>Started:</strong>
-                                                                    {{ $campaign['emStart'] ?? 'N/A' }}
-                                                                </div>
-
-                                                                <div>
-                                                                    <strong>Completed:</strong>
-                                                                    {{ $campaign['emComplete'] ?? 'N/A' }}
-                                                                </div>
-
-                                                                <div>
-                                                                    <strong>Label:</strong>
-                                                                    {{ $campaign['campLabel'] ?? 'N/A' }}
-                                                                </div>
-
-                                                            </div>
-
-                                                        @endforeach
-
                                                     </div>
+
                                                 </div>
 
                                             </div>
@@ -322,48 +301,10 @@
                                                         </div>
                                                     </div>
 
-                                                    <button
-                                                        type="button"
-                                                        class="campaign-toggle flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 text-sm font-semibold text-slate-600 hover:bg-slate-200"
-                                                    >
+                                                    <div class="text-sm text-slate-400">
                                                         {{ $campaigns->count() }} campaigns
-                                                        <span class="campaign-arrow transition-transform">▼</span>
-                                                    </button>
-
-                                                </div>
-
-                                                <div class="campaign-details hidden mt-4 border-t border-slate-200 pt-4">
-                                                    <div class="space-y-2">
-
-                                                        @foreach($campaigns as $campaign)
-
-                                                            <div class="rounded-xl bg-slate-50 p-3 text-sm text-slate-700">
-
-                                                                <div>
-                                                                    <strong>Requested:</strong>
-                                                                    {{ $campaign['emRequest'] ?? 'N/A' }}
-                                                                </div>
-
-                                                                <div>
-                                                                    <strong>Started:</strong>
-                                                                    {{ $campaign['emStart'] ?? 'N/A' }}
-                                                                </div>
-
-                                                                <div>
-                                                                    <strong>Completed:</strong>
-                                                                    {{ $campaign['emComplete'] ?? 'N/A' }}
-                                                                </div>
-
-                                                                <div>
-                                                                    <strong>Label:</strong>
-                                                                    {{ $campaign['campLabel'] ?? 'N/A' }}
-                                                                </div>
-
-                                                            </div>
-
-                                                        @endforeach
-
                                                     </div>
+
                                                 </div>
 
                                             </div>
@@ -424,48 +365,10 @@
                                                         </div>
                                                     </div>
 
-                                                    <button
-                                                        type="button"
-                                                        class="campaign-toggle flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 text-sm font-semibold text-slate-600 hover:bg-slate-200"
-                                                    >
+                                                    <div class="text-sm text-slate-400">
                                                         {{ $campaigns->count() }} campaigns
-                                                        <span class="campaign-arrow transition-transform">▼</span>
-                                                    </button>
-
-                                                </div>
-
-                                                <div class="campaign-details hidden mt-4 border-t border-slate-200 pt-4">
-                                                    <div class="space-y-2">
-
-                                                        @foreach($campaigns as $campaign)
-
-                                                            <div class="rounded-xl bg-slate-50 p-3 text-sm text-slate-700">
-
-                                                                <div>
-                                                                    <strong>Requested:</strong>
-                                                                    {{ $campaign['emRequest'] ?? 'N/A' }}
-                                                                </div>
-
-                                                                <div>
-                                                                    <strong>Started:</strong>
-                                                                    {{ $campaign['emStart'] ?? 'N/A' }}
-                                                                </div>
-
-                                                                <div>
-                                                                    <strong>Completed:</strong>
-                                                                    {{ $campaign['emComplete'] ?? 'N/A' }}
-                                                                </div>
-
-                                                                <div>
-                                                                    <strong>Label:</strong>
-                                                                    {{ $campaign['campLabel'] ?? 'N/A' }}
-                                                                </div>
-
-                                                            </div>
-
-                                                        @endforeach
-
                                                     </div>
+
                                                 </div>
 
                                             </div>
@@ -540,30 +443,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 'text-white',
                 'shadow'
             );
-
-        });
-
-    });
-
-    const campaignToggles = document.querySelectorAll('.campaign-toggle');
-
-    campaignToggles.forEach(function(toggle) {
-
-        toggle.addEventListener('click', function() {
-
-            const card = toggle.closest('.rounded-2xl');
-            const details = card.querySelector('.campaign-details');
-            const arrow = toggle.querySelector('.campaign-arrow');
-
-            if (!details) {
-                return;
-            }
-
-            details.classList.toggle('hidden');
-
-            if (arrow) {
-                arrow.classList.toggle('rotate-180');
-            }
 
         });
 
