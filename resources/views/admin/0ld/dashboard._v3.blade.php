@@ -19,6 +19,15 @@
                 $campaignsWaiting     = $data['campaignsWaiting'] ?? 0;
                 $campaignsInProgress  = $data['campaignsInProgress'] ?? 0;
                 $campaignsCompleted   = $data['campaignsCompleted'] ?? 0;
+
+                dd(
+                    $waitingFlyerCamps,
+                    $inProgressFlyerCamps,
+                    $completeFlyerCamps,
+                    $campaignsWaiting,
+                    $campaignsInProgress,
+                    $campaignsCompleted
+                );
             @endphp
 
             <div class="min-h-screen bg-[#f4f7fb]">
@@ -201,48 +210,22 @@
 
                                             @php
                                                 $first = $campaigns->first();
-
-                                                $flyer = $first['flyer'] ?? null;
-                                                $photo = $flyer?->thePhotos?->first();
-                                                $meta  = $flyer?->theMeta;
-
-                                                $thumbUrl = null;
-
-                                                if ($photo && $meta && $meta->zipDir && $meta->mlsDir && $photo->photoName) {
-                                                    $thumbUrl = "https://realtyrepublic.com/hqphotos/{$meta->zipDir}/{$meta->mlsDir}/{$photo->photoName}";
-                                                }
                                             @endphp
 
                                             <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-[#214e9b]/40 hover:shadow-md">
 
-                                                <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                                                <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 
-                                                    <div class="flex items-center gap-4">
-                                                        <div class="h-20 w-28 shrink-0 overflow-hidden rounded-xl border border-slate-200 bg-slate-100">
-                                                            @if($thumbUrl)
-                                                                <img
-                                                                    src="{{ $thumbUrl }}"
-                                                                    alt="{{ $first['address'] ?? 'Property photo' }}"
-                                                                    class="h-full w-full object-cover"
-                                                                >
-                                                            @else
-                                                                <div class="flex h-full w-full items-center justify-center text-xs text-slate-400">
-                                                                    No Photo
-                                                                </div>
-                                                            @endif
-                                                        </div>
+                                                    <div>
+                                                        <a
+                                                            href="/flyer/{{ $flyerId }}"
+                                                            class="text-[15px] font-semibold text-[#214e9b] hover:underline"
+                                                        >
+                                                            ID#: {{ $flyerId }}
+                                                        </a>
 
-                                                        <div>
-                                                            <a
-                                                                href="/flyer/{{ $flyerId }}"
-                                                                class="text-[15px] font-semibold text-[#214e9b] hover:underline"
-                                                            >
-                                                                ID#: {{ $flyerId }}
-                                                            </a>
-
-                                                            <div class="mt-1 text-sm text-slate-700">
-                                                                {{ $first['address'] ?? 'No Address' }}
-                                                            </div>
+                                                        <div class="mt-1 text-sm text-slate-700">
+                                                            {{ $first['address'] ?? 'No Address' }}
                                                         </div>
                                                     </div>
 
@@ -262,11 +245,6 @@
                                                         @foreach($campaigns as $campaign)
 
                                                             <div class="rounded-xl bg-slate-50 p-3 text-sm text-slate-700">
-
-                                                                <div>
-                                                                    <strong>Subject:</strong>
-                                                                    {{ $campaign['emSubject'] ?? 'N/A' }}
-                                                                </div>
 
                                                                 <div>
                                                                     <strong>Requested:</strong>
@@ -334,48 +312,22 @@
 
                                             @php
                                                 $first = $campaigns->first();
-
-                                                $flyer = $first['flyer'] ?? null;
-                                                $photo = $flyer?->thePhotos?->first();
-                                                $meta  = $flyer?->theMeta;
-
-                                                $thumbUrl = null;
-
-                                                if ($photo && $meta && $meta->zipDir && $meta->mlsDir && $photo->photoName) {
-                                                    $thumbUrl = "https://realtyrepublic.com/hqphotos/{$meta->zipDir}/{$meta->mlsDir}/{$photo->photoName}";
-                                                }
                                             @endphp
 
                                             <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-[#214e9b]/40 hover:shadow-md">
 
-                                                <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                                                <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 
-                                                    <div class="flex items-center gap-4">
-                                                        <div class="h-20 w-28 shrink-0 overflow-hidden rounded-xl border border-slate-200 bg-slate-100">
-                                                            @if($thumbUrl)
-                                                                <img
-                                                                    src="{{ $thumbUrl }}"
-                                                                    alt="{{ $first['address'] ?? 'Property photo' }}"
-                                                                    class="h-full w-full object-cover"
-                                                                >
-                                                            @else
-                                                                <div class="flex h-full w-full items-center justify-center text-xs text-slate-400">
-                                                                    No Photo
-                                                                </div>
-                                                            @endif
-                                                        </div>
+                                                    <div>
+                                                        <a
+                                                            href="/flyer/{{ $flyerId }}"
+                                                            class="text-[15px] font-semibold text-[#214e9b] hover:underline"
+                                                        >
+                                                            ID#: {{ $flyerId }}
+                                                        </a>
 
-                                                        <div>
-                                                            <a
-                                                                href="/flyer/{{ $flyerId }}"
-                                                                class="text-[15px] font-semibold text-[#214e9b] hover:underline"
-                                                            >
-                                                                ID#: {{ $flyerId }}
-                                                            </a>
-
-                                                            <div class="mt-1 text-sm text-slate-700">
-                                                                {{ $first['address'] ?? 'No Address' }}
-                                                            </div>
+                                                        <div class="mt-1 text-sm text-slate-700">
+                                                            {{ $first['address'] ?? 'No Address' }}
                                                         </div>
                                                     </div>
 
@@ -395,11 +347,6 @@
                                                         @foreach($campaigns as $campaign)
 
                                                             <div class="rounded-xl bg-slate-50 p-3 text-sm text-slate-700">
-
-                                                                <div>
-                                                                    <strong>Subject:</strong>
-                                                                    {{ $campaign['emSubject'] ?? 'N/A' }}
-                                                                </div>
 
                                                                 <div>
                                                                     <strong>Requested:</strong>
@@ -467,48 +414,22 @@
 
                                             @php
                                                 $first = $campaigns->first();
-
-                                                $flyer = $first['flyer'] ?? null;
-                                                $photo = $flyer?->thePhotos?->first();
-                                                $meta  = $flyer?->theMeta;
-
-                                                $thumbUrl = null;
-
-                                                if ($photo && $meta && $meta->zipDir && $meta->mlsDir && $photo->photoName) {
-                                                    $thumbUrl = "https://realtyrepublic.com/hqphotos/{$meta->zipDir}/{$meta->mlsDir}/{$photo->photoName}";
-                                                }
                                             @endphp
 
                                             <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-[#214e9b]/40 hover:shadow-md">
 
-                                                <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                                                <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 
-                                                    <div class="flex items-center gap-4">
-                                                        <div class="h-20 w-28 shrink-0 overflow-hidden rounded-xl border border-slate-200 bg-slate-100">
-                                                            @if($thumbUrl)
-                                                                <img
-                                                                    src="{{ $thumbUrl }}"
-                                                                    alt="{{ $first['address'] ?? 'Property photo' }}"
-                                                                    class="h-full w-full object-cover"
-                                                                >
-                                                            @else
-                                                                <div class="flex h-full w-full items-center justify-center text-xs text-slate-400">
-                                                                    No Photo
-                                                                </div>
-                                                            @endif
-                                                        </div>
+                                                    <div>
+                                                        <a
+                                                            href="/flyer/{{ $flyerId }}"
+                                                            class="text-[15px] font-semibold text-[#214e9b] hover:underline"
+                                                        >
+                                                            ID#: {{ $flyerId }}
+                                                        </a>
 
-                                                        <div>
-                                                            <a
-                                                                href="/flyer/{{ $flyerId }}"
-                                                                class="text-[15px] font-semibold text-[#214e9b] hover:underline"
-                                                            >
-                                                                ID#: {{ $flyerId }}
-                                                            </a>
-
-                                                            <div class="mt-1 text-sm text-slate-700">
-                                                                {{ $first['address'] ?? 'No Address' }}
-                                                            </div>
+                                                        <div class="mt-1 text-sm text-slate-700">
+                                                            {{ $first['address'] ?? 'No Address' }}
                                                         </div>
                                                     </div>
 
@@ -528,11 +449,6 @@
                                                         @foreach($campaigns as $campaign)
 
                                                             <div class="rounded-xl bg-slate-50 p-3 text-sm text-slate-700">
-
-                                                                <div>
-                                                                    <strong>Subject:</strong>
-                                                                    {{ $campaign['emSubject'] ?? 'N/A' }}
-                                                                </div>
 
                                                                 <div>
                                                                     <strong>Requested:</strong>
