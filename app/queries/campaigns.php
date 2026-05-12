@@ -33,7 +33,7 @@ $waitingCampsQuery = propdelivnow::with('theFlyer')
 
 $waitingCampsMap = $waitingCampsQuery->map(function ($item) {
     return [
-        'flyer'         => $item->theFlyer
+        'flyer'         => $item->theFlyer,
         'address'       => $item->theFlyer->xFullStreet,
         'campLabel'     => $item->campLabel,
         'propflyer_id'  => $item->propflyer_id,
