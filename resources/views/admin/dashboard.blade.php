@@ -1,3 +1,13 @@
+@php
+    $waitingFlyerCamps    = $data['waitingFlyerCamps'] ?? collect();
+    $inProgressFlyerCamps = $data['inProgressFlyerCamps'] ?? collect();
+    $completeFlyerCamps   = $data['completeFlyerCamps'] ?? collect();
+
+    $campaignsWaiting     = $data['campaignsWaiting'] ?? 0;
+    $campaignsInProgress  = $data['campaignsInProgress'] ?? 0;
+    $campaignsCompleted   = $data['campaignsCompleted'] ?? 0;
+@endphp
+
 {{-- TABBED GROUP PREVIEW --}}
 <div class="mt-10 rounded-[24px] bg-white shadow-[0_12px_35px_rgba(15,23,42,0.06)]">
 
