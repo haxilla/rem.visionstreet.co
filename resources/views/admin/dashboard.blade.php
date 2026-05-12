@@ -19,6 +19,15 @@
                 $campaignsWaiting     = $data['campaignsWaiting'] ?? 0;
                 $campaignsInProgress  = $data['campaignsInProgress'] ?? 0;
                 $campaignsCompleted   = $data['campaignsCompleted'] ?? 0;
+
+                dd(
+                    $waitingFlyerCamps,
+                    $inProgressFlyerCamps,
+                    $completeFlyerCamps,
+                    $campaignsWaiting,
+                    $campaignsInProgress,
+                    $campaignsCompleted
+                );
             @endphp
 
             <div class="min-h-screen bg-[#f4f7fb]">
