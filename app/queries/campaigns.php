@@ -12,8 +12,12 @@ $theDate = Carbon::today()->subDays(7);
 | Requested, not started, not completed
 */
 
-$waitingCampsQuery = propdelivnow::with('theFlyer')
-    ->select(
+$waitingCampsQuery = Propdelivnow::with([
+    'theFlyer.thePhotos',
+    'theFlyer.theAgent',
+    'theFlyer.theOffice',
+    'theFlyer.theMeta',
+])->select(
         'propflyer_id',
         'propagent_id',
         'emRequest',
@@ -54,8 +58,12 @@ $waitingFlyerCamps = $waitingCampsMap->groupBy('propflyer_id');
 | Requested, started, not completed
 */
 
-$inProgressCampsQuery = propdelivnow::with('theFlyer')
-    ->select(
+$inProgressCampsQuery = Propdelivnow::with([
+    'theFlyer.thePhotos',
+    'theFlyer.theAgent',
+    'theFlyer.theOffice',
+    'theFlyer.theMeta',
+])->select(
         'propflyer_id',
         'propagent_id',
         'emRequest',
@@ -96,8 +104,12 @@ $inProgressFlyerCamps = $inProgressCampsMap->groupBy('propflyer_id');
 | Completed within last 7 days
 */
 
-$completeCampsQuery = Propdelivnow::with('theFlyer')
-    ->select(
+$completeCampsQuery = Propdelivnow::with([
+    'theFlyer.thePhotos',
+    'theFlyer.theAgent',
+    'theFlyer.theOffice',
+    'theFlyer.theMeta',
+])->select(
         'propflyer_id',
         'propagent_id',
         'emRequest',
@@ -141,3 +153,12 @@ $completeFlyerCamps = $completeCampsMap->groupBy('propflyer_id');
 $campaignsWaiting       = $waitingCampsQuery->count();
 $campaignsInProgress    = $inProgressCampsQuery->count();
 $campaignsCompleted     = $completeCampsQuery->count();
+
+dd(
+    $waitingFlyerCamps,
+    $inProgressFlyerCamps,
+    $completeFlyerCamps,
+    $campaignsWaiting,
+    $campaignsInProgress,
+    $campaignsCompleted
+);
