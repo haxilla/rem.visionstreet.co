@@ -13,7 +13,9 @@ $theDate = Carbon::today()->subDays(7);
 */
 
 $waitingCampsQuery = Propdelivnow::with([
-    'theFlyer.thePhotos',
+    'theFlyer.thePhotos' => function ($query) {
+        $query->where('def', 1);
+    },
     'theFlyer.theAgent',
     'theFlyer.theOffice',
     'theFlyer.theMeta',
@@ -59,7 +61,9 @@ $waitingFlyerCamps = $waitingCampsMap->groupBy('propflyer_id');
 */
 
 $inProgressCampsQuery = Propdelivnow::with([
-    'theFlyer.thePhotos',
+    'theFlyer.thePhotos' => function ($query) {
+        $query->where('def', 1);
+    },
     'theFlyer.theAgent',
     'theFlyer.theOffice',
     'theFlyer.theMeta',
@@ -105,7 +109,9 @@ $inProgressFlyerCamps = $inProgressCampsMap->groupBy('propflyer_id');
 */
 
 $completeCampsQuery = Propdelivnow::with([
-    'theFlyer.thePhotos',
+    'theFlyer.thePhotos' => function ($query) {
+        $query->where('def', 1);
+    },
     'theFlyer.theAgent',
     'theFlyer.theOffice',
     'theFlyer.theMeta',
