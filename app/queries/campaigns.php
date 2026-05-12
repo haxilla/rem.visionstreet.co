@@ -159,12 +159,3 @@ $completeFlyerCamps = $completeCampsMap->groupBy('propflyer_id');
 $campaignsWaiting       = $waitingCampsQuery->count();
 $campaignsInProgress    = $inProgressCampsQuery->count();
 $campaignsCompleted     = $completeCampsQuery->count();
-
-dd(
-    $waitingFlyerCamps,
-    $inProgressFlyerCamps,
-    $completeFlyerCamps,
-    $campaignsWaiting,
-    $campaignsInProgress,
-    $campaignsCompleted
-);
