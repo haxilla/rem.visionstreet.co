@@ -359,6 +359,7 @@
                                                 $flyer = $first['flyer'] ?? null;
                                                 $photo = $flyer?->thePhotos?->first();
                                                 $meta  = $flyer?->theMeta;
+                                                $agent = $flyer?->theAgent;
 
                                                 $thumbUrl = null;
 
@@ -512,6 +513,7 @@
                                                 $flyer = $first['flyer'] ?? null;
                                                 $photo = $flyer?->thePhotos?->first();
                                                 $meta  = $flyer?->theMeta;
+                                                $agent = $flyer?->theAgent;
 
                                                 $thumbUrl = null;
 
