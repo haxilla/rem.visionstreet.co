@@ -205,6 +205,7 @@
                                                 $flyer = $first['flyer'] ?? null;
                                                 $photo = $flyer?->thePhotos?->first();
                                                 $meta  = $flyer?->theMeta;
+                                                $agent = $flyer?->theAgent;
 
                                                 $thumbUrl = null;
 
@@ -242,6 +243,26 @@
 
                                                             <div class="mt-1 text-sm text-slate-700">
                                                                 {{ $first['address'] ?? 'No Address' }}
+                                                            </div>
+                                                            <div class="mt-2">
+
+                                                                @if($agent)
+                                                                    <div class="text-xs text-slate-500">
+
+                                                                        <span class="font-medium text-slate-400">
+                                                                            Agent:
+                                                                        </span>
+
+                                                                        <a
+                                                                            href="#"
+                                                                            class="ml-1 font-medium text-[#214e9b] hover:underline"
+                                                                        >
+                                                                            {{ $agent->agtFullName }}
+                                                                        </a>
+
+                                                                    </div>
+                                                                @endif
+
                                                             </div>
                                                         </div>
                                                     </div>
@@ -376,6 +397,26 @@
                                                             <div class="mt-1 text-sm text-slate-700">
                                                                 {{ $first['address'] ?? 'No Address' }}
                                                             </div>
+                                                            <div class="mt-2">
+
+                                                                @if($agent)
+                                                                    <div class="text-xs text-slate-500">
+
+                                                                        <span class="font-medium text-slate-400">
+                                                                            Agent:
+                                                                        </span>
+
+                                                                        <a
+                                                                            href="#"
+                                                                            class="ml-1 font-medium text-[#214e9b] hover:underline"
+                                                                        >
+                                                                            {{ $agent->agtFullName }}
+                                                                        </a>
+
+                                                                    </div>
+                                                                @endif
+
+                                                            </div>
                                                         </div>
                                                     </div>
 
@@ -508,6 +549,26 @@
 
                                                             <div class="mt-1 text-sm text-slate-700">
                                                                 {{ $first['address'] ?? 'No Address' }}
+                                                            </div>
+                                                            <div class="mt-2">
+
+                                                                @if($agent)
+                                                                    <div class="text-xs text-slate-500">
+
+                                                                        <span class="font-medium text-slate-400">
+                                                                            Agent:
+                                                                        </span>
+
+                                                                        <a
+                                                                            href="#"
+                                                                            class="ml-1 font-medium text-[#214e9b] hover:underline"
+                                                                        >
+                                                                            {{ $agent->agtFullName }}
+                                                                        </a>
+
+                                                                    </div>
+                                                                @endif
+
                                                             </div>
                                                         </div>
                                                     </div>
