@@ -3,6 +3,7 @@
 <body data-section="admin" class="relative bg-white min-h-screen font-sans text-gray-800">
 
 @include('public.layout.nav')
+
 @php
     $agents = $data['agents'] ?? collect();
 @endphp
@@ -41,7 +42,7 @@
                         <div class="mt-10 rounded-[24px] bg-white shadow-[0_12px_35px_rgba(15,23,42,0.06)] overflow-hidden">
 
                             <div class="border-b border-slate-200 bg-slate-50 px-6 py-5">
-                                <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                                <div class="flex items-center justify-between">
                                     <div>
                                         <h2 class="text-xl font-semibold text-slate-900">
                                             All Agents
@@ -52,99 +53,113 @@
                                         </p>
                                     </div>
 
-                                    <span class="rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">
-                                        {{ $agents->total() }} agents
-                                    </span>
+                                    @if(method_exists($agents, 'total'))
+                                        <span class="rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">
+                                            {{ $agents->total() }} agents
+                                        </span>
+                                    @endif
                                 </div>
                             </div>
 
                             <div class="overflow-x-auto">
 
-                                {{-- TABLE HEADER --}}
-                                <div class="grid min-w-[920px] grid-cols-[1.4fr_1.4fr_110px_130px_130px_150px] gap-4 border-b border-slate-200 bg-white px-6 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500">
-                                    <div>First Name</div>
-                                    <div>Last Name</div>
-                                    <div>Credits</div>
-                                    <div>Start Date</div>
-                                    <div>Expire Date</div>
-                                    <div class="text-right">Actions</div>
+                                <table class="min-w-full divide-y divide-slate-200">
+                                    <thead class="bg-white">
+                                        <tr>
+                                            <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                                                First Name
+                                            </th>
+
+                                            <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                                                Last Name
+                                            </th>
+
+                                            <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                                                Credits
+                                            </th>
+
+                                            <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                                                Start Date
+                                            </th>
+
+                                            <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                                                Expire Date
+                                            </th>
+
+                                            <th class="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wide text-slate-500">
+                                                Actions
+                                            </th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody class="divide-y divide-slate-100 bg-white">
+
+                                        @forelse($agents as $agent)
+
+                                            <tr class="hover:bg-slate-50">
+
+                                                <td class="whitespace-nowrap px-6 py-3 text-sm font-medium text-slate-900">
+                                                    {{ $agent->agtFirst ?: '—' }}
+                                                </td>
+
+                                                <td class="whitespace-nowrap px-6 py-3 text-sm font-medium text-slate-900">
+                                                    {{ $agent->agtLast ?: '—' }}
+                                                </td>
+
+                                                <td class="whitespace-nowrap px-6 py-3 text-sm text-slate-700">
+                                                    {{ $agent->remCreds ?? 0 }}
+                                                </td>
+
+                                                <td class="whitespace-nowrap px-6 py-3 text-sm text-slate-700">
+                                                    {{ $agent->startDate ? \Carbon\Carbon::parse($agent->startDate)->format('m/d/Y') : '—' }}
+                                                </td>
+
+                                                <td class="whitespace-nowrap px-6 py-3 text-sm text-slate-700">
+                                                    {{ $agent->expireDate ? \Carbon\Carbon::parse($agent->expireDate)->format('m/d/Y') : '—' }}
+                                                </td>
+
+                                                <td class="whitespace-nowrap px-6 py-3 text-right text-sm">
+                                                    <div class="flex items-center justify-end gap-2">
+
+                                                        <a
+                                                            href="/admin/agents/{{ $agent->id }}"
+                                                            class="rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-100"
+                                                        >
+                                                            View
+                                                        </a>
+
+                                                        <a
+                                                            href="/admin/agents/{{ $agent->id }}/login-as"
+                                                            class="rounded-lg bg-[#16213e] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[#22315a]"
+                                                        >
+                                                            Login
+                                                        </a>
+
+                                                    </div>
+                                                </td>
+
+                                            </tr>
+
+                                        @empty
+
+                                            <tr>
+                                                <td colspan="6" class="px-6 py-10 text-center text-sm text-slate-500">
+                                                    No agents found.
+                                                </td>
+                                            </tr>
+
+                                        @endforelse
+
+                                    </tbody>
+                                </table>
+
+                            </div>
+
+                            @if(method_exists($agents, 'links'))
+                                <div class="border-t border-slate-200 bg-slate-50 px-6 py-5">
+                                    {{ $agents->links() }}
                                 </div>
-
-                                {{-- TABLE ROWS --}}
-                                @forelse($agents as $agent)
-
-                                    @php
-                                        $nameParts = preg_split('/\s+/', trim($agent->agtFullName ?? ''), 2);
-
-                                        $firstName = $agent->agtFirstName
-                                            ?? $agent->firstName
-                                            ?? $nameParts[0]
-                                            ?? '';
-
-                                        $lastName = $agent->agtLastName
-                                            ?? $agent->lastName
-                                            ?? $nameParts[1]
-                                            ?? '';
-                                    @endphp
-
-                                    <div class="grid min-w-[920px] grid-cols-[1.4fr_1.4fr_110px_130px_130px_150px] gap-4 border-b border-slate-100 px-6 py-4 text-sm text-slate-700 transition hover:bg-slate-50">
-
-                                        <div class="truncate font-semibold text-slate-900">
-                                            {{ $firstName ?: '—' }}
-                                        </div>
-
-                                        <div class="truncate font-semibold text-slate-900">
-                                            {{ $lastName ?: '—' }}
-                                        </div>
-
-                                        <div>
-                                            {{ $agent->remCreds ?? 0 }}
-                                        </div>
-
-                                        <div>
-                                            {{ $agent->startDate
-                                                ? \Carbon\Carbon::parse($agent->startDate)->format('m/d/Y')
-                                                : '—' }}
-                                        </div>
-
-                                        <div>
-                                            {{ $agent->expireDate
-                                                ? \Carbon\Carbon::parse($agent->expireDate)->format('m/d/Y')
-                                                : '—' }}
-                                        </div>
-
-                                        <div class="flex justify-end gap-2">
-                                            <a
-                                                href="/admin/agents/{{ $agent->id }}"
-                                                class="rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-100"
-                                            >
-                                                View
-                                            </a>
-
-                                            <a
-                                                href="/admin/agents/{{ $agent->id }}/login-as"
-                                                class="rounded-lg bg-[#16213e] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[#22315a]"
-                                            >
-                                                Login
-                                            </a>
-                                        </div>
-
-                                    </div>
-
-                                @empty
-
-                                    <div class="p-10 text-center text-sm text-slate-500">
-                                        No agents found.
-                                    </div>
-
-                                @endforelse
-
-                            </div>
-
-                            {{-- PAGINATION --}}
-                            <div class="border-t border-slate-200 bg-slate-50 px-6 py-5">
-                                {{ $agents->links() }}
-                            </div>
+                            @endif
 
                         </div>
 

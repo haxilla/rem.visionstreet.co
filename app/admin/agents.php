@@ -4,12 +4,14 @@ use App\Models\Core\Propagent;
 
 $agents = Propagent::select([
     'id',
-    'agtFullName',
+    'agtFirst',
+    'agtLast',
     'remCreds',
     'startDate',
     'expireDate',
 ])
-->orderBy('agtFullName')
+->orderBy('agtLast')
+->orderBy('agtFirst')
 ->paginate(25);
 
 $data = [
