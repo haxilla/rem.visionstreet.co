@@ -43,4 +43,13 @@ class adminController extends Controller
         
     }   
 
+
+    public function agentDelete($id)
+    {
+
+        include(app_path().'/admin/agentDelete.php');
+        return redirect()->back();
+
+    }
+
 }

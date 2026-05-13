@@ -29,6 +29,11 @@ Route::post('/member/login',
 //public details
 Route::get('/homedetails/{flyerslug}',
 [guestController::class, 'publicDetails'])->name('public.details');
+
+//agentDelete
+Route::get('/admin/agentDelete/{id}',
+[adminController::class, 'agentDelete'])->name('admin.agentDelete');
+
 //flyer details
 Route::get('/flyer/{flyerId}', [guestController::class, 'flyerDetail'])->name('flyer.detail');
 
