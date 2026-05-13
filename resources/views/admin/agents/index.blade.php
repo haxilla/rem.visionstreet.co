@@ -307,7 +307,7 @@
 
                                                                 <a
                                                                     href="/admin/agentDelete/{{ $agent->id }}"
-                                                                    class="rounded-lg bg-red-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-red-700"
+                                                                    class="inline-flex items-center rounded-lg !bg-red-600 px-3 py-1.5 text-xs font-semibold !text-white shadow-sm hover:!bg-red-700"
                                                                 >
                                                                     Delete
                                                                 </a>
