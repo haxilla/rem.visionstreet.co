@@ -17,3 +17,5 @@ $agents = Propagent::select([
 $data = [
     'agents' => $agents,
 ];
+
+dd($agents);
