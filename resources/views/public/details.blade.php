@@ -292,7 +292,7 @@
                             <div>{{ $agent->agtMainPhone }}</div>
                         @endif
                         <div>
-                            <button>
+                            <button style="background-color: #000066; color: white; padding: 8px 16px; border-radius: 4px; font-size: 14px; font-weight: 600; margin-top: 8px;">
                                 Email Agent
                             </button>
                         </div>
