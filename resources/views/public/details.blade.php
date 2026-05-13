@@ -300,12 +300,12 @@
 
                     {{-- Office Logo --}}
                     @if($officeLogo)
-                        <div class="w-[280px] h-[120px] flex-shrink-0 flex items-center justify-center px-4 overflow-hidden">
+                        <div class="w-[190px] h-[90px] flex-shrink-0 flex items-center justify-center px-3 overflow-hidden">
 
                             <img
                                 src="{{ $officeLogo }}"
                                 alt="{{ $office?->officeName }}"
-                                class="max-w-full max-h-[90px] object-contain"
+                                style="max-width: 170px; max-height: 70px; width: auto; height: auto; object-fit: contain;"
                             >
 
                         </div>
