@@ -2,10 +2,16 @@
 
 use App\Models\Core\Propagent;
 
-$agent = Propagent::with([
-    'theAgentMeta',
-    'theAgentCleanup',
-    'theAgtOffice',
-])->first();
+$agents = Propagent::select([
+    'id',
+    'agtFullName',
+    'remCreds',
+    'startDate',
+    'expireDate',
+])
+->orderBy('agtFullName')
+->paginate(25);
 
-dd($agent);
+$data = [
+    'agents' => $agents,
+];
