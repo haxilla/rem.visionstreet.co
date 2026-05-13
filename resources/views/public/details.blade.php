@@ -67,7 +67,6 @@
     if ($agent?->agtLogo && $office?->officeID) {
         $officeLogo = "https://realtyrepublic.com/officeLogos/{$office->officeID}/{$agent->agtLogo}";
     }
-
 @endphp
 
 <style>
@@ -137,9 +136,10 @@
 
     </div>
 
-    {{-- Main content --}}
-    <div class="grid grid-cols-1 gap-9 mt-6">
+    {{-- Main content + right column --}}
+    <div class="grid grid-cols-1 lg:grid-cols-[1fr_260px] gap-9 mt-6">
 
+        {{-- Left: main content --}}
         <main>
 
             <div class="mb-3">
@@ -239,14 +239,13 @@
             <hr class="my-8 border-slate-300 max-w-[760px]">
 
             {{-- Remarks --}}
-            <section class="max-w-[980px]">
+            <section class="max-w-[760px]">
                 <h2 class="text-2xl font-bold mb-5">What's special</h2>
 
                 <p class="text-lg leading-8">
                     {{ $details->theRemarks->xPubRemarks ?? '' }}
                 </p>
             </section>
-
 
             {{-- Bottom Agent Section --}}
             <div class="max-w-[760px] mt-10 border border-slate-300 bg-white">
@@ -309,44 +308,109 @@
 
             </div>
 
+        </main>
+
+        {{-- Right column: promo only --}}
+        <div class="flex flex-col gap-4">
+
             {{-- Promo --}}
-            <div class="mt-10 max-w-[420px]">
-                <div class="sdb">
-                    <div class="sdb-top">
-                        <p class="sdb-eyebrow">For Real Estate Agents</p>
-                        <p class="sdb-headline">Email your listing to thousands of interested buyers &amp; agents — instantly</p>
-                        <div class="sdb-badge"><span class="sdb-price">$9</span></div>
-                        <p class="sdb-from">Starting at just $9</p>
-                    </div>
+            <div class="sdb">
+                <div class="sdb-top">
+                    <p class="sdb-eyebrow">For Real Estate Agents</p>
+                    <p class="sdb-headline">Email your listing to thousands of interested buyers &amp; agents — instantly</p>
+                    <div class="sdb-badge"><span class="sdb-price">$9</span></div>
+                    <p class="sdb-from">Starting at just $9</p>
+                </div>
 
-                    <div class="sdb-band"><p>Premium Services for Less</p></div>
+                <div class="sdb-band"><p>Premium Services for Less</p></div>
 
-                    <div class="sdb-list">
-                        <ul>
-                            <li><span class="sdb-check">&#10003;</span> Instant Proof &amp; Delivery</li>
-                            <li><span class="sdb-check">&#10003;</span> Instant Copy to Home Seller</li>
-                            <li><span class="sdb-check">&#10003;</span> Flyers Saved &amp; Editable for Resends</li>
-                            <li><span class="sdb-check">&#10003;</span> Upload Unlimited Photos</li>
-                            <li><span class="sdb-check">&#10003;</span> FREE Web Page Slide Show</li>
-                            <li><span class="sdb-check">&#10003;</span> FREE Page View Reports</li>
-                            <li><span class="sdb-check">&#10003;</span> Personal Contact Copy Center</li>
-                            <li><span class="sdb-check">&#10003;</span> Multiple Flyer Templates</li>
-                        </ul>
-                    </div>
+                <div class="sdb-list">
+                    <ul>
+                        <li><span class="sdb-check">&#10003;</span> Instant Proof &amp; Delivery</li>
+                        <li><span class="sdb-check">&#10003;</span> Instant Copy to Home Seller</li>
+                        <li><span class="sdb-check">&#10003;</span> Flyers Saved &amp; Editable for Resends</li>
+                        <li><span class="sdb-check">&#10003;</span> Upload Unlimited Photos</li>
+                        <li><span class="sdb-check">&#10003;</span> FREE Web Page Slide Show</li>
+                        <li><span class="sdb-check">&#10003;</span> FREE Page View Reports</li>
+                        <li><span class="sdb-check">&#10003;</span> Personal Contact Copy Center</li>
+                        <li><span class="sdb-check">&#10003;</span> Multiple Flyer Templates</li>
+                    </ul>
+                </div>
 
-                    <div class="sdb-more">And More!</div>
+                <div class="sdb-more">And More!</div>
 
-                    <div class="sdb-cta">
-                        <a href="#" class="sdb-btn">Send My Listing Now</a>
-                    </div>
+                <div class="sdb-cta">
+                    <a href="#" class="sdb-btn">Send My Listing Now</a>
                 </div>
             </div>
 
-        </main>
+        </div>{{-- end right column --}}
 
-    </div>
+    </div>{{-- end main grid --}}
 
 </section>
+
+<div id="photoModal" class="hidden fixed inset-0 z-[9999] bg-black">
+
+    <div class="absolute top-0 left-0 right-0 z-30 h-16 bg-black flex items-center justify-between px-5">
+        <button
+            id="photoModalClose"
+            type="button"
+            class="text-white text-sm font-bold"
+        >
+            ✕ Close
+        </button>
+
+        <div class="text-white text-sm font-semibold">
+            {{ $details->xFullStreet }}
+        </div>
+    </div>
+
+    <button
+        type="button"
+        class="photo-modal-prev absolute left-4 top-1/2 z-30 -translate-y-1/2 bg-white text-black rounded-full w-12 h-12 text-3xl"
+    >
+        ‹
+    </button>
+
+    <button
+        type="button"
+        class="photo-modal-next absolute right-4 top-1/2 z-30 -translate-y-1/2 bg-white text-black rounded-full w-12 h-12 text-3xl"
+    >
+        ›
+    </button>
+
+    <div class="swiper photo-modal-main h-[calc(100vh-150px)] pt-16">
+        <div class="swiper-wrapper">
+            @foreach($modalPhotos as $photo)
+                <div class="swiper-slide !flex items-center justify-center">
+                    <img
+                        src="{{ $photoPath($photo) }}"
+                        class="max-h-[calc(100vh-180px)] max-w-[90vw] object-contain"
+                        alt=""
+                    >
+                </div>
+            @endforeach
+        </div>
+    </div>
+
+    <div class="absolute bottom-0 left-0 right-0 z-30 h-[110px] bg-black px-6 py-4">
+        <div class="swiper photo-modal-thumbs max-w-5xl mx-auto">
+            <div class="swiper-wrapper">
+                @foreach($modalPhotos as $photo)
+                    <div class="swiper-slide cursor-pointer opacity-60">
+                        <img
+                            src="{{ $photoPath($photo) }}"
+                            class="h-20 w-full object-cover rounded"
+                            alt=""
+                        >
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
+
+</div>
 
 @vite(['resources/js/photo-modal.js'])
 </body>
