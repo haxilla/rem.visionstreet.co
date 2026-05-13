@@ -248,12 +248,13 @@
             </section>
 
             {{-- Bottom Agent Section --}}
-            <div class="max-w-[760px] mt-10 border border-slate-300 bg-white">
+            <div class="max-w-[760px] mt-10 border border-slate-300 bg-white overflow-hidden">
 
-                <div class="flex items-center p-2">
+                <div class="flex items-center min-h-[135px]">
 
+                    {{-- Agent Photo --}}
                     @if($agentImg)
-                        <div class="w-[86px] h-[120px] flex-shrink-0 overflow-hidden">
+                        <div class="w-[95px] h-[125px] flex-shrink-0 overflow-hidden ml-2">
                             <img
                                 src="{{ $agentImg }}"
                                 alt="{{ $agent?->agtFullName }}"
@@ -262,10 +263,11 @@
                         </div>
                     @endif
 
-                    <div class="pl-4 flex-1 text-[14px] leading-[1.55] text-[#000066]">
+                    {{-- Agent Details --}}
+                    <div class="px-4 flex-1 text-[14px] leading-[1.45] text-[#000066] py-3">
 
                         @if($agent?->agtFullName)
-                            <div class="text-[18px] leading-tight font-bold text-[#000066]">
+                            <div class="text-[18px] leading-tight font-bold text-[#000066] mb-1">
                                 {{ $agent->agtFullName }}
                             </div>
                         @endif
@@ -280,7 +282,9 @@
 
                         @if($office?->officeCity)
                             <div>
-                                {{ $office->officeCity }}, {{ $office->officeState }} {{ $office->officeZip }}
+                                {{ $office->officeCity }},
+                                {{ $office->officeState }}
+                                {{ $office->officeZip }}
                             </div>
                         @endif
 
@@ -294,13 +298,16 @@
 
                     </div>
 
+                    {{-- Office Logo --}}
                     @if($officeLogo)
-                        <div class="w-[220px] flex-shrink-0 flex items-center justify-center pr-6">
+                        <div class="w-[280px] h-[120px] flex-shrink-0 flex items-center justify-center px-4 overflow-hidden">
+
                             <img
                                 src="{{ $officeLogo }}"
                                 alt="{{ $office?->officeName }}"
-                                class="max-w-[170px] max-h-[70px] object-contain"
+                                class="max-w-full max-h-[90px] object-contain"
                             >
+
                         </div>
                     @endif
 
