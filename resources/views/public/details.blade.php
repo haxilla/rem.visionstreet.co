@@ -247,67 +247,60 @@
                 </p>
             </section>
 
-            {{-- Bottom Agent Section --}}
-            <div class="max-w-[980px] mt-10 border border-[#cfcfcf] bg-[#efefef] overflow-hidden">
 
-                <div class="flex flex-col md:flex-row">
+            {{-- Bottom Agent Section --}}
+            <div class="max-w-[760px] mt-10 border border-slate-300 bg-white">
+
+                <div class="flex items-center p-2">
 
                     @if($agentImg)
-                        <div class="w-full md:w-[170px] flex-shrink-0 bg-[#d7d7d7]">
+                        <div class="w-[86px] h-[120px] flex-shrink-0 overflow-hidden">
                             <img
                                 src="{{ $agentImg }}"
-                                alt="{{ $agent->agtFullName }}"
-                                class="w-full h-full object-cover min-h-[210px]"
+                                alt="{{ $agent?->agtFullName }}"
+                                class="w-full h-full object-cover"
                             >
                         </div>
                     @endif
 
-                    <div class="flex-1 px-7 py-6 flex flex-col justify-center">
+                    <div class="pl-4 flex-1 text-[14px] leading-[1.55] text-[#000066]">
 
-                        <div class="text-[36px] leading-none font-bold text-[#1a1a66] mb-2">
-                            {{ $agent->agtFullName }}
-                        </div>
+                        @if($agent?->agtFullName)
+                            <div class="text-[18px] leading-tight font-bold text-[#000066]">
+                                {{ $agent->agtFullName }}
+                            </div>
+                        @endif
 
                         @if($office?->officeName)
-                            <div class="text-[22px] text-black mb-2">
-                                {{ $office->officeName }}
-                            </div>
+                            <div>{{ $office->officeName }}</div>
                         @endif
 
                         @if($office?->officeAddress1)
-                            <div class="text-[19px] leading-8 text-black">
-                                {{ $office->officeAddress1 }}
-                            </div>
-                        @endif
-
-                        @if($office?->officeAddress2)
-                            <div class="text-[19px] leading-8 text-black">
-                                {{ $office->officeAddress2 }}
-                            </div>
+                            <div>{{ $office->officeAddress1 }}</div>
                         @endif
 
                         @if($office?->officeCity)
-                            <div class="text-[19px] leading-8 text-black">
-                                {{ $office->officeCity }},
-                                {{ $office->officeState }}
-                                {{ $office->officeZip }}
+                            <div>
+                                {{ $office->officeCity }}, {{ $office->officeState }} {{ $office->officeZip }}
                             </div>
                         @endif
 
                         @if($agent?->agtMainPhone)
-                            <div class="text-[24px] leading-8 text-black mt-2 font-semibold">
-                                {{ $agent->agtMainPhone }}
-                            </div>
+                            <div>{{ $agent->agtMainPhone }}</div>
+                        @endif
+
+                        @if($office?->officeAddress1)
+                            <div>{{ $office->officeAddress1 }}</div>
                         @endif
 
                     </div>
 
                     @if($officeLogo)
-                        <div class="w-full md:w-[240px] flex items-center justify-center px-8 py-6 border-t md:border-t-0 md:border-l border-[#d3d3d3] bg-[#efefef]">
+                        <div class="w-[220px] flex-shrink-0 flex items-center justify-center pr-6">
                             <img
                                 src="{{ $officeLogo }}"
                                 alt="{{ $office?->officeName }}"
-                                class="max-h-[95px] w-auto object-contain"
+                                class="max-w-[170px] max-h-[70px] object-contain"
                             >
                         </div>
                     @endif
