@@ -292,10 +292,6 @@
                             <div>{{ $agent->agtMainPhone }}</div>
                         @endif
 
-                        @if($office?->officeAddress1)
-                            <div>{{ $office->officeAddress1 }}</div>
-                        @endif
-
                     </div>
 
                     {{-- Office Logo --}}
@@ -305,7 +301,7 @@
                             <img
                                 src="{{ $officeLogo }}"
                                 alt="{{ $office?->officeName }}"
-                                style="max-width: 170px; max-height: 70px; width: auto; height: auto; object-fit: contain;"
+                                style="max-width: 200px; max-height: 70px; width: auto; height: auto; object-fit: contain;"
                             >
 
                         </div>
