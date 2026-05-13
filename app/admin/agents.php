@@ -18,4 +18,6 @@ $data = [
     'agents' => $agents,
 ];
 
+$agents=Propagent::all();
+
 dd($agents);
