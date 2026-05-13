@@ -18,6 +18,6 @@ $data = [
     'agents' => $agents,
 ];
 
-$agents=Propagent::all();
+$agents=Propagent::limit(25)->get();
 
 dd($agents);
