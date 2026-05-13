@@ -291,6 +291,11 @@
                         @if($agent?->agtMainPhone)
                             <div>{{ $agent->agtMainPhone }}</div>
                         @endif
+                        <div>
+                            <button>
+                                Email Agent
+                            </button>
+                        </div>
 
                     </div>
 
