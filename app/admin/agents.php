@@ -1,23 +1,37 @@
 <?php
-
 use App\Models\Core\Propagent;
 
-/*
-$agents = Propagent::select([
+$activeAgents = Propagent::select([
     'id',
     'agtFirst',
     'agtLast',
+    'agtFullName',
+    'agtUname',
+    'agtEmail',
     'remCreds',
     'startDate',
     'expireDate',
 ])
-->orderBy('agtLast')
-->orderBy('agtFirst')
-->paginate(25);
-*/
+->whereNotNull('startDate')
+->orderBy('startDate', 'desc')
+->paginate(25, ['*'], 'active_page');
 
-$agents=Propagent::limit(25)->get();
+$noStartAgents = Propagent::select([
+    'id',
+    'agtFirst',
+    'agtLast',
+    'agtFullName',
+    'agtUname',
+    'agtEmail',
+    'remCreds',
+    'startDate',
+    'expireDate',
+])
+->whereNull('startDate')
+->orderBy('id', 'desc')
+->paginate(25, ['*'], 'nostart_page');
 
 $data = [
-    'agents' => $agents,
+    'activeAgents' => $activeAgents,
+    'noStartAgents' => $noStartAgents,
 ];
