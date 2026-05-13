@@ -51,7 +51,7 @@
         $details->xZip
     );
 
-    $agent = $details->theAgent ?? null;
+        $agent = $details->theAgent ?? null;
     $office = $details->theOffice ?? null;
 
     $agentImg = null;
@@ -67,7 +67,6 @@
     if ($agent?->agtLogo && $office?->officeID) {
         $officeLogo = "https://realtyrepublic.com/officeLogos/{$office->officeID}/{$agent->agtLogo}";
     }
-
 @endphp
 
 <style>
@@ -137,9 +136,10 @@
 
     </div>
 
-    {{-- Main content --}}
-    <div class="grid grid-cols-1 gap-9 mt-6">
+    {{-- Main content + right column --}}
+    <div class="grid grid-cols-1 lg:grid-cols-[1fr_260px] gap-9 mt-6">
 
+        {{-- Left: main content --}}
         <main>
 
             <div class="mb-3">
@@ -235,11 +235,11 @@
                     src="https://www.google.com/maps?q={{ $mapAddress }}&output=embed">
                 </iframe>
             </div>
-
             <hr class="my-8 border-slate-300 max-w-[760px]">
 
+
             {{-- Remarks --}}
-            <section class="max-w-[980px]">
+            <section class="max-w-[760px]">
                 <h2 class="text-2xl font-bold mb-5">What's special</h2>
 
                 <p class="text-lg leading-8">
@@ -247,113 +247,169 @@
                 </p>
             </section>
 
-            {{-- Bottom Agent Section --}}
-            <div class="max-w-[980px] mt-10 border border-[#cfcfcf] bg-[#efefef] overflow-hidden">
-
-                <div class="flex flex-col md:flex-row">
-
-                    @if($agentImg)
-                        <div class="w-full md:w-[170px] flex-shrink-0 bg-[#d7d7d7]">
-                            <img
-                                src="{{ $agentImg }}"
-                                alt="{{ $agent->agtFullName }}"
-                                class="w-full h-full object-cover min-h-[210px]"
-                            >
-                        </div>
-                    @endif
-
-                    <div class="flex-1 px-7 py-6 flex flex-col justify-center">
-
-                        <div class="text-[36px] leading-none font-bold text-[#1a1a66] mb-2">
-                            {{ $agent->agtFullName }}
-                        </div>
-
-                        @if($office?->officeName)
-                            <div class="text-[22px] text-black mb-2">
-                                {{ $office->officeName }}
-                            </div>
-                        @endif
-
-                        @if($office?->officeAddress1)
-                            <div class="text-[19px] leading-8 text-black">
-                                {{ $office->officeAddress1 }}
-                            </div>
-                        @endif
-
-                        @if($office?->officeAddress2)
-                            <div class="text-[19px] leading-8 text-black">
-                                {{ $office->officeAddress2 }}
-                            </div>
-                        @endif
-
-                        @if($office?->officeCity)
-                            <div class="text-[19px] leading-8 text-black">
-                                {{ $office->officeCity }},
-                                {{ $office->officeState }}
-                                {{ $office->officeZip }}
-                            </div>
-                        @endif
-
-                        @if($agent?->agtMainPhone)
-                            <div class="text-[24px] leading-8 text-black mt-2 font-semibold">
-                                {{ $agent->agtMainPhone }}
-                            </div>
-                        @endif
-
-                    </div>
-
-                    @if($officeLogo)
-                        <div class="w-full md:w-[240px] flex items-center justify-center px-8 py-6 border-t md:border-t-0 md:border-l border-[#d3d3d3] bg-[#efefef]">
-                            <img
-                                src="{{ $officeLogo }}"
-                                alt="{{ $office?->officeName }}"
-                                class="max-h-[95px] w-auto object-contain"
-                            >
-                        </div>
-                    @endif
-
-                </div>
-
-            </div>
-
-            {{-- Promo --}}
-            <div class="mt-10 max-w-[420px]">
-                <div class="sdb">
-                    <div class="sdb-top">
-                        <p class="sdb-eyebrow">For Real Estate Agents</p>
-                        <p class="sdb-headline">Email your listing to thousands of interested buyers &amp; agents — instantly</p>
-                        <div class="sdb-badge"><span class="sdb-price">$9</span></div>
-                        <p class="sdb-from">Starting at just $9</p>
-                    </div>
-
-                    <div class="sdb-band"><p>Premium Services for Less</p></div>
-
-                    <div class="sdb-list">
-                        <ul>
-                            <li><span class="sdb-check">&#10003;</span> Instant Proof &amp; Delivery</li>
-                            <li><span class="sdb-check">&#10003;</span> Instant Copy to Home Seller</li>
-                            <li><span class="sdb-check">&#10003;</span> Flyers Saved &amp; Editable for Resends</li>
-                            <li><span class="sdb-check">&#10003;</span> Upload Unlimited Photos</li>
-                            <li><span class="sdb-check">&#10003;</span> FREE Web Page Slide Show</li>
-                            <li><span class="sdb-check">&#10003;</span> FREE Page View Reports</li>
-                            <li><span class="sdb-check">&#10003;</span> Personal Contact Copy Center</li>
-                            <li><span class="sdb-check">&#10003;</span> Multiple Flyer Templates</li>
-                        </ul>
-                    </div>
-
-                    <div class="sdb-more">And More!</div>
-
-                    <div class="sdb-cta">
-                        <a href="#" class="sdb-btn">Send My Listing Now</a>
-                    </div>
-                </div>
-            </div>
-
         </main>
 
-    </div>
+        {{-- Right column: e-flyer widget + contact sidebar --}}
+        <div class="flex flex-col gap-4">
+
+            {{-- Agent Info--}}
+            <div class="rounded-2xl bg-white border border-slate-300 shadow-sm p-6 max-w-sm text-center">
+
+                @if($agentImg)
+                    <img
+                        src="{{ $agentImg }}"
+                        alt="{{ $agent->agtFullName }}"
+                        class="w-28 h-28 rounded-full object-contain mx-auto bg-slate-100 p-1"
+                    >
+                @endif
+
+                <div class="mt-5 text-2xl font-bold text-slate-900">
+                    {{ $agent->agtFullName }}
+                </div>
+
+                @if($agent->agtDesignations)
+                    <div class="mt-1 text-sm text-slate-500">
+                        {{ $agent->agtDesignations }}
+                    </div>
+                @endif
+
+                @if($agent->agtMainPhone)
+                    <div class="mt-4 text-xl font-medium text-slate-700">
+                        {{ $agent->agtMainPhone }}
+                    </div>
+                @endif
+
+                @if($officeLogo)
+                    <div class="mt-5">
+                        <img
+                            src="{{ $officeLogo }}"
+                            alt="{{ $office?->officeName }}"
+                            class="h-16 mx-auto object-contain"
+                        >
+                    </div>
+                @endif
+
+                @if($office?->officeName)
+                    <div class="mt-5 text-lg font-semibold text-slate-800">
+                        {{ $office->officeName }}
+                    </div>
+                @endif
+
+                @if($office?->officeAddress1 || $office?->officeCity)
+                    <div class="mt-2 text-sm text-slate-500 leading-relaxed">
+                        {{ $office->officeAddress1 }}<br>
+                        {{ $office->officeCity }}, {{ $office->officeState }} {{ $office->officeZip }}
+                    </div>
+                @endif
+
+                <div class="mt-6">
+                    <a
+                        href="tel:{{ preg_replace('/[^0-9]/', '', $agent->agtMainPhone) }}"
+                        class="inline-flex items-center justify-center w-full rounded-xl border border-blue-600 text-blue-600 font-semibold px-5 py-3 hover:bg-blue-600 hover:text-white transition"
+                    >
+                        Contact agent
+                    </a>
+                </div>
+
+            </div>
+            {{-- Promo --}}
+            <div class="sdb">
+                <div class="sdb-top">
+                    <p class="sdb-eyebrow">For Real Estate Agents</p>
+                    <p class="sdb-headline">Email your listing to thousands of interested buyers &amp; agents — instantly</p>
+                    <div class="sdb-badge"><span class="sdb-price">$9</span></div>
+                    <p class="sdb-from">Starting at just $9</p>
+                </div>
+
+                <div class="sdb-band"><p>Premium Services for Less</p></div>
+
+                <div class="sdb-list">
+                    <ul>
+                        <li><span class="sdb-check">&#10003;</span> Instant Proof &amp; Delivery</li>
+                        <li><span class="sdb-check">&#10003;</span> Instant Copy to Home Seller</li>
+                        <li><span class="sdb-check">&#10003;</span> Flyers Saved &amp; Editable for Resends</li>
+                        <li><span class="sdb-check">&#10003;</span> Upload Unlimited Photos</li>
+                        <li><span class="sdb-check">&#10003;</span> FREE Web Page Slide Show</li>
+                        <li><span class="sdb-check">&#10003;</span> FREE Page View Reports</li>
+                        <li><span class="sdb-check">&#10003;</span> Personal Contact Copy Center</li>
+                        <li><span class="sdb-check">&#10003;</span> Multiple Flyer Templates</li>
+                    </ul>
+                </div>
+
+                <div class="sdb-more">And More!</div>
+
+                <div class="sdb-cta">
+                    <a href="#" class="sdb-btn">Send My Listing Now</a>
+                </div>
+            </div>
+
+        </div>{{-- end right column --}}
+
+    </div>{{-- end main grid --}}
 
 </section>
+
+<div id="photoModal" class="hidden fixed inset-0 z-[9999] bg-black">
+
+    <div class="absolute top-0 left-0 right-0 z-30 h-16 bg-black flex items-center justify-between px-5">
+        <button
+            id="photoModalClose"
+            type="button"
+            class="text-white text-sm font-bold"
+        >
+            ✕ Close
+        </button>
+
+        <div class="text-white text-sm font-semibold">
+            {{ $details->xFullStreet }}
+        </div>
+    </div>
+
+    <button
+        type="button"
+        class="photo-modal-prev absolute left-4 top-1/2 z-30 -translate-y-1/2 bg-white text-black rounded-full w-12 h-12 text-3xl"
+    >
+        ‹
+    </button>
+
+    <button
+        type="button"
+        class="photo-modal-next absolute right-4 top-1/2 z-30 -translate-y-1/2 bg-white text-black rounded-full w-12 h-12 text-3xl"
+    >
+        ›
+    </button>
+
+    <div class="swiper photo-modal-main h-[calc(100vh-150px)] pt-16">
+        <div class="swiper-wrapper">
+            @foreach($modalPhotos as $photo)
+                <div class="swiper-slide !flex items-center justify-center">
+                    <img
+                        src="{{ $photoPath($photo) }}"
+                        class="max-h-[calc(100vh-180px)] max-w-[90vw] object-contain"
+                        alt=""
+                    >
+                </div>
+            @endforeach
+        </div>
+    </div>
+
+    <div class="absolute bottom-0 left-0 right-0 z-30 h-[110px] bg-black px-6 py-4">
+        <div class="swiper photo-modal-thumbs max-w-5xl mx-auto">
+            <div class="swiper-wrapper">
+                @foreach($modalPhotos as $photo)
+                    <div class="swiper-slide cursor-pointer opacity-60">
+                        <img
+                            src="{{ $photoPath($photo) }}"
+                            class="h-20 w-full object-cover rounded"
+                            alt=""
+                        >
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
+
+</div>
 
 @vite(['resources/js/photo-modal.js'])
 </body>
