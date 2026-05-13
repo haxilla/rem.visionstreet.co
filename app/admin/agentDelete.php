@@ -17,7 +17,7 @@ if ($agent->startDate) {
 */
 
 DB::connection('remote_realtyemails')
-    ->table('remailagents')
+    ->table('emailagents')
     ->where('umid', $agent->id)
     ->delete();
 
