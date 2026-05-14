@@ -1,6 +1,6 @@
 @include('public.layout.head')
 
-<body data-section="admin" class="linkcheck relative bg-white min-h-screen font-sans text-gray-800">
+<body data-section="admin" class="relative bg-white min-h-screen font-sans text-gray-800">
 
 @include('public.layout.nav')
 
@@ -182,18 +182,14 @@
                                                             <div class="flex justify-end gap-2">
 
                                                                 <a
-                                                                    href="/admin/agentview"
-                                                                    data-action="handle"
-                                                                    data-value="agentid:{{ $agent->id }}"
+                                                                    href="/admin/agentView/{{ $agent->id }}"
                                                                     class="rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-100"
                                                                 >
                                                                     View
                                                                 </a>
 
                                                                 <a
-                                                                    href="/admin/agentlogin"
-                                                                    data-action="handle"
-                                                                    data-value="agentid:{{ $agent->id }}"
+                                                                    href="/admin/agentLogin/{{ $agent->id }}"
                                                                     class="rounded-lg bg-[#16213e] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[#22315a]"
                                                                 >
                                                                     Login

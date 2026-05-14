@@ -34,6 +34,12 @@ Route::get('/homedetails/{flyerslug}',
 Route::get('/admin/agentDelete/{id}',
 [adminController::class, 'agentDelete'])->name('admin.agentDelete');
 
+Route::get('/admin/agentView/{id}',
+[adminController::class, 'agentView'])->name('admin.agentView');
+
+Route::get('/admin/agentLogin/{id}',
+[adminController::class, 'agentLogin'])->name('admin.agentLogin');
+
 //flyer details
 Route::get('/flyer/{flyerId}', [guestController::class, 'flyerDetail'])->name('flyer.detail');
 
