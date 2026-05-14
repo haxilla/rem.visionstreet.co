@@ -47,7 +47,23 @@ class adminController extends Controller
     public function agentDelete($id)
     {
 
-        include(app_path().'/admin/agentDelete.php');
+        include(app_path().'/admin/agent/delete.php');
+        return redirect()->back();
+
+    }
+
+    public function agentView($id)
+    {
+
+        include(app_path().'/admin/agent/view.php');
+        return redirect()->back();
+
+    }
+
+    public function agentLogin($id)
+    {
+
+        include(app_path().'/admin/agent/login.php');
         return redirect()->back();
 
     }
