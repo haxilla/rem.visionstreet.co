@@ -64,7 +64,6 @@ class adminController extends Controller
     {
 
         include(app_path().'/admin/agent/login.php');
-        return redirect()->route('/member/dashboard');
+        return redirect('/member/dashboard');
     }
-
 }
