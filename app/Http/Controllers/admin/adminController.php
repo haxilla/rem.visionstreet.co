@@ -62,10 +62,16 @@ class adminController extends Controller
 
     public function agentLogin($id)
     {
+        $member = Member::findOrFail($id);
 
-        include(app_path().'/admin/agent/login.php');
-        return redirect()->back();
+        session([
+            'impersonator_admin_id' => Auth::guard('admin')->id(),
+            'impersonating_member_id' => $member->id,
+        ]);
 
+        Auth::guard('member')->login($member);
+
+        return redirect()->route('/member/dashboard');
     }
 
 }
