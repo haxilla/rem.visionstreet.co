@@ -1,8 +1,10 @@
 <?php
 
 Use App\Models\Core\Propflyer;
+use Illuminate\Support\Facades\Auth;
 
-$agentID=auth::guard('member')->id();
+
+$agentID=Auth::guard('member')->id();
 
 $propflyers = Propflyer::where('agentId', $agentID)->get();
 
