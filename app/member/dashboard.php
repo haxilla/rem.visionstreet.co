@@ -6,6 +6,6 @@ use Illuminate\Support\Facades\Auth;
 
 $agentID=Auth::guard('member')->id();
 
-$propflyers = Propflyer::where('agentId', $agentID)->get();
+$propflyers = Propflyer::where('propagent_id', $agentID)->get();
 
 dd($propflyers);
