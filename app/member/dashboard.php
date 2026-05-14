@@ -1,6 +1,6 @@
 <?php
 
-Use App\Models\Core\Propflyer
+Use App\Models\Core\Propflyer;
 
 $propflyers = Propflyer::where('agentId', $id)->get();
 
