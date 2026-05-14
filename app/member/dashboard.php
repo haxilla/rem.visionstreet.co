@@ -2,6 +2,8 @@
 
 Use App\Models\Core\Propflyer;
 
-$propflyers = Propflyer::where('agentId', $id)->get();
+$agentID=auth::guard('member')->id();
+
+$propflyers = Propflyer::where('agentId', $agentID)->get();
 
 dd($propflyers);
