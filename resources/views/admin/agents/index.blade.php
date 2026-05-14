@@ -1,6 +1,6 @@
 @include('public.layout.head')
 
-<body data-section="admin" class="relative bg-white min-h-screen font-sans text-gray-800">
+<body data-section="admin" class="linkcheck relative bg-white min-h-screen font-sans text-gray-800">
 
 @include('public.layout.nav')
 
