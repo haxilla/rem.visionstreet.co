@@ -2,9 +2,11 @@
 
 namespace App\Models\Core;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Propagent extends Model{
+class Propagent extends Authenticatable
+
+{
 
     protected $table='remuserdb.propagents';
     public $incrementing = true;
