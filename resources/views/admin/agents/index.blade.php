@@ -182,14 +182,18 @@
                                                             <div class="flex justify-end gap-2">
 
                                                                 <a
-                                                                    href="/admin/agents/{{ $agent->id }}"
+                                                                    href="/admin/agentview"
+                                                                    data-action="handle"
+                                                                    data-value="agentid:{{ $agent->id }}"
                                                                     class="rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-100"
                                                                 >
                                                                     View
                                                                 </a>
 
                                                                 <a
-                                                                    href="/admin/agents/{{ $agent->id }}/login-as"
+                                                                    href="/admin/agentlogin"
+                                                                    data-action="handle"
+                                                                    data-value="agentid:{{ $agent->id }}"
                                                                     class="rounded-lg bg-[#16213e] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[#22315a]"
                                                                 >
                                                                     Login
