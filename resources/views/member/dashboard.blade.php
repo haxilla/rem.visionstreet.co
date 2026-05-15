@@ -2,7 +2,7 @@
 
 <body data-section="member" class="relative min-h-screen bg-[#f0f2f7] font-sans text-slate-800">
 
-@include('public.layout.nav')
+@include('member.layout.nav')
 
 @php
     use Illuminate\Support\Carbon;
