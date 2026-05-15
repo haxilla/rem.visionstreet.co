@@ -92,20 +92,6 @@
             </div>
         </div>
 
-        {{-- ── Summary stats ── --}}
-        <div class="mb-10 grid grid-cols-1 gap-4 md:grid-cols-3">
-            @foreach([
-                ['Emails Delivered',    number_format($totalDelivered)],
-                ['Completed Campaigns', $completedCampaigns->count()],
-                ['Flyer Views',         number_format($totalViews)],
-            ] as [$label, $val])
-                <div class="rounded-2xl bg-white px-6 py-5 shadow-sm ring-1 ring-slate-200">
-                    <div class="text-xs font-bold uppercase tracking-wide text-slate-400">{{ $label }}</div>
-                    <div class="mt-2 text-3xl font-black text-slate-900">{{ $val }}</div>
-                </div>
-            @endforeach
-        </div>
-
         {{-- ══════════════════════════════════════════
              SENT FLYERS
         ══════════════════════════════════════════ --}}
