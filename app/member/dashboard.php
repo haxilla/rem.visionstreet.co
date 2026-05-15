@@ -17,3 +17,7 @@ $propdelivs = Propdelivnow::with([
 ->where('propagent_id', $agentID)
 ->get();
 
+$data=[
+    'propflyers' => $propflyers,
+    'propdelivs' => $propdelivs,
+];
