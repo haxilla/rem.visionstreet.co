@@ -87,6 +87,7 @@
 
         <div class="overflow-hidden rounded-3xl bg-white shadow-xl ring-1 ring-slate-200">
 
+            {{-- ── Header ── --}}
             <div class="bg-gradient-to-r from-[#1b2f63] via-[#223a75] to-[#2a4486] px-8 py-8">
                 <div class="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
                     <div>
@@ -94,13 +95,9 @@
                             RealtyEmails<span class="text-blue-200">.com</span>
                         </div>
 
-                        <p class="mt-2 text-sm text-blue-100">
-                            Member Dashboard
-                        </p>
+                        <p class="mt-2 text-sm text-blue-100">Member Dashboard</p>
 
-                        <h1 class="mt-4 text-4xl font-bold tracking-tight text-white">
-                            Welcome Back
-                        </h1>
+                        <h1 class="mt-4 text-4xl font-bold tracking-tight text-white">Welcome Back</h1>
 
                         <p class="mt-2 text-lg text-blue-100">
                             {{ $agent->agtFullName ?? 'Member' }}
@@ -133,41 +130,35 @@
 
             <div class="p-6 lg:p-8">
 
+                {{-- ── Summary stats ── --}}
                 <div class="mb-8 grid grid-cols-1 gap-4 md:grid-cols-3">
                     <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
-                        <div class="text-xs font-bold uppercase tracking-wide text-slate-400">
-                            Emails Delivered
-                        </div>
-                        <div class="mt-2 text-3xl font-black text-slate-900">
-                            {{ number_format($totalDelivered) }}
-                        </div>
+                        <div class="text-xs font-bold uppercase tracking-wide text-slate-400">Emails Delivered</div>
+                        <div class="mt-2 text-3xl font-black text-slate-900">{{ number_format($totalDelivered) }}</div>
                     </div>
 
                     <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
-                        <div class="text-xs font-bold uppercase tracking-wide text-slate-400">
-                            Completed Campaigns
-                        </div>
-                        <div class="mt-2 text-3xl font-black text-slate-900">
-                            {{ $completedCampaigns->count() }}
-                        </div>
+                        <div class="text-xs font-bold uppercase tracking-wide text-slate-400">Completed Campaigns</div>
+                        <div class="mt-2 text-3xl font-black text-slate-900">{{ $completedCampaigns->count() }}</div>
                     </div>
 
                     <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
-                        <div class="text-xs font-bold uppercase tracking-wide text-slate-400">
-                            Flyer Views
-                        </div>
-                        <div class="mt-2 text-3xl font-black text-slate-900">
-                            {{ number_format($totalViews) }}
-                        </div>
+                        <div class="text-xs font-bold uppercase tracking-wide text-slate-400">Flyer Views</div>
+                        <div class="mt-2 text-3xl font-black text-slate-900">{{ number_format($totalViews) }}</div>
                     </div>
                 </div>
 
+                {{-- ────────────────────────────────────────────
+                     SHARED CARD MACRO
+                     Both sections use this identical card layout.
+                     The only differences are the badge color/label
+                     and a subtle left-border accent.
+                ──────────────────────────────────────────────── --}}
+
+                {{-- ── Sent Flyers ── --}}
                 <section id="sent-flyers">
                     <div class="mb-5">
-                        <h2 class="text-2xl font-bold tracking-tight text-slate-900">
-                            Sent Flyers
-                        </h2>
-
+                        <h2 class="text-2xl font-bold tracking-tight text-slate-900">Sent Flyers</h2>
                         <p class="mt-1 text-sm text-slate-500">
                             Flyers that have already been emailed or have completed delivery activity.
                         </p>
@@ -175,47 +166,34 @@
 
                     @if($sentFlyers->isEmpty())
                         <div class="rounded-3xl border border-dashed border-slate-300 bg-slate-50 p-10 text-center">
-                            <div class="text-lg font-semibold text-slate-700">
-                                No sent flyers yet.
-                            </div>
+                            <div class="text-lg font-semibold text-slate-700">No sent flyers yet.</div>
                         </div>
                     @else
                         <div class="grid grid-cols-1 gap-7 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
                             @foreach($sentFlyers as $flyer)
                                 @php
-                                    $img = $photoUrl($flyer);
-                                    $stats = $flyer->theStats;
-                                    $flyerCampaigns = $campaignsByFlyer->get($flyer->id, collect());
-
-                                    $completedForFlyer = $flyerCampaigns->filter(fn($camp) => !empty($camp->emComplete));
-                                    $pendingForFlyer = $flyerCampaigns->filter(fn($camp) => empty($camp->emStart) && empty($camp->emComplete));
-
-                                    $latestCampaign = $flyerCampaigns->sortByDesc(function ($camp) {
-                                        return $camp->emComplete ?? $camp->created_at ?? $camp->emRequest ?? $camp->emStart;
-                                    })->first();
-
-                                    $emailCount = $completedForFlyer->sum('totalEmails');
-                                    $viewCount = optional($stats)->xWebViews ?? 0;
+                                    $img              = $photoUrl($flyer);
+                                    $stats            = $flyer->theStats;
+                                    $flyerCampaigns   = $campaignsByFlyer->get($flyer->id, collect());
+                                    $completedForFlyer = $flyerCampaigns->filter(fn($c) => !empty($c->emComplete));
+                                    $pendingForFlyer  = $flyerCampaigns->filter(fn($c) => empty($c->emStart) && empty($c->emComplete));
+                                    $latestCampaign   = $flyerCampaigns->sortByDesc(fn($c) => $c->emComplete ?? $c->created_at ?? $c->emRequest ?? $c->emStart)->first();
+                                    $emailCount       = $completedForFlyer->sum('totalEmails');
+                                    $viewCount        = optional($stats)->xWebViews ?? 0;
                                 @endphp
 
-                                <article class="min-w-0 rounded-[26px] border border-slate-200 bg-white p-5 shadow-lg">
+                                <article class="min-w-0 rounded-[26px] border border-slate-200 bg-white p-5 shadow-lg border-l-4 border-l-[#123f91]">
                                     <div class="h-52 overflow-hidden rounded-2xl bg-slate-100">
                                         @if($img)
-                                            <img
-                                                src="{{ $img }}"
-                                                alt="{{ $flyer->xFullStreet }}"
-                                                class="block h-full w-full object-cover"
-                                            >
+                                            <img src="{{ $img }}" alt="{{ $flyer->xFullStreet }}" class="block h-full w-full object-cover">
                                         @else
-                                            <div class="flex h-full items-center justify-center text-sm font-semibold text-slate-400">
-                                                No Photo Available
-                                            </div>
+                                            <div class="flex h-full items-center justify-center text-sm font-semibold text-slate-400">No Photo Available</div>
                                         @endif
                                     </div>
 
                                     <div class="mt-5 flex items-center gap-2">
-                                        <span class="text-xs font-bold uppercase tracking-[0.22em] text-slate-400">
-                                            Sent Flyer
+                                        <span class="rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-800">
+                                            Sent
                                         </span>
 
                                         <span class="rounded-full bg-[#123f91] px-3 py-1 text-xs font-bold text-white">
@@ -234,9 +212,7 @@
                                     </h3>
 
                                     <p class="mt-2 text-sm text-slate-600">
-                                        {{ $flyer->xCity }}
-                                        {{ $flyer->state ?? $flyer->xState }}
-                                        {{ $flyer->xxZip ?? $flyer->xZip }}
+                                        {{ $flyer->xCity }} {{ $flyer->state ?? $flyer->xState }} {{ $flyer->xxZip ?? $flyer->xZip }}
                                     </p>
 
                                     <div class="mt-5 flex items-center gap-3">
@@ -245,14 +221,10 @@
                                         </div>
 
                                         <div class="min-w-0">
-                                            <div class="text-xs text-slate-500">
-                                                Latest campaign:
-                                            </div>
-
+                                            <div class="text-xs text-slate-500">Latest campaign:</div>
                                             <div class="truncate text-sm font-bold text-[#123f91]">
                                                 {{ optional($latestCampaign)->emArea_display ?: optional($latestCampaign)->emArea ?: 'Campaign history available' }}
                                             </div>
-
                                             <div class="truncate text-sm text-slate-700">
                                                 {{ number_format($emailCount) }} emails sent · {{ number_format($viewCount) }} views
                                             </div>
@@ -261,29 +233,18 @@
 
                                     <div class="mt-5 grid grid-cols-3 gap-2 border-t border-slate-100 pt-4">
                                         @if($flyer->url_slug)
-                                            <a
-                                                href="/homedetails/{{ $flyer->url_slug }}"
-                                                class="rounded-xl bg-[#123f91] px-3 py-2 text-center text-xs font-bold text-white hover:bg-[#0f3274]"
-                                            >
+                                            <a href="/homedetails/{{ $flyer->url_slug }}" class="rounded-xl bg-[#123f91] px-3 py-2 text-center text-xs font-bold text-white hover:bg-[#0f3274]">
                                                 View Flyer
                                             </a>
                                         @else
-                                            <span class="rounded-xl bg-slate-100 px-3 py-2 text-center text-xs font-bold text-slate-400">
-                                                No Link
-                                            </span>
+                                            <span class="rounded-xl bg-slate-100 px-3 py-2 text-center text-xs font-bold text-slate-400">No Link</span>
                                         @endif
 
-                                        <a
-                                            href="/member/campaigns/{{ $flyer->id }}"
-                                            class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-center text-xs font-bold text-slate-700 hover:bg-slate-50"
-                                        >
+                                        <a href="/member/campaigns/{{ $flyer->id }}" class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-center text-xs font-bold text-slate-700 hover:bg-slate-50">
                                             Campaigns
                                         </a>
 
-                                        <a
-                                            href="/member/send-campaign/{{ $flyer->id }}"
-                                            class="rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-center text-xs font-bold text-emerald-700 hover:bg-emerald-100"
-                                        >
+                                        <a href="/member/send-campaign/{{ $flyer->id }}" class="rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-center text-xs font-bold text-emerald-700 hover:bg-emerald-100">
                                             Send
                                         </a>
                                     </div>
@@ -293,12 +254,10 @@
                     @endif
                 </section>
 
+                {{-- ── Unsent / Incomplete Flyers ── --}}
                 <section id="unsent-flyers" class="mt-12">
                     <div class="mb-5">
-                        <h2 class="text-2xl font-bold tracking-tight text-slate-900">
-                            Incomplete / Unsent Flyers
-                        </h2>
-
+                        <h2 class="text-2xl font-bold tracking-tight text-slate-900">Incomplete / Unsent Flyers</h2>
                         <p class="mt-1 text-sm text-slate-500">
                             Flyers that have not been emailed yet.
                         </p>
@@ -309,92 +268,77 @@
                             No incomplete or unsent flyers found.
                         </div>
                     @else
-                        <div class="rounded-2xl border border-slate-200 bg-white">
-                            <div class="divide-y divide-slate-200">
-                                @foreach($unsentFlyers as $flyer)
-                                    @php
-                                        $img = $photoUrl($flyer);
-                                        $flyerCampaigns = $campaignsByFlyer->get($flyer->id, collect());
+                        {{-- ✅ Same grid as Sent Flyers --}}
+                        <div class="grid grid-cols-1 gap-7 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+                            @foreach($unsentFlyers as $flyer)
+                                @php
+                                    $img            = $photoUrl($flyer);
+                                    $flyerCampaigns = $campaignsByFlyer->get($flyer->id, collect());
+                                    $hasRequest     = $flyerCampaigns->filter(fn($c) => empty($c->emStart) && empty($c->emComplete))->count() > 0;
+                                @endphp
 
-                                        $hasRequest = $flyerCampaigns->filter(fn($camp) =>
-                                            empty($camp->emStart) && empty($camp->emComplete)
-                                        )->count() > 0;
-                                    @endphp
+                                {{-- Same card shape; amber left-border accent to visually distinguish --}}
+                                <article class="min-w-0 rounded-[26px] border border-slate-200 bg-white p-5 shadow-lg border-l-4 border-l-amber-400">
+                                    <div class="h-52 overflow-hidden rounded-2xl bg-slate-100">
+                                        @if($img)
+                                            <img src="{{ $img }}" alt="{{ $flyer->xFullStreet }}" class="block h-full w-full object-cover">
+                                        @else
+                                            <div class="flex h-full items-center justify-center text-sm font-semibold text-slate-400">No Photo Available</div>
+                                        @endif
+                                    </div>
 
-                                    <div class="grid grid-cols-1 gap-4 p-4 md:grid-cols-[80px_1fr_150px_240px] md:items-center">
-                                        <div class="h-14 w-20 overflow-hidden rounded-xl bg-slate-100">
-                                            @if($img)
-                                                <img
-                                                    src="{{ $img }}"
-                                                    alt="{{ $flyer->xFullStreet }}"
-                                                    class="block h-full w-full object-cover"
-                                                >
-                                            @else
-                                                <div class="flex h-full items-center justify-center text-[10px] font-bold text-slate-400">
-                                                    No Photo
-                                                </div>
-                                            @endif
+                                    <div class="mt-5 flex items-center gap-2">
+                                        @if($hasRequest)
+                                            <span class="rounded-full bg-amber-100 px-3 py-1 text-xs font-bold text-amber-800">Requested</span>
+                                        @else
+                                            <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-600">Not Sent</span>
+                                        @endif
+
+                                        <span class="rounded-full bg-[#123f91] px-3 py-1 text-xs font-bold text-white">
+                                            {{ $money($flyer->xListPrice) }}
+                                        </span>
+                                    </div>
+
+                                    <h3 class="mt-4 line-clamp-2 text-2xl font-medium leading-tight text-[#123f91]">
+                                        {{ $flyer->xFullStreet ?: 'Untitled Flyer' }}
+                                    </h3>
+
+                                    <p class="mt-2 text-sm text-slate-600">
+                                        {{ $flyer->xCity }} {{ $flyer->state ?? $flyer->xState }} {{ $flyer->xxZip ?? $flyer->xZip }}
+                                    </p>
+
+                                    {{-- Spacer so buttons stay pinned to the same vertical position as sent cards --}}
+                                    <div class="mt-5 flex items-center gap-3">
+                                        <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-xs font-bold text-slate-400">
+                                            {{ strtoupper(substr($agent->agtFullName ?? 'A', 0, 1)) }}
                                         </div>
 
-                                        <div>
-                                            <div class="font-bold text-slate-900">
-                                                {{ $flyer->xFullStreet ?: 'Untitled Flyer' }}
-                                            </div>
-
-                                            <div class="mt-1 text-sm text-slate-500">
-                                                {{ $flyer->xCity }}
-                                                {{ $flyer->state ?? $flyer->xState }}
-                                                {{ $flyer->xxZip ?? $flyer->xZip }}
-                                            </div>
-
-                                            <div class="mt-1 text-xs text-slate-400">
-                                                {{ $money($flyer->xListPrice) }}
-                                            </div>
-                                        </div>
-
-                                        <div>
-                                            @if($hasRequest)
-                                                <span class="inline-flex rounded-full bg-amber-100 px-3 py-1 text-xs font-bold text-amber-800">
-                                                    Requested
-                                                </span>
-                                            @else
-                                                <span class="inline-flex rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-700">
-                                                    Not Sent
-                                                </span>
-                                            @endif
-                                        </div>
-
-                                        <div class="grid grid-cols-3 gap-2">
-                                            @if($flyer->url_slug)
-                                                <a
-                                                    href="/homedetails/{{ $flyer->url_slug }}"
-                                                    class="rounded-lg bg-[#123f91] px-2 py-2 text-center text-xs font-bold text-white hover:bg-[#0f3274]"
-                                                >
-                                                    View
-                                                </a>
-                                            @else
-                                                <span class="rounded-lg bg-slate-100 px-2 py-2 text-center text-xs font-bold text-slate-400">
-                                                    No Link
-                                                </span>
-                                            @endif
-
-                                            <a
-                                                href="/member/campaigns/{{ $flyer->id }}"
-                                                class="rounded-lg border border-slate-200 bg-white px-2 py-2 text-center text-xs font-bold text-slate-700 hover:bg-slate-50"
-                                            >
-                                                Campaigns
-                                            </a>
-
-                                            <a
-                                                href="/member/send-campaign/{{ $flyer->id }}"
-                                                class="rounded-lg border border-emerald-200 bg-emerald-50 px-2 py-2 text-center text-xs font-bold text-emerald-700 hover:bg-emerald-100"
-                                            >
-                                                Send
-                                            </a>
+                                        <div class="min-w-0">
+                                            <div class="text-xs text-slate-500">Status</div>
+                                            <div class="truncate text-sm font-bold text-slate-500">No campaigns sent yet</div>
+                                            <div class="truncate text-sm text-slate-400">Ready to send</div>
                                         </div>
                                     </div>
-                                @endforeach
-                            </div>
+
+                                    <div class="mt-5 grid grid-cols-3 gap-2 border-t border-slate-100 pt-4">
+                                        @if($flyer->url_slug)
+                                            <a href="/homedetails/{{ $flyer->url_slug }}" class="rounded-xl bg-[#123f91] px-3 py-2 text-center text-xs font-bold text-white hover:bg-[#0f3274]">
+                                                View Flyer
+                                            </a>
+                                        @else
+                                            <span class="rounded-xl bg-slate-100 px-3 py-2 text-center text-xs font-bold text-slate-400">No Link</span>
+                                        @endif
+
+                                        <a href="/member/campaigns/{{ $flyer->id }}" class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-center text-xs font-bold text-slate-700 hover:bg-slate-50">
+                                            Campaigns
+                                        </a>
+
+                                        <a href="/member/send-campaign/{{ $flyer->id }}" class="rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-center text-xs font-bold text-emerald-700 hover:bg-emerald-100">
+                                            Send
+                                        </a>
+                                    </div>
+                                </article>
+                            @endforeach
                         </div>
                     @endif
                 </section>
