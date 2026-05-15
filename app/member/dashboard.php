@@ -11,9 +11,9 @@ $propdelivs = Propdelivnow::with([
     'theFlyer.thePhotos' => function ($query) {
         $query->where('def', 1);
     },
-    'theFlyer.theStats'
+    'theFlyer.theStats',
+    'theFlyer.theMeta'
 ])
 ->where('propagent_id', $agentID)
 ->get();
 
-dd($propflyers, $propdelivs);
