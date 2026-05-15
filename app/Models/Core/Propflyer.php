@@ -35,8 +35,14 @@ class Propflyer extends Model{
         return $this->hasOne('App\Models\Core\Propmapping','propflyer_id','id');
     }
 
+    public function theStats(){
+        return $this->hasOne('App\Models\Core\Propflyerstat','propflyer_id','id');
+    }
+
     public function theRemarks(){
         return $this->hasOne('App\Models\Core\Propremark','propflyer_id','id');
     }
+
+
 
 }
