@@ -227,7 +227,7 @@
                             </p>
                         </div>
                     @else
-                        <div class="grid grid-cols-1 gap-7 md:grid-cols-2 2xl:grid-cols-3">
+                        <div class="class="grid grid-cols-1 gap-7 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
                             @foreach($sentFlyers as $flyer)
                                 @php
                                     $img = $photoUrl($flyer);
@@ -252,8 +252,7 @@
                                     $lastDeliveryDate = optional($stats)->xLastDeliveryDate;
                                 @endphp
 
-<article class="rounded-[1.6rem] border border-slate-200 bg-white p-5 shadow-[0_18px_45px_rgba(15,23,42,0.08)]">
-    <div class="h-56 overflow-hidden rounded-2xl bg-slate-100">
+<article class="max-w-[390px] rounded-[1.6rem] border border-slate-200 bg-white p-5 shadow-[0_18px_45px_rgba(15,23,42,0.08)]">    <div class="h-56 overflow-hidden rounded-2xl bg-slate-100">
         @if($img)
             <img src="{{ $img }}" alt="{{ $flyer->xFullStreet }}" class="h-full w-full object-cover">
         @else
