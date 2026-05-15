@@ -1,8 +1,8 @@
 <?php
 
 Use App\Models\Core\Propflyer;
-use Illuminate\Support\Facades\Auth;
-
+Use App\Models\Core\Propdelivnow;
+Use Illuminate\Support\Facades\Auth;
 
 $agentID=Auth::guard('member')->id();
 
