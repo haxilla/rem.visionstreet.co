@@ -134,39 +134,23 @@
 
                     <div class="grid grid-cols-2 gap-4 lg:grid-cols-4">
                         <div class="rounded-2xl bg-white/10 px-5 py-4 backdrop-blur-sm ring-1 ring-white/20">
-                            <div class="text-xs uppercase tracking-wide text-blue-100">
-                                Total Flyers
-                            </div>
-                            <div class="mt-2 text-3xl font-bold text-white">
-                                {{ $flyers->count() }}
-                            </div>
+                            <div class="text-xs uppercase tracking-wide text-blue-100">Total Flyers</div>
+                            <div class="mt-2 text-3xl font-bold text-white">{{ $flyers->count() }}</div>
                         </div>
 
                         <div class="rounded-2xl bg-white/10 px-5 py-4 backdrop-blur-sm ring-1 ring-white/20">
-                            <div class="text-xs uppercase tracking-wide text-blue-100">
-                                Sent Flyers
-                            </div>
-                            <div class="mt-2 text-3xl font-bold text-white">
-                                {{ $sentFlyers->count() }}
-                            </div>
+                            <div class="text-xs uppercase tracking-wide text-blue-100">Sent Flyers</div>
+                            <div class="mt-2 text-3xl font-bold text-white">{{ $sentFlyers->count() }}</div>
                         </div>
 
                         <div class="rounded-2xl bg-white/10 px-5 py-4 backdrop-blur-sm ring-1 ring-white/20">
-                            <div class="text-xs uppercase tracking-wide text-blue-100">
-                                Incomplete
-                            </div>
-                            <div class="mt-2 text-3xl font-bold text-white">
-                                {{ $unsentFlyers->count() }}
-                            </div>
+                            <div class="text-xs uppercase tracking-wide text-blue-100">Incomplete</div>
+                            <div class="mt-2 text-3xl font-bold text-white">{{ $unsentFlyers->count() }}</div>
                         </div>
 
                         <div class="rounded-2xl bg-white/10 px-5 py-4 backdrop-blur-sm ring-1 ring-white/20">
-                            <div class="text-xs uppercase tracking-wide text-blue-100">
-                                Pending
-                            </div>
-                            <div class="mt-2 text-3xl font-bold text-white">
-                                {{ $pendingCampaigns->count() }}
-                            </div>
+                            <div class="text-xs uppercase tracking-wide text-blue-100">Pending</div>
+                            <div class="mt-2 text-3xl font-bold text-white">{{ $pendingCampaigns->count() }}</div>
                         </div>
                     </div>
                 </div>
@@ -204,16 +188,14 @@
                 </div>
 
                 <section id="sent-flyers">
-                    <div class="mb-5 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-                        <div>
-                            <h2 class="text-2xl font-bold tracking-tight text-slate-900">
-                                Sent Flyers
-                            </h2>
+                    <div class="mb-5">
+                        <h2 class="text-2xl font-bold tracking-tight text-slate-900">
+                            Sent Flyers
+                        </h2>
 
-                            <p class="mt-1 text-sm text-slate-500">
-                                Flyers that have already been emailed or have completed delivery activity.
-                            </p>
-                        </div>
+                        <p class="mt-1 text-sm text-slate-500">
+                            Flyers that have already been emailed or have completed delivery activity.
+                        </p>
                     </div>
 
                     @if($sentFlyers->isEmpty())
@@ -227,7 +209,15 @@
                             </p>
                         </div>
                     @else
-                        <div class="class="grid grid-cols-1 gap-7 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+
+                        {{-- 
+                            IMPORTANT:
+                            This grid uses fixed-width columns.
+                            A single card will NOT stretch full width.
+                            Large screens will naturally fit 3 or 4 cards depending on available width.
+                        --}}
+                        <div class="grid justify-start gap-7 [grid-template-columns:repeat(auto-fill,minmax(340px,380px))]">
+
                             @foreach($sentFlyers as $flyer)
                                 @php
                                     $img = $photoUrl($flyer);
@@ -249,104 +239,112 @@
                                     $emailCount = $completedForFlyer->sum('totalEmails');
                                     $deliveryCount = optional($stats)->xDeliveryCount ?? $completedForFlyer->count();
                                     $viewCount = optional($stats)->xWebViews ?? 0;
-                                    $lastDeliveryDate = optional($stats)->xLastDeliveryDate;
                                 @endphp
 
-<article class="max-w-[390px] rounded-[1.6rem] border border-slate-200 bg-white p-5 shadow-[0_18px_45px_rgba(15,23,42,0.08)]">    <div class="h-56 overflow-hidden rounded-2xl bg-slate-100">
-        @if($img)
-            <img src="{{ $img }}" alt="{{ $flyer->xFullStreet }}" class="h-full w-full object-cover">
-        @else
-            <div class="flex h-full items-center justify-center text-sm font-semibold text-slate-400">
-                No Photo Available
-            </div>
-        @endif
-    </div>
+                                <article class="w-full rounded-[1.65rem] border border-slate-200 bg-white p-5 shadow-[0_18px_45px_rgba(15,23,42,0.08)]">
+                                    <div class="h-52 overflow-hidden rounded-2xl bg-slate-100">
+                                        @if($img)
+                                            <img
+                                                src="{{ $img }}"
+                                                alt="{{ $flyer->xFullStreet }}"
+                                                class="h-full w-full object-cover"
+                                            >
+                                        @else
+                                            <div class="flex h-full items-center justify-center text-sm font-semibold text-slate-400">
+                                                No Photo Available
+                                            </div>
+                                        @endif
+                                    </div>
 
-    <div class="mt-5 flex items-center gap-2">
-        <span class="text-xs font-bold uppercase tracking-[0.22em] text-slate-400">
-            Sent Flyer
-        </span>
+                                    <div class="mt-5 flex items-center gap-2">
+                                        <span class="text-xs font-bold uppercase tracking-[0.22em] text-slate-400">
+                                            Sent Flyer
+                                        </span>
 
-        <span class="rounded-full bg-[#123f91] px-3 py-1 text-xs font-bold text-white">
-            {{ $money($flyer->xListPrice) }}
-        </span>
-    </div>
+                                        <span class="rounded-full bg-[#123f91] px-3 py-1 text-xs font-bold text-white">
+                                            {{ $money($flyer->xListPrice) }}
+                                        </span>
 
-    <h3 class="mt-4 text-2xl font-medium leading-tight text-[#123f91]">
-        {{ $flyer->xFullStreet }}
-    </h3>
+                                        @if($pendingForFlyer->count())
+                                            <span class="rounded-full bg-amber-100 px-3 py-1 text-xs font-bold text-amber-800">
+                                                New Request
+                                            </span>
+                                        @endif
+                                    </div>
 
-    <p class="mt-2 text-sm text-slate-600">
-        {{ $flyer->xCity }}
-        {{ $flyer->state ?? $flyer->xState }}
-        {{ $flyer->xxZip ?? $flyer->xZip }}
-    </p>
+                                    <h3 class="mt-4 line-clamp-2 text-2xl font-medium leading-tight text-[#123f91]">
+                                        {{ $flyer->xFullStreet }}
+                                    </h3>
 
-    <div class="mt-5 flex items-center gap-3">
-        <div class="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-slate-100 text-xs font-bold text-slate-400">
-            {{ strtoupper(substr($agent->agtFullName ?? 'A', 0, 1)) }}
-        </div>
+                                    <p class="mt-2 text-sm text-slate-600">
+                                        {{ $flyer->xCity }}
+                                        {{ $flyer->state ?? $flyer->xState }}
+                                        {{ $flyer->xxZip ?? $flyer->xZip }}
+                                    </p>
 
-        <div class="min-w-0">
-            <div class="text-xs text-slate-500">
-                Latest campaign:
-            </div>
+                                    <div class="mt-5 flex items-center gap-3">
+                                        <div class="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-slate-100 text-xs font-bold text-slate-400">
+                                            {{ strtoupper(substr($agent->agtFullName ?? 'A', 0, 1)) }}
+                                        </div>
 
-            <div class="truncate text-sm font-bold text-[#123f91]">
-                {{ optional($latestCampaign)->emArea_display ?: optional($latestCampaign)->emArea ?: 'Campaign history available' }}
-            </div>
+                                        <div class="min-w-0">
+                                            <div class="text-xs text-slate-500">
+                                                Latest campaign:
+                                            </div>
 
-            <div class="truncate text-sm text-slate-700">
-                {{ number_format($emailCount) }} emails sent · {{ number_format($viewCount) }} views
-            </div>
-        </div>
-    </div>
+                                            <div class="truncate text-sm font-bold text-[#123f91]">
+                                                {{ optional($latestCampaign)->emArea_display ?: optional($latestCampaign)->emArea ?: 'Campaign history available' }}
+                                            </div>
 
-    <div class="mt-5 grid grid-cols-3 gap-2 border-t border-slate-100 pt-4">
-        @if($flyer->url_slug)
-            <a
-                href="/homedetails/{{ $flyer->url_slug }}"
-                class="rounded-xl bg-[#123f91] px-3 py-2 text-center text-xs font-bold text-white transition hover:bg-[#0f3274]"
-            >
-                View Flyer
-            </a>
-        @else
-            <span class="rounded-xl bg-slate-100 px-3 py-2 text-center text-xs font-bold text-slate-400">
-                No Link
-            </span>
-        @endif
+                                            <div class="truncate text-sm text-slate-700">
+                                                {{ number_format($emailCount) }} emails sent · {{ number_format($viewCount) }} views
+                                            </div>
+                                        </div>
+                                    </div>
 
-        <a
-            href="/member/campaigns/{{ $flyer->id }}"
-            class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-center text-xs font-bold text-slate-700 transition hover:bg-slate-50"
-        >
-            Campaigns
-        </a>
+                                    <div class="mt-5 grid grid-cols-3 gap-2 border-t border-slate-100 pt-4">
+                                        @if($flyer->url_slug)
+                                            <a
+                                                href="/homedetails/{{ $flyer->url_slug }}"
+                                                class="rounded-xl bg-[#123f91] px-3 py-2 text-center text-xs font-bold text-white transition hover:bg-[#0f3274]"
+                                            >
+                                                View Flyer
+                                            </a>
+                                        @else
+                                            <span class="rounded-xl bg-slate-100 px-3 py-2 text-center text-xs font-bold text-slate-400">
+                                                No Link
+                                            </span>
+                                        @endif
 
-        <a
-            href="/member/send-campaign/{{ $flyer->id }}"
-            class="rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-center text-xs font-bold text-emerald-700 transition hover:bg-emerald-100"
-        >
-            Send
-        </a>
-    </div>
-</article>
+                                        <a
+                                            href="/member/campaigns/{{ $flyer->id }}"
+                                            class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-center text-xs font-bold text-slate-700 transition hover:bg-slate-50"
+                                        >
+                                            Campaigns
+                                        </a>
+
+                                        <a
+                                            href="/member/send-campaign/{{ $flyer->id }}"
+                                            class="rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-center text-xs font-bold text-emerald-700 transition hover:bg-emerald-100"
+                                        >
+                                            Send
+                                        </a>
+                                    </div>
+                                </article>
                             @endforeach
                         </div>
                     @endif
                 </section>
 
                 <section id="unsent-flyers" class="mt-12">
-                    <div class="mb-5 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-                        <div>
-                            <h2 class="text-2xl font-bold tracking-tight text-slate-900">
-                                Incomplete / Unsent Flyers
-                            </h2>
+                    <div class="mb-5">
+                        <h2 class="text-2xl font-bold tracking-tight text-slate-900">
+                            Incomplete / Unsent Flyers
+                        </h2>
 
-                            <p class="mt-1 text-sm text-slate-500">
-                                Flyers that have not been emailed yet. These are shown separately so the sent flyer dashboard stays clean.
-                            </p>
-                        </div>
+                        <p class="mt-1 text-sm text-slate-500">
+                            Flyers that have not been emailed yet. These are shown separately so the sent flyer dashboard stays clean.
+                        </p>
                     </div>
 
                     @if($unsentFlyers->isEmpty())
