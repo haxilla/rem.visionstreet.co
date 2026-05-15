@@ -21,13 +21,20 @@
         return empty($camp->emStart) && empty($camp->emComplete);
     });
 
-    $inProgressCampaigns = $campaigns->filter(function ($camp) {
-        return !empty($camp->emStart) && empty($camp->emComplete);
-    });
-
     $completedCampaigns = $campaigns->filter(function ($camp) {
         return !empty($camp->emComplete);
     });
+
+    $sentFlyersCount = $flyers->filter(function ($flyer) use ($campaignsByFlyer) {
+        $stats = $flyer->theStats;
+        $flyerCampaigns = $campaignsByFlyer->get($flyer->id, collect());
+
+        return (int) (optional($stats)->xAgtSent ?? 0) > 0
+            || (int) (optional($stats)->xDeliveryCount ?? 0) > 0
+            || $flyerCampaigns->filter(fn($camp) => !empty($camp->emComplete))->count() > 0;
+    })->count();
+
+    $notSentFlyersCount = $flyers->count() - $sentFlyersCount;
 
     $totalDelivered = $completedCampaigns->sum('totalEmails');
 
@@ -135,140 +142,74 @@
 
                         <div class="rounded-2xl bg-white/10 px-5 py-4 backdrop-blur-sm ring-1 ring-white/20">
                             <div class="text-xs uppercase tracking-wide text-blue-100">
+                                Sent Flyers
+                            </div>
+                            <div class="mt-2 text-3xl font-bold text-white">
+                                {{ $sentFlyersCount }}
+                            </div>
+                        </div>
+
+                        <div class="rounded-2xl bg-white/10 px-5 py-4 backdrop-blur-sm ring-1 ring-white/20">
+                            <div class="text-xs uppercase tracking-wide text-blue-100">
+                                Not Sent
+                            </div>
+                            <div class="mt-2 text-3xl font-bold text-white">
+                                {{ $notSentFlyersCount }}
+                            </div>
+                        </div>
+
+                        <div class="rounded-2xl bg-white/10 px-5 py-4 backdrop-blur-sm ring-1 ring-white/20">
+                            <div class="text-xs uppercase tracking-wide text-blue-100">
                                 Pending
                             </div>
                             <div class="mt-2 text-3xl font-bold text-white">
                                 {{ $pendingCampaigns->count() }}
                             </div>
                         </div>
-
-                        <div class="rounded-2xl bg-white/10 px-5 py-4 backdrop-blur-sm ring-1 ring-white/20">
-                            <div class="text-xs uppercase tracking-wide text-blue-100">
-                                Sent
-                            </div>
-                            <div class="mt-2 text-3xl font-bold text-white">
-                                {{ $completedCampaigns->count() }}
-                            </div>
-                        </div>
-
-                        <div class="rounded-2xl bg-white/10 px-5 py-4 backdrop-blur-sm ring-1 ring-white/20">
-                            <div class="text-xs uppercase tracking-wide text-blue-100">
-                                Views
-                            </div>
-                            <div class="mt-2 text-3xl font-bold text-white">
-                                {{ number_format($totalViews) }}
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 gap-8 p-8 xl:grid-cols-[280px_1fr]">
+            <div class="p-6 lg:p-8">
 
-                <aside>
-                    <div class="rounded-3xl border border-slate-200 bg-slate-50 p-4">
-                        <div class="mb-4 px-3">
-                            <div class="text-xs font-bold uppercase tracking-[0.2em] text-slate-400">
-                                Actions
-                            </div>
-                        </div>
-
-                        <nav class="space-y-2">
-                            <a
-                                href="#"
-                                class="group flex items-center justify-between rounded-2xl bg-white px-4 py-4 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:shadow-md"
-                            >
-                                <span class="font-semibold text-slate-700 group-hover:text-[#214e9b]">
-                                    Create New Flyer
-                                </span>
-                                <span class="text-slate-300 group-hover:text-[#214e9b]">
-                                    →
-                                </span>
-                            </a>
-
-                            <a
-                                href="#flyers"
-                                class="group flex items-center justify-between rounded-2xl bg-white px-4 py-4 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:shadow-md"
-                            >
-                                <span class="font-semibold text-slate-700 group-hover:text-[#214e9b]">
-                                    My Flyers
-                                </span>
-                                <span class="text-slate-300 group-hover:text-[#214e9b]">
-                                    →
-                                </span>
-                            </a>
-
-                            <a
-                                href="#campaigns"
-                                class="group flex items-center justify-between rounded-2xl bg-white px-4 py-4 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:shadow-md"
-                            >
-                                <span class="font-semibold text-slate-700 group-hover:text-[#214e9b]">
-                                    Campaign History
-                                </span>
-                                <span class="text-slate-300 group-hover:text-[#214e9b]">
-                                    →
-                                </span>
-                            </a>
-
-                            <a
-                                href="#"
-                                class="group flex items-center justify-between rounded-2xl bg-white px-4 py-4 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:shadow-md"
-                            >
-                                <span class="font-semibold text-slate-700 group-hover:text-[#214e9b]">
-                                    Purchase Credits
-                                </span>
-                                <span class="text-slate-300 group-hover:text-[#214e9b]">
-                                    →
-                                </span>
-                            </a>
-                        </nav>
-                    </div>
-
-                    <div class="mt-6 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+                <div class="mb-6 grid grid-cols-1 gap-4 md:grid-cols-3">
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
                         <div class="text-xs font-bold uppercase tracking-[0.2em] text-slate-400">
-                            Delivery Summary
+                            Total Emails Delivered
                         </div>
-
-                        <div class="mt-5 space-y-4">
-                            <div>
-                                <div class="text-sm text-slate-500">
-                                    Total Emails Delivered
-                                </div>
-                                <div class="text-2xl font-black text-slate-900">
-                                    {{ number_format($totalDelivered) }}
-                                </div>
-                            </div>
-
-                            <div>
-                                <div class="text-sm text-slate-500">
-                                    In Progress
-                                </div>
-                                <div class="text-2xl font-black text-slate-900">
-                                    {{ $inProgressCampaigns->count() }}
-                                </div>
-                            </div>
-
-                            <div>
-                                <div class="text-sm text-slate-500">
-                                    Completed Campaigns
-                                </div>
-                                <div class="text-2xl font-black text-slate-900">
-                                    {{ $completedCampaigns->count() }}
-                                </div>
-                            </div>
+                        <div class="mt-2 text-3xl font-black text-slate-900">
+                            {{ number_format($totalDelivered) }}
                         </div>
                     </div>
-                </aside>
+
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+                        <div class="text-xs font-bold uppercase tracking-[0.2em] text-slate-400">
+                            Completed Campaigns
+                        </div>
+                        <div class="mt-2 text-3xl font-black text-slate-900">
+                            {{ $completedCampaigns->count() }}
+                        </div>
+                    </div>
+
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+                        <div class="text-xs font-bold uppercase tracking-[0.2em] text-slate-400">
+                            Flyer Views
+                        </div>
+                        <div class="mt-2 text-3xl font-black text-slate-900">
+                            {{ number_format($totalViews) }}
+                        </div>
+                    </div>
+                </div>
 
                 <section id="flyers">
-                    <div class="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+                    <div class="mb-5 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
                         <div>
                             <h2 class="text-2xl font-bold tracking-tight text-slate-900">
                                 Your Flyers
                             </h2>
 
                             <p class="mt-1 text-sm text-slate-500">
-                                Review each flyer, its delivery status, and recent campaign activity.
+                                Smaller tiles with flyer status, recent campaign info, and quick actions.
                             </p>
                         </div>
                     </div>
@@ -284,7 +225,7 @@
                             </p>
                         </div>
                     @else
-                        <div class="grid grid-cols-1 gap-6 md:grid-cols-2 2xl:grid-cols-3">
+                        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
                             @foreach($flyers as $flyer)
                                 @php
                                     $img = $photoUrl($flyer);
@@ -295,35 +236,39 @@
                                         return empty($camp->emStart) && empty($camp->emComplete);
                                     });
 
-                                    $flyerInProgress = $flyerCampaigns->filter(function ($camp) {
-                                        return !empty($camp->emStart) && empty($camp->emComplete);
-                                    });
-
                                     $flyerCompleted = $flyerCampaigns->filter(function ($camp) {
                                         return !empty($camp->emComplete);
                                     });
+
+                                    $hasBeenSent =
+                                        (int) (optional($stats)->xAgtSent ?? 0) > 0
+                                        || (int) (optional($stats)->xDeliveryCount ?? 0) > 0
+                                        || $flyerCompleted->count() > 0;
+
+                                    if ($flyerPending->count()) {
+                                        $statusText = 'Requested';
+                                        $statusClass = 'bg-amber-100 text-amber-800';
+                                    } elseif ($hasBeenSent) {
+                                        $statusText = 'Sent';
+                                        $statusClass = 'bg-emerald-100 text-emerald-800';
+                                    } else {
+                                        $statusText = 'Not Sent';
+                                        $statusClass = 'bg-slate-100 text-slate-700';
+                                    }
 
                                     $latestCampaign = $flyerCampaigns->sortByDesc(function ($camp) {
                                         return $camp->created_at ?? $camp->emRequest ?? $camp->emStart ?? $camp->emComplete;
                                     })->first();
 
-                                    if ($flyerPending->count()) {
-                                        $statusText = 'Requested';
-                                        $statusClass = 'bg-amber-100 text-amber-800';
-                                    } elseif ($flyerInProgress->count()) {
-                                        $statusText = 'Sending';
-                                        $statusClass = 'bg-blue-100 text-blue-800';
-                                    } elseif ($flyerCompleted->count()) {
-                                        $statusText = 'Sent';
-                                        $statusClass = 'bg-emerald-100 text-emerald-800';
-                                    } else {
-                                        $statusText = 'No Campaign';
-                                        $statusClass = 'bg-slate-100 text-slate-700';
-                                    }
+                                    $campaignCount = $flyerCampaigns->count();
+                                    $emailCount = $flyerCompleted->sum('totalEmails');
+                                    $viewCount = optional($stats)->xWebViews ?? 0;
+                                    $deliveryCount = optional($stats)->xDeliveryCount ?? 0;
+                                    $lastDeliveryDate = optional($stats)->xLastDeliveryDate;
                                 @endphp
 
-                                <article class="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
-                                    <div class="relative h-44 bg-slate-200">
+                                <article class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+                                    <div class="relative h-28 bg-slate-200">
                                         @if($img)
                                             <img
                                                 src="{{ $img }}"
@@ -331,130 +276,148 @@
                                                 class="h-full w-full object-cover"
                                             >
                                         @else
-                                            <div class="flex h-full items-center justify-center bg-slate-100 text-sm font-semibold text-slate-400">
+                                            <div class="flex h-full items-center justify-center bg-slate-100 text-xs font-semibold text-slate-400">
                                                 No Photo
                                             </div>
                                         @endif
 
-                                        <div class="absolute left-4 top-4 rounded-full px-3 py-1 text-xs font-bold shadow-sm {{ $statusClass }}">
+                                        <div class="absolute left-3 top-3 rounded-full px-2.5 py-1 text-[11px] font-bold shadow-sm {{ $statusClass }}">
                                             {{ $statusText }}
                                         </div>
                                     </div>
 
-                                    <div class="p-5">
-                                        <h3 class="truncate text-lg font-black tracking-tight text-slate-900">
+                                    <div class="p-4">
+                                        <h3 class="truncate text-base font-black tracking-tight text-slate-900">
                                             {{ $flyer->xFullStreet }}
                                         </h3>
 
-                                        <p class="mt-1 truncate text-sm text-slate-500">
+                                        <p class="mt-0.5 truncate text-xs text-slate-500">
                                             {{ $flyer->xCity }},
                                             {{ $flyer->state ?? $flyer->xState }}
                                             {{ $flyer->xxZip ?? $flyer->xZip }}
                                         </p>
 
-                                        <div class="mt-3 flex flex-wrap gap-2 text-xs font-semibold">
-                                            <span class="rounded-full bg-slate-100 px-3 py-1 text-slate-700">
+                                        <div class="mt-2 flex flex-wrap gap-1.5 text-[11px] font-semibold">
+                                            <span class="rounded-full bg-slate-100 px-2 py-0.5 text-slate-700">
                                                 {{ $money($flyer->xListPrice) }}
                                             </span>
 
                                             @if($flyer->xxBeds)
-                                                <span class="rounded-full bg-slate-100 px-3 py-1 text-slate-700">
-                                                    {{ $flyer->xxBeds }} Beds
+                                                <span class="rounded-full bg-slate-100 px-2 py-0.5 text-slate-700">
+                                                    {{ $flyer->xxBeds }} bd
                                                 </span>
                                             @endif
 
                                             @if($flyer->xxBaths)
-                                                <span class="rounded-full bg-slate-100 px-3 py-1 text-slate-700">
-                                                    {{ $flyer->xxBaths }} Baths
+                                                <span class="rounded-full bg-slate-100 px-2 py-0.5 text-slate-700">
+                                                    {{ $flyer->xxBaths }} ba
                                                 </span>
                                             @endif
 
                                             @if($flyer->xxSqft)
-                                                <span class="rounded-full bg-slate-100 px-3 py-1 text-slate-700">
-                                                    {{ number_format((int) $flyer->xxSqft) }} Sq Ft
+                                                <span class="rounded-full bg-slate-100 px-2 py-0.5 text-slate-700">
+                                                    {{ number_format((int) $flyer->xxSqft) }} sf
                                                 </span>
                                             @endif
                                         </div>
 
-                                        <div class="mt-5 grid grid-cols-3 gap-2">
-                                            <div class="rounded-2xl bg-slate-50 p-3 text-center ring-1 ring-slate-200">
-                                                <div class="text-[10px] font-bold uppercase tracking-wide text-slate-400">
-                                                    Campaigns
+                                        <div class="mt-3 grid grid-cols-4 gap-1.5">
+                                            <div class="rounded-xl bg-slate-50 p-2 text-center ring-1 ring-slate-200">
+                                                <div class="text-[9px] font-bold uppercase text-slate-400">
+                                                    Camps
                                                 </div>
-                                                <div class="mt-1 text-lg font-black text-slate-900">
-                                                    {{ $flyerCampaigns->count() }}
+                                                <div class="text-sm font-black text-slate-900">
+                                                    {{ $campaignCount }}
                                                 </div>
                                             </div>
 
-                                            <div class="rounded-2xl bg-slate-50 p-3 text-center ring-1 ring-slate-200">
-                                                <div class="text-[10px] font-bold uppercase tracking-wide text-slate-400">
+                                            <div class="rounded-xl bg-slate-50 p-2 text-center ring-1 ring-slate-200">
+                                                <div class="text-[9px] font-bold uppercase text-slate-400">
+                                                    Sent
+                                                </div>
+                                                <div class="text-sm font-black text-slate-900">
+                                                    {{ $deliveryCount }}
+                                                </div>
+                                            </div>
+
+                                            <div class="rounded-xl bg-slate-50 p-2 text-center ring-1 ring-slate-200">
+                                                <div class="text-[9px] font-bold uppercase text-slate-400">
                                                     Emails
                                                 </div>
-                                                <div class="mt-1 text-lg font-black text-slate-900">
-                                                    {{ number_format($flyerCompleted->sum('totalEmails')) }}
+                                                <div class="text-sm font-black text-slate-900">
+                                                    {{ number_format($emailCount) }}
                                                 </div>
                                             </div>
 
-                                            <div class="rounded-2xl bg-slate-50 p-3 text-center ring-1 ring-slate-200">
-                                                <div class="text-[10px] font-bold uppercase tracking-wide text-slate-400">
+                                            <div class="rounded-xl bg-slate-50 p-2 text-center ring-1 ring-slate-200">
+                                                <div class="text-[9px] font-bold uppercase text-slate-400">
                                                     Views
                                                 </div>
-                                                <div class="mt-1 text-lg font-black text-slate-900">
-                                                    {{ number_format(optional($stats)->xWebViews ?? 0) }}
+                                                <div class="text-sm font-black text-slate-900">
+                                                    {{ number_format($viewCount) }}
                                                 </div>
                                             </div>
                                         </div>
 
-                                        @if($latestCampaign)
-                                            <div class="mt-5 rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                                                <div class="text-xs font-bold uppercase tracking-wide text-slate-400">
-                                                    Latest Campaign
-                                                </div>
-
-                                                <div class="mt-2 line-clamp-2 text-sm font-bold text-slate-800">
+                                        <div class="mt-3 rounded-xl border border-slate-200 bg-slate-50 p-3">
+                                            @if($latestCampaign)
+                                                <div class="truncate text-xs font-bold text-slate-800">
                                                     {{ $latestCampaign->emSubject ?: 'No subject saved' }}
                                                 </div>
 
-                                                <div class="mt-2 text-xs text-slate-500">
-                                                    Requested:
-                                                    <span class="font-semibold">
-                                                        {{ $dateFmt($latestCampaign->emRequest ?? $latestCampaign->created_at) }}
+                                                <div class="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-[11px] text-slate-500">
+                                                    <span>
+                                                        Requested:
+                                                        <strong>{{ $dateFmt($latestCampaign->emRequest ?? $latestCampaign->created_at) }}</strong>
+                                                    </span>
+
+                                                    <span>
+                                                        Sent:
+                                                        <strong>{{ $dateFmt($latestCampaign->emComplete) }}</strong>
                                                     </span>
                                                 </div>
 
-                                                <div class="mt-1 text-xs text-slate-500">
-                                                    Sent:
-                                                    <span class="font-semibold">
-                                                        {{ $dateFmt($latestCampaign->emComplete) }}
-                                                    </span>
-                                                </div>
-
-                                                <div class="mt-1 text-xs text-slate-500">
+                                                <div class="mt-1 truncate text-[11px] text-slate-500">
                                                     Area:
-                                                    <span class="font-semibold">
+                                                    <strong>
                                                         {{ $latestCampaign->emArea_display ?: $latestCampaign->emArea ?: 'Not specified' }}
-                                                    </span>
+                                                    </strong>
                                                 </div>
-                                            </div>
-                                        @else
-                                            <div class="mt-5 rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-4 text-sm text-slate-500">
-                                                No email campaign has been requested for this flyer yet.
-                                            </div>
-                                        @endif
+                                            @else
+                                                <div class="text-xs font-semibold text-slate-500">
+                                                    No campaign requested yet.
+                                                </div>
 
-                                        <div class="mt-5 flex gap-2">
+                                                <div class="mt-1 text-[11px] text-slate-400">
+                                                    Last sent: {{ $dateFmt($lastDeliveryDate) }}
+                                                </div>
+                                            @endif
+                                        </div>
+
+                                        <div class="mt-3 grid grid-cols-3 gap-1.5">
                                             @if($flyer->url_slug)
                                                 <a
                                                     href="/homedetails/{{ $flyer->url_slug }}"
-                                                    class="flex-1 rounded-xl bg-[#214e9b] px-4 py-2 text-center text-sm font-bold text-white transition hover:bg-[#183b78]"
+                                                    class="rounded-lg bg-[#214e9b] px-2 py-2 text-center text-[11px] font-bold text-white transition hover:bg-[#183b78]"
                                                 >
-                                                    View
+                                                    View Flyer
                                                 </a>
+                                            @else
+                                                <span class="rounded-lg bg-slate-100 px-2 py-2 text-center text-[11px] font-bold text-slate-400">
+                                                    No Link
+                                                </span>
                                             @endif
 
                                             <a
-                                                href="#"
-                                                class="flex-1 rounded-xl border border-slate-200 bg-white px-4 py-2 text-center text-sm font-bold text-slate-700 transition hover:bg-slate-50"
+                                                href="/member/campaigns/{{ $flyer->id }}"
+                                                class="rounded-lg border border-slate-200 bg-white px-2 py-2 text-center text-[11px] font-bold text-slate-700 transition hover:bg-slate-50"
+                                            >
+                                                Campaigns
+                                            </a>
+
+                                            <a
+                                                href="/member/send-campaign/{{ $flyer->id }}"
+                                                class="rounded-lg border border-emerald-200 bg-emerald-50 px-2 py-2 text-center text-[11px] font-bold text-emerald-700 transition hover:bg-emerald-100"
                                             >
                                                 Send
                                             </a>
