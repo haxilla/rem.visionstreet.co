@@ -29,16 +29,15 @@
     $totalDelivered = $completedCampaigns->sum('totalEmails');
     $totalViews     = $sentFlyers->sum(fn($f) => optional($f->theStats)->xWebViews ?? 0);
 
-    // Helper: build photo URL inline per flyer (avoid closure call issues in Blade)
-    // Usage: @php $img = re_photo_url($flyer); @endphp
-    function re_photo_url($flyer): ?string {
+    // Closure — safe in Blade, won't cause redeclaration errors
+    $photoUrl = function ($flyer) {
         $photo = optional($flyer->thePhotos)->first();
         if (!$photo || !$flyer->theMeta) return null;
         return 'https://realtyrepublic.com/hqphotos/'
             . $flyer->theMeta->zipDir . '/'
             . $flyer->theMeta->mlsDir . '/'
             . $photo->photoName;
-    }
+    };
 
     $money = fn($v) => ($v === null || $v === '') ? 'Price N/A' : '$' . number_format((float)$v);
 @endphp
@@ -47,7 +46,6 @@
     class="transition-all duration-300 min-h-screen pt-24"
     :class="collapsed ? 'ml-20' : 'ml-64'"
 >
-    {{-- ── Max-width constraint ~1200px, centred ── --}}
     <div class="mx-auto w-full max-w-[1200px] px-6 pb-16">
 
         {{-- ── Impersonation banner ── --}}
@@ -135,7 +133,7 @@
                 <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                     @foreach($sentFlyers as $flyer)
                         @php
-                            $img               = re_photo_url($flyer);
+                            $img               = $photoUrl($flyer);
                             $stats             = $flyer->theStats;
                             $flyerCampaigns    = $campaignsByFlyer->get($flyer->id, collect());
                             $completedForFlyer = $flyerCampaigns->filter(fn($c) => !empty($c->emComplete));
@@ -146,41 +144,38 @@
 
                         <article class="flex flex-col overflow-hidden rounded-2xl bg-white shadow-md ring-1 ring-slate-200 transition-shadow duration-200 hover:shadow-xl">
 
-                            {{-- ── Photo block ── --}}
-                            <div class="relative w-full" style="height:200px; overflow:hidden; background:#e2e8f0;">
+                            {{-- Photo: inline styles so nothing can be purged by Tailwind --}}
+                            <div style="position:relative; height:200px; overflow:hidden; background:#e2e8f0; flex-shrink:0;">
                                 @if($img)
                                     <img
                                         src="{{ $img }}"
                                         alt="{{ $flyer->xFullStreet }}"
-                                        style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"
+                                        style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover;"
                                     >
                                 @else
-                                    <div style="display:flex;height:100%;align-items:center;justify-content:center;font-size:.875rem;font-weight:600;color:#94a3b8;">
+                                    <div style="display:flex; height:100%; align-items:center; justify-content:center; font-size:.875rem; font-weight:600; color:#94a3b8;">
                                         No Photo Available
                                     </div>
                                 @endif
 
-                                {{-- Status badges --}}
-                                <div style="position:absolute;top:12px;left:12px;display:flex;gap:6px;">
-                                    <span style="background:#059669;color:#fff;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 10px;border-radius:999px;">
+                                <div style="position:absolute; top:12px; left:12px; display:flex; gap:6px;">
+                                    <span style="background:#059669; color:#fff; font-size:10px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; padding:3px 10px; border-radius:999px;">
                                         Sent
                                     </span>
                                     @if($pendingForFlyer->count())
-                                        <span style="background:#d97706;color:#fff;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 10px;border-radius:999px;">
+                                        <span style="background:#d97706; color:#fff; font-size:10px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; padding:3px 10px; border-radius:999px;">
                                             Requested
                                         </span>
                                     @endif
                                 </div>
 
-                                {{-- Price badge --}}
-                                <div style="position:absolute;bottom:12px;right:12px;">
-                                    <span style="background:rgba(18,63,145,.9);color:#fff;font-size:11px;font-weight:700;padding:4px 12px;border-radius:999px;">
+                                <div style="position:absolute; bottom:12px; right:12px;">
+                                    <span style="background:rgba(18,63,145,.88); color:#fff; font-size:11px; font-weight:700; padding:4px 12px; border-radius:999px;">
                                         {{ $money($flyer->xListPrice) }}
                                     </span>
                                 </div>
                             </div>
 
-                            {{-- ── Card body ── --}}
                             <div class="flex flex-1 flex-col p-5">
                                 <h3 class="line-clamp-1 text-[15px] font-bold text-[#123f91]">
                                     {{ $flyer->xFullStreet }}
@@ -196,7 +191,6 @@
                                 </div>
 
                                 <div class="mt-auto pt-4">
-                                    {{-- Agent --}}
                                     <div class="flex items-center gap-2.5 border-t border-slate-100 pt-4">
                                         <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#1b2f63] text-xs font-bold text-white">
                                             {{ strtoupper(substr($agent->agtFullName ?? 'A', 0, 1)) }}
@@ -207,7 +201,6 @@
                                         </div>
                                     </div>
 
-                                    {{-- Buttons --}}
                                     <div class="mt-3 grid grid-cols-3 gap-2">
                                         @if($flyer->url_slug)
                                             <a href="/homedetails/{{ $flyer->url_slug }}"
@@ -261,47 +254,45 @@
                 <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                     @foreach($unsentFlyers as $flyer)
                         @php
-                            $img            = re_photo_url($flyer);
+                            $img            = $photoUrl($flyer);
                             $flyerCampaigns = $campaignsByFlyer->get($flyer->id, collect());
                             $hasRequest     = $flyerCampaigns->filter(fn($c) => empty($c->emStart) && empty($c->emComplete))->count() > 0;
                         @endphp
 
                         <article class="flex flex-col overflow-hidden rounded-2xl bg-white shadow-md ring-1 ring-slate-200 transition-shadow duration-200 hover:shadow-xl">
 
-                            {{-- ── Photo block ── --}}
-                            <div class="relative w-full" style="height:200px; overflow:hidden; background:#e2e8f0;">
+                            <div style="position:relative; height:200px; overflow:hidden; background:#e2e8f0; flex-shrink:0;">
                                 @if($img)
                                     <img
                                         src="{{ $img }}"
                                         alt="{{ $flyer->xFullStreet }}"
-                                        style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"
+                                        style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover;"
                                     >
                                 @else
-                                    <div style="display:flex;height:100%;align-items:center;justify-content:center;font-size:.875rem;font-weight:600;color:#94a3b8;">
+                                    <div style="display:flex; height:100%; align-items:center; justify-content:center; font-size:.875rem; font-weight:600; color:#94a3b8;">
                                         No Photo Available
                                     </div>
                                 @endif
 
-                                <div style="position:absolute;top:12px;left:12px;">
+                                <div style="position:absolute; top:12px; left:12px;">
                                     @if($hasRequest)
-                                        <span style="background:#d97706;color:#fff;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 10px;border-radius:999px;">
+                                        <span style="background:#d97706; color:#fff; font-size:10px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; padding:3px 10px; border-radius:999px;">
                                             Requested
                                         </span>
                                     @else
-                                        <span style="background:#475569;color:#fff;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 10px;border-radius:999px;">
+                                        <span style="background:#475569; color:#fff; font-size:10px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; padding:3px 10px; border-radius:999px;">
                                             Not Sent
                                         </span>
                                     @endif
                                 </div>
 
-                                <div style="position:absolute;bottom:12px;right:12px;">
-                                    <span style="background:rgba(18,63,145,.9);color:#fff;font-size:11px;font-weight:700;padding:4px 12px;border-radius:999px;">
+                                <div style="position:absolute; bottom:12px; right:12px;">
+                                    <span style="background:rgba(18,63,145,.88); color:#fff; font-size:11px; font-weight:700; padding:4px 12px; border-radius:999px;">
                                         {{ $money($flyer->xListPrice) }}
                                     </span>
                                 </div>
                             </div>
 
-                            {{-- ── Card body ── --}}
                             <div class="flex flex-1 flex-col p-5">
                                 <h3 class="line-clamp-1 text-[15px] font-bold text-[#123f91]">
                                     {{ $flyer->xFullStreet ?: 'Untitled Flyer' }}
@@ -353,7 +344,7 @@
             @endif
         </section>
 
-    </div>{{-- /max-width wrapper --}}
+    </div>
 </main>
 
 @include('public.layout.footer')
