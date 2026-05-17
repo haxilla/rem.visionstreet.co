@@ -1,6 +1,6 @@
 <?php
 
-phpinfo();
+dd(phpinfo());
 
 /*
 $mailbox = imap_open(
