@@ -4,8 +4,8 @@ $mailboxPath = '{mail.realtye-mails.com:110/pop3/notls}INBOX';
 
 $mailbox = @imap_open(
     $mailboxPath,
-    'members@realtye-mails.com',
-    'PASSWORD'
+    'members',
+    'D4vidb0wi3!'
 );
 
 if (!$mailbox) {
