@@ -18,3 +18,4 @@ $mailbox = imap_open(
     imap_close($mailbox);
 
     return "Connected successfully. Message count: " . $count;
+*/
