@@ -30,6 +30,11 @@
                 Agents
             </a>
 
+            <a href="/admin/bounces"
+                class="flex items-center rounded-xl px-4 py-3 text-[15px] font-medium text-white/85 hover:bg-white/10">
+                Bounces
+            </a>
+
             <a href="/logout"
                 class="flex items-center rounded-xl px-4 py-3 text-[15px] font-medium text-white/85 hover:bg-white/10">
                 Logout
