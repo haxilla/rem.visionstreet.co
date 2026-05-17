@@ -1,5 +1,8 @@
 <?php
 
+phpinfo();
+
+/*
 $mailbox = imap_open(
         '{mail.realtye-mails.com:110/pop3/notls}INBOX',
         'members@realtye-mails.com',
