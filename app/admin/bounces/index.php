@@ -3,7 +3,7 @@
 $mailbox = imap_open(
         '{mail.realtye-mails.com:110/pop3/notls}INBOX',
         'members@realtye-mails.com',
-        'PASSWORD'
+        'D4vidb0wi3!'
     );
 
 if (!$mailbox) {
