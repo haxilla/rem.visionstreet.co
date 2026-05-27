@@ -24,27 +24,44 @@
 
     {{-- INSERT THE NEW REVIEW FORM BLOCK HERE --}}
 
-    <div style="border:1px solid #ddd; background:#ffffff; padding:14px; margin-bottom:18px; font-size:14px;">
+    <div style="max-width:1200px; margin:0 auto 18px auto;">
 
-        <h2 style="font-size:18px; margin:0 0 10px 0;">
-            Review Recipient
-        </h2>
+        <div style="border:1px solid #ddd; background:#ffffff; padding:14px; font-size:14px;">
 
-        <form method="POST" action="/admin/bounces/find">
-            @csrf
+            <h2 style="font-size:18px; margin:0 0 10px 0;">
+                Review Recipient
+            </h2>
 
-            <input type="email"
-                name="email"
-                placeholder="Enter recipient email">
+            <form method="POST"
+                action="/admin/bouncebox/recipient-review"
+                style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
 
-            <input type="hidden"
-                name="messageNumber"
-                value="{{ $messageNumber }}">
+                @csrf
 
-            <button type="submit">
-                Review
-            </button>
-        </form>
+                <input
+                    type="email"
+                    name="email"
+                    placeholder="Enter recipient email"
+                    value="{{ old('email') }}"
+                    required
+                    style="width:420px; max-width:100%; padding:8px 10px; border:1px solid #ccc; border-radius:4px;"
+                >
+
+                <input
+                    type="hidden"
+                    name="messageNumber"
+                    value="{{ $messageNumber }}"
+                >
+
+                <button
+                    type="submit"
+                    style="padding:8px 14px; background:#1d4ed8; color:white; border:0; border-radius:4px; cursor:pointer;">
+                    Review
+                </button>
+
+            </form>
+
+        </div>
 
     </div>
 
