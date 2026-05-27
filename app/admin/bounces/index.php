@@ -51,11 +51,19 @@ for ($i = $latestMessageNumber; $i >= $oldestMessageNumber; $i--) {
         'messageNumber' => $i,
 
         'subject' => trim(
-            imap_utf8($overview->subject ?? '(No subject)')
+            iconv_mime_decode(
+                $overview->subject ?? '(No subject)',
+                ICONV_MIME_DECODE_CONTINUE_ON_ERROR,
+                'UTF-8'
+            )
         ),
 
         'from' => trim(
-            imap_utf8($overview->from ?? '')
+            iconv_mime_decode(
+                $overview->from ?? '',
+                ICONV_MIME_DECODE_CONTINUE_ON_ERROR,
+                'UTF-8'
+            )
         ),
 
         'date' => $overview->date ?? '',
