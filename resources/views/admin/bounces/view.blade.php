@@ -20,6 +20,34 @@
         @endif
     </div>
 
+    </div>
+
+    {{-- INSERT THE NEW REVIEW FORM BLOCK HERE --}}
+
+    <div style="border:1px solid #ddd; background:#ffffff; padding:14px; margin-bottom:18px; font-size:14px;">
+
+        <h2 style="font-size:18px; margin:0 0 10px 0;">
+            Review Recipient
+        </h2>
+
+        <form method="POST" action="/admin/bounces/find">
+            @csrf
+
+            <input type="email"
+                name="email"
+                placeholder="Enter recipient email">
+
+            <input type="hidden"
+                name="messageNumber"
+                value="{{ $messageNumber }}">
+
+            <button type="submit">
+                Review
+            </button>
+        </form>
+
+    </div>
+
     <h2 style="font-size:20px; margin:22px 0 10px;">Rendered Body</h2>
 
     @if(trim($body ?? '') !== '')
