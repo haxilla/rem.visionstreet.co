@@ -25,7 +25,6 @@ class bounceboxController extends Controller
         );
 
         if (!$mailbox) {
-
             dd([
                 'mailboxPath' => $mailboxPath,
                 'errors' => imap_errors(),
@@ -33,22 +32,13 @@ class bounceboxController extends Controller
             ]);
         }
 
-        $overview = imap_fetch_overview(
-            $mailbox,
-            $messageNumber,
-            0
-        )[0] ?? null;
-
-        $structure = imap_fetchstructure(
-            $mailbox,
-            $messageNumber
-        );
+        $overview = imap_fetch_overview($mailbox, $messageNumber, 0)[0] ?? null;
+        $structure = imap_fetchstructure($mailbox, $messageNumber);
 
         $htmlBody = '';
         $textBody = '';
 
         $decodePart = function ($content, $encoding) {
-
             if ($encoding == 3) {
                 return base64_decode($content);
             }
@@ -61,23 +51,12 @@ class bounceboxController extends Controller
         };
 
         if (!empty($structure->parts)) {
-
             foreach ($structure->parts as $index => $part) {
-
                 $partNumber = $index + 1;
-
                 $subtype = strtoupper($part->subtype ?? '');
 
-                $content = imap_fetchbody(
-                    $mailbox,
-                    $messageNumber,
-                    $partNumber
-                );
-
-                $content = $decodePart(
-                    $content,
-                    $part->encoding ?? 0
-                );
+                $content = imap_fetchbody($mailbox, $messageNumber, $partNumber);
+                $content = $decodePart($content, $part->encoding ?? 0);
 
                 if ($subtype === 'HTML' && trim($htmlBody) === '') {
                     $htmlBody = $content;
@@ -87,18 +66,9 @@ class bounceboxController extends Controller
                     $textBody = $content;
                 }
             }
-
         } else {
-
-            $content = imap_body(
-                $mailbox,
-                $messageNumber
-            );
-
-            $content = $decodePart(
-                $content,
-                $structure->encoding ?? 0
-            );
+            $content = imap_body($mailbox, $messageNumber);
+            $content = $decodePart($content, $structure->encoding ?? 0);
 
             if (strtoupper($structure->subtype ?? '') === 'HTML') {
                 $htmlBody = $content;
@@ -109,68 +79,67 @@ class bounceboxController extends Controller
 
         imap_close($mailbox);
 
-        $bodyType = trim($htmlBody) !== ''
-            ? 'html'
-            : 'text';
+        $bodyType = trim($htmlBody) !== '' ? 'html' : 'text';
+        $body = trim($htmlBody) !== '' ? $htmlBody : $textBody;
 
-        $body = trim($htmlBody) !== ''
-            ? $htmlBody
-            : $textBody;
-
-        // inject layout protection css into html emails
         if ($bodyType === 'html') {
-
             $css = '
                 <style>
-                    html, body {
-                        margin:0 !important;
-                        padding:0 !important;
-                        width:100% !important;
-                        max-width:100% !important;
-                        overflow:auto !important;
-                        background:#ffffff !important;
+                    html,
+                    body {
+                        margin: 0 !important;
+                        padding: 0 !important;
+                        width: 100% !important;
+                        max-width: 100% !important;
+                        min-width: 100% !important;
+                        overflow-x: auto !important;
+                        background: #ffffff !important;
+                    }
+
+                    body {
+                        display: block !important;
                     }
 
                     table {
-                        max-width:100% !important;
+                        max-width: 100% !important;
+                    }
+
+                    body > table,
+                    body > div,
+                    center > table,
+                    center > div,
+                    .wrapper,
+                    .container,
+                    .email-container {
+                        width: 100% !important;
+                        max-width: 900px !important;
+                        margin-left: auto !important;
+                        margin-right: auto !important;
                     }
 
                     img {
-                        max-width:100% !important;
-                        height:auto !important;
+                        max-width: 100% !important;
+                        height: auto !important;
                     }
 
                     * {
-                        box-sizing:border-box !important;
+                        box-sizing: border-box !important;
                     }
                 </style>
             ';
 
             if (stripos($body, '<head') !== false) {
-
-                $body = preg_replace(
-                    '/<head[^>]*>/i',
-                    '$0' . $css,
-                    $body,
-                    1
-                );
-
+                $body = preg_replace('/<head[^>]*>/i', '$0' . $css, $body, 1);
             } else {
-
                 $body = $css . $body;
             }
         }
 
         return view('admin.bounces.view', [
-
             'messageNumber' => $messageNumber,
-
             'overview' => $overview,
-
             'body' => $body,
-
             'bodyType' => $bodyType,
-
         ]);
     }
 
