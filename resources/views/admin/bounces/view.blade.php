@@ -59,7 +59,7 @@
 
                 <iframe
                     class="w-full bg-white border rounded"
-                    style="height:1400px;"
+                    style="height:1400px;max-width:900px;"
                     sandbox="allow-same-origin"
                     srcdoc="{{ $body }}">
                 </iframe>
