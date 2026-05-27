@@ -107,7 +107,7 @@ class bounceboxController extends Controller
             ? $htmlBody
             : $textBody;
 
-        return view('admin.bouncebox.view', [
+        return view('admin.bounces.view', [
 
             'messageNumber' => $messageNumber,
 
