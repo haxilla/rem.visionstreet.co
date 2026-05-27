@@ -29,11 +29,11 @@
         <div style="border:1px solid #ddd; background:#ffffff; padding:14px; font-size:14px;">
 
             <h2 style="font-size:18px; margin:0 0 10px 0;">
-                Review Recipient
+                Find Email
             </h2>
 
             <form method="POST"
-                action="/admin/bouncebox/recipient-review"
+                action="/admin/bounces/find"
                 style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
 
                 @csrf
@@ -56,7 +56,7 @@
                 <button
                     type="submit"
                     style="padding:8px 14px; background:#1d4ed8; color:white; border:0; border-radius:4px; cursor:pointer;">
-                    Review
+                    Submit
                 </button>
 
             </form>
