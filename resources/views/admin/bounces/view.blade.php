@@ -58,8 +58,7 @@
             @if($bodyType === 'html')
 
                 <iframe
-                    class="w-full bg-white border rounded"
-                    style="height:1400px;max-width:900px;"
+                    style="display:block; width:100%; min-width:100%; max-width:100%; height:1400px; border:1px solid #ddd; background:white;"
                     sandbox="allow-same-origin"
                     srcdoc="{{ $body }}">
                 </iframe>
