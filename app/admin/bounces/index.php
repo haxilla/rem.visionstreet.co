@@ -26,15 +26,19 @@ $perPage = 50;
 $page = max((int) request()->get('page', 1), 1);
 
 $latestMessageNumber = $total - (($page - 1) * $perPage);
-$oldestMessageNumber = max($latestMessageNumber - $perPage + 1, 1);
+
+if ($latestMessageNumber < 1) {
+    $latestMessageNumber = 1;
+}
+
+$oldestMessageNumber = max(
+    $latestMessageNumber - $perPage + 1,
+    1
+);
 
 $messages = [];
 
 for ($i = $latestMessageNumber; $i >= $oldestMessageNumber; $i--) {
-
-    if ($i < 1) {
-        continue;
-    }
 
     $overview = imap_fetch_overview($mailbox, $i, 0)[0] ?? null;
 
@@ -46,12 +50,12 @@ for ($i = $latestMessageNumber; $i >= $oldestMessageNumber; $i--) {
 
         'messageNumber' => $i,
 
-        'subject' => imap_utf8(
-            $overview->subject ?? '(No subject)'
+        'subject' => trim(
+            imap_utf8($overview->subject ?? '(No subject)')
         ),
 
-        'from' => imap_utf8(
-            $overview->from ?? ''
+        'from' => trim(
+            imap_utf8($overview->from ?? '')
         ),
 
         'date' => $overview->date ?? '',

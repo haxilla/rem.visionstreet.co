@@ -1,65 +1,128 @@
-<div class="p-6">
+<div class="p-6 max-w-7xl mx-auto">
 
-    <h1 class="text-2xl font-bold mb-4">
-        Bouncebox
-    </h1>
+    <div class="flex items-center justify-between mb-6">
+        <div>
+            <h1 class="text-2xl font-bold">
+                Bouncebox
+            </h1>
 
-    <div class="mb-4 text-sm text-gray-500">
-        {{ number_format($data['count']) }} messages
+            <div class="text-sm text-gray-500 mt-1">
+                {{ number_format($data['count']) }} messages
+            </div>
+        </div>
+
+        <div class="text-sm text-gray-500">
+            Page {{ $data['page'] }}
+        </div>
     </div>
 
-    <div class="border rounded overflow-hidden bg-white">
+    <div class="overflow-hidden border border-gray-200 rounded-lg bg-white shadow-sm">
 
-        @foreach(($data['messages'] ?? []) as $message)
+        <table class="w-full text-sm">
 
-            <a href="/admin/bounces/view/{{ $message['messageNumber'] }}"
-               class="block border-b px-4 py-3 hover:bg-gray-50">
+            <thead class="bg-gray-50 border-b border-gray-200">
 
-                <div class="flex justify-between gap-4">
+                <tr>
+                    <th class="px-4 py-3 text-left w-24">
+                        Msg #
+                    </th>
 
-                    <div class="truncate">
+                    <th class="px-4 py-3 text-left w-56">
+                        Date
+                    </th>
 
-                        <span class="font-semibold">
+                    <th class="px-4 py-3 text-left w-80">
+                        From
+                    </th>
+
+                    <th class="px-4 py-3 text-left">
+                        Subject
+                    </th>
+                </tr>
+
+            </thead>
+
+            <tbody class="divide-y divide-gray-100">
+
+                @forelse($data['messages'] as $message)
+
+                    <tr class="hover:bg-blue-50">
+
+                        <td class="px-4 py-3 text-gray-500 whitespace-nowrap">
+                            #{{ $message['messageNumber'] }}
+                        </td>
+
+                        <td class="px-4 py-3 text-gray-600 whitespace-nowrap">
+                            {{ $message['date'] }}
+                        </td>
+
+                        <td class="px-4 py-3 text-gray-700 truncate max-w-xs">
                             {{ $message['from'] }}
-                        </span>
+                        </td>
 
-                        <span class="text-gray-400">
-                            —
-                        </span>
+                        <td class="px-4 py-3">
 
-                        <span>
-                            {{ $message['subject'] }}
-                        </span>
+                            <a href="/admin/bounces/view/{{ $message['messageNumber'] }}"
+                               class="text-blue-700 hover:underline">
 
-                    </div>
+                                {{ $message['subject'] }}
 
-                    <div class="text-xs text-gray-500 whitespace-nowrap">
-                        {{ $message['date'] }}
-                    </div>
+                            </a>
 
-                </div>
+                        </td>
 
-            </a>
+                    </tr>
 
-        @endforeach
+                @empty
+
+                    <tr>
+                        <td colspan="4"
+                            class="px-4 py-8 text-center text-gray-500">
+
+                            No messages found.
+
+                        </td>
+                    </tr>
+
+                @endforelse
+
+            </tbody>
+
+        </table>
 
     </div>
 
-    <div class="flex gap-3 mt-5">
+    <div class="flex items-center justify-between mt-6">
 
-        @if($data['hasNewer'])
-            <a href="?page={{ $data['page'] - 1 }}"
-               class="px-4 py-2 border rounded">
-                Newer
-            </a>
-        @endif
+        <div>
 
-        @if($data['hasOlder'])
-            <a href="?page={{ $data['page'] + 1 }}"
-               class="px-4 py-2 border rounded">
-                Older
-            </a>
-        @endif
+            @if($data['hasNewer'])
+
+                <a href="/admin/bounces?page={{ $data['page'] - 1 }}"
+                   class="inline-flex items-center px-4 py-2 border rounded bg-white hover:bg-gray-50">
+
+                    ← Newer
+
+                </a>
+
+            @endif
+
+        </div>
+
+        <div>
+
+            @if($data['hasOlder'])
+
+                <a href="/admin/bounces?page={{ $data['page'] + 1 }}"
+                   class="inline-flex items-center px-4 py-2 border rounded bg-white hover:bg-gray-50">
+
+                    Older →
+
+                </a>
+
+            @endif
+
+        </div>
 
     </div>
 
