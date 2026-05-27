@@ -5,19 +5,78 @@ $mailboxPath = '{mail.realtye-mails.com:110/pop3/notls}INBOX';
 $mailbox = @imap_open(
     $mailboxPath,
     'members@realtye-mails.com',
-    'D4vidb0wi3'
+    env('BOUNCEBOX_PASSWORD')
 );
 
 if (!$mailbox) {
-    dd([
+
+    $data = [
+        'connected' => false,
         'mailboxPath' => $mailboxPath,
         'errors' => imap_errors(),
         'last_error' => imap_last_error(),
-    ]);
+    ];
+
+    return;
 }
 
-$count = imap_num_msg($mailbox);
+$total = imap_num_msg($mailbox);
+
+$perPage = 50;
+$page = max((int) request()->get('page', 1), 1);
+
+$latestMessageNumber = $total - (($page - 1) * $perPage);
+$oldestMessageNumber = max($latestMessageNumber - $perPage + 1, 1);
+
+$messages = [];
+
+for ($i = $latestMessageNumber; $i >= $oldestMessageNumber; $i--) {
+
+    if ($i < 1) {
+        continue;
+    }
+
+    $overview = imap_fetch_overview($mailbox, $i, 0)[0] ?? null;
+
+    if (!$overview) {
+        continue;
+    }
+
+    $messages[] = [
+
+        'messageNumber' => $i,
+
+        'subject' => imap_utf8(
+            $overview->subject ?? '(No subject)'
+        ),
+
+        'from' => imap_utf8(
+            $overview->from ?? ''
+        ),
+
+        'date' => $overview->date ?? '',
+
+        'seen' => !empty($overview->seen),
+
+    ];
+}
 
 imap_close($mailbox);
 
-dd("Connected successfully. Message count: " . $count);
+$data = [
+
+    'connected' => true,
+
+    'count' => $total,
+
+    'messages' => $messages,
+
+    'page' => $page,
+
+    'perPage' => $perPage,
+
+    'hasOlder' => $oldestMessageNumber > 1,
+
+    'hasNewer' => $page > 1,
+
+];
