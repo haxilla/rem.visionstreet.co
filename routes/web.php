@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\guest\guestController;
 use App\Http\Controllers\admin\adminController;
 use App\Http\Controllers\member\memberController;
+use App\Http\Controllers\bounceboxController;
 
 
 //index
@@ -25,6 +26,11 @@ Route::get('/member/login',
 Route::post('/member/login', 
 [guestController::class, 'memberLogin'])->name('member.login.submit');
 
+
+//bouncebox
+Route::get('/admin/bouncebox/{messageNumber}', [bounceboxController::class, 'view'])
+    ->whereNumber('messageNumber')
+    ->name('admin.bouncebox.view');
 
 //public details
 Route::get('/homedetails/{flyerslug}',

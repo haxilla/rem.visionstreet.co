@@ -82,7 +82,7 @@
                             </td>
 
                             <td class="px-4 py-3">
-                                <a href="/admin/bounces/view/{{ $message['messageNumber'] }}"
+                                <a href="/admin/bouncebox/{{ $message['messageNumber'] }}"
                                    class="text-blue-700 hover:underline">
                                     {{ $message['subject'] }}
                                 </a>
