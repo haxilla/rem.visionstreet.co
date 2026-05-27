@@ -22,7 +22,7 @@ if (!$mailbox) {
 
 $total = imap_num_msg($mailbox);
 
-$perPage = 50;
+$perPage = 35;
 $page = max((int) request()->get('page', 1), 1);
 
 $latestMessageNumber = $total - (($page - 1) * $perPage);
