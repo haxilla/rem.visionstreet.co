@@ -25,6 +25,7 @@ class bounceboxController extends Controller
         );
 
         if (!$mailbox) {
+
             dd([
                 'mailboxPath' => $mailboxPath,
                 'errors' => imap_errors(),
@@ -33,39 +34,89 @@ class bounceboxController extends Controller
         }
 
         $overview = imap_fetch_overview($mailbox, $messageNumber, 0)[0] ?? null;
+
         $structure = imap_fetchstructure($mailbox, $messageNumber);
 
-        $body = '';
+        $htmlBody = '';
+        $textBody = '';
+
+        $decodePart = function ($content, $encoding) {
+
+            if ($encoding == 3) {
+                return base64_decode($content);
+            }
+
+            if ($encoding == 4) {
+                return quoted_printable_decode($content);
+            }
+
+            return $content;
+        };
 
         if (!empty($structure->parts)) {
+
             foreach ($structure->parts as $index => $part) {
+
                 $partNumber = $index + 1;
 
-                if (($part->subtype ?? '') === 'PLAIN') {
-                    $body = imap_fetchbody($mailbox, $messageNumber, $partNumber);
+                $subtype = strtoupper($part->subtype ?? '');
 
-                    if (($part->encoding ?? 0) == 3) {
-                        $body = base64_decode($body);
-                    } elseif (($part->encoding ?? 0) == 4) {
-                        $body = quoted_printable_decode($body);
-                    }
+                $content = imap_fetchbody(
+                    $mailbox,
+                    $messageNumber,
+                    $partNumber
+                );
 
-                    break;
+                $content = $decodePart(
+                    $content,
+                    $part->encoding ?? 0
+                );
+
+                if ($subtype === 'HTML' && trim($htmlBody) === '') {
+                    $htmlBody = $content;
+                }
+
+                if ($subtype === 'PLAIN' && trim($textBody) === '') {
+                    $textBody = $content;
                 }
             }
-        }
 
-        if ($body === '') {
-            $body = imap_body($mailbox, $messageNumber);
-            $body = quoted_printable_decode($body);
+        } else {
+
+            $content = imap_body($mailbox, $messageNumber);
+
+            $content = $decodePart(
+                $content,
+                $structure->encoding ?? 0
+            );
+
+            if (strtoupper($structure->subtype ?? '') === 'HTML') {
+                $htmlBody = $content;
+            } else {
+                $textBody = $content;
+            }
         }
 
         imap_close($mailbox);
 
-        return view('admin.bounces.view', [
+        $bodyType = trim($htmlBody) !== ''
+            ? 'html'
+            : 'text';
+
+        $body = trim($htmlBody) !== ''
+            ? $htmlBody
+            : $textBody;
+
+        return view('admin.bouncebox.view', [
+
             'messageNumber' => $messageNumber,
+
             'overview' => $overview,
+
             'body' => $body,
+
+            'bodyType' => $bodyType,
+
         ]);
     }
 
