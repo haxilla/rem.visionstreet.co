@@ -53,18 +53,20 @@
 
         </div>
 
-        <div class="p-5">
+        <div class="bg-gray-100 p-4">
 
             @if($bodyType === 'html')
 
                 <iframe
-                    class="w-full min-h-[900px] border rounded bg-white"
+                    class="w-full bg-white border rounded"
+                    style="height:1400px;"
+                    sandbox="allow-same-origin"
                     srcdoc="{{ $body }}">
                 </iframe>
 
             @else
 
-                <pre class="whitespace-pre-wrap text-sm bg-gray-50 border rounded p-4 overflow-x-auto">{{ $body }}</pre>
+                <pre class="whitespace-pre-wrap text-sm bg-white border rounded p-4 overflow-x-auto">{{ $body }}</pre>
 
             @endif
 

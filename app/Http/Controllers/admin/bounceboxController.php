@@ -33,9 +33,16 @@ class bounceboxController extends Controller
             ]);
         }
 
-        $overview = imap_fetch_overview($mailbox, $messageNumber, 0)[0] ?? null;
+        $overview = imap_fetch_overview(
+            $mailbox,
+            $messageNumber,
+            0
+        )[0] ?? null;
 
-        $structure = imap_fetchstructure($mailbox, $messageNumber);
+        $structure = imap_fetchstructure(
+            $mailbox,
+            $messageNumber
+        );
 
         $htmlBody = '';
         $textBody = '';
@@ -83,7 +90,10 @@ class bounceboxController extends Controller
 
         } else {
 
-            $content = imap_body($mailbox, $messageNumber);
+            $content = imap_body(
+                $mailbox,
+                $messageNumber
+            );
 
             $content = $decodePart(
                 $content,
@@ -106,6 +116,50 @@ class bounceboxController extends Controller
         $body = trim($htmlBody) !== ''
             ? $htmlBody
             : $textBody;
+
+        // inject layout protection css into html emails
+        if ($bodyType === 'html') {
+
+            $css = '
+                <style>
+                    html, body {
+                        margin:0 !important;
+                        padding:0 !important;
+                        width:100% !important;
+                        max-width:100% !important;
+                        overflow:auto !important;
+                        background:#ffffff !important;
+                    }
+
+                    table {
+                        max-width:100% !important;
+                    }
+
+                    img {
+                        max-width:100% !important;
+                        height:auto !important;
+                    }
+
+                    * {
+                        box-sizing:border-box !important;
+                    }
+                </style>
+            ';
+
+            if (stripos($body, '<head') !== false) {
+
+                $body = preg_replace(
+                    '/<head[^>]*>/i',
+                    '$0' . $css,
+                    $body,
+                    1
+                );
+
+            } else {
+
+                $body = $css . $body;
+            }
+        }
 
         return view('admin.bounces.view', [
 
