@@ -33,7 +33,32 @@ class bounceboxController extends Controller
         }
 
         $overview = imap_fetch_overview($mailbox, $messageNumber, 0)[0] ?? null;
-        $body = imap_body($mailbox, $messageNumber);
+        $structure = imap_fetchstructure($mailbox, $messageNumber);
+
+        $body = '';
+
+        if (!empty($structure->parts)) {
+            foreach ($structure->parts as $index => $part) {
+                $partNumber = $index + 1;
+
+                if (($part->subtype ?? '') === 'PLAIN') {
+                    $body = imap_fetchbody($mailbox, $messageNumber, $partNumber);
+
+                    if (($part->encoding ?? 0) == 3) {
+                        $body = base64_decode($body);
+                    } elseif (($part->encoding ?? 0) == 4) {
+                        $body = quoted_printable_decode($body);
+                    }
+
+                    break;
+                }
+            }
+        }
+
+        if ($body === '') {
+            $body = imap_body($mailbox, $messageNumber);
+            $body = quoted_printable_decode($body);
+        }
 
         imap_close($mailbox);
 
