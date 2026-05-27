@@ -27,12 +27,12 @@ Route::post('/member/login',
 [guestController::class, 'memberLogin'])->name('member.login.submit');
 
 //bouncebox
-Route::post('/admin/bouncebox/group-delete', [bounceboxController::class, 'groupDelete'])
-    ->name('admin.bouncebox.groupDelete');
+Route::post('/admin/bounces/group-delete', [bounceboxController::class, 'groupDelete'])
+    ->name('admin.bounces.groupDelete');
 
-Route::get('/admin/bouncebox/{messageNumber}', [bounceboxController::class, 'view'])
+Route::get('/admin/bounces/{messageNumber}', [bounceboxController::class, 'view'])
     ->whereNumber('messageNumber')
-    ->name('admin.bouncebox.view');
+    ->name('admin.bounces.view');
 
 //public details
 Route::get('/homedetails/{flyerslug}',

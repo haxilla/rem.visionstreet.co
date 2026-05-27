@@ -1,6 +1,6 @@
 <div class="p-6 max-w-7xl mx-auto">
 
-    <form method="POST" action="/admin/bouncebox/group-delete">
+    <form method="POST" action="/admin/bounces/group-delete">
         @csrf
 
         <div class="flex items-center justify-between mb-6">
@@ -82,7 +82,7 @@
                             </td>
 
                             <td class="px-4 py-3">
-                                <a href="/admin/bouncebox/{{ $message['messageNumber'] }}"
+                                <a href="/admin/bounces/{{ $message['messageNumber'] }}"
                                    class="text-blue-700 hover:underline">
                                     {{ $message['subject'] }}
                                 </a>

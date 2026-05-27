@@ -37,7 +37,7 @@ class bounceboxController extends Controller
 
         imap_close($mailbox);
 
-        return view('admin.bouncebox.view', [
+        return view('admin.bounces.view', [
             'messageNumber' => $messageNumber,
             'overview' => $overview,
             'body' => $body,
