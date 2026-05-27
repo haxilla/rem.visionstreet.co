@@ -1,6 +1,6 @@
 <div class="p-6 max-w-7xl mx-auto">
 
-    <form method="POST" action="/admin/bounces/group-delete">
+    <form method="POST" action="/admin/bouncebox/group-delete">
         @csrf
 
         <div class="flex items-center justify-between mb-6">
