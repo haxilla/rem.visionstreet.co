@@ -51,8 +51,7 @@ Route::get('/admin/agentLogin/{id}',
 //flyer details
 Route::get('/flyer/{flyerId}', [guestController::class, 'flyerDetail'])->name('flyer.detail');
 
-//route for multiple segments
-Route::get('/admin/{segments}', [adminController::class, 'segments'])
+Route::match(['get', 'post'], '/admin/{segments}', [adminController::class, 'segments'])
     ->where('segments', '.+');
 
 //route for multiple segments
