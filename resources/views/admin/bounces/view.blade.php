@@ -65,27 +65,33 @@
 
     </div>
 
-    <h2 style="font-size:20px; margin:22px 0 10px;">Rendered Body</h2>
+    <div style="max-width:1200px; margin:0 auto 18px auto;">
 
-    @if(trim($body ?? '') !== '')
+        <h2 style="font-size:20px; margin:22px 0 10px;">
+            Rendered Body
+        </h2>
 
-        @if($bodyType === 'html')
-            <div style="width:100%; max-width:1200px; overflow:auto; background:#f3f4f6; padding:16px; border:1px solid #ddd;">
-                <iframe
-                    style="display:block; width:100%; min-width:100%; max-width:100%; height:1400px; border:1px solid #ddd; background:white;"
-                    sandbox="allow-same-origin"
-                    srcdoc="{{ $body }}">
-                </iframe>
-            </div>
+        @if(trim($body ?? '') !== '')
+
+            @if($bodyType === 'html')
+                <div style="width:100%; overflow:auto; background:#f3f4f6; padding:16px; border:1px solid #ddd;">
+                    <iframe
+                        style="display:block; width:100%; min-width:100%; max-width:100%; height:1400px; border:1px solid #ddd; background:white;"
+                        sandbox="allow-same-origin"
+                        srcdoc="{{ $body }}">
+                    </iframe>
+                </div>
+            @else
+                <pre style="white-space:pre-wrap; font-size:13px; background:#fff; border:1px solid #ddd; padding:14px; overflow:auto;">{{ $body }}</pre>
+            @endif
+
         @else
-            <pre style="white-space:pre-wrap; font-size:13px; background:#fff; border:1px solid #ddd; padding:14px; overflow:auto;">{{ $body }}</pre>
+            <div style="background:#fff7ed; border:1px solid #fed7aa; padding:14px;">
+                No normal rendered body was found. Check MIME parts, headers, and raw body below.
+            </div>
         @endif
 
-    @else
-        <div style="background:#fff7ed; border:1px solid #fed7aa; padding:14px; margin-bottom:18px;">
-            No normal rendered body was found. Check MIME parts, headers, and raw body below.
-        </div>
-    @endif
+    </div>
 
     <h2 style="font-size:20px; margin:28px 0 10px;">MIME Parts / Attachments</h2>
 
