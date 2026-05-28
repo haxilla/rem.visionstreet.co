@@ -66,7 +66,7 @@ return [
         'remote_realtyemails' => [
             'driver' => 'mysql',
             'host' => env('DB_REMOTE_HOST', 'www.realtyemails.com'),
-            'port' => env('DB_REMOTEPORT', '3306'),
+            'port' => env('DB_REMOTE_PORT', '3306'),
             'database' => env('DB_REMOTE_DATABASE', 'forge'),
             'username' => env('DB_REMOTE_USERNAME', 'forge'),
             'password' => env('DB_REMOTE_PASSWORD', ''),
@@ -79,6 +79,42 @@ return [
             'options'   => array(
                 PDO::ATTR_TIMEOUT => "2",
             )
+        ],
+
+        'remote_emailgroups_azemails' => [
+            'driver' => 'mysql',
+            'host' => env('DB_AZEMAILS_HOST', 'realtyemails.com'),
+            'port' => env('DB_AZEMAILS_PORT', '3306'),
+            'database' => env('DB_AZEMAILS_DATABASE', 'emailgroups'),
+            'username' => env('DB_AZEMAILS_USERNAME', 'forge'),
+            'password' => env('DB_AZEMAILS_PASSWORD', ''),
+            'unix_socket' => env('DB_AZEMAILS_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+            'options' => [
+                PDO::ATTR_TIMEOUT => 2,
+            ],
+        ],
+
+        'remote_emailgroups_arizonaemails' => [
+            'driver' => 'mysql',
+            'host' => env('DB_ARIZONAEMAILS_HOST', 'realtyemails.com'),
+            'port' => env('DB_ARIZONAEMAILS_PORT', '3306'),
+            'database' => env('DB_ARIZONAEMAILS_DATABASE', 'emailgroups'),
+            'username' => env('DB_ARIZONAEMAILS_USERNAME', 'forge'),
+            'password' => env('DB_ARIZONAEMAILS_PASSWORD', ''),
+            'unix_socket' => env('DB_ARIZONAEMAILS_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+            'options' => [
+                PDO::ATTR_TIMEOUT => 2,
+            ],
         ],
 
         'pgsql' => [
