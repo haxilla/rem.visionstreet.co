@@ -36,45 +36,28 @@
                                 ← Back to Bouncebox
                             </a>
 
-                            <form
-                                method="POST"
-                                action="/admin/bounces/delete-recipient"
-                                onsubmit="return confirm('Are you sure you want to permanently delete this recipient record? This cannot be undone.');"
-                            >
-                                @csrf
-
-                                <input
-                                    type="hidden"
-                                    name="az_table"
-                                    value="{{ $azMatch['table'] ?? '' }}"
+                            @if(!$hasProblem)
+                                <form
+                                    method="POST"
+                                    action="/admin/bounces/delete-recipient"
+                                    onsubmit="return confirm('Are you sure you want to permanently delete this recipient record from both databases? This cannot be undone.');"
                                 >
+                                    @csrf
 
-                                <input
-                                    type="hidden"
-                                    name="az_eid"
-                                    value="{{ $azMatch['row']->eid ?? '' }}"
-                                >
+                                    <input type="hidden" name="az_table" value="{{ $azMatch['table'] ?? '' }}">
+                                    <input type="hidden" name="az_eid" value="{{ $azMatch['row']->eid ?? '' }}">
 
-                                <input
-                                    type="hidden"
-                                    name="arizona_table"
-                                    value="{{ $arizonaMatch['table'] ?? '' }}"
-                                >
+                                    <input type="hidden" name="arizona_table" value="{{ $arizonaMatch['table'] ?? '' }}">
+                                    <input type="hidden" name="arizona_eid" value="{{ $arizonaMatch['row']->eid ?? '' }}">
 
-                                <input
-                                    type="hidden"
-                                    name="arizona_eid"
-                                    value="{{ $arizonaMatch['row']->eid ?? '' }}"
-                                >
-
-                                <button
-                                    type="submit"
-                                    class="cursor-pointer inline-flex items-center rounded-full border border-red-200 bg-white px-5 py-2.5 text-sm font-semibold text-red-600 shadow-sm transition hover:bg-red-50 hover:border-red-300"
-                                >
-                                    Delete This Record
-                                </button>
-
-                            </form>
+                                    <button
+                                        type="submit"
+                                        class="inline-flex cursor-pointer items-center rounded-full border border-red-200 bg-white px-5 py-2.5 text-sm font-semibold text-red-600 shadow-sm transition hover:border-red-300 hover:bg-red-50"
+                                    >
+                                        Delete This Record
+                                    </button>
+                                </form>
+                            @endif
 
                         </div>
 
@@ -235,14 +218,13 @@
                                 <div class="overflow-hidden rounded-[24px] bg-white shadow-[0_12px_35px_rgba(15,23,42,0.06)]">
 
                                     <div class="border-b border-slate-200 bg-slate-50 px-6 py-5">
-
-                                        <div class="flex items-center justify-between">
+                                        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 
                                             <h2 class="text-sm font-semibold text-slate-700">
                                                 Editable Recipient Details
                                             </h2>
 
-                                            <div class="flex items-center gap-3">
+                                            <div class="flex flex-wrap items-center gap-3">
 
                                                 <a
                                                     href="https://services.azre.gov/PdbWeb/"
@@ -255,7 +237,7 @@
 
                                                 <button
                                                     type="submit"
-                                                    class="rounded-full bg-[#214e9b] px-5 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-[#1b4386]"
+                                                    class="cursor-pointer rounded-full bg-[#214e9b] px-5 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-[#1b4386]"
                                                 >
                                                     Save Changes
                                                 </button>
@@ -263,7 +245,6 @@
                                             </div>
 
                                         </div>
-
                                     </div>
 
                                     <div class="space-y-5 p-8">
@@ -278,6 +259,46 @@
                                                 value="{{ $row->email ?? '' }}"
                                                 class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 outline-none transition focus:border-[#214e9b]/50 focus:bg-white focus:ring-4 focus:ring-[#214e9b]/10"
                                             >
+                                        </div>
+
+                                        <div class="grid gap-5 md:grid-cols-3">
+
+                                            <div>
+                                                <label class="mb-2 block text-sm font-semibold text-slate-700">
+                                                    First Name
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    name="FirstName"
+                                                    value="{{ $row->FirstName ?? '' }}"
+                                                    class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 outline-none transition focus:border-[#214e9b]/50 focus:bg-white focus:ring-4 focus:ring-[#214e9b]/10"
+                                                >
+                                            </div>
+
+                                            <div>
+                                                <label class="mb-2 block text-sm font-semibold text-slate-700">
+                                                    Last Name
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    name="LastName"
+                                                    value="{{ $row->LastName ?? '' }}"
+                                                    class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 outline-none transition focus:border-[#214e9b]/50 focus:bg-white focus:ring-4 focus:ring-[#214e9b]/10"
+                                                >
+                                            </div>
+
+                                            <div>
+                                                <label class="mb-2 block text-sm font-semibold text-slate-700">
+                                                    Full Name
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    name="FullName"
+                                                    value="{{ $row->FullName ?? '' }}"
+                                                    class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 outline-none transition focus:border-[#214e9b]/50 focus:bg-white focus:ring-4 focus:ring-[#214e9b]/10"
+                                                >
+                                            </div>
+
                                         </div>
 
                                         <div>
@@ -385,15 +406,6 @@
 
                                         <div>
                                             <span class="block text-xs font-semibold uppercase tracking-wide text-slate-400">
-                                                Full Name
-                                            </span>
-                                            <span class="mt-1 block font-semibold text-slate-800">
-                                                {{ $row->FullName ?? '' }}
-                                            </span>
-                                        </div>
-
-                                        <div>
-                                            <span class="block text-xs font-semibold uppercase tracking-wide text-slate-400">
                                                 License #
                                             </span>
                                             <span class="mt-1 block font-semibold text-slate-800">
@@ -448,15 +460,6 @@
 
                                     </div>
 
-                                </div>
-
-                                <div class="mt-6 flex justify-end">
-                                    <button
-                                        type="submit"
-                                        class="rounded-full bg-[#214e9b] px-7 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#1b4386]"
-                                    >
-                                        Save Changes to Both Databases
-                                    </button>
                                 </div>
 
                             </form>
