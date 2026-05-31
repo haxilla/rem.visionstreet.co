@@ -15,7 +15,8 @@ class bounceboxController extends Controller
     public function view($messageNumber)
     {
 
-
+        include app_path('admin/bounces/view.php');
+        
         return view('admin.bounces.view', [
             'messageNumber' => $messageNumber,
             'overview' => $overview,
