@@ -21,6 +21,7 @@ if (!$mailbox) {
 $overview = imap_fetch_overview($mailbox, $messageNumber, 0)[0] ?? null;
 $headers  = imap_fetchheader($mailbox, $messageNumber);
 $rawBody  = imap_body($mailbox, $messageNumber);
+$rawFullMessage = $headers . "\r\n\r\n" . $rawBody;
 $structure = imap_fetchstructure($mailbox, $messageNumber);
 
 $htmlBody = '';
@@ -107,7 +108,7 @@ $walkParts = function ($parts, $prefix = '') use (
                 'encoding' => $encoding,
                 'filename' => $filename,
                 'bytes' => strlen($content),
-                'preview' => mb_substr(trim($decodedContent), 0, 1500),
+                'preview' => mb_substr(trim($decodedContent), 0, 10000),
             ];
         } else {
             $partsReport[] = [
@@ -145,9 +146,43 @@ if (!empty($structure->parts)) {
         'encoding' => $structure->encoding ?? 0,
         'filename' => '',
         'bytes' => strlen($rawBody),
-        'preview' => mb_substr(trim($content), 0, 1500),
+        'preview' => mb_substr(trim($content), 0, 10000),
     ];
 }
+
+/*
+|--------------------------------------------------------------------------
+| Try to expose possible recipient emails from full bounce content
+|--------------------------------------------------------------------------
+*/
+
+$rawSearchText = $rawFullMessage . "\n\n" . implode("\n\n", array_column($partsReport, 'preview'));
+
+$possibleRecipients = [];
+
+$patterns = [
+    '/Final-Recipient:\s*rfc822;\s*([^\s<>,;]+)/i',
+    '/Original-Recipient:\s*rfc822;\s*([^\s<>,;]+)/i',
+    '/X-Failed-Recipients:\s*([^\s<>,;]+)/i',
+    '/Diagnostic-Code:.*?([A-Z0-9._%+\-]+@[A-Z0-9.\-]+\.[A-Z]{2,})/is',
+    '/Action:\s*failed.*?([A-Z0-9._%+\-]+@[A-Z0-9.\-]+\.[A-Z]{2,})/is',
+    '/([A-Z0-9._%+\-]+@[A-Z0-9.\-]+\.[A-Z]{2,})/i',
+];
+
+foreach ($patterns as $pattern) {
+    if (preg_match_all($pattern, $rawSearchText, $matches)) {
+        foreach ($matches[1] as $match) {
+            $emailMatch = strtolower(trim($match, " \t\r\n<>;,"));
+
+            if (filter_var($emailMatch, FILTER_VALIDATE_EMAIL)) {
+                $possibleRecipients[$emailMatch] = true;
+            }
+        }
+    }
+}
+
+$possibleRecipients = array_keys($possibleRecipients);
+sort($possibleRecipients);
 
 imap_close($mailbox);
 

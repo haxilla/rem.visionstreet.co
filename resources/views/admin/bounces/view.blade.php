@@ -70,6 +70,34 @@
 
                         </div>
 
+                        @if(!empty($possibleRecipients))
+
+                            <div class="mt-8 rounded-[24px] border border-blue-200 bg-blue-50 px-8 py-6 shadow-[0_12px_35px_rgba(15,23,42,0.04)]">
+
+                                <div class="text-lg font-semibold text-blue-900">
+                                    Possible Recipient Emails Found
+                                </div>
+
+                                <p class="mt-1 text-sm text-blue-800">
+                                    These were extracted from the raw bounce message, diagnostic codes, delivery-status sections, and MIME parts.
+                                </p>
+
+                                <div class="mt-4 flex flex-wrap gap-2">
+                                    @foreach($possibleRecipients as $possibleEmail)
+                                        <button
+                                            type="button"
+                                            onclick="document.querySelector('input[name=email]').value = '{{ $possibleEmail }}'"
+                                            class="cursor-pointer rounded-full bg-white px-4 py-2 text-sm font-semibold text-[#214e9b] shadow-sm ring-1 ring-blue-200 hover:bg-blue-100"
+                                        >
+                                            {{ $possibleEmail }}
+                                        </button>
+                                    @endforeach
+                                </div>
+
+                            </div>
+
+                        @endif
+
                         {{-- FIND EMAIL --}}
                         <div class="mt-8 rounded-[24px] bg-white px-8 py-7 shadow-[0_12px_35px_rgba(15,23,42,0.06)]">
 
@@ -215,6 +243,16 @@
 
                         {{-- RAW SECTIONS --}}
                         <div class="mt-8 space-y-4">
+
+                            <details class="overflow-hidden rounded-[24px] bg-white shadow-[0_12px_35px_rgba(15,23,42,0.06)]" open>
+                                <summary class="cursor-pointer border-b border-slate-200 bg-slate-50 px-6 py-5 text-sm font-semibold text-slate-700">
+                                    Entire Raw Message
+                                </summary>
+
+                                <div class="p-6">
+                                    <pre class="overflow-auto whitespace-pre-wrap rounded-2xl border border-slate-700 bg-slate-950 p-4 text-xs leading-5 text-slate-100">{{ $rawFullMessage ?? '' }}</pre>
+                                </div>
+                            </details>
 
                             <details class="overflow-hidden rounded-[24px] bg-white shadow-[0_12px_35px_rgba(15,23,42,0.06)]">
                                 <summary class="cursor-pointer border-b border-slate-200 bg-slate-50 px-6 py-5 text-sm font-semibold text-slate-700">
