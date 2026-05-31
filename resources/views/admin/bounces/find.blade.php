@@ -299,6 +299,35 @@
                                             </div>
 
                                         </div>
+                                        <div class="grid gap-5 md:grid-cols-2">
+
+                                        <div>
+                                                <label class="mb-2 block text-sm font-semibold text-slate-700">
+                                                    Agent License Number
+                                                </label>
+
+                                                <input
+                                                    type="text"
+                                                    name="agentLicenseNum"
+                                                    value="{{ $row->agentLicenseNum ?? '' }}"
+                                                    class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 outline-none transition focus:border-[#214e9b]/50 focus:bg-white focus:ring-4 focus:ring-[#214e9b]/10"
+                                                >
+                                            </div>
+
+                                            <div>
+                                                <label class="mb-2 block text-sm font-semibold text-slate-700">
+                                                    Employer License Number
+                                                </label>
+
+                                                <input
+                                                    type="text"
+                                                    name="employerLicenseNum"
+                                                    value="{{ $row->employerLicenseNum ?? '' }}"
+                                                    class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 outline-none transition focus:border-[#214e9b]/50 focus:bg-white focus:ring-4 focus:ring-[#214e9b]/10"
+                                                >
+                                            </div>
+
+                                        </div>
 
                                         <div>
                                             <label class="mb-2 block text-sm font-semibold text-slate-700">
