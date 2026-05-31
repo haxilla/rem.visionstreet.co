@@ -69,7 +69,7 @@
 
                                 <button
                                     type="submit"
-                                    class="inline-flex items-center rounded-full border border-red-200 bg-white px-5 py-2.5 text-sm font-semibold text-red-600 shadow-sm transition hover:bg-red-50 hover:border-red-300"
+                                    class="cursor-pointer inline-flex items-center rounded-full border border-red-200 bg-white px-5 py-2.5 text-sm font-semibold text-red-600 shadow-sm transition hover:bg-red-50 hover:border-red-300"
                                 >
                                     Delete This Record
                                 </button>
