@@ -60,12 +60,13 @@ if (!empty($messageNumber)) {
     }
 }
 
-return redirect('/admin/bounces')->with([
-    'deleteComplete'       => true,
-    'deletedAz'            => $deletedAz,
-    'deletedArizona'       => $deletedArizona,
-    'deletedBounceMessage' => $deletedBounceMessage,
-    'bounceDeleteError'    => $bounceDeleteError,
-    'messageNumber'        => $messageNumber,
-    'deletedEid'           => $eid,
-]);
+$data = compact(
+    'azTable',
+    'arizonaTable',
+    'eid',
+    'messageNumber',
+    'deletedAz',
+    'deletedArizona',
+    'deletedBounceMessage',
+    'bounceDeleteError'
+);
