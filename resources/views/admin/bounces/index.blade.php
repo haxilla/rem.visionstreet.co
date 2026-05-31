@@ -56,6 +56,73 @@
                                 </div>
                             </div>
 
+                            {{-- DELETE COMPLETE --}}
+                            @if(session('deleteComplete'))
+
+                                <div class="mt-8 rounded-[24px] border border-emerald-200 bg-emerald-50 px-8 py-6 shadow-[0_12px_35px_rgba(15,23,42,0.04)]">
+
+                                    <div class="text-lg font-semibold text-emerald-900">
+                                        Delete Complete
+                                    </div>
+
+                                    <p class="mt-1 text-sm text-emerald-800">
+                                        The recipient delete process finished and returned to Bouncebox.
+                                    </p>
+
+                                    <div class="mt-4 grid gap-3 text-sm text-emerald-900 md:grid-cols-2 lg:grid-cols-4">
+
+                                        <div>
+                                            <span class="block text-xs font-semibold uppercase tracking-wide text-emerald-700/70">
+                                                EID
+                                            </span>
+                                            <span class="mt-1 block font-semibold">
+                                                {{ session('deletedEid') }}
+                                            </span>
+                                        </div>
+
+                                        <div>
+                                            <span class="block text-xs font-semibold uppercase tracking-wide text-emerald-700/70">
+                                                AZEmails Rows Deleted
+                                            </span>
+                                            <span class="mt-1 block font-semibold">
+                                                {{ session('deletedAz') }}
+                                            </span>
+                                        </div>
+
+                                        <div>
+                                            <span class="block text-xs font-semibold uppercase tracking-wide text-emerald-700/70">
+                                                ArizonaEmails Rows Deleted
+                                            </span>
+                                            <span class="mt-1 block font-semibold">
+                                                {{ session('deletedArizona') }}
+                                            </span>
+                                        </div>
+
+                                        <div>
+                                            <span class="block text-xs font-semibold uppercase tracking-wide text-emerald-700/70">
+                                                Bounce Message
+                                            </span>
+                                            <span class="mt-1 block font-semibold">
+                                                {{ session('deletedBounceMessage') ? 'Deleted' : 'Not Deleted' }}
+                                                @if(session('messageNumber'))
+                                                    #{{ session('messageNumber') }}
+                                                @endif
+                                            </span>
+                                        </div>
+
+                                    </div>
+
+                                    @if(session('bounceDeleteError'))
+                                        <div class="mt-4 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
+                                            <strong>Bounce delete warning:</strong>
+                                            {{ session('bounceDeleteError') }}
+                                        </div>
+                                    @endif
+
+                                </div>
+
+                            @endif
+
                             {{-- TABLE CARD --}}
                             <div class="mt-10 overflow-hidden rounded-[24px] bg-white shadow-[0_12px_35px_rgba(15,23,42,0.06)]">
 

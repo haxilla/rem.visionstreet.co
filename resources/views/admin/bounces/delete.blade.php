@@ -146,9 +146,7 @@
                             @if($azRow && $arizonaRow)
                                 <form
                                     method="POST"
-                                    action="/admin/bounces/delete-recipient-confirmed"
-                                    onsubmit="return confirm('FINAL CONFIRMATION: Delete these recipient records from both remote databases and continue with bounce message deletion?');"
-                                >
+                                    action="/admin/bounces/delete-confirmed">
                                     @csrf
 
                                     <input type="hidden" name="az_table" value="{{ $azTable }}">
