@@ -227,7 +227,7 @@
                                             <div class="flex flex-wrap items-center gap-3">
 
                                                 <a
-                                                    href="https://services.azre.gov/PdbWeb/"
+                                                    href="https://services.azre.gov/PdbWeb/IndividualLicense/SearchIndividualLicenses"
                                                     target="_blank"
                                                     rel="noopener"
                                                     class="inline-flex items-center rounded-full border border-[#214e9b]/20 bg-white px-4 py-2 text-xs font-semibold text-[#214e9b] shadow-sm transition hover:border-[#214e9b]/40 hover:bg-[#214e9b]/5"
