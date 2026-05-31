@@ -39,9 +39,7 @@
                             @if(!$hasProblem)
                                 <form
                                     method="POST"
-                                    action="/admin/bounces/delete"
-                                    onsubmit="return confirm('Are you sure you want to permanently delete this recipient record from both databases? This cannot be undone.');"
-                                >
+                                    action="/admin/bounces/delete">
                                     @csrf
 
                                     <input type="hidden" name="az_table" value="{{ $azMatch['table'] ?? '' }}">
