@@ -193,9 +193,35 @@
                                 <div class="overflow-hidden rounded-[24px] bg-white shadow-[0_12px_35px_rgba(15,23,42,0.06)]">
 
                                     <div class="border-b border-slate-200 bg-slate-50 px-6 py-5">
-                                        <h2 class="text-sm font-semibold text-slate-700">
-                                            Editable Recipient Details
-                                        </h2>
+
+                                        <div class="flex items-center justify-between">
+
+                                            <h2 class="text-sm font-semibold text-slate-700">
+                                                Editable Recipient Details
+                                            </h2>
+
+                                            <div class="flex items-center gap-3">
+
+                                                <a
+                                                    href="https://services.azre.gov/PdbWeb/"
+                                                    target="_blank"
+                                                    rel="noopener"
+                                                    class="inline-flex items-center rounded-full border border-[#214e9b]/20 bg-white px-4 py-2 text-xs font-semibold text-[#214e9b] shadow-sm transition hover:border-[#214e9b]/40 hover:bg-[#214e9b]/5"
+                                                >
+                                                    ADRE License Lookup ↗
+                                                </a>
+
+                                                <button
+                                                    type="submit"
+                                                    class="rounded-full bg-[#214e9b] px-5 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-[#1b4386]"
+                                                >
+                                                    Save Changes
+                                                </button>
+
+                                            </div>
+
+                                        </div>
+
                                     </div>
 
                                     <div class="space-y-5 p-8">
