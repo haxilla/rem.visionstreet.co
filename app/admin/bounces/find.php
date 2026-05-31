@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\DB;
 
 $email = trim(strtolower(request()->input('email', '')));
 
+dd(request()->all());
+
 $connections = [
     'azemails' => 'remote_emailgroups_azemails',
     'arizonaemails' => 'remote_emailgroups_arizonaemails',
