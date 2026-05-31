@@ -46,6 +46,7 @@
 
                                     <input type="hidden" name="az_table" value="{{ $azMatch['table'] ?? '' }}">
                                     <input type="hidden" name="az_eid" value="{{ $azMatch['row']->eid ?? '' }}">
+                                    <input type="hidden" name="messageNumber" value="{{ $data['messageNumber'] ?? '' }}">
 
                                     <input type="hidden" name="arizona_table" value="{{ $arizonaMatch['table'] ?? '' }}">
                                     <input type="hidden" name="arizona_eid" value="{{ $arizonaMatch['row']->eid ?? '' }}">

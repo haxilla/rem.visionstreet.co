@@ -3,8 +3,7 @@
 use Illuminate\Support\Facades\DB;
 
 $email = trim(strtolower(request()->input('email', '')));
-
-dd(request()->all());
+$messageNumber= request()->input('messageNumber');
 
 $connections = [
     'azemails' => 'remote_emailgroups_azemails',
@@ -62,6 +61,7 @@ if (!$hasProblem) {
 
 $data = compact(
     'email',
+    'messageNumber',
     'foundByDb',
     'hasProblem',
     'azMatch',
