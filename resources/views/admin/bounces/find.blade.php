@@ -27,13 +27,55 @@
 
                     <main class="flex-1 px-6 py-6 lg:px-10 lg:py-8">
 
-                        <div class="mb-5">
+                        <div class="mb-5 flex items-center justify-between">
+
                             <a
                                 href="/admin/bounces"
                                 class="inline-flex items-center rounded-full border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-slate-600 shadow-sm transition hover:border-[#214e9b]/40 hover:text-[#214e9b]"
                             >
                                 ← Back to Bouncebox
                             </a>
+
+                            <form
+                                method="POST"
+                                action="/admin/bounces/delete-recipient"
+                                onsubmit="return confirm('Are you sure you want to permanently delete this recipient record? This cannot be undone.');"
+                            >
+                                @csrf
+
+                                <input
+                                    type="hidden"
+                                    name="az_table"
+                                    value="{{ $azMatch['table'] ?? '' }}"
+                                >
+
+                                <input
+                                    type="hidden"
+                                    name="az_eid"
+                                    value="{{ $azMatch['row']->eid ?? '' }}"
+                                >
+
+                                <input
+                                    type="hidden"
+                                    name="arizona_table"
+                                    value="{{ $arizonaMatch['table'] ?? '' }}"
+                                >
+
+                                <input
+                                    type="hidden"
+                                    name="arizona_eid"
+                                    value="{{ $arizonaMatch['row']->eid ?? '' }}"
+                                >
+
+                                <button
+                                    type="submit"
+                                    class="inline-flex items-center rounded-full border border-red-200 bg-white px-5 py-2.5 text-sm font-semibold text-red-600 shadow-sm transition hover:bg-red-50 hover:border-red-300"
+                                >
+                                    Delete This Record
+                                </button>
+
+                            </form>
+
                         </div>
 
                         {{-- HEADER --}}
