@@ -1,3 +1,3 @@
 <?php
 
-dd($_POST);
+dd($_POST['messages'] ?? []);
