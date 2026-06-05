@@ -31,6 +31,8 @@ class bounceboxController extends Controller
 
     public function groupDelete(Request $request)
     {
-        dd($request->input('messages', []));
+
+        include app_path('admin/bounces/group-delete.php');
+
     }
 }
