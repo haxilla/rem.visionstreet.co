@@ -46,18 +46,25 @@ $appCandidates = [
     app_path("$renderPath/index.php"),];
 
 $data = null;
-$appResult = include $p;
 
-if (str_contains($p, 'group-delete.php')) {
-    dd([
-        'included_file' => $p,
-        'result_type' => is_object($appResult) ? get_class($appResult) : gettype($appResult),
-        'result' => $appResult,
-    ]);
-}
+foreach ($appCandidates as $p) {
+    if (is_file($p)) {
+        $appResult = include $p;
 
-if ($appResult instanceof \Symfony\Component\HttpFoundation\Response) {
-    return $appResult;
+        if (str_contains($p, 'group-delete.php')) {
+            dd([
+                'included_file' => $p,
+                'result_type' => is_object($appResult) ? get_class($appResult) : gettype($appResult),
+                'result' => $appResult,
+            ]);
+        }
+
+        if ($appResult instanceof \Symfony\Component\HttpFoundation\Response) {
+            return $appResult;
+        }
+
+        break;
+    }
 }
 
 if (!$viewName) {
