@@ -25,9 +25,10 @@ class adminController extends Controller
 
         $result = require __DIR__ . '/../parts/dynamic_index.php';
 
-        if ($result instanceof \Symfony\Component\HttpFoundation\Response) {
-            return $result;
-        }
+        dd([
+            'result_type' => is_object($result) ? get_class($result) : gettype($result),
+            'result' => $result,
+        ]);
 
         // ---- partial vs full ----
         $isPartial = $request->header('X-Pageswap') === '1';
