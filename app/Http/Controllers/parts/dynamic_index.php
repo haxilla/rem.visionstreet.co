@@ -46,18 +46,8 @@ $appCandidates = [
     app_path("$renderPath/index.php"),];
 
 $data = null;
-
 foreach ($appCandidates as $p) {
-    if (is_file($p)) {
-        $appResult = include $p;
-
-        if ($appResult instanceof \Symfony\Component\HttpFoundation\Response) {
-            return $appResult;
-        }
-
-        break;
-    }
-}
+    if (is_file($p))  { include $p; break; }}
 
 if (!$viewName) {
     throw new 
