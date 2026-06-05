@@ -47,16 +47,7 @@ $appCandidates = [
 
 $data = null;
 foreach ($appCandidates as $p) {
-    if (is_file($p)) {
-        $result = include $p;
-
-        if ($result instanceof \Symfony\Component\HttpFoundation\Response) {
-            return $result;
-        }
-
-        break;
-    }
-}
+    if (is_file($p))  { include $p; break; }}
 
 if (!$viewName) {
     throw new 
