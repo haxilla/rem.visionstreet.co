@@ -23,7 +23,11 @@ class adminController extends Controller
         // Prepend 'admin' so dynamic_index resolves to admin.* views
         array_unshift($parts, 'admin');
 
-        require_once __DIR__ . '/../parts/dynamic_index.php';
+        $result = require __DIR__ . '/../parts/dynamic_index.php';
+
+        if ($result instanceof \Symfony\Component\HttpFoundation\Response) {
+            return $result;
+        }
 
         // ---- partial vs full ----
         $isPartial = $request->header('X-Pageswap') === '1';
