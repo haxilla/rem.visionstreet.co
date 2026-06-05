@@ -23,12 +23,7 @@ class adminController extends Controller
         // Prepend 'admin' so dynamic_index resolves to admin.* views
         array_unshift($parts, 'admin');
 
-        $result = require __DIR__ . '/../parts/dynamic_index.php';
-
-        dd([
-            'result_type' => is_object($result) ? get_class($result) : gettype($result),
-            'result' => $result,
-        ]);
+        require_once __DIR__ . '/../parts/dynamic_index.php';
 
         // ---- partial vs full ----
         $isPartial = $request->header('X-Pageswap') === '1';
