@@ -57,5 +57,8 @@ if (!empty($failed)) {
         ->with('error', 'Deleted ' . $deleted . ' message(s), but failed to delete: ' . implode(', ', $failed));
 }
 
-return redirect('/admin/bounces')
-    ->with('success', 'Deleted ' . $deleted . ' selected message(s).');
+redirect('/admin/bounces')
+    ->with('success', 'Selected messages deleted.')
+    ->send();
+
+exit;
