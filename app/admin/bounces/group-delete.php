@@ -53,7 +53,7 @@ foreach ($messageNumbers as $messageNumber) {
 @imap_close($mailbox, CL_EXPUNGE);
 
 if (!empty($failed)) {
-    return redirect('/admin/bounces')
+    redirect('/admin/bounces')
         ->with('error', 'Deleted ' . $deleted . ' message(s), but failed to delete: ' . implode(', ', $failed));
 }
 

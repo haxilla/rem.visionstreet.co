@@ -60,6 +60,35 @@ if (!empty($messageNumber)) {
     }
 }
 
+$allDatabaseDeletesWorked = ((int) $deletedAz > 0 && (int) $deletedArizona > 0);
+
+$bounceWasExpected = !empty($messageNumber);
+$bounceDeleteWorked = !$bounceWasExpected || $deletedBounceMessage;
+
+$message =
+    'EID: ' . $eid .
+    ', Deleted from AZ: ' . $deletedAz .
+    ', Deleted from Arizona: ' . $deletedArizona .
+    ', Bounce Message Deleted: ' . ($deletedBounceMessage ? 'Yes' : 'No');
+
+if ($bounceDeleteError) {
+    $message .= ', Bounce Delete Error: ' . $bounceDeleteError;
+}
+
+if ($allDatabaseDeletesWorked && $bounceDeleteWorked) {
+    redirect('/admin/bounces')
+        ->with('success', 'Agent & Bounce Message deleted. ' . $message)
+        ->send();
+
+    exit;
+}
+
+redirect('/admin/bounces')
+    ->with('error', 'Delete finished with a problem. ' . $message)
+    ->send();
+
+exit;
+/*
 $data = compact(
     'azTable',
     'arizonaTable',
@@ -70,3 +99,4 @@ $data = compact(
     'deletedBounceMessage',
     'bounceDeleteError'
 );
+*/
