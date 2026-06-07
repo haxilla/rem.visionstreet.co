@@ -88,15 +88,3 @@ redirect('/admin/bounces')
     ->send();
 
 exit;
-/*
-$data = compact(
-    'azTable',
-    'arizonaTable',
-    'eid',
-    'messageNumber',
-    'deletedAz',
-    'deletedArizona',
-    'deletedBounceMessage',
-    'bounceDeleteError'
-);
-*/
