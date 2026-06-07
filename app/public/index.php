@@ -62,7 +62,7 @@ $topLuxury=$topLuxury
 // member since / agent wall
 $theDate = \Carbon\Carbon::today()->subDays(45);
 
-$memberSince = \Appa\Modelsa\Corea\Propagenta::select(
+$memberSince = \App\Models\Core\Propagent::select(
     'startDate',
     'agtFullName',
     'id',
