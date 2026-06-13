@@ -2,6 +2,8 @@
 
 <body data-section="member" class="relative min-h-screen bg-[#f0f2f7] font-sans text-slate-800">
 
+@include('member.layout.nav')
+
 @php
     use Illuminate\Support\Carbon;
 
@@ -39,74 +41,50 @@
         ->take(5);
 @endphp
 
-<div class="min-h-screen bg-[#f0f2f7] lg:flex">
+<main class="min-h-screen bg-[#f0f2f7] pt-24">
+    <div class="mx-auto flex w-full max-w-[1400px] gap-8 px-6 pb-16">
 
-    {{-- LEFT SIDEBAR --}}
-    <aside class="lg:sticky lg:top-0 lg:h-screen lg:w-[260px] shrink-0 bg-[#101827] text-white shadow-xl">
-        <div class="flex h-full flex-col p-6">
-
-            <div class="mb-10">
-                <div class="text-xl font-black">
-                    RealtyEmails<span class="text-blue-400">.com</span>
-                </div>
-                <div class="mt-1 text-sm text-slate-400">
-                    Member Dashboard
-                </div>
-            </div>
-
+        {{-- LEFT STICKY SIDEBAR --}}
+        <aside class="sticky top-28 h-fit w-[240px] shrink-0 rounded-3xl bg-white p-5 shadow-sm ring-1 ring-black/5">
             <nav class="space-y-2 text-sm font-bold">
-                <a href="/member/create-flyer" class="block rounded-lg px-4 py-3 hover:bg-white/10">
+                <a href="/member/create-flyer" class="block rounded-xl px-4 py-3 text-slate-700 hover:bg-slate-100">
                     Create New Flyer
                 </a>
 
-                <a href="/member/resend-flyer" class="block rounded-lg px-4 py-3 hover:bg-white/10">
+                <a href="/member/resend-flyer" class="block rounded-xl px-4 py-3 text-slate-700 hover:bg-slate-100">
                     Resend Flyer
                 </a>
 
-                <a href="/member/campaigns" class="block rounded-lg px-4 py-3 hover:bg-white/10">
+                <a href="/member/campaigns" class="block rounded-xl px-4 py-3 text-slate-700 hover:bg-slate-100">
                     Campaigns
                 </a>
 
-                <a href="/member/agent-info" class="block rounded-lg px-4 py-3 hover:bg-white/10">
+                <a href="/member/agent-info" class="block rounded-xl px-4 py-3 text-slate-700 hover:bg-slate-100">
                     Agent Info
                 </a>
 
-                <a href="/member/account" class="block rounded-lg px-4 py-3 hover:bg-white/10">
+                <a href="/member/account" class="block rounded-xl px-4 py-3 text-slate-700 hover:bg-slate-100">
                     Account Info
                 </a>
-            </nav>
 
-            <div class="mt-auto border-t border-white/10 pt-5">
-                <div class="mb-4 text-sm text-slate-400">
-                    Logged in as<br>
-                    <span class="font-semibold text-white">
-                        {{ $agent->agtFullName ?? 'Member' }}
-                    </span>
-                </div>
-
-                <a href="/member/logout" class="block rounded-lg bg-red-600 px-4 py-3 text-center text-sm font-bold text-white hover:bg-red-700">
+                <a href="/logout" class="block rounded-xl px-4 py-3 text-red-600 hover:bg-red-50">
                     Log Out
                 </a>
+            </nav>
+        </aside>
+
+        {{-- RIGHT CONTENT --}}
+        <section class="min-w-0 flex-1">
+
+            <div class="mb-6">
+                <h1 class="text-3xl font-black text-slate-900">
+                    Welcome Back
+                </h1>
+                <p class="mt-1 text-sm text-slate-500">
+                    {{ $agent->agtFullName ?? 'Member' }}
+                </p>
             </div>
 
-        </div>
-    </aside>
-
-    {{-- RIGHT CONTENT --}}
-    <main class="flex-1 p-6 lg:p-10">
-
-        {{-- PAGE HEADER --}}
-        <div class="mb-8">
-            <h1 class="text-3xl font-black text-slate-900">
-                Welcome Back
-            </h1>
-            <p class="mt-1 text-sm text-slate-500">
-                {{ $agent->agtFullName ?? 'Member' }}
-            </p>
-        </div>
-
-        {{-- RECENT FLYERS --}}
-        <section>
             <div class="mb-5">
                 <h2 class="text-2xl font-black text-slate-900">
                     5 Most Recent Flyers
@@ -150,12 +128,12 @@
 
                         <article class="flex items-center gap-5 rounded-2xl bg-white p-4 shadow-sm ring-1 ring-black/5">
 
-                            {{-- SMALL THUMBNAIL --}}
-                            <div class="h-[95px] w-[140px] shrink-0 overflow-hidden rounded-xl bg-slate-200">
+                            {{-- THUMBNAIL --}}
+                            <div style="width:120px;height:82px;flex:0 0 120px;overflow:hidden;border-radius:12px;background:#e2e8f0;">
                                 @if($img)
                                     <img src="{{ $img }}"
                                          alt="{{ $flyer->xFullStreet }}"
-                                         class="h-full w-full object-cover">
+                                         style="width:120px;height:82px;object-fit:cover;display:block;">
                                 @else
                                     <div class="flex h-full items-center justify-center text-xs font-bold text-slate-400">
                                         No Photo
@@ -222,10 +200,11 @@
                     @endforeach
                 </div>
             @endif
+
         </section>
 
-    </main>
-</div>
+    </div>
+</main>
 
 @include('public.layout.footer')
 
