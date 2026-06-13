@@ -145,19 +145,19 @@
             <div class="mb-6 flex items-center gap-3">
 
                 {{-- MOBILE HAMBURGER ONLY --}}
-                <details class="relative lg:hidden">
+                <details class="relative block lg:!hidden">
                     <summary class="flex h-11 w-11 cursor-pointer list-none items-center justify-center rounded-xl bg-white text-slate-700 shadow-sm ring-1 ring-black/5">
                         <span class="text-xl font-black leading-none">☰</span>
                     </summary>
 
-                    <div class="absolute left-0 top-13 z-40 w-[240px] rounded-2xl bg-white p-3 shadow-xl ring-1 ring-black/10">
+                    <div class="absolute left-0 top-13 z-40 w-[320px] max-w-[calc(100vw-32px)] rounded-2xl bg-white p-3 shadow-xl ring-1 ring-black/10">
                         <nav class="space-y-2 text-sm font-bold">
-                            <a href="/member/create-flyer" class="block rounded-xl bg-slate-50 px-4 py-3 text-slate-700 hover:bg-slate-100">Create New Flyer</a>
-                            <a href="/member/resend-flyer" class="block rounded-xl bg-slate-50 px-4 py-3 text-slate-700 hover:bg-slate-100">Resend Flyer</a>
-                            <a href="/member/campaigns" class="block rounded-xl bg-slate-50 px-4 py-3 text-slate-700 hover:bg-slate-100">Campaigns</a>
-                            <a href="/member/agent-info" class="block rounded-xl bg-slate-50 px-4 py-3 text-slate-700 hover:bg-slate-100">Agent Info</a>
-                            <a href="/member/account" class="block rounded-xl bg-slate-50 px-4 py-3 text-slate-700 hover:bg-slate-100">Account Info</a>
-                            <a href="/logout" class="block rounded-xl bg-red-50 px-4 py-3 text-red-600 hover:bg-red-100">Log Out</a>
+                            <a href="/member/create-flyer" class="whitespace-nowrap block rounded-xl bg-slate-50 px-4 py-3 text-slate-700 hover:bg-slate-100">Create New Flyer</a>
+                            <a href="/member/resend-flyer" class="whitespace-nowrap block rounded-xl bg-slate-50 px-4 py-3 text-slate-700 hover:bg-slate-100">Resend Flyer</a>
+                            <a href="/member/campaigns" class="whitespace-nowrap block rounded-xl bg-slate-50 px-4 py-3 text-slate-700 hover:bg-slate-100">Campaigns</a>
+                            <a href="/member/agent-info" class="whitespace-nowrap block rounded-xl bg-slate-50 px-4 py-3 text-slate-700 hover:bg-slate-100">Agent Info</a>
+                            <a href="/member/account" class="whitespace-nowrap block rounded-xl bg-slate-50 px-4 py-3 text-slate-700 hover:bg-slate-100">Account Info</a>
+                            <a href="/logout" class="whitespace-nowrap block rounded-xl bg-red-50 px-4 py-3 text-red-600 hover:bg-red-100">Log Out</a>
                         </nav>
                     </div>
                 </details>
