@@ -35,4 +35,6 @@ $agents = DB::table('propagents')
         ];
     });
 
-return response()->json($agents);
+header('Content-Type: application/json');
+echo json_encode($agents);
+exit;
