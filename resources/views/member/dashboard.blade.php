@@ -125,6 +125,10 @@
                             $pendingForFlyer   = $flyerCampaigns->filter(fn($c) => empty($c->emStart) && empty($c->emComplete));
                             $emailCount        = $completedForFlyer->sum('totalEmails');
                             $viewCount         = optional($stats)->xWebViews ?? 0;
+
+                            $lastSent = optional($stats)->xLastDeliveryDate
+                                ? Carbon::parse($stats->xLastDeliveryDate)->format('M j, Y')
+                                : null;                            
                         @endphp
 
                         {{-- Card: padded like the top-viewed component --}}
@@ -147,7 +151,7 @@
                                 {{-- Status badge: top-left --}}
                                 <div class="absolute top-3 left-3 flex gap-1.5">
                                     <span class="rounded-full bg-emerald-600 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-white shadow">
-                                        Sent
+                                        {{ $lastSent ? 'Last Sent ' . $lastSent : 'Sent' }}
                                     </span>
                                     @if($pendingForFlyer->count())
                                         <span class="rounded-full bg-amber-500 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-white shadow">
