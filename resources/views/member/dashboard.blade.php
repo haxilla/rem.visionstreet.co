@@ -120,7 +120,7 @@
     $recentFlyers = $flyersWithStatus
         ->filter(fn($flyer) => $flyer->dashboard_is_sent)
         ->sortByDesc(fn($flyer) => $flyer->dashboard_last_sent_raw)
-        ->take(5);
+        ->take(10);
 @endphp
 
 <main class="min-h-screen bg-[#f0f2f7] pt-24">
@@ -241,7 +241,7 @@
 
             {{-- SENT FLYERS --}}
             <div class="mb-5">
-                <h2 class="text-2xl font-black text-slate-900">5 Most Recent Sent Flyers</h2>
+                <h2 class="text-2xl font-black text-slate-900">Most Recent Sent Flyers</h2>
                 <p class="text-sm text-slate-500">Recent flyer activity, delivery stats, and quick actions.</p>
             </div>
 
