@@ -8,7 +8,7 @@ $agentID=Auth::guard('member')->id();
 
 //$propflyers = Propflyer::with(['theAgent','theStats'])->where('propagent_id', $agentID)->get();
 $propflyers = Propflyer::with(['theAgent','theStats'])
-    ->where('propagent_id', $agentID)
+    ->where('propflyers.propagent_id', $agentID)
     ->join('propflyerstats', 'propflyers.id', '=', 'propflyerstats.propflyer_id')
     ->orderByDesc('propflyerstats.xLastDeliveryDate')
     ->select('propflyers.*')
