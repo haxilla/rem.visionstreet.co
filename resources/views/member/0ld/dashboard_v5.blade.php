@@ -141,34 +141,33 @@
 
         <section class="min-w-0 flex-1">
 
-            {{-- WELCOME / MOBILE MENU ROW --}}
-            <div class="mb-6 flex items-center gap-3">
+            <div class="mb-6">
+                <h1 class="text-3xl font-black text-slate-900 sm:text-4xl">Welcome Back</h1>
+                <p class="mt-1 text-sm text-slate-500">
+                    {{ $agent->agtFullName ?? 'Member' }}
+                </p>
+            </div>
 
-                {{-- MOBILE HAMBURGER ONLY --}}
-                <details class="relative lg:hidden">
-                    <summary class="flex h-11 w-11 cursor-pointer list-none items-center justify-center rounded-xl bg-white text-slate-700 shadow-sm ring-1 ring-black/5">
-                        <span class="text-xl font-black leading-none">☰</span>
+            {{-- MOBILE MENU --}}
+            <div class="mb-8 lg:hidden">
+                <details class="group rounded-2xl bg-white shadow-sm ring-1 ring-black/5">
+                    <summary class="flex cursor-pointer list-none items-center justify-between px-4 py-4 text-sm font-black text-slate-800">
+                        <span>Member Menu</span>
+                        <span class="rounded-lg bg-slate-100 px-3 py-1 text-xs font-bold text-slate-600 group-open:hidden">Open</span>
+                        <span class="hidden rounded-lg bg-slate-100 px-3 py-1 text-xs font-bold text-slate-600 group-open:inline">Close</span>
                     </summary>
 
-                    <div class="absolute left-0 top-13 z-40 w-[240px] rounded-2xl bg-white p-3 shadow-xl ring-1 ring-black/10">
-                        <nav class="space-y-2 text-sm font-bold">
-                            <a href="/member/create-flyer" class="block rounded-xl bg-slate-50 px-4 py-3 text-slate-700 hover:bg-slate-100">Create New Flyer</a>
-                            <a href="/member/resend-flyer" class="block rounded-xl bg-slate-50 px-4 py-3 text-slate-700 hover:bg-slate-100">Resend Flyer</a>
-                            <a href="/member/campaigns" class="block rounded-xl bg-slate-50 px-4 py-3 text-slate-700 hover:bg-slate-100">Campaigns</a>
-                            <a href="/member/agent-info" class="block rounded-xl bg-slate-50 px-4 py-3 text-slate-700 hover:bg-slate-100">Agent Info</a>
-                            <a href="/member/account" class="block rounded-xl bg-slate-50 px-4 py-3 text-slate-700 hover:bg-slate-100">Account Info</a>
-                            <a href="/logout" class="block rounded-xl bg-red-50 px-4 py-3 text-red-600 hover:bg-red-100">Log Out</a>
+                    <div class="border-t border-slate-100 p-3">
+                        <nav class="grid grid-cols-1 gap-2 text-sm font-bold sm:grid-cols-2">
+                            <a href="/member/create-flyer" class="rounded-xl bg-slate-50 px-4 py-3 text-slate-700 hover:bg-slate-100">Create New Flyer</a>
+                            <a href="/member/resend-flyer" class="rounded-xl bg-slate-50 px-4 py-3 text-slate-700 hover:bg-slate-100">Resend Flyer</a>
+                            <a href="/member/campaigns" class="rounded-xl bg-slate-50 px-4 py-3 text-slate-700 hover:bg-slate-100">Campaigns</a>
+                            <a href="/member/agent-info" class="rounded-xl bg-slate-50 px-4 py-3 text-slate-700 hover:bg-slate-100">Agent Info</a>
+                            <a href="/member/account" class="rounded-xl bg-slate-50 px-4 py-3 text-slate-700 hover:bg-slate-100">Account Info</a>
+                            <a href="/logout" class="rounded-xl bg-red-50 px-4 py-3 text-red-600 hover:bg-red-100">Log Out</a>
                         </nav>
                     </div>
                 </details>
-
-                <div>
-                    <h1 class="text-3xl font-black text-slate-900 sm:text-4xl">Welcome Back</h1>
-                    <p class="mt-1 text-sm text-slate-500">
-                        {{ $agent->agtFullName ?? 'Member' }}
-                    </p>
-                </div>
-
             </div>
 
             {{-- UNSENT FLYERS --}}
