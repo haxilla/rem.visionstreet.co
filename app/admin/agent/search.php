@@ -6,7 +6,7 @@ $q = trim(request('q', ''));
     return response()->json([]);
 }
 
-$agents = DB::table('agents')
+$agents = DB::table('propagents')
     ->select('id', 'agtFirst', 'agtLast', 'agtFullName', 'agtUname', 'agtEmail')
     ->where(function ($query) use ($q) {
         $query->where('id', $q)
