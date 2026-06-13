@@ -1,3 +1,37 @@
+@php
+    use Illuminate\Support\Carbon;
+
+    $flyers     = $data['propflyers'] ?? collect();
+    $campaigns  = $data['propdelivs'] ?? collect();
+
+    $agent            = optional($flyers->first())->theAgent;
+    $campaignsByFlyer = $campaigns->groupBy('propflyer_id');
+
+    $photoUrl = function ($flyer) {
+        $photo = optional($flyer->thePhotos)->first();
+        if (!$photo || !$flyer->theMeta) return null;
+
+        return 'https://realtyrepublic.com/hqphotos/'
+            . $flyer->theMeta->zipDir . '/'
+            . $flyer->theMeta->mlsDir . '/'
+            . $photo->photoName;
+    };
+
+    $money = fn($v) => ($v === null || $v === '') ? 'Price N/A' : '$' . number_format((float)$v);
+
+    $recentFlyers = $flyers
+        ->sortByDesc(function ($flyer) use ($campaignsByFlyer) {
+            $stats = $flyer->theStats;
+            $campaignsForFlyer = $campaignsByFlyer->get($flyer->id, collect());
+
+            return optional($stats)->xLastDeliveryDate
+                ?? optional($campaignsForFlyer->sortByDesc('emComplete')->first())->emComplete
+                ?? $flyer->created_at
+                ?? $flyer->id;
+        })
+        ->take(5);
+@endphp
+
 <div class="min-h-screen bg-[#f0f2f7] flex">
 
     {{-- LEFT SIDEBAR --}}
