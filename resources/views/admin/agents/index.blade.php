@@ -41,6 +41,28 @@
                             </p>
                         </div>
 
+                        {{-- SEARCH AGENTS --}}
+                        <div class="mt-8 rounded-[24px] bg-white p-6 shadow-[0_12px_35px_rgba(15,23,42,0.06)]">
+                            <label class="block text-sm font-semibold text-slate-700">
+                                Search Agents
+                            </label>
+
+                            <div class="relative mt-2">
+                                <input
+                                    id="agentSearch"
+                                    type="text"
+                                    placeholder="Search by name, email, username, or ID..."
+                                    autocomplete="off"
+                                    class="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm focus:border-[#214e9b] focus:outline-none focus:ring-2 focus:ring-[#214e9b]/20"
+                                >
+
+                                <div
+                                    id="agentSearchResults"
+                                    class="absolute z-50 mt-2 hidden w-full overflow-hidden rounded-xl border border-slate-200 bg-white shadow-lg"
+                                ></div>
+                            </div>
+                        </div>
+
                         {{-- AGENTS TABS --}}
                         <div class="mt-10 rounded-[24px] bg-white shadow-[0_12px_35px_rgba(15,23,42,0.06)] overflow-hidden">
 
@@ -352,6 +374,78 @@
         </div>
     </div>
 </main>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const input = document.getElementById('agentSearch');
+    const results = document.getElementById('agentSearchResults');
+
+    let timer = null;
+
+    input.addEventListener('input', function () {
+        clearTimeout(timer);
+
+        const q = input.value.trim();
+
+        if (q.length < 2) {
+            results.innerHTML = '';
+            results.classList.add('hidden');
+            return;
+        }
+
+        timer = setTimeout(() => {
+            fetch(`/admin/agent/search?q=${encodeURIComponent(q)}`)
+                .then(response => response.json())
+                .then(data => {
+                    results.innerHTML = '';
+
+                    if (!data.length) {
+                        results.innerHTML = `
+                            <div class="px-4 py-3 text-sm text-slate-500">
+                                No agents found.
+                            </div>
+                        `;
+                        results.classList.remove('hidden');
+                        return;
+                    }
+
+                    data.forEach(agent => {
+                        results.innerHTML += `
+                            <div class="flex items-center justify-between border-b border-slate-100 px-4 py-3 hover:bg-slate-50">
+                                <div>
+                                    <div class="text-sm font-semibold text-slate-900">
+                                        ${agent.name}
+                                    </div>
+                                    <div class="text-xs text-slate-500">
+                                        ${agent.email ?? 'No email'} — ID: ${agent.id}
+                                    </div>
+                                </div>
+
+                                <div class="flex gap-2">
+                                    <a href="/admin/agentView/${agent.id}" class="rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-100">
+                                        View
+                                    </a>
+
+                                    <a href="/admin/agentLogin/${agent.id}" class="rounded-lg bg-[#16213e] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[#22315a]">
+                                        Login
+                                    </a>
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    results.classList.remove('hidden');
+                });
+        }, 250);
+    });
+
+    document.addEventListener('click', function (e) {
+        if (!input.contains(e.target) && !results.contains(e.target)) {
+            results.classList.add('hidden');
+        }
+    });
+});
+</script>
 
 @include('public.layout.footer')
 
