@@ -4,6 +4,76 @@
 
 @include('member.layout.nav')
 
+<style>
+    .flyer-card {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        background: #ffffff;
+        padding: 16px;
+        border-radius: 16px;
+        box-shadow: 0 1px 2px rgba(0,0,0,.05);
+        border: 1px solid rgba(0,0,0,.05);
+    }
+
+    .flyer-thumb {
+        width: 120px;
+        height: 82px;
+        flex: 0 0 120px;
+        overflow: hidden;
+        border-radius: 12px;
+        background: #e2e8f0;
+    }
+
+    .flyer-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    .flyer-info {
+        min-width: 0;
+        flex: 1;
+    }
+
+    .flyer-actions {
+        display: flex;
+        gap: 8px;
+        flex-shrink: 0;
+        align-items: center;
+    }
+
+    .flyer-btn {
+        display: inline-block;
+        white-space: nowrap;
+        text-align: center;
+    }
+
+    @media (max-width: 700px) {
+        .flyer-card {
+            display: block;
+        }
+
+        .flyer-thumb {
+            width: 100%;
+            height: 160px;
+            margin-bottom: 14px;
+        }
+
+        .flyer-actions {
+            margin-top: 14px;
+            width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .flyer-actions .flyer-btn {
+            flex: 1 1 0;
+        }
+    }
+</style>
+
 @php
     use Illuminate\Support\Carbon;
 
@@ -100,6 +170,7 @@
                 </details>
             </div>
 
+            {{-- UNSENT FLYERS --}}
             @if($unsentFlyers->isNotEmpty())
                 <div class="mb-5">
                     <h2 class="text-2xl font-black text-slate-900">Unsent Flyers</h2>
@@ -110,6 +181,7 @@
                     @foreach($unsentFlyers as $flyer)
                         @php
                             $img = $photoUrl($flyer);
+
                             $location = trim(
                                 ($flyer->xCity ?? '') . ' ' .
                                 ($flyer->state ?? $flyer->xState ?? '') . ' ' .
@@ -117,11 +189,11 @@
                             );
                         @endphp
 
-                        <article class="flex flex-col gap-4 rounded-2xl bg-white p-4 shadow-sm ring-1 ring-black/5 md:flex-row md:items-center md:gap-5">
+                        <article class="flyer-card">
 
-                            <div class="h-[160px] w-full overflow-hidden rounded-xl bg-slate-200 md:h-[82px] md:w-[120px] md:flex-[0_0_120px]">
+                            <div class="flyer-thumb">
                                 @if($img)
-                                    <img src="{{ $img }}" alt="{{ $flyer->xFullStreet }}" class="h-full w-full object-cover">
+                                    <img src="{{ $img }}" alt="{{ $flyer->xFullStreet }}">
                                 @else
                                     <div class="flex h-full items-center justify-center text-xs font-bold text-slate-400">
                                         No Photo
@@ -129,7 +201,7 @@
                                 @endif
                             </div>
 
-                            <div class="min-w-0 flex-1">
+                            <div class="flyer-info">
                                 <div class="truncate text-lg font-black text-[#123f91]">
                                     {{ $flyer->xFullStreet ?: 'Untitled Flyer' }}
                                 </div>
@@ -149,15 +221,15 @@
                                 </div>
                             </div>
 
-                            <div class="flex w-full flex-wrap gap-2 md:w-auto md:shrink-0 md:justify-end">
+                            <div class="flyer-actions">
                                 <a href="/member/send-campaign/{{ $flyer->id }}"
-                                   class="flex-1 rounded-lg bg-amber-50 px-4 py-2 text-center text-xs font-bold text-amber-700 ring-1 ring-amber-200 hover:bg-amber-100 md:flex-none">
+                                   class="flyer-btn rounded-lg bg-amber-50 px-4 py-2 text-xs font-bold text-amber-700 ring-1 ring-amber-200 hover:bg-amber-100">
                                     Resume
                                 </a>
 
                                 <a href="/member/delete-flyer/{{ $flyer->id }}"
                                    onclick="return confirm('Delete this flyer?')"
-                                   class="flex-1 rounded-lg bg-red-50 px-4 py-2 text-center text-xs font-bold text-red-700 ring-1 ring-red-200 hover:bg-red-100 md:flex-none">
+                                   class="flyer-btn rounded-lg bg-red-50 px-4 py-2 text-xs font-bold text-red-700 ring-1 ring-red-200 hover:bg-red-100">
                                     Delete
                                 </a>
                             </div>
@@ -167,6 +239,7 @@
                 </div>
             @endif
 
+            {{-- SENT FLYERS --}}
             <div class="mb-5">
                 <h2 class="text-2xl font-black text-slate-900">5 Most Recent Sent Flyers</h2>
                 <p class="text-sm text-slate-500">Recent flyer activity, delivery stats, and quick actions.</p>
@@ -199,11 +272,11 @@
                             );
                         @endphp
 
-                        <article class="flex flex-col gap-4 rounded-2xl bg-white p-4 shadow-sm ring-1 ring-black/5 md:flex-row md:items-center md:gap-5">
+                        <article class="flyer-card">
 
-                            <div class="h-[160px] w-full overflow-hidden rounded-xl bg-slate-200 md:h-[82px] md:w-[120px] md:flex-[0_0_120px]">
+                            <div class="flyer-thumb">
                                 @if($img)
-                                    <img src="{{ $img }}" alt="{{ $flyer->xFullStreet }}" class="h-full w-full object-cover">
+                                    <img src="{{ $img }}" alt="{{ $flyer->xFullStreet }}">
                                 @else
                                     <div class="flex h-full items-center justify-center text-xs font-bold text-slate-400">
                                         No Photo
@@ -211,7 +284,7 @@
                                 @endif
                             </div>
 
-                            <div class="min-w-0 flex-1">
+                            <div class="flyer-info">
                                 <div class="truncate text-lg font-black text-[#123f91]">
                                     {{ $flyer->xFullStreet ?: 'Untitled Flyer' }}
                                 </div>
@@ -239,21 +312,21 @@
                                 </div>
                             </div>
 
-                            <div class="flex w-full flex-wrap gap-2 md:w-auto md:shrink-0 md:justify-end">
+                            <div class="flyer-actions">
                                 @if($flyer->url_slug)
                                     <a href="/homedetails/{{ $flyer->url_slug }}"
-                                       class="flex-1 rounded-lg bg-[#123f91] px-4 py-2 text-center text-xs font-bold text-white hover:bg-[#0f3274] md:flex-none">
+                                       class="flyer-btn rounded-lg bg-[#123f91] px-4 py-2 text-xs font-bold text-white hover:bg-[#0f3274]">
                                         View
                                     </a>
                                 @endif
 
                                 <a href="/member/campaigns/{{ $flyer->id }}"
-                                   class="flex-1 rounded-lg border border-slate-200 px-4 py-2 text-center text-xs font-bold text-slate-700 hover:bg-slate-50 md:flex-none">
+                                   class="flyer-btn rounded-lg border border-slate-200 px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50">
                                     Campaigns
                                 </a>
 
                                 <a href="/member/send-campaign/{{ $flyer->id }}"
-                                   class="flex-1 rounded-lg bg-emerald-50 px-4 py-2 text-center text-xs font-bold text-emerald-700 ring-1 ring-emerald-200 hover:bg-emerald-100 md:flex-none">
+                                   class="flyer-btn rounded-lg bg-emerald-50 px-4 py-2 text-xs font-bold text-emerald-700 ring-1 ring-emerald-200 hover:bg-emerald-100">
                                     Resend
                                 </a>
                             </div>
