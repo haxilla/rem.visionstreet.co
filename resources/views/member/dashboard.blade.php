@@ -142,8 +142,7 @@
         <section class="min-w-0 flex-1">
 
             {{-- WELCOME / MOBILE MENU ROW --}}
-            <div class="mb-6 flex items-center gap-3">
-
+            <div class="sticky top-[72px] z-30 -mx-4 mb-6 flex items-center gap-3 bg-[#f0f2f7]/95 px-4 py-3 backdrop-blur sm:-mx-6 sm:px-6 lg:static lg:mx-0 lg:bg-transparent lg:px-0 lg:py-0 lg:backdrop-blur-0">
                 {{-- MOBILE HAMBURGER ONLY --}}
                 <details class="relative block lg:!hidden">
                     <summary class="flex h-11 w-11 cursor-pointer list-none items-center justify-center rounded-xl bg-white text-slate-700 shadow-sm ring-1 ring-black/5">
