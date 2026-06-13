@@ -81,25 +81,55 @@
                 </p>
             </div>
 
-            {{-- MOBILE / TABLET QUICK ACTIONS --}}
+            {{-- MOBILE / TABLET MENU --}}
             <div class="mb-8 lg:hidden">
-                <div class="flex gap-2 overflow-x-auto pb-1">
-                    <a href="/member/create-flyer" class="whitespace-nowrap rounded-xl bg-white px-4 py-3 text-sm font-bold text-slate-700 shadow-sm ring-1 ring-black/5">
-                        Create Flyer
-                    </a>
-                    <a href="/member/resend-flyer" class="whitespace-nowrap rounded-xl bg-white px-4 py-3 text-sm font-bold text-slate-700 shadow-sm ring-1 ring-black/5">
-                        Resend
-                    </a>
-                    <a href="/member/campaigns" class="whitespace-nowrap rounded-xl bg-white px-4 py-3 text-sm font-bold text-slate-700 shadow-sm ring-1 ring-black/5">
-                        Campaigns
-                    </a>
-                    <a href="/member/agent-info" class="whitespace-nowrap rounded-xl bg-white px-4 py-3 text-sm font-bold text-slate-700 shadow-sm ring-1 ring-black/5">
-                        Agent Info
-                    </a>
-                    <a href="/member/account" class="whitespace-nowrap rounded-xl bg-white px-4 py-3 text-sm font-bold text-slate-700 shadow-sm ring-1 ring-black/5">
-                        Account
-                    </a>
-                </div>
+                <details class="group rounded-2xl bg-white shadow-sm ring-1 ring-black/5">
+                    <summary class="flex cursor-pointer list-none items-center justify-between px-4 py-4 text-sm font-black text-slate-800">
+                        <span>Member Menu</span>
+
+                        <span class="rounded-lg bg-slate-100 px-3 py-1 text-xs font-bold text-slate-600 group-open:hidden">
+                            Open
+                        </span>
+
+                        <span class="hidden rounded-lg bg-slate-100 px-3 py-1 text-xs font-bold text-slate-600 group-open:inline">
+                            Close
+                        </span>
+                    </summary>
+
+                    <div class="border-t border-slate-100 p-3">
+                        <nav class="grid grid-cols-1 gap-2 text-sm font-bold">
+                            <a href="/member/create-flyer"
+                            class="rounded-xl bg-slate-50 px-4 py-3 text-slate-700 hover:bg-slate-100">
+                                Create New Flyer
+                            </a>
+
+                            <a href="/member/resend-flyer"
+                            class="rounded-xl bg-slate-50 px-4 py-3 text-slate-700 hover:bg-slate-100">
+                                Resend Flyer
+                            </a>
+
+                            <a href="/member/campaigns"
+                            class="rounded-xl bg-slate-50 px-4 py-3 text-slate-700 hover:bg-slate-100">
+                                Campaigns
+                            </a>
+
+                            <a href="/member/agent-info"
+                            class="rounded-xl bg-slate-50 px-4 py-3 text-slate-700 hover:bg-slate-100">
+                                Agent Info
+                            </a>
+
+                            <a href="/member/account"
+                            class="rounded-xl bg-slate-50 px-4 py-3 text-slate-700 hover:bg-slate-100">
+                                Account Info
+                            </a>
+
+                            <a href="/logout"
+                            class="rounded-xl bg-red-50 px-4 py-3 text-red-600 hover:bg-red-100">
+                                Log Out
+                            </a>
+                        </nav>
+                    </div>
+                </details>
             </div>
 
             {{-- UNSENT FLYERS --}}
