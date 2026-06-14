@@ -21,8 +21,21 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
                 </a>
 
                 <button type="button"
-                class="inline-flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-700">
-                    Save &amp; Continue →
+                class="inline-flex items-center gap-2 rounded-lg bg-[#1b2f63] px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#223a75]">
+
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.75"
+                    stroke="currentColor"
+                    class="h-4 w-4">
+                        <path stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25H4.5a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5H4.5A2.25 2.25 0 0 0 2.25 6.75m19.5 0-8.69 5.516a2.25 2.25 0 0 1-2.12 0L2.25 6.75" />
+                    </svg>
+
+                    Save & Continue
+
                 </button>
 
             </div>
