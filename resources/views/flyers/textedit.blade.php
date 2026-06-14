@@ -29,18 +29,6 @@
             </div>
         </div>
 
-        <div class="flex gap-3">
-            <a href="/member/flyer/{{ $propInfo->id }}"
-               class="inline-flex items-center justify-center rounded-md border border-slate-300 bg-white px-5 py-3 text-sm font-extrabold text-slate-700 shadow-sm hover:bg-slate-50">
-                Back to Flyer
-            </a>
-
-            <button form="flyerTextForm"
-                    type="submit"
-                    class="inline-flex items-center justify-center rounded-md bg-emerald-700 px-6 py-3 text-sm font-extrabold text-white shadow-sm hover:bg-emerald-800">
-                Save Text
-            </button>
-        </div>
     </div>
 
     <form id="flyerTextForm" method="POST" action="" class="space-y-6">
