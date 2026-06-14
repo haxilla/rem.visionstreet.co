@@ -243,8 +243,6 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
                 .flyer-stage {
                     width:100%;
                     overflow:hidden;
-                    display:flex;
-                    justify-content:center;
                     filter:drop-shadow(0 10px 25px rgba(0,0,0,.12));
                 }
                 #flyer-scale-wrapper {
