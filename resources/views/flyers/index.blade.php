@@ -55,7 +55,7 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
                             Select a flyer layout
                         </p>
 
-                        <div class="inline-flex rounded-lg overflow-hidden border border-gray-200">
+                        <div class="flex flex-wrap rounded-lg overflow-hidden border border-gray-200">
 
                             <button class="flyer-btn border-r border-gray-200" data-target="s1pc">
                                 Style 1
