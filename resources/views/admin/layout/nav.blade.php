@@ -22,20 +22,6 @@
 
       </nav>
 
-      {{-- RIGHT SIDE --}}
-      <div class="flex items-center gap-5">
-
-        <button class="text-white/80 hover:text-white transition">
-          <i class="ti-search text-[16px]"></i>
-        </button>
-
-        <a href="/logout" 
-        class="text-[14px] font-medium text-white/80 hover:text-white transition">
-          Log out
-        </a>
-
-      </div>
-
     </div>
   </div>
 </header>
