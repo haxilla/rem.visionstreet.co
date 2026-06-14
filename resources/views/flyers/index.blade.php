@@ -160,6 +160,106 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
 
                 </div>
 
+            </div>
+
+
+            <style>
+                .flyer-panel { display: none; }
+                .flyer-panel.active { display: block; }
+                .flyer-btn { padding: 4px 12px; border-radius: 4px; border: none; cursor: pointer; font-size: 14px; background: #e5e7eb; color: #374151; }
+                .flyer-btn.active { background: #2563eb; color: white; }
+                .editor-tab.active { color: #1d4ed8; border-bottom-color: #2563eb; }
+                .flyer-stage {overflow-x: visible;}
+                #flyer-scale-wrapper {width: 600px;transform-origin: top left;}
+                .control-tab{
+                    color:#6b7280;
+                    border:1px solid transparent;
+                    border-bottom:none;
+                    border-radius:8px 8px 0 0;
+                }
+
+                .control-tab.active{
+                    background:#ffffff;
+                    color:#111827;
+                    border:1px solid #d1d5db;
+                    border-bottom:1px solid #ffffff;
+                }
+            </style>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+
+                    // Flyer switcher
+                    function switchFlyer(target) {
+                        document.querySelectorAll('.flyer-panel').forEach(p => p.classList.remove('active'));
+                        document.querySelectorAll('.flyer-btn').forEach(b => b.classList.remove('active'));
+                        document.getElementById('flyer-' + target).classList.add('active');
+                        document.querySelector(`.flyer-btn[data-target="${target}"]`).classList.add('active');
+                    }
+
+                    document.querySelectorAll('.flyer-btn').forEach(btn => {
+                        btn.addEventListener('click', () => switchFlyer(btn.dataset.target));
+                    });
+
+                    switchFlyer('s{{ $template }}');
+
+                    // Editor tab switcher
+                    function switchEditorTab(panelId) {
+                        document.querySelectorAll('.editor-panel').forEach(p => p.classList.add('hidden'));
+                        document.querySelectorAll('.editor-tab').forEach(t => t.classList.remove('active'));
+                        document.getElementById(panelId).classList.remove('hidden');
+                        document.querySelector(`.editor-tab[data-panel="${panelId}"]`).classList.add('active');
+                    }
+
+                    document.querySelectorAll('.editor-tab').forEach(tab => {
+                        tab.addEventListener('click', () => switchEditorTab(tab.dataset.panel));
+                    });
+
+                    switchEditorTab('edit-headline');
+                    function scaleFlyer() {
+
+                        const stage = document.querySelector('.flyer-stage');
+                        const wrapper = document.getElementById('flyer-scale-wrapper');
+
+                        if (!stage || !wrapper) return;
+
+                        const scale = Math.min(
+                            stage.clientWidth / 600,
+                            1
+                        );
+
+                        console.log({
+                            stageWidth: stage.clientWidth,
+                            scale: scale
+                        });
+
+                        const activeFlyer = wrapper.querySelector('.flyer-panel.active');
+
+                        if (activeFlyer) {
+                            wrapper.style.height =
+                                (activeFlyer.offsetHeight * scale) + 'px';
+                        }
+
+                        wrapper.style.transform = `scale(${scale})`;
+                    }
+
+                    scaleFlyer();
+
+                    window.addEventListener('resize', scaleFlyer);
+
+                });
+            </script>
+        </div>
+    </main>
+    <script src="/my/js/flyers/colorswatch.js"></script>  
+    <script src="/my/js/flyers/headline.js"></script>
+
+    @include('public.layout.footer')
+    </body>
+</html>
+
+<!---
+
                 {{-- Right: Editor panel --}}
                 <div class="w-72 shrink-0 border border-gray-200 rounded-xl shadow-sm bg-white sticky top-28">
 
@@ -280,95 +380,4 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
                     </div>
                 </div>
 
-            </div>
-
-
-            <style>
-                .flyer-panel { display: none; }
-                .flyer-panel.active { display: block; }
-                .flyer-btn { padding: 4px 12px; border-radius: 4px; border: none; cursor: pointer; font-size: 14px; background: #e5e7eb; color: #374151; }
-                .flyer-btn.active { background: #2563eb; color: white; }
-                .editor-tab.active { color: #1d4ed8; border-bottom-color: #2563eb; }
-                .flyer-stage {overflow-x: auto;}
-                #flyer-scale-wrapper {width: 600px;transform-origin: top left;}
-                .control-tab{
-                    color:#6b7280;
-                    border:1px solid transparent;
-                    border-bottom:none;
-                    border-radius:8px 8px 0 0;
-                }
-
-                .control-tab.active{
-                    background:#ffffff;
-                    color:#111827;
-                    border:1px solid #d1d5db;
-                    border-bottom:1px solid #ffffff;
-                }
-            </style>
-
-            <script>
-                document.addEventListener('DOMContentLoaded', () => {
-
-                    // Flyer switcher
-                    function switchFlyer(target) {
-                        document.querySelectorAll('.flyer-panel').forEach(p => p.classList.remove('active'));
-                        document.querySelectorAll('.flyer-btn').forEach(b => b.classList.remove('active'));
-                        document.getElementById('flyer-' + target).classList.add('active');
-                        document.querySelector(`.flyer-btn[data-target="${target}"]`).classList.add('active');
-                    }
-
-                    document.querySelectorAll('.flyer-btn').forEach(btn => {
-                        btn.addEventListener('click', () => switchFlyer(btn.dataset.target));
-                    });
-
-                    switchFlyer('s{{ $template }}');
-
-                    // Editor tab switcher
-                    function switchEditorTab(panelId) {
-                        document.querySelectorAll('.editor-panel').forEach(p => p.classList.add('hidden'));
-                        document.querySelectorAll('.editor-tab').forEach(t => t.classList.remove('active'));
-                        document.getElementById(panelId).classList.remove('hidden');
-                        document.querySelector(`.editor-tab[data-panel="${panelId}"]`).classList.add('active');
-                    }
-
-                    document.querySelectorAll('.editor-tab').forEach(tab => {
-                        tab.addEventListener('click', () => switchEditorTab(tab.dataset.panel));
-                    });
-
-                    switchEditorTab('edit-headline');
-                    function scaleFlyer() {
-
-                        const stage = document.querySelector('.flyer-stage');
-                        const wrapper = document.getElementById('flyer-scale-wrapper');
-
-                        if (!stage || !wrapper) return;
-
-                        const scale = Math.min(
-                            stage.clientWidth / 600,
-                            1
-                        );
-
-                        const activeFlyer = wrapper.querySelector('.flyer-panel.active');
-
-                        if (activeFlyer) {
-                            wrapper.style.height =
-                                (activeFlyer.offsetHeight * scale) + 'px';
-                        }
-
-                        wrapper.style.transform = `scale(${scale})`;
-                    }
-
-                    scaleFlyer();
-
-                    window.addEventListener('resize', scaleFlyer);
-
-                });
-            </script>
-        </div>
-    </main>
-    <script src="/my/js/flyers/colorswatch.js"></script>  
-    <script src="/my/js/flyers/headline.js"></script>
-
-    @include('public.layout.footer')
-    </body>
-</html>
+--->
