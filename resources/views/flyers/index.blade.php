@@ -13,7 +13,7 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
                 include(app_path().'/flyers/variables.php');
             @endphp
 
-            <div class="flyer-controls mb-4 border border-gray-200 rounded-xl bg-white shadow-sm overflow-hidden mx-auto w-full" style="max-width:900px;">
+            <div class="mb-4 border border-gray-200 rounded-xl bg-white shadow-sm overflow-hidden mx-auto w-full" style="max-width:900px;">
                 {{-- Header --}}
                 <div class="px-4 pt-4 bg-gray-50 border-b border-gray-200">
 
@@ -346,7 +346,6 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
 
                         const availableWidth = stage.clientWidth;
                         const scale = Math.min(availableWidth / 600, 1);
-                        const scaledWidth = 600 * scale;
 
                         console.log('availableWidth=', availableWidth);
                         console.log('scale=', scale);
@@ -356,12 +355,6 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
 
                         wrapper.style.height =
                             (activeFlyer.offsetHeight * scale) + 'px';
-                        
-                        const controls = document.querySelector('.flyer-controls');
-
-                        if (controls) {
-                            controls.style.width = scaledWidth + 'px';
-                        }
 
                     }
 
