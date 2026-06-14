@@ -1,4 +1,4 @@
-@include('member.layout.head')
+@include('public.layout.head')
 
 <body class="bg-slate-100 min-h-screen text-slate-900">
 
