@@ -3,9 +3,9 @@
 // query
 $propInfo=propflyer::select(
    'id','propagent_id','officeID','xFullStreet',
-   'xListPrice','xCity','xState','xZip','xHeadline',
+   'xListPrice','xCity','xState','xZip','xxZip','xHeadline',
    'xMlsNum','xBeds','xxBeds','xBaths','xxBaths',
-   'xSqft','xxSqft','xYrBuilt','xVirtualTour',
+   'xSqft','xxSqft','xYrBuilt','xxYrBuilt','xVirtualTour',
    'xMlsLink','xxHeadline')
 ->where('id','=',"$idFly")
 ->with(['theRemarks'=>function($q){

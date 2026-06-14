@@ -28,23 +28,51 @@
     }
 
     $parkingValue = $propInfo->xParking ?? '';
+
+    $defaultPhoto = $propInfo->thePhotos
+        ? $propInfo->thePhotos->where('def', 1)->first()
+        : null;
+
+    $defaultPhotoUrl = null;
+
+    if ($defaultPhoto && $propInfo->theMeta) {
+        $defaultPhotoUrl = 'https://realtyrepublic.com/hqphotos/'
+            . $propInfo->theMeta->zipDir . '/'
+            . $propInfo->theMeta->mlsDir . '/'
+            . $defaultPhoto->photoName;
+    }
 @endphp
 
 <main class="mx-auto max-w-6xl px-4 pt-28 pb-10">
 
     <div class="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <div>
-            <div class="text-sm font-extrabold uppercase tracking-wide text-[#1b2f63]">
-                Edit Flyer Text
+        <div class="flex items-center gap-5">
+
+            @if($defaultPhotoUrl)
+                <img
+                    src="{{ $defaultPhotoUrl }}"
+                    alt="Property Photo"
+                    class="h-24 w-36 rounded-lg border border-slate-300 bg-white object-cover shadow-sm">
+            @endif
+
+            <div>
+                <div class="text-sm font-extrabold uppercase tracking-wide text-[#1b2f63]">
+                    Edit Flyer Text
+                </div>
+
+                <h1 class="mt-1 text-3xl font-extrabold leading-tight text-slate-950">
+                    {{ $propInfo->xFullStreet }}
+                </h1>
+
+                <div class="mt-1 text-slate-600">
+                    {{ $propInfo->xCity }}, {{ $propInfo->xState }} {{ $zipValue }}
+                </div>
+
+                <div class="mt-2 text-sm font-semibold text-slate-500">
+                    MLS #{{ $propInfo->xMlsNum }}
+                </div>
             </div>
 
-            <h1 class="mt-1 text-3xl font-extrabold leading-tight text-slate-950">
-                {{ $propInfo->xFullStreet }}
-            </h1>
-
-            <div class="mt-1 text-slate-600">
-                {{ $propInfo->xCity }}, {{ $propInfo->xState }} {{ $zipValue }}
-            </div>
         </div>
 
         <div class="flex gap-3">

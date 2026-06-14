@@ -33,8 +33,9 @@ $propInfo=Propflyer::select(
    $q->select('officeName','officeAddress1','propagent_id',
       'officeCity','officeState','officeZip','officeID');}])
 ->with(['theMap'=>function($q){
-   $q->select('propflyer_id','xIntersection');
-}])
+   $q->select('propflyer_id','xIntersection');}])
+->with(['theMeta'=>function($q){
+   $q->select('propflyer_id','zipDir','mlsDir');}])
 ->first();
 
 /*
