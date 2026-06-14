@@ -209,6 +209,15 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
                     border:1px solid #d1d5db;
                     border-bottom:1px solid #ffffff;
                 }
+                body {
+                    background:
+                        linear-gradient(
+                            to bottom,
+                            #eef3f8 0%,
+                            #f7f9fc 300px,
+                            #ffffff 100%
+                        );
+                }
             </style>
 
             <script>
