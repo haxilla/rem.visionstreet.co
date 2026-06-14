@@ -36,56 +36,62 @@
     $defaultPhotoUrl = null;
 
     if ($defaultPhoto && $propInfo->theMeta) {
-        $defaultPhotoUrl = 'https://realtyrepublic.com/hqphotos/'
+        $defaultPhotoUrl =
+            'https://realtyrepublic.com/hqphotos/'
             . $propInfo->theMeta->zipDir . '/'
             . $propInfo->theMeta->mlsDir . '/'
             . $defaultPhoto->photoName;
     }
 @endphp
 
-<main class="mx-auto max-w-6xl px-4 pt-28 pb-10">
+<main class="mx-auto max-w-6xl px-4 pt-24 pb-10">
 
-    <div class="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <div class="flex items-center gap-5">
-
-            @if($defaultPhotoUrl)
-                <img
-                    src="{{ $defaultPhotoUrl }}"
-                    alt="Property Photo"
-                    class="h-24 w-36 rounded-lg border border-slate-300 bg-white object-cover shadow-sm">
-            @endif
-
-            <div>
-                <div class="text-sm font-extrabold uppercase tracking-wide text-[#1b2f63]">
-                    Edit Flyer Text
-                </div>
-
-                <h1 class="mt-1 text-3xl font-extrabold leading-tight text-slate-950">
-                    {{ $propInfo->xFullStreet }}
-                </h1>
-
-                <div class="mt-1 text-slate-600">
-                    {{ $propInfo->xCity }}, {{ $propInfo->xState }} {{ $zipValue }}
-                </div>
-
-                <div class="mt-2 text-sm font-semibold text-slate-500">
-                    MLS #{{ $propInfo->xMlsNum }}
-                </div>
-            </div>
-
-        </div>
-
-        <div class="flex gap-3">
+    {{-- Sticky Action Bar --}}
+    <div class="sticky top-[72px] z-40 -mx-4 mb-6 border-b border-slate-300 bg-slate-100/95 px-4 py-3 backdrop-blur">
+        <div class="mx-auto flex max-w-6xl items-center justify-between gap-3">
             <a href="/member/flyer/{{ $propInfo->id }}"
-               class="inline-flex items-center justify-center rounded-md border border-slate-300 bg-white px-5 py-3 text-sm font-extrabold text-slate-700 shadow-sm hover:bg-slate-50">
+               class="inline-flex items-center justify-center rounded-md border border-slate-300 bg-white px-4 py-2.5 text-sm font-extrabold text-slate-700 shadow-sm hover:bg-slate-50">
+                <span class="mr-2 text-lg leading-none">←</span>
                 Back to Flyer
             </a>
 
             <button form="flyerTextForm"
                     type="submit"
-                    class="inline-flex items-center justify-center rounded-md bg-emerald-700 px-6 py-3 text-sm font-extrabold text-white shadow-sm hover:bg-emerald-800">
+                    class="inline-flex items-center justify-center rounded-md bg-emerald-700 px-5 py-2.5 text-sm font-extrabold text-white shadow-sm hover:bg-emerald-800">
                 Save Text
+                <span class="ml-2 text-lg leading-none">→</span>
             </button>
+        </div>
+    </div>
+
+    {{-- Header --}}
+    <div class="mb-6 rounded-xl border border-slate-300 bg-white p-4 shadow-sm">
+        <div class="flex items-start gap-4">
+            @if($defaultPhotoUrl)
+                <div class="shrink-0">
+                    <img src="{{ $defaultPhotoUrl }}"
+                         alt="Property Photo"
+                         class="h-20 w-28 rounded-md border border-slate-300 bg-white object-cover shadow-sm sm:h-24 sm:w-36">
+                </div>
+            @endif
+
+            <div class="min-w-0 flex-1">
+                <div class="text-xs font-extrabold uppercase tracking-wide text-[#1b2f63]">
+                    Edit Flyer Text
+                </div>
+
+                <div class="mt-1 text-xs font-bold text-slate-500 sm:text-sm">
+                    MLS #{{ $propInfo->xMlsNum }}
+                </div>
+
+                <h1 class="mt-1 text-xl font-extrabold leading-snug text-slate-950 sm:text-3xl">
+                    {{ $propInfo->xFullStreet }}
+                </h1>
+
+                <div class="mt-1 text-sm text-slate-600 sm:text-base">
+                    {{ $propInfo->xCity }}, {{ $propInfo->xState }} {{ $zipValue }}
+                </div>
+            </div>
         </div>
     </div>
 
@@ -179,29 +185,25 @@
             <div class="grid grid-cols-1 gap-5 p-6 md:grid-cols-2 lg:grid-cols-3">
                 <div>
                     <label class="mb-2 block text-sm font-extrabold text-blue-950">Beds</label>
-                    <input name="xxBeds"
-                           value="{{ old('xxBeds', $bedsValue) }}"
+                    <input name="xxBeds" value="{{ old('xxBeds', $bedsValue) }}"
                            class="block w-full rounded-md border border-slate-400 bg-white px-4 py-3 text-base text-slate-950 shadow-inner outline-none focus:border-[#1b2f63] focus:ring-4 focus:ring-blue-900/10">
                 </div>
 
                 <div>
                     <label class="mb-2 block text-sm font-extrabold text-blue-950">Baths</label>
-                    <input name="xxBaths"
-                           value="{{ old('xxBaths', $bathsValue) }}"
+                    <input name="xxBaths" value="{{ old('xxBaths', $bathsValue) }}"
                            class="block w-full rounded-md border border-slate-400 bg-white px-4 py-3 text-base text-slate-950 shadow-inner outline-none focus:border-[#1b2f63] focus:ring-4 focus:ring-blue-900/10">
                 </div>
 
                 <div>
                     <label class="mb-2 block text-sm font-extrabold text-blue-950">Sqft</label>
-                    <input name="xxSqft"
-                           value="{{ old('xxSqft', $sqftValue) }}"
+                    <input name="xxSqft" value="{{ old('xxSqft', $sqftValue) }}"
                            class="block w-full rounded-md border border-slate-400 bg-white px-4 py-3 text-base text-slate-950 shadow-inner outline-none focus:border-[#1b2f63] focus:ring-4 focus:ring-blue-900/10">
                 </div>
 
                 <div>
                     <label class="mb-2 block text-sm font-extrabold text-blue-950">Year Built</label>
-                    <input name="xxYrBuilt"
-                           value="{{ old('xxYrBuilt', $yearValue) }}"
+                    <input name="xxYrBuilt" value="{{ old('xxYrBuilt', $yearValue) }}"
                            placeholder="Year Built"
                            class="block w-full rounded-md border border-slate-400 bg-white px-4 py-3 text-base text-slate-950 shadow-inner outline-none focus:border-[#1b2f63] focus:ring-4 focus:ring-blue-900/10">
                 </div>
@@ -301,20 +303,6 @@
                 </div>
             </div>
         </section>
-
-        <div class="sticky bottom-0 z-20 -mx-4 mt-8 border-t border-slate-300 bg-slate-100/95 px-4 py-4 backdrop-blur">
-            <div class="mx-auto flex max-w-6xl justify-end gap-3">
-                <a href="/member/flyer/{{ $propInfo->id }}"
-                   class="inline-flex items-center justify-center rounded-md border border-slate-300 bg-white px-5 py-3 text-sm font-extrabold text-slate-700 shadow-sm hover:bg-slate-50">
-                    Cancel
-                </a>
-
-                <button type="submit"
-                        class="inline-flex items-center justify-center rounded-md bg-emerald-700 px-7 py-3 text-sm font-extrabold text-white shadow-sm hover:bg-emerald-800">
-                    Save Text Changes
-                </button>
-            </div>
-        </div>
 
     </form>
 </main>
