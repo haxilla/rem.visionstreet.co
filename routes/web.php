@@ -50,6 +50,9 @@ Route::get('/admin/agentLogin/{id}',
 
 //flyer details
 Route::get('/flyer/{flyerId}', [guestController::class, 'flyerDetail'])->name('flyer.detail');
+Route::get('/member/flyerEdit/{flyerId}', [memberController::class, 'flyerEdit'])->name('member.flyeredit');
+Route::get('/admin/flyerEdit/{flyerId}', [adminController::class, 'flyerEdit'])->name('admin.flyeredit');
+
 
 Route::match(['get', 'post'], '/admin/{segments}', [adminController::class, 'segments'])
     ->where('segments', '.+');

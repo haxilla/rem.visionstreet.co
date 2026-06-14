@@ -41,6 +41,12 @@ class memberController extends Controller
                 'contentView' => $viewName,
             ])->header('Vary', 'X-Pageswap');
         
-    }  
+    }
+    
+    public function flyerEdit($flyerId)
+    {
+        include app_path('queries/flyerdetails.php');
+        return view('flyers.index',compact('propInfo'));
+    }
 
 }
