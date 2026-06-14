@@ -13,97 +13,127 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
                 include(app_path().'/flyers/variables.php');
             @endphp
 
-            <div class="mb-6 border border-gray-200 rounded-xl bg-white p-4 shadow-sm">
+            <div class="mb-6 border border-gray-200 rounded-xl bg-white shadow-sm overflow-hidden">
 
-                <div class="flex gap-2 mb-4">
-                    <button class="control-tab active" data-panel="styles-panel">
-                        Style
-                    </button>
+                {{-- Header --}}
+                <div class="px-4 pt-4 bg-gray-50 border-b border-gray-200">
 
-                    <button class="control-tab" data-panel="colors-panel">
-                        Colors
-                    </button>
-                </div>
+                    <div class="text-xs uppercase tracking-wide text-gray-400 mb-3">
+                        Flyer Controls
+                    </div>
 
-                <div id="styles-panel">
+                    <div class="flex gap-1">
 
-                    <div class="flex gap-2 flex-wrap">
-                        <button class="flyer-btn" data-target="s1pc">Style 1</button>
-                        <button class="flyer-btn" data-target="s2pb">Style 2</button>
-                        <button class="flyer-btn" data-target="s3pt">Style 3</button>
-                        <button class="flyer-btn" data-target="s4sp">Style 4</button>
-                        <button class="flyer-btn" data-target="s5pt">Style 5</button>
+                        <button
+                            class="control-tab active px-4 py-2 text-sm font-medium"
+                            data-panel="styles-panel">
+                            Style
+                        </button>
+
+                        <button
+                            class="control-tab px-4 py-2 text-sm font-medium"
+                            data-panel="colors-panel">
+                            Colors
+                        </button>
+
                     </div>
 
                 </div>
 
-                <div id="colors-panel" class="hidden">
+                {{-- Content --}}
+                <div class="p-4">
 
-                    <div id="edit-colors">
+                    <div id="styles-panel">
 
-                        <p class="text-xs font-medium text-gray-500 mb-2">Background</p>
+                        <p class="text-xs text-gray-500 mb-3">
+                            Select a flyer layout
+                        </p>
 
-                        <div class="flex flex-wrap gap-1 mb-4">
-                            <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform"
-                            style="background:#eeeeee;" data-style="background" data-scheme="light" data-color="eeeeee"></a>
-
-                            <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform"
-                            style="background:#cccccc;" data-style="background" data-scheme="light" data-color="cccccc"></a>
-
-                            <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform"
-                            style="background:#999999;" data-style="background" data-scheme="dark" data-color="999999"></a>
-
-                            <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform"
-                            style="background:#000066;" data-style="background" data-scheme="dark" data-color="000066"></a>
-
-                            <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform"
-                            style="background:#996600;" data-style="background" data-scheme="light" data-color="996600"></a>
-
-                            <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform"
-                            style="background:#990000;" data-style="background" data-scheme="dark" data-color="990000"></a>
-
-                            <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform"
-                            style="background:#000000;" data-style="background" data-scheme="dark" data-color="000000"></a>
+                        <div class="flex gap-2 flex-wrap">
+                            <button class="flyer-btn" data-target="s1pc">Style 1</button>
+                            <button class="flyer-btn" data-target="s2pb">Style 2</button>
+                            <button class="flyer-btn" data-target="s3pt">Style 3</button>
+                            <button class="flyer-btn" data-target="s4sp">Style 4</button>
+                            <button class="flyer-btn" data-target="s5pt">Style 5</button>
                         </div>
 
-                        <p class="text-xs font-medium text-gray-500 mb-2">Accents</p>
+                    </div>
 
-                        <p class="light-accents text-xs text-gray-400 mb-1">Light</p>
+                    <div id="colors-panel" class="hidden">
 
-                        <div class="light-accents flex flex-wrap gap-1 mb-3">
-                            <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform"
-                            style="background:#ffffff;" data-style="accent" data-scheme="light" data-color="ffffff"></a>
+                        <div id="edit-colors">
 
-                            <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform"
-                            style="background:#eeeeee;" data-style="accent" data-scheme="light" data-color="eeeeee"></a>
+                            <p class="text-xs font-medium text-gray-500 mb-2">Background</p>
 
-                            <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform"
-                            style="background:#ffffcc;" data-style="accent" data-scheme="light" data-color="ffffcc"></a>
-                        </div>
+                            <div class="flex flex-wrap gap-1 mb-4">
 
-                        <p class="dark-accents text-xs text-gray-400 mb-1">Dark</p>
+                                <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform"
+                                style="background:#eeeeee;" data-style="background" data-scheme="light" data-color="eeeeee"></a>
 
-                        <div class="dark-accents flex flex-wrap gap-1">
-                            <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform"
-                            style="background:#ffc60b;" data-style="accent" data-scheme="dark" data-color="ffc60b"></a>
+                                <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform"
+                                style="background:#cccccc;" data-style="background" data-scheme="light" data-color="cccccc"></a>
 
-                            <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform"
-                            style="background:#990000;" data-style="accent" data-scheme="dark" data-color="990000"></a>
+                                <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform"
+                                style="background:#999999;" data-style="background" data-scheme="dark" data-color="999999"></a>
 
-                            <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform"
-                            style="background:#000066;" data-style="accent" data-scheme="dark" data-color="000066"></a>
+                                <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform"
+                                style="background:#000066;" data-style="background" data-scheme="dark" data-color="000066"></a>
 
-                            <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform"
-                            style="background:#00aeef;" data-style="accent" data-scheme="dark" data-color="00aeef"></a>
+                                <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform"
+                                style="background:#996600;" data-style="background" data-scheme="light" data-color="996600"></a>
 
-                            <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform"
-                            style="background:#60b67b;" data-style="accent" data-scheme="dark" data-color="60b67b"></a>
+                                <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform"
+                                style="background:#990000;" data-style="background" data-scheme="dark" data-color="990000"></a>
 
-                            <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform"
-                            style="background:#f0535b;" data-style="accent" data-scheme="dark" data-color="f0535b"></a>
+                                <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform"
+                                style="background:#000000;" data-style="background" data-scheme="dark" data-color="000000"></a>
 
-                            <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform"
-                            style="background:#ff0000;" data-style="accent" data-scheme="dark" data-color="ff0000"></a>
+                            </div>
+
+                            <p class="text-xs font-medium text-gray-500 mb-2">Accents</p>
+
+                            <p class="light-accents text-xs text-gray-400 mb-1">Light</p>
+
+                            <div class="light-accents flex flex-wrap gap-1 mb-3">
+
+                                <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform"
+                                style="background:#ffffff;" data-style="accent" data-scheme="light" data-color="ffffff"></a>
+
+                                <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform"
+                                style="background:#eeeeee;" data-style="accent" data-scheme="light" data-color="eeeeee"></a>
+
+                                <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform"
+                                style="background:#ffffcc;" data-style="accent" data-scheme="light" data-color="ffffcc"></a>
+
+                            </div>
+
+                            <p class="dark-accents text-xs text-gray-400 mb-1">Dark</p>
+
+                            <div class="dark-accents flex flex-wrap gap-1">
+
+                                <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform"
+                                style="background:#ffc60b;" data-style="accent" data-scheme="dark" data-color="ffc60b"></a>
+
+                                <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform"
+                                style="background:#990000;" data-style="accent" data-scheme="dark" data-color="990000"></a>
+
+                                <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform"
+                                style="background:#000066;" data-style="accent" data-scheme="dark" data-color="000066"></a>
+
+                                <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform"
+                                style="background:#00aeef;" data-style="accent" data-scheme="dark" data-color="00aeef"></a>
+
+                                <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform"
+                                style="background:#60b67b;" data-style="accent" data-scheme="dark" data-color="60b67b"></a>
+
+                                <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform"
+                                style="background:#f0535b;" data-style="accent" data-scheme="dark" data-color="f0535b"></a>
+
+                                <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform"
+                                style="background:#ff0000;" data-style="accent" data-scheme="dark" data-color="ff0000"></a>
+
+                            </div>
+
                         </div>
 
                     </div>
@@ -261,6 +291,19 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
                 .editor-tab.active { color: #1d4ed8; border-bottom-color: #2563eb; }
                 .flyer-stage {overflow-x: auto;}
                 #flyer-scale-wrapper {width: 600px;transform-origin: top left;}
+                .control-tab{
+                    color:#6b7280;
+                    border:1px solid transparent;
+                    border-bottom:none;
+                    border-radius:8px 8px 0 0;
+                }
+
+                .control-tab.active{
+                    background:#ffffff;
+                    color:#111827;
+                    border:1px solid #d1d5db;
+                    border-bottom:1px solid #ffffff;
+                }
             </style>
 
             <script>
