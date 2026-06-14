@@ -21,7 +21,7 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
                 </a>
 
                 <button type="button"
-                class="inline-flex items-center gap-2 rounded-lg bg-[#1b2f63] px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#223a75]">
+                class="inline-flex items-center gap-2 rounded-lg bg-[#166534] px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#223a75]">
 
                     <svg xmlns="http://www.w3.org/2000/svg"
                     fill="none"
