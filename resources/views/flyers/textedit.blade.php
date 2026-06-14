@@ -17,11 +17,13 @@
     $zipValue = $propInfo->xxZip ?: $propInfo->xZip;
     $virtualTourValue = $propInfo->xxVirtualTour ?: $propInfo->xVirtualTour;
 
-    $poolType = 'none';
+    $poolType = '';
 
-    if (($propInfo->xxPoolPvt ?: $propInfo->xPoolPvt)) {
+    if (!empty($propInfo->xxPoolPvt) || !empty($propInfo->xPoolPvt)) {
         $poolType = 'private';
-    } elseif ($propInfo->xPoolCommunity) {
+    }
+
+    if (!empty($propInfo->xPoolCommunity)) {
         $poolType = 'community';
     }
 
@@ -30,7 +32,6 @@
 
 <main class="mx-auto max-w-6xl px-4 pt-28 pb-10">
 
-    {{-- Top Bar --}}
     <div class="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
             <div class="text-sm font-extrabold uppercase tracking-wide text-[#1b2f63]">
@@ -96,43 +97,44 @@
                 <div>
                     <label class="mb-2 block text-sm font-extrabold text-blue-950">MLS Number</label>
                     <input name="xMlsNum"
-                        value="{{ old('xMlsNum', $propInfo->xMlsNum) }}"
-                        class="block w-full rounded-md border border-slate-400 bg-white px-4 py-3 text-base text-slate-950 shadow-inner outline-none focus:border-[#1b2f63] focus:ring-4 focus:ring-blue-900/10">
+                           value="{{ old('xMlsNum', $propInfo->xMlsNum) }}"
+                           class="block w-full rounded-md border border-slate-400 bg-white px-4 py-3 text-base text-slate-950 shadow-inner outline-none focus:border-[#1b2f63] focus:ring-4 focus:ring-blue-900/10">
                 </div>
 
                 <div>
                     <label class="mb-2 block text-sm font-extrabold text-blue-950">Street Address</label>
                     <input name="xFullStreet"
-                        value="{{ old('xFullStreet', $propInfo->xFullStreet) }}"
-                        class="block w-full rounded-md border border-slate-400 bg-white px-4 py-3 text-base text-slate-950 shadow-inner outline-none focus:border-[#1b2f63] focus:ring-4 focus:ring-blue-900/10">
+                           value="{{ old('xFullStreet', $propInfo->xFullStreet) }}"
+                           class="block w-full rounded-md border border-slate-400 bg-white px-4 py-3 text-base text-slate-950 shadow-inner outline-none focus:border-[#1b2f63] focus:ring-4 focus:ring-blue-900/10">
                 </div>
 
                 <div>
                     <label class="mb-2 block text-sm font-extrabold text-blue-950">City</label>
                     <input name="xCity"
-                        value="{{ old('xCity', $propInfo->xCity) }}"
-                        class="block w-full rounded-md border border-slate-400 bg-white px-4 py-3 text-base text-slate-950 shadow-inner outline-none focus:border-[#1b2f63] focus:ring-4 focus:ring-blue-900/10">
+                           value="{{ old('xCity', $propInfo->xCity) }}"
+                           class="block w-full rounded-md border border-slate-400 bg-white px-4 py-3 text-base text-slate-950 shadow-inner outline-none focus:border-[#1b2f63] focus:ring-4 focus:ring-blue-900/10">
                 </div>
 
                 <div>
                     <label class="mb-2 block text-sm font-extrabold text-blue-950">State</label>
                     <input name="xState"
-                        value="{{ old('xState', $propInfo->xState) }}"
-                        class="block w-full rounded-md border border-slate-400 bg-white px-4 py-3 text-base text-slate-950 shadow-inner outline-none focus:border-[#1b2f63] focus:ring-4 focus:ring-blue-900/10">
+                           value="{{ old('xState', $propInfo->xState) }}"
+                           class="block w-full rounded-md border border-slate-400 bg-white px-4 py-3 text-base text-slate-950 shadow-inner outline-none focus:border-[#1b2f63] focus:ring-4 focus:ring-blue-900/10">
                 </div>
 
                 <div>
                     <label class="mb-2 block text-sm font-extrabold text-blue-950">Zip</label>
                     <input name="xxZip"
-                        value="{{ old('xxZip', $zipValue) }}"
-                        class="block w-full rounded-md border border-slate-400 bg-white px-4 py-3 text-base text-slate-950 shadow-inner outline-none focus:border-[#1b2f63] focus:ring-4 focus:ring-blue-900/10">
+                           value="{{ old('xxZip', $zipValue) }}"
+                           placeholder="Zip Code"
+                           class="block w-full rounded-md border border-slate-400 bg-white px-4 py-3 text-base text-slate-950 shadow-inner outline-none focus:border-[#1b2f63] focus:ring-4 focus:ring-blue-900/10">
                 </div>
 
                 <div>
                     <label class="mb-2 block text-sm font-extrabold text-blue-950">Major Cross Streets</label>
                     <input name="xIntersection"
-                        value="{{ old('xIntersection', $map->xIntersection ?? '') }}"
-                        class="block w-full rounded-md border border-slate-400 bg-white px-4 py-3 text-base text-slate-950 shadow-inner outline-none focus:border-[#1b2f63] focus:ring-4 focus:ring-blue-900/10">
+                           value="{{ old('xIntersection', $map->xIntersection ?? '') }}"
+                           class="block w-full rounded-md border border-slate-400 bg-white px-4 py-3 text-base text-slate-950 shadow-inner outline-none focus:border-[#1b2f63] focus:ring-4 focus:ring-blue-900/10">
                 </div>
             </div>
         </section>
@@ -150,29 +152,30 @@
                 <div>
                     <label class="mb-2 block text-sm font-extrabold text-blue-950">Beds</label>
                     <input name="xxBeds"
-                        value="{{ old('xxBeds', $bedsValue) }}"
-                        class="block w-full rounded-md border border-slate-400 bg-white px-4 py-3 text-base text-slate-950 shadow-inner outline-none focus:border-[#1b2f63] focus:ring-4 focus:ring-blue-900/10">
+                           value="{{ old('xxBeds', $bedsValue) }}"
+                           class="block w-full rounded-md border border-slate-400 bg-white px-4 py-3 text-base text-slate-950 shadow-inner outline-none focus:border-[#1b2f63] focus:ring-4 focus:ring-blue-900/10">
                 </div>
 
                 <div>
                     <label class="mb-2 block text-sm font-extrabold text-blue-950">Baths</label>
                     <input name="xxBaths"
-                        value="{{ old('xxBaths', $bathsValue) }}"
-                        class="block w-full rounded-md border border-slate-400 bg-white px-4 py-3 text-base text-slate-950 shadow-inner outline-none focus:border-[#1b2f63] focus:ring-4 focus:ring-blue-900/10">
+                           value="{{ old('xxBaths', $bathsValue) }}"
+                           class="block w-full rounded-md border border-slate-400 bg-white px-4 py-3 text-base text-slate-950 shadow-inner outline-none focus:border-[#1b2f63] focus:ring-4 focus:ring-blue-900/10">
                 </div>
 
                 <div>
                     <label class="mb-2 block text-sm font-extrabold text-blue-950">Sqft</label>
                     <input name="xxSqft"
-                        value="{{ old('xxSqft', $sqftValue) }}"
-                        class="block w-full rounded-md border border-slate-400 bg-white px-4 py-3 text-base text-slate-950 shadow-inner outline-none focus:border-[#1b2f63] focus:ring-4 focus:ring-blue-900/10">
+                           value="{{ old('xxSqft', $sqftValue) }}"
+                           class="block w-full rounded-md border border-slate-400 bg-white px-4 py-3 text-base text-slate-950 shadow-inner outline-none focus:border-[#1b2f63] focus:ring-4 focus:ring-blue-900/10">
                 </div>
 
                 <div>
                     <label class="mb-2 block text-sm font-extrabold text-blue-950">Year Built</label>
                     <input name="xxYrBuilt"
-                        value="{{ old('xxYrBuilt', $yearValue) }}"
-                        class="block w-full rounded-md border border-slate-400 bg-white px-4 py-3 text-base text-slate-950 shadow-inner outline-none focus:border-[#1b2f63] focus:ring-4 focus:ring-blue-900/10">
+                           value="{{ old('xxYrBuilt', $yearValue) }}"
+                           placeholder="Year Built"
+                           class="block w-full rounded-md border border-slate-400 bg-white px-4 py-3 text-base text-slate-950 shadow-inner outline-none focus:border-[#1b2f63] focus:ring-4 focus:ring-blue-900/10">
                 </div>
 
                 <div>
@@ -271,7 +274,6 @@
             </div>
         </section>
 
-        {{-- Bottom Save Bar --}}
         <div class="sticky bottom-0 z-20 -mx-4 mt-8 border-t border-slate-300 bg-slate-100/95 px-4 py-4 backdrop-blur">
             <div class="mx-auto flex max-w-6xl justify-end gap-3">
                 <a href="/member/flyer/{{ $propInfo->id }}"
