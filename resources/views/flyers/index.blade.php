@@ -169,12 +169,16 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
                 .flyer-btn { padding: 4px 12px; border-radius: 4px; border: none; cursor: pointer; font-size: 14px; background: #e5e7eb; color: #374151; }
                 .flyer-btn.active { background: #2563eb; color: white; }
                 .editor-tab.active { color: #1d4ed8; border-bottom-color: #2563eb; }
-                .flyer-stage {overflow-x: visible;}
-                #flyer-scale-wrapper {
+                .flyer-stage {
                     width:100%;
-                    max-width:600px;
-                    margin:0 auto;
-                }                .control-tab{
+                    overflow:hidden;
+                }
+                #flyer-scale-wrapper {
+                    width:600px;
+                    transform-origin:top left;
+                }               
+                
+                .control-tab{
                     color:#6b7280;
                     border:1px solid transparent;
                     border-bottom:none;
@@ -219,6 +223,7 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
                     });
 
                     switchEditorTab('edit-headline');
+                    
                     function scaleFlyer() {
 
                         const stage = document.querySelector('.flyer-stage');
@@ -226,29 +231,27 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
 
                         if (!stage || !wrapper) return;
 
-                        const scale = Math.min(
-                            stage.clientWidth / 600,
-                            1
-                        );
-
-                        console.log({
-                            stageWidth: stage.clientWidth,
-                            scale: scale
-                        });
-
                         const activeFlyer = wrapper.querySelector('.flyer-panel.active');
 
-                        if (activeFlyer) {
-                            wrapper.style.height =
-                                (activeFlyer.offsetHeight * scale) + 'px';
-                        }
+                        if (!activeFlyer) return;
 
+                        const availableWidth = stage.clientWidth;
+                        const scale = Math.min(availableWidth / 600, 1);
+
+                        console.log('availableWidth=', availableWidth);
+                        console.log('scale=', scale);
+
+                        wrapper.style.transformOrigin = 'top left';
                         wrapper.style.transform = `scale(${scale})`;
+
+                        wrapper.style.height =
+                            (activeFlyer.offsetHeight * scale) + 'px';
+
                     }
-                    /*
+
                     scaleFlyer();
                     window.addEventListener('resize', scaleFlyer);
-                    */
+
                 });
             </script>
         </div>
