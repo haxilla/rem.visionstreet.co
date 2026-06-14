@@ -65,7 +65,7 @@
     </div>
 
     {{-- Header --}}
-    <div class="mb-6 rounded-xl border border-slate-300 bg-white p-4 shadow-sm">
+    <div class="mt-2 mb-6 rounded-xl border border-slate-300 bg-white p-4 shadow-sm">
         <div class="flex items-start gap-4">
             @if($defaultPhotoUrl)
                 <div class="shrink-0">
