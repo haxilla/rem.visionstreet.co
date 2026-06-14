@@ -34,19 +34,16 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
                 </div>
 
             </div>
-            {{-- New click-to-edit toolbar --}}
-            <div id="flyer-editor" 
-            class="mb-6 border border-gray-200 rounded-xl bg-white p-4 shadow-sm">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <div class="text-xs uppercase tracking-wide text-gray-400">
-                            Flyer Editor
-                        </div>
-                        <div class="text-sm font-semibold text-gray-700">
-                            Select an item on the flyer to edit
-                        </div>
-                    </div>
+            <div class="mb-6 border border-gray-200 rounded-xl bg-white p-4 shadow-sm">
+
+                <div class="text-sm font-semibold text-gray-700 mb-3">
+                    Flyer Settings
                 </div>
+
+                <div id="flyer-colors">
+                    Colors coming next...
+                </div>
+
             </div>
 
             {{-- Main editor layout --}}
