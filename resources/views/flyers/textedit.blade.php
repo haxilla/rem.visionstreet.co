@@ -44,7 +44,7 @@
     }
 @endphp
 
-<main class="mx-auto max-w-6xl px-4 pt-24 pb-10">
+<main class="mx-auto max-w-6xl px-4 pt-12 pb-10">
 
     {{-- Sticky Action Bar --}}
     <div class="sticky top-[72px] z-40 -mx-4 mb-6 border-b border-slate-300 bg-slate-100/95 px-4 py-3 backdrop-blur">
