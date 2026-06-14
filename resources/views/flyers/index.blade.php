@@ -36,6 +36,12 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
                             Colors
                         </button>
 
+                        <button
+                            class="control-tab px-4 py-2 text-sm font-medium"
+                            data-panel="headline-panel">
+                            Headline
+                        </button>
+
                     </div>
 
                 </div>
@@ -154,6 +160,30 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
 
                     </div>
 
+                    <div id="headline-panel" class="hidden">
+
+                        <p class="text-xs text-gray-500 mb-3">
+                            Select a headline
+                        </p>
+
+                        <select id="headlineSelect">
+                            <option value="">-- Select headline --</option>
+                            <option value="acreage">Acreage</option>
+                            <option value="agentbonus">Agent Bonus</option>
+                            <option value="amazingviews">Amazing Views</option>
+                            <option value="backonmarket">Back On Market</option>
+                            <option value="bankowned">Bank Owned</option>
+                            <option value="greatbuy">Great Buy</option>
+                            <option value="horseproperty">Horse Property</option>
+                            <option value="justlisted">Just Listed</option>
+                            <option value="modelcloseout">Model Closeout</option>
+                            <option value="mustsee">Must See</option>
+                            <option value="openhouse">Open House</option>
+                            <option value="reduced">Reduced</option>
+                        </select>
+
+                    </div>
+
                 </div>
 
             </div>
@@ -267,6 +297,9 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
                                 .classList.add('hidden');
 
                             document.getElementById('colors-panel')
+                                .classList.add('hidden');
+                            
+                            document.getElementById('headline-panel')
                                 .classList.add('hidden');
 
                             document.getElementById(tab.dataset.panel)
