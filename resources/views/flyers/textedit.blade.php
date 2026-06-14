@@ -8,7 +8,24 @@
     $remarks = $propInfo->theRemarks ?? null;
     $map = $propInfo->theMap ?? null;
 
-    $headlineValue = $propInfo->xxHeadline ?? $propInfo->xHeadline ?? '';
+    $headlineValue = $propInfo->xxHeadline ?: $propInfo->xHeadline;
+
+    $bedsValue = $propInfo->xxBeds ?: $propInfo->xBeds;
+    $bathsValue = $propInfo->xxBaths ?: $propInfo->xBaths;
+    $sqftValue = $propInfo->xxSqft ?: $propInfo->xSqft;
+    $yearValue = $propInfo->xxYrBuilt ?: $propInfo->xYrBuilt;
+    $zipValue = $propInfo->xxZip ?: $propInfo->xZip;
+    $virtualTourValue = $propInfo->xxVirtualTour ?: $propInfo->xVirtualTour;
+
+    $poolType = 'none';
+
+    if (($propInfo->xxPoolPvt ?: $propInfo->xPoolPvt)) {
+        $poolType = 'private';
+    } elseif ($propInfo->xPoolCommunity) {
+        $poolType = 'community';
+    }
+
+    $parkingValue = $propInfo->xParking ?? '';
 @endphp
 
 <main class="mx-auto max-w-6xl px-4 pt-28 pb-10">
@@ -25,10 +42,22 @@
             </h1>
 
             <div class="mt-1 text-slate-600">
-                {{ $propInfo->xCity }}, {{ $propInfo->xState }} {{ $propInfo->xZip }}
+                {{ $propInfo->xCity }}, {{ $propInfo->xState }} {{ $zipValue }}
             </div>
         </div>
 
+        <div class="flex gap-3">
+            <a href="/member/flyer/{{ $propInfo->id }}"
+               class="inline-flex items-center justify-center rounded-md border border-slate-300 bg-white px-5 py-3 text-sm font-extrabold text-slate-700 shadow-sm hover:bg-slate-50">
+                Back to Flyer
+            </a>
+
+            <button form="flyerTextForm"
+                    type="submit"
+                    class="inline-flex items-center justify-center rounded-md bg-emerald-700 px-6 py-3 text-sm font-extrabold text-white shadow-sm hover:bg-emerald-800">
+                Save Text
+            </button>
+        </div>
     </div>
 
     <form id="flyerTextForm" method="POST" action="" class="space-y-6">
@@ -51,10 +80,6 @@
                 <textarea name="xxHeadline"
                           rows="4"
                           class="block w-full rounded-md border border-slate-400 bg-white px-4 py-3 text-base leading-7 text-slate-950 shadow-inner outline-none focus:border-[#1b2f63] focus:ring-4 focus:ring-blue-900/10">{{ old('xxHeadline', $headlineValue) }}</textarea>
-
-                <div class="mt-2 text-xs text-slate-500">
-                    This is the main descriptive headline beside the graphic header.
-                </div>
             </div>
         </section>
 
@@ -63,39 +88,11 @@
             <div class="border-b border-slate-200 bg-slate-50 px-6 py-5">
                 <h2 class="text-xl font-extrabold text-slate-950">Property Details</h2>
                 <p class="mt-1 text-sm text-slate-600">
-                    Address and quick facts used in the flyer summary areas.
+                    MLS number, address, and location details shown on the flyer.
                 </p>
             </div>
 
             <div class="grid grid-cols-1 gap-5 p-6 md:grid-cols-12">
-                <div class="md:col-span-6">
-                    <label class="mb-2 block text-sm font-extrabold text-blue-950">Street Address</label>
-                    <input name="xFullStreet"
-                           value="{{ old('xFullStreet', $propInfo->xFullStreet) }}"
-                           class="block w-full rounded-md border border-slate-400 bg-white px-4 py-3 text-base text-slate-950 shadow-inner outline-none focus:border-[#1b2f63] focus:ring-4 focus:ring-blue-900/10">
-                </div>
-
-                <div class="md:col-span-3">
-                    <label class="mb-2 block text-sm font-extrabold text-blue-950">City</label>
-                    <input name="xCity"
-                           value="{{ old('xCity', $propInfo->xCity) }}"
-                           class="block w-full rounded-md border border-slate-400 bg-white px-4 py-3 text-base text-slate-950 shadow-inner outline-none focus:border-[#1b2f63] focus:ring-4 focus:ring-blue-900/10">
-                </div>
-
-                <div class="md:col-span-3">
-                    <label class="mb-2 block text-sm font-extrabold text-blue-950">State</label>
-                    <input name="xState"
-                           value="{{ old('xState', $propInfo->xState) }}"
-                           class="block w-full rounded-md border border-slate-400 bg-white px-4 py-3 text-base text-slate-950 shadow-inner outline-none focus:border-[#1b2f63] focus:ring-4 focus:ring-blue-900/10">
-                </div>
-
-                <div class="md:col-span-3">
-                    <label class="mb-2 block text-sm font-extrabold text-blue-950">Zip</label>
-                    <input name="xZip"
-                           value="{{ old('xZip', $propInfo->xZip) }}"
-                           class="block w-full rounded-md border border-slate-400 bg-white px-4 py-3 text-base text-slate-950 shadow-inner outline-none focus:border-[#1b2f63] focus:ring-4 focus:ring-blue-900/10">
-                </div>
-
                 <div class="md:col-span-3">
                     <label class="mb-2 block text-sm font-extrabold text-blue-950">MLS Number</label>
                     <input name="xMlsNum"
@@ -103,25 +100,103 @@
                            class="block w-full rounded-md border border-slate-400 bg-white px-4 py-3 text-base text-slate-950 shadow-inner outline-none focus:border-[#1b2f63] focus:ring-4 focus:ring-blue-900/10">
                 </div>
 
+                <div class="md:col-span-9">
+                    <label class="mb-2 block text-sm font-extrabold text-blue-950">Street Address</label>
+                    <input name="xFullStreet"
+                           value="{{ old('xFullStreet', $propInfo->xFullStreet) }}"
+                           class="block w-full rounded-md border border-slate-400 bg-white px-4 py-3 text-base text-slate-950 shadow-inner outline-none focus:border-[#1b2f63] focus:ring-4 focus:ring-blue-900/10">
+                </div>
+
+                <div class="md:col-span-4">
+                    <label class="mb-2 block text-sm font-extrabold text-blue-950">City</label>
+                    <input name="xCity"
+                           value="{{ old('xCity', $propInfo->xCity) }}"
+                           class="block w-full rounded-md border border-slate-400 bg-white px-4 py-3 text-base text-slate-950 shadow-inner outline-none focus:border-[#1b2f63] focus:ring-4 focus:ring-blue-900/10">
+                </div>
+
+                <div class="md:col-span-2">
+                    <label class="mb-2 block text-sm font-extrabold text-blue-950">State</label>
+                    <input name="xState"
+                           value="{{ old('xState', $propInfo->xState) }}"
+                           class="block w-full rounded-md border border-slate-400 bg-white px-4 py-3 text-base text-slate-950 shadow-inner outline-none focus:border-[#1b2f63] focus:ring-4 focus:ring-blue-900/10">
+                </div>
+
+                <div class="md:col-span-2">
+                    <label class="mb-2 block text-sm font-extrabold text-blue-950">Zip</label>
+                    <input name="xxZip"
+                           value="{{ old('xxZip', $zipValue) }}"
+                           class="block w-full rounded-md border border-slate-400 bg-white px-4 py-3 text-base text-slate-950 shadow-inner outline-none focus:border-[#1b2f63] focus:ring-4 focus:ring-blue-900/10">
+                </div>
+
+                <div class="md:col-span-4">
+                    <label class="mb-2 block text-sm font-extrabold text-blue-950">Major Cross Streets</label>
+                    <input name="xIntersection"
+                           value="{{ old('xIntersection', $map->xIntersection ?? '') }}"
+                           class="block w-full rounded-md border border-slate-400 bg-white px-4 py-3 text-base text-slate-950 shadow-inner outline-none focus:border-[#1b2f63] focus:ring-4 focus:ring-blue-900/10">
+                </div>
+            </div>
+        </section>
+
+        {{-- Features --}}
+        <section class="overflow-hidden rounded-xl border border-slate-300 bg-white shadow-sm">
+            <div class="border-b border-slate-200 bg-slate-50 px-6 py-5">
+                <h2 class="text-xl font-extrabold text-slate-950">Features</h2>
+                <p class="mt-1 text-sm text-slate-600">
+                    Core property features and searchable facts.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 gap-5 p-6 md:grid-cols-12">
                 <div class="md:col-span-2">
                     <label class="mb-2 block text-sm font-extrabold text-blue-950">Beds</label>
                     <input name="xxBeds"
-                           value="{{ old('xxBeds', $propInfo->xxBeds ?: $propInfo->xBeds) }}"
+                           value="{{ old('xxBeds', $bedsValue) }}"
                            class="block w-full rounded-md border border-slate-400 bg-white px-4 py-3 text-base text-slate-950 shadow-inner outline-none focus:border-[#1b2f63] focus:ring-4 focus:ring-blue-900/10">
                 </div>
 
                 <div class="md:col-span-2">
                     <label class="mb-2 block text-sm font-extrabold text-blue-950">Baths</label>
                     <input name="xxBaths"
-                           value="{{ old('xxBaths', $propInfo->xxBaths ?: $propInfo->xBaths) }}"
+                           value="{{ old('xxBaths', $bathsValue) }}"
                            class="block w-full rounded-md border border-slate-400 bg-white px-4 py-3 text-base text-slate-950 shadow-inner outline-none focus:border-[#1b2f63] focus:ring-4 focus:ring-blue-900/10">
                 </div>
 
                 <div class="md:col-span-2">
                     <label class="mb-2 block text-sm font-extrabold text-blue-950">Sqft</label>
                     <input name="xxSqft"
-                           value="{{ old('xxSqft', $propInfo->xxSqft ?: $propInfo->xSqft) }}"
+                           value="{{ old('xxSqft', $sqftValue) }}"
                            class="block w-full rounded-md border border-slate-400 bg-white px-4 py-3 text-base text-slate-950 shadow-inner outline-none focus:border-[#1b2f63] focus:ring-4 focus:ring-blue-900/10">
+                </div>
+
+                <div class="md:col-span-2">
+                    <label class="mb-2 block text-sm font-extrabold text-blue-950">Year Built</label>
+                    <input name="xxYrBuilt"
+                           value="{{ old('xxYrBuilt', $yearValue) }}"
+                           class="block w-full rounded-md border border-slate-400 bg-white px-4 py-3 text-base text-slate-950 shadow-inner outline-none focus:border-[#1b2f63] focus:ring-4 focus:ring-blue-900/10">
+                </div>
+
+                <div class="md:col-span-2">
+                    <label class="mb-2 block text-sm font-extrabold text-blue-950">Pool</label>
+                    <select name="poolType"
+                            class="block w-full rounded-md border border-slate-400 bg-white px-4 py-3 text-base text-slate-950 shadow-inner outline-none focus:border-[#1b2f63] focus:ring-4 focus:ring-blue-900/10">
+                        <option value="none" @selected(old('poolType', $poolType) === 'none')>No Pool</option>
+                        <option value="private" @selected(old('poolType', $poolType) === 'private')>Private Pool</option>
+                        <option value="community" @selected(old('poolType', $poolType) === 'community')>Community Pool</option>
+                    </select>
+                </div>
+
+                <div class="md:col-span-2">
+                    <label class="mb-2 block text-sm font-extrabold text-blue-950">Parking</label>
+                    <select name="xParking"
+                            class="block w-full rounded-md border border-slate-400 bg-white px-4 py-3 text-base text-slate-950 shadow-inner outline-none focus:border-[#1b2f63] focus:ring-4 focus:ring-blue-900/10">
+                        <option value="">Select Parking</option>
+                        <option value="Slab" @selected(old('xParking', $parkingValue) === 'Slab')>Slab</option>
+                        <option value="Carport" @selected(old('xParking', $parkingValue) === 'Carport')>Carport</option>
+                        <option value="1 Garage" @selected(old('xParking', $parkingValue) === '1 Garage')>1 Garage</option>
+                        <option value="2 Garage" @selected(old('xParking', $parkingValue) === '2 Garage')>2 Garage</option>
+                        <option value="3 Garage" @selected(old('xParking', $parkingValue) === '3 Garage')>3 Garage</option>
+                        <option value="4 Garage+" @selected(old('xParking', $parkingValue) === '4 Garage+')>4 Garage+</option>
+                    </select>
                 </div>
             </div>
         </section>
@@ -169,26 +244,6 @@
             </div>
         </section>
 
-        {{-- Location --}}
-        <section class="overflow-hidden rounded-xl border border-slate-300 bg-white shadow-sm">
-            <div class="border-b border-slate-200 bg-slate-50 px-6 py-5">
-                <h2 class="text-xl font-extrabold text-slate-950">Location</h2>
-                <p class="mt-1 text-sm text-slate-600">
-                    Displayed as Major Cross Streets on the flyer.
-                </p>
-            </div>
-
-            <div class="p-6">
-                <label class="mb-2 block text-sm font-extrabold text-blue-950">
-                    Major Cross Streets
-                </label>
-
-                <input name="xIntersection"
-                       value="{{ old('xIntersection', $map->xIntersection ?? '') }}"
-                       class="block w-full rounded-md border border-slate-400 bg-white px-4 py-3 text-base text-slate-950 shadow-inner outline-none focus:border-[#1b2f63] focus:ring-4 focus:ring-blue-900/10">
-            </div>
-        </section>
-
         {{-- Online Links --}}
         <section class="overflow-hidden rounded-xl border border-slate-300 bg-white shadow-sm">
             <div class="border-b border-slate-200 bg-slate-50 px-6 py-5">
@@ -208,8 +263,8 @@
 
                 <div>
                     <label class="mb-2 block text-sm font-extrabold text-blue-950">Virtual Tour Link</label>
-                    <input name="xVirtualTour"
-                           value="{{ old('xVirtualTour', $propInfo->xVirtualTour) }}"
+                    <input name="xxVirtualTour"
+                           value="{{ old('xxVirtualTour', $virtualTourValue) }}"
                            class="block w-full rounded-md border border-slate-400 bg-white px-4 py-3 text-base text-slate-950 shadow-inner outline-none focus:border-[#1b2f63] focus:ring-4 focus:ring-blue-900/10">
                 </div>
             </div>
