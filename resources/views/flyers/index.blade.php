@@ -3,7 +3,7 @@
 <body data-section="admin" 
 class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres">
 
-  @include('public.layout.nav')
+  @include('member.layout.nav')
 
   <main class="transition-all duration-300 min-h-screen pt-24 relative"
   :class="collapsed ? 'ml-20' : 'ml-64'">
