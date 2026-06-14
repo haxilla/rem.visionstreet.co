@@ -314,9 +314,9 @@
 
                             <div class="flyer-actions">
                                 @if($flyer->url_slug)
-                                    <a href="/homedetails/{{ $flyer->url_slug }}"
+                                    <a href="/member/flyerEdit/{{ $flyer->id }}"
                                        class="flyer-btn rounded-lg bg-[#123f91] px-4 py-2 text-xs font-bold text-white hover:bg-[#0f3274]">
-                                        View
+                                        View / Edit
                                     </a>
                                 @endif
 
@@ -325,10 +325,6 @@
                                     Campaigns
                                 </a>
 
-                                <a href="/member/send-campaign/{{ $flyer->id }}"
-                                   class="flyer-btn rounded-lg bg-emerald-50 px-4 py-2 text-xs font-bold text-emerald-700 ring-1 ring-emerald-200 hover:bg-emerald-100">
-                                    Resend
-                                </a>
                             </div>
 
                         </article>
