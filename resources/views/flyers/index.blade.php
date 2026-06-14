@@ -13,6 +13,20 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
                 include(app_path().'/flyers/variables.php');
             @endphp
 
+            <div class="max-w-[600px] mx-auto mb-3 flex items-center justify-between">
+
+                <a href="/member"
+                class="inline-flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-gray-900">
+                    ← Back to Dashboard
+                </a>
+
+                <button type="button"
+                class="inline-flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-700">
+                    Save &amp; Continue →
+                </button>
+
+            </div>
+
             <div class="mb-4 border border-gray-200 rounded-xl bg-white shadow-sm overflow-hidden mx-auto"
             style="max-width:600px;">
                 {{-- Header --}}
