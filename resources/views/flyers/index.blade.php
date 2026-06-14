@@ -184,8 +184,7 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
                 .flyer-panel.active { display: block; }
                 .flyer-btn { padding: 4px 12px; border-radius: 0; border: none; cursor: pointer; font-size: 14px; background: #e5e7eb; color: #374151; }
                 .flyer-btn.active { background: #2563eb; color: white; }
-                .flyer-btn:hover {background: #f3f4f6;}
-                .editor-tab.active { color: #1d4ed8; border-bottom-color: #2563eb; }
+                .flyer-btn:not(.active):hover {background: #f3f4f6;}                
                 .flyer-stage {
                     width:100%;
                     overflow:hidden;
