@@ -23,21 +23,15 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
             </div>
 
             {{-- Main editor layout --}}
-            <div class="flex flex-col xl:flex-row gap-6 items-start">
-                
+            <div class="flex gap-6 items-start">
+
                 {{-- Left: Flyer preview --}}
-                <div class="flex-1 min-w-0 flyer-stage">
-
-                    <div id="flyer-scale-wrapper">
-
-                        <div id="flyer-s1pc" class="flyer-panel">@include('flyers.s1pc')</div>
-                        <div id="flyer-s2pb" class="flyer-panel">@include('flyers.s2pb')</div>
-                        <div id="flyer-s3pt" class="flyer-panel">@include('flyers.s3pt')</div>
-                        <div id="flyer-s4sp" class="flyer-panel">@include('flyers.s4sp')</div>
-                        <div id="flyer-s5pt" class="flyer-panel">@include('flyers.s5pt')</div>
-
-                    </div>
-
+                <div class="flex-1 min-w-0" style="max-width: 600px;">
+                    <div id="flyer-s1pc" class="flyer-panel">@include('flyers.s1pc')</div>
+                    <div id="flyer-s2pb" class="flyer-panel">@include('flyers.s2pb')</div>
+                    <div id="flyer-s3pt" class="flyer-panel">@include('flyers.s3pt')</div>
+                    <div id="flyer-s4sp" class="flyer-panel">@include('flyers.s4sp')</div>
+                    <div id="flyer-s5pt" class="flyer-panel">@include('flyers.s5pt')</div>
                 </div>
 
                 {{-- Right: Editor panel --}}
@@ -169,8 +163,6 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
             .flyer-btn { padding: 4px 12px; border-radius: 4px; border: none; cursor: pointer; font-size: 14px; background: #e5e7eb; color: #374151; }
             .flyer-btn.active { background: #2563eb; color: white; }
             .editor-tab.active { color: #1d4ed8; border-bottom-color: #2563eb; }
-            .flyer-stage {overflow-x: auto;}
-            #flyer-scale-wrapper {width: 600px;transform-origin: top left;}
         </style>
 
         <script>
@@ -203,31 +195,6 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
                 });
 
                 switchEditorTab('edit-headline');
-                function scaleFlyer() {
-
-                    const stage = document.querySelector('.flyer-stage');
-                    const wrapper = document.getElementById('flyer-scale-wrapper');
-
-                    if (!stage || !wrapper) return;
-
-                    const scale = Math.min(
-                        stage.clientWidth / 600,
-                        1
-                    );
-
-                    const activeFlyer = wrapper.querySelector('.flyer-panel.active');
-
-                    if (activeFlyer) {
-                        wrapper.style.height =
-                            (activeFlyer.offsetHeight * scale) + 'px';
-                    }
-
-                    wrapper.style.transform = `scale(${scale})`;
-                }
-
-                scaleFlyer();
-
-                window.addEventListener('resize', scaleFlyer);
 
             });
         </script>
