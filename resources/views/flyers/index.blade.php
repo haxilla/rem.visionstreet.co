@@ -190,6 +190,7 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
                     overflow:hidden;
                     display:flex;
                     justify-content:center;
+                    filter:drop-shadow(0 10px 25px rgba(0,0,0,.12));
                 }
                 #flyer-scale-wrapper {
                     width:600px;
@@ -209,14 +210,22 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
                     border:1px solid #d1d5db;
                     border-bottom:1px solid #ffffff;
                 }
-                body {
-                    background:
+                body{
+                    background-color:#e6ebf3;
+
+                    background-image:
                         linear-gradient(
-                            to bottom,
-                            #eef3f8 0%,
-                            #f7f9fc 300px,
-                            #ffffff 100%
+                            135deg,
+                            rgba(255,255,255,.35) 25%,
+                            transparent 25%
+                        ),
+                        linear-gradient(
+                            315deg,
+                            rgba(255,255,255,.20) 25%,
+                            transparent 25%
                         );
+
+                    background-size:600px 600px;
                 }
             </style>
 
