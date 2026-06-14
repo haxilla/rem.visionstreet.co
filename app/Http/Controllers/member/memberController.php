@@ -49,13 +49,13 @@ class memberController extends Controller
         return view('flyers.index',compact('propInfo'));
     }
 
-    public function flyerText($flyerID)
+    public function flyerText($flyerId)
     {
         include app_path('queries/flyerdetails.php');
         return view('flyers.textedit',compact('propInfo'));
     }
 
-    public function flyerPhotos($flyerID)
+    public function flyerPhotos($flyerId)
     {
         include app_path('queries/flyerdetails.php');
         return view('flyers.photoedit',compact('propInfo'));
