@@ -24,7 +24,19 @@
             <div class="min-h-screen bg-[#f4f7fb]">
                 <div class="flex min-h-screen">
 
-                    @include('admin.includes.sidebar')
+                    {{-- DESKTOP SIDEBAR --}}
+                    <div class="hidden lg:block">
+                        @include('admin.includes.sidebar')
+                    </div>
+
+                    {{-- MOBILE SIDEBAR OVERLAY --}}
+                    <div id="adminMobileMenuOverlay" class="fixed inset-0 z-[60] hidden lg:hidden">
+                        <div class="absolute inset-0 bg-slate-900/50" id="adminMobileMenuBackdrop"></div>
+
+                        <div class="relative h-full w-72 bg-white shadow-2xl">
+                            @include('admin.includes.sidebar')
+                        </div>
+                    </div>
 
                     {{-- MAIN --}}
                     <main class="flex-1 px-6 py-6 lg:px-10 lg:py-8">
@@ -639,7 +651,30 @@ document.addEventListener('DOMContentLoaded', function () {
 
     });
 
+    // MOBILE MENU
+
+    const mobileMenuButton = document.getElementById('adminMobileMenuButton');
+    const mobileMenuOverlay = document.getElementById('adminMobileMenuOverlay');
+    const mobileMenuBackdrop = document.getElementById('adminMobileMenuBackdrop');
+
+    if (mobileMenuButton && mobileMenuOverlay) {
+
+        mobileMenuButton.addEventListener('click', function () {
+            mobileMenuOverlay.classList.remove('hidden');
+        });
+
+        if (mobileMenuBackdrop) {
+            mobileMenuBackdrop.addEventListener('click', function () {
+                mobileMenuOverlay.classList.add('hidden');
+            });
+        }
+
+    }
+
 });
+
+
+
 </script>
 
 </body>
