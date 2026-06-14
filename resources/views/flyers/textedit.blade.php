@@ -76,9 +76,6 @@
             @endif
 
             <div class="min-w-0 flex-1">
-                <div class="text-xs font-extrabold uppercase tracking-wide text-[#1b2f63]">
-                    Edit Flyer Text
-                </div>
 
                 <div class="mt-1 text-xs font-bold text-slate-500 sm:text-sm">
                     MLS #{{ $propInfo->xMlsNum }}
