@@ -15,20 +15,22 @@
         <img src="{{ asset('images/RealtyEmails_logo1.png') }}" alt="RealtyEmails" class="h-9 w-auto">
       </a>
 
-      {{-- DESKTOP TEXT --}}
-      <nav class="hidden lg:flex items-center gap-10 text-[14px] font-medium tracking-[0.06em] text-white/80">
-        ADMIN LOGIN
+      {{-- NAV LINKS --}}
+      <nav class="hidden md:flex items-center gap-10 text-[14px] font-medium tracking-[0.06em] text-white/80">
+
+        YOU ARE LOGGED IN
+
       </nav>
 
-      {{-- MOBILE HAMBURGER --}}
-      <button
-        type="button"
-        id="adminMobileMenuButton"
-        class="lg:hidden flex h-10 w-10 items-center justify-center rounded-lg border border-white/20 bg-white/10 text-white"
-        aria-label="Open admin menu"
-      >
-        ☰
-      </button>
+      {{-- RIGHT SIDE --}}
+      <div class="flex items-center gap-5">
+
+        <a href="/logout" 
+        class="text-[14px] font-medium text-white/80 hover:text-white transition">
+          Log out
+        </a>
+
+      </div>
 
     </div>
   </div>
