@@ -49,12 +49,28 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
                             Select a flyer layout
                         </p>
 
-                        <div class="flex gap-2 flex-wrap">
-                            <button class="flyer-btn" data-target="s1pc">Style 1</button>
-                            <button class="flyer-btn" data-target="s2pb">Style 2</button>
-                            <button class="flyer-btn" data-target="s3pt">Style 3</button>
-                            <button class="flyer-btn" data-target="s4sp">Style 4</button>
-                            <button class="flyer-btn" data-target="s5pt">Style 5</button>
+                        <div class="inline-flex rounded-lg overflow-hidden border border-gray-200">
+
+                            <button class="flyer-btn border-r border-gray-200" data-target="s1pc">
+                                Style 1
+                            </button>
+
+                            <button class="flyer-btn border-r border-gray-200" data-target="s2pb">
+                                Style 2
+                            </button>
+
+                            <button class="flyer-btn border-r border-gray-200" data-target="s3pt">
+                                Style 3
+                            </button>
+
+                            <button class="flyer-btn border-r border-gray-200" data-target="s4sp">
+                                Style 4
+                            </button>
+
+                            <button class="flyer-btn" data-target="s5pt">
+                                Style 5
+                            </button>
+
                         </div>
 
                     </div>
