@@ -13,8 +13,7 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
                 include(app_path().'/flyers/variables.php');
             @endphp
 
-            <div class="mb-4 border border-gray-200 rounded-xl bg-white shadow-sm overflow-hidden mx-auto"
-            style="max-width:600px;">
+            <div class="mb-4 border border-gray-200 rounded-xl bg-white shadow-sm overflow-hidden mx-auto w-full">
                 {{-- Header --}}
                 <div class="px-4 pt-4 bg-gray-50 border-b border-gray-200">
 
