@@ -211,6 +211,7 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
                     switchFlyer('s{{ $template }}');
 
                     // Editor tab switcher
+                    /*
                     function switchEditorTab(panelId) {
                         document.querySelectorAll('.editor-panel').forEach(p => p.classList.add('hidden'));
                         document.querySelectorAll('.editor-tab').forEach(t => t.classList.remove('active'));
@@ -223,7 +224,7 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
                     });
 
                     switchEditorTab('edit-headline');
-                    
+                    */
                     function scaleFlyer() {
 
                         const stage = document.querySelector('.flyer-stage');
