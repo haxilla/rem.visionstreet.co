@@ -14,12 +14,25 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
             @endphp
 
             {{-- Template switcher --}}
-            <div class="flex gap-2 mb-4 flex-wrap">
-                <button class="flyer-btn" data-target="s1pc">S1PC</button>
-                <button class="flyer-btn" data-target="s2pb">S2PB</button>
-                <button class="flyer-btn" data-target="s3pt">S3PT</button>
-                <button class="flyer-btn" data-target="s4sp">S4SP</button>
-                <button class="flyer-btn" data-target="s5pt">S5PT</button>
+            <div class="mb-6">
+
+                <div class="mb-3">
+                    <h3 class="text-sm font-semibold text-gray-700">
+                        Choose Flyer Style
+                    </h3>
+                    <p class="text-xs text-gray-500">
+                        Select a flyer layout
+                    </p>
+                </div>
+
+                <div class="flex gap-2 flex-wrap">
+                    <button class="flyer-btn" data-target="s1pc">Style 1</button>
+                    <button class="flyer-btn" data-target="s2pb">Style 2</button>
+                    <button class="flyer-btn" data-target="s3pt">Style 3</button>
+                    <button class="flyer-btn" data-target="s4sp">Style 4</button>
+                    <button class="flyer-btn" data-target="s5pt">Style 5</button>
+                </div>
+
             </div>
             {{-- New click-to-edit toolbar --}}
             <div id="flyer-editor" 
