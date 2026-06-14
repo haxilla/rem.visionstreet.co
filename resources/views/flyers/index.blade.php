@@ -41,7 +41,59 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
                 </div>
 
                 <div id="flyer-colors">
-                    Colors coming next...
+                        {{-- THIS IS THE ONLY edit-colors div --}}
+                        <div id="edit-colors">
+
+                            <p class="text-xs font-medium text-gray-500 mb-2">Background</p>
+                            <div class="flex flex-wrap gap-1 mb-4">
+                                <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" 
+                                style="background:#eeeeee;" data-style="background" data-scheme="light" data-color="eeeeee"></a>
+                                <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" 
+                                style="background:#cccccc;" data-style="background" data-scheme="light" data-color="cccccc"></a>
+                                <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" 
+                                style="background:#999999;" data-style="background" data-scheme="dark" data-color="999999"></a>
+                                <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" 
+                                style="background:#000066;" data-style="background" data-scheme="dark" data-color="000066"></a>
+                                <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" 
+                                style="background:#996600;" data-style="background" data-scheme="light" data-color="996600"></a>
+                                <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" 
+                                style="background:#990000;" data-style="background" data-scheme="dark" data-color="990000"></a>
+                                <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" 
+                                style="background:#000000;" data-style="background" data-scheme="dark" data-color="000000"></a>
+                            </div>
+
+                            <p class="text-xs font-medium text-gray-500 mb-2">Accents</p>
+
+                            <p class="light-accents text-xs text-gray-400 mb-1">Light</p>
+                            <div class="light-accents flex flex-wrap gap-1 mb-3">
+                                <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" 
+                                style="background:#ffffff;" data-style="accent" data-scheme="light" data-color="ffffff"></a>
+                                <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" 
+                                style="background:#eeeeee;" data-style="accent" data-scheme="light" data-color="eeeeee"></a>
+                                <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" 
+                                style="background:#ffffcc;" data-style="accent" data-scheme="light" data-color="ffffcc"></a>
+                            </div>
+
+                            <p class="dark-accents text-xs text-gray-400 mb-1">Dark</p>
+                            <div class="dark-accents flex flex-wrap gap-1">
+                                <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" 
+                                style="background:#ffc60b;" data-style="accent" data-scheme="dark" data-color="ffc60b"></a>
+                                <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" 
+                                style="background:#990000;" data-style="accent" data-scheme="dark" data-color="990000"></a>
+                                <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" 
+                                style="background:#000066;" data-style="accent" data-scheme="dark" data-color="000066"></a>
+                                <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" 
+                                style="background:#00aeef;" data-style="accent" data-scheme="dark" data-color="00aeef"></a>
+                                <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" 
+                                style="background:#60b67b;" data-style="accent" data-scheme="dark" data-color="60b67b"></a>
+                                <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" 
+                                style="background:#f0535b;" data-style="accent" data-scheme="dark" data-color="f0535b"></a>
+                                <a href="#" class="colorswatch block w-6 h-6 rounded border border-gray-300 hover:scale-110 transition-transform" 
+                                style="background:#ff0000;" data-style="accent" data-scheme="dark" data-color="ff0000"></a>
+                            </div>
+
+                        </div>
+
                 </div>
 
             </div>
