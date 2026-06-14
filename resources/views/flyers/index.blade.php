@@ -170,8 +170,11 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
                 .flyer-btn.active { background: #2563eb; color: white; }
                 .editor-tab.active { color: #1d4ed8; border-bottom-color: #2563eb; }
                 .flyer-stage {overflow-x: visible;}
-                #flyer-scale-wrapper {width: 600px;transform-origin: top left;}
-                .control-tab{
+                #flyer-scale-wrapper {
+                    width:100%;
+                    max-width:600px;
+                    margin:0 auto;
+                }                .control-tab{
                     color:#6b7280;
                     border:1px solid transparent;
                     border-bottom:none;
@@ -242,11 +245,10 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
 
                         wrapper.style.transform = `scale(${scale})`;
                     }
-
+                    /*
                     scaleFlyer();
-
                     window.addEventListener('resize', scaleFlyer);
-
+                    */
                 });
             </script>
         </div>
