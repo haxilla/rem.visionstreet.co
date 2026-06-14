@@ -166,29 +166,48 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
                             Select a headline
                         </p>
 
-                        <select id="headlineSelect">
-                            <option value="">-- Select headline --</option>
-                            <option value="acreage">Acreage</option>
-                            <option value="agentbonus">Agent Bonus</option>
-                            <option value="amazingviews">Amazing Views</option>
-                            <option value="backonmarket">Back On Market</option>
-                            <option value="bankowned">Bank Owned</option>
-                            <option value="greatbuy">Great Buy</option>
-                            <option value="horseproperty">Horse Property</option>
-                            <option value="justlisted">Just Listed</option>
-                            <option value="modelcloseout">Model Closeout</option>
-                            <option value="mustsee">Must See</option>
-                            <option value="openhouse">Open House</option>
-                            <option value="reduced">Reduced</option>
-                        </select>
-                        <select id="headlineStyle">
-                            <option value="">-- Select Style --</option>
-                            <option value="bold">Bold</option>
-                            <option value="3d">3D</option>
-                            <option value="ul">Underline</option>
-                        </select>
+                        <div class="flex flex-wrap gap-3">
 
-                    </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-500 mb-1">
+                                    Headline
+                                </label>
+
+                                <select id="headlineSelect"
+                                    class="w-44 border border-gray-300 rounded-lg bg-white px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option value="">-- Select headline --</option>
+                                    <option value="acreage">Acreage</option>
+                                    <option value="agentbonus">Agent Bonus</option>
+                                    <option value="amazingviews">Amazing Views</option>
+                                    <option value="backonmarket">Back On Market</option>
+                                    <option value="bankowned">Bank Owned</option>
+                                    <option value="greatbuy">Great Buy</option>
+                                    <option value="horseproperty">Horse Property</option>
+                                    <option value="justlisted">Just Listed</option>
+                                    <option value="modelcloseout">Model Closeout</option>
+                                    <option value="mustsee">Must See</option>
+                                    <option value="openhouse">Open House</option>
+                                    <option value="reduced">Reduced</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-medium text-gray-500 mb-1">
+                                    Style
+                                </label>
+
+                                <select id="headlineStyle"
+                                    class="w-36 border border-gray-300 rounded-lg bg-white px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option value="">-- Select style --</option>
+                                    <option value="bold">Bold</option>
+                                    <option value="3d">3D</option>
+                                    <option value="ul">Underline</option>
+                                </select>
+                            </div>
+
+                        </div>
+
+                    </div>                    
 
                 </div>
 
