@@ -205,26 +205,19 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
                     }
 
                     document.querySelectorAll('.flyer-btn').forEach(btn => {
-                        btn.addEventListener('click', () => switchFlyer(btn.dataset.target));
+                        btn.addEventListener('click', () => {
+
+                            switchFlyer(btn.dataset.target);
+
+                            requestAnimationFrame(() => {
+                                scaleFlyer();
+                            });
+
+                        });
                     });
 
                     switchFlyer('s{{ $template }}');
 
-                    // Editor tab switcher
-                    /*
-                    function switchEditorTab(panelId) {
-                        document.querySelectorAll('.editor-panel').forEach(p => p.classList.add('hidden'));
-                        document.querySelectorAll('.editor-tab').forEach(t => t.classList.remove('active'));
-                        document.getElementById(panelId).classList.remove('hidden');
-                        document.querySelector(`.editor-tab[data-panel="${panelId}"]`).classList.add('active');
-                    }
-
-                    document.querySelectorAll('.editor-tab').forEach(tab => {
-                        tab.addEventListener('click', () => switchEditorTab(tab.dataset.panel));
-                    });
-
-                    switchEditorTab('edit-headline');
-                    */
                     function scaleFlyer() {
 
                         const stage = document.querySelector('.flyer-stage');
