@@ -218,6 +218,28 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
 
                     switchFlyer('s{{ $template }}');
 
+                    document.querySelectorAll('.control-tab').forEach(tab => {
+
+                        tab.addEventListener('click', () => {
+
+                            document.querySelectorAll('.control-tab')
+                                .forEach(t => t.classList.remove('active'));
+
+                            tab.classList.add('active');
+
+                            document.getElementById('styles-panel')
+                                .classList.add('hidden');
+
+                            document.getElementById('colors-panel')
+                                .classList.add('hidden');
+
+                            document.getElementById(tab.dataset.panel)
+                                .classList.remove('hidden');
+
+                        });
+
+                    });
+
                     function scaleFlyer() {
 
                         const stage = document.querySelector('.flyer-stage');
