@@ -51,6 +51,10 @@ Route::get('/admin/agentLogin/{id}',
 //flyer details
 Route::get('/flyer/{flyerId}', [guestController::class, 'flyerDetail'])->name('flyer.detail');
 Route::get('/member/flyerEdit/{flyerId}', [memberController::class, 'flyerEdit'])->name('member.flyeredit');
+Route::get('/member/flyer/text/{id}', [memberController::class, 'flyerText'])->name('member.flyerText');
+Route::get('/member/flyer/photos/{id}', [memberController::class, 'flyerPhotos'])->name('member.flyerPhotos');
+
+
 Route::get('/admin/flyerEdit/{flyerId}', [adminController::class, 'flyerEdit'])->name('admin.flyeredit');
 
 
