@@ -69,12 +69,12 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
                             Headline
                         </button>
 
-                        <a href="/member/flyer/text/{{ $propid }}"
+                        <a href="/member/flyer/text/{{ $propInfo->id }}"
                         class="control-tab px-4 py-2 text-sm font-medium no-underline">
                             Text
                         </a>
 
-                        <a href="/member/flyer/photos/{{ $propid }}"
+                        <a href="/member/flyer/photos/{{ $propInfo->id }}"
                         class="control-tab px-4 py-2 text-sm font-medium no-underline">
                             Photos
                         </a>
