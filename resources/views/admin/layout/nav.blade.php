@@ -33,3 +33,65 @@
     </div>
   </div>
 </header>
+
+<div id="adminMobileMenuOverlay"
+     class="fixed inset-0 z-[60] hidden lg:hidden">
+
+    <div
+        id="adminMobileMenuBackdrop"
+        class="absolute inset-0 bg-black/50">
+    </div>
+
+    <div class="relative h-full w-72 bg-white shadow-xl">
+        <div class="mb-6 text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">
+            Admin Menu
+        </div>
+
+        <nav class="space-y-2">
+            <a href="/admin" class="block rounded-xl px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-100">
+                Dashboard
+            </a>
+
+            <a href="/admin/flyers" class="block rounded-xl px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-100">
+                Flyers
+            </a>
+
+            <a href="/admin/campaigns" class="block rounded-xl px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-100">
+                Campaigns
+            </a>
+
+            <a href="/admin/agents" class="block rounded-xl px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-100">
+                Agents
+            </a>
+
+            <a href="/admin/logout" class="block rounded-xl px-4 py-3 text-sm font-semibold text-red-600 hover:bg-red-50">
+                Log Out
+            </a>
+        </nav>
+    </div>
+
+</div>
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    const button   = document.getElementById('adminMobileMenuButton');
+    const overlay  = document.getElementById('adminMobileMenuOverlay');
+    const backdrop = document.getElementById('adminMobileMenuBackdrop');
+
+    if (!button || !overlay) {
+        return;
+    }
+
+    button.addEventListener('click', function () {
+        overlay.classList.remove('hidden');
+    });
+
+    backdrop.addEventListener('click', function () {
+        overlay.classList.add('hidden');
+    });
+
+});
+
+</script>
