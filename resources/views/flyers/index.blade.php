@@ -5,59 +5,31 @@ class="linkcheck relative bg-white min-h-screen font-sans text-gray-800 postgres
 
   @include('member.layout.nav')
 
-  <main class="transition-all duration-300 min-h-screen pt-24 relative"
+  <main class="transition-all duration-300 min-h-screen pt-[72px] relative"
   :class="collapsed ? 'ml-20' : 'ml-64'">
     <div class="mx-3 lg:mx-10">
         <div class="pageswap p-0 lg:p-6 w-full">
             @php 
                 include(app_path().'/flyers/variables.php');
             @endphp
-            <!--
-            <div class="max-w-[600px] mx-auto mb-3 flex items-center justify-between">
 
-                <a href="/member"
-                class="inline-flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-gray-900">
-                    ← Back to Dashboard
-                </a>
+            {{-- Sticky Action Bar --}}
+            <div class="sticky top-[72px] z-40 -mx-4 mb-8 border-b border-slate-300 bg-slate-100/95 px-4 py-3 backdrop-blur">
+                <div class="mx-auto flex max-w-6xl items-center justify-between gap-3">
+                    <a href="/member/dashboard"
+                    class="inline-flex items-center justify-center rounded-md border border-slate-300 bg-white px-4 py-2.5 text-sm font-extrabold text-slate-700 shadow-sm hover:bg-slate-50">
+                        <span class="mr-2 text-lg leading-none">←</span>
+                        Back to Dashboard
+                    </a>
 
-                <button type="button"
-                class="inline-flex items-center gap-2 rounded-lg bg-[#166534] px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#223a75]">
-
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="1.75"
-                    stroke="currentColor"
-                    class="h-4 w-4">
-                        <path stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25H4.5a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5H4.5A2.25 2.25 0 0 0 2.25 6.75m19.5 0-8.69 5.516a2.25 2.25 0 0 1-2.12 0L2.25 6.75" />
-                    </svg>
-
-                    Save & Continue
-
-                </button>
-
-            </div>
-            -->
-
-                {{-- Sticky Action Bar --}}
-                <div class="sticky top-[72px] z-40 -mx-4 mb-8 border-b border-slate-300 bg-slate-100/95 px-4 py-3 backdrop-blur">
-                    <div class="mx-auto flex max-w-6xl items-center justify-between gap-3">
-                        <a href="/member/dashboard"
-                        class="inline-flex items-center justify-center rounded-md border border-slate-300 bg-white px-4 py-2.5 text-sm font-extrabold text-slate-700 shadow-sm hover:bg-slate-50">
-                            <span class="mr-2 text-lg leading-none">←</span>
-                            Back to Dashboard
-                        </a>
-
-                        <button form="flyerTextForm"
-                                type="submit"
-                                class="inline-flex items-center justify-center rounded-md bg-emerald-700 px-5 py-2.5 text-sm font-extrabold text-white shadow-sm hover:bg-emerald-800">
-                            Save & Continue
-                            <span class="ml-2 text-lg leading-none">→</span>
-                        </button>
-                    </div>
+                    <button form="flyerTextForm"
+                            type="submit"
+                            class="inline-flex items-center justify-center rounded-md bg-emerald-700 px-5 py-2.5 text-sm font-extrabold text-white shadow-sm hover:bg-emerald-800">
+                        Save & Continue
+                        <span class="ml-2 text-lg leading-none">→</span>
+                    </button>
                 </div>
+            </div>
 
             <div class="mb-4 border border-gray-200 rounded-xl bg-white shadow-sm overflow-hidden mx-auto"
             style="max-width:600px;">
