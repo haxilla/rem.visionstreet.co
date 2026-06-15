@@ -165,8 +165,8 @@
         </div>
 
     </section>
-        {{-- Upload Photos --}}
-    <section class="mb-6 overflow-hidden rounded-xl border border-slate-300 bg-white shadow-sm">
+    {-- Upload Photos --}}
+    <section class="mt-6 mb-6 overflow-hidden rounded-xl border border-slate-300 bg-white shadow-sm">
 
         <div class="border-b border-slate-200 bg-slate-50 px-6 py-5">
 
