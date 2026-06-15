@@ -47,72 +47,6 @@
 
     </div>
 
-    {{-- Upload Photos --}}
-    <section class="mb-6 overflow-hidden rounded-xl border border-slate-300 bg-white shadow-sm">
-
-        <div class="border-b border-slate-200 bg-slate-50 px-6 py-5">
-
-            <h2 class="text-xl font-extrabold text-slate-950">
-                Add Photos
-            </h2>
-
-            <p class="mt-1 text-sm text-slate-600">
-                Upload additional property photos. New photos will appear in the gallery below.
-            </p>
-
-        </div>
-
-        <div class="p-6">
-
-            <form method="POST"
-                action=""
-                enctype="multipart/form-data">
-
-                @csrf
-
-                <div class="rounded-lg border-2 border-dashed border-slate-300 bg-slate-50 p-10 text-center">
-
-                    <input type="file"
-                        id="photos"
-                        name="photos[]"
-                        multiple
-                        accept="image/*"
-                        class="hidden">
-
-                    <label for="photos" class="block cursor-pointer">
-
-                        <div class="text-4xl">
-                            📷
-                        </div>
-
-                        <div id="photoCount"
-                            class="mt-2 text-sm text-slate-500">
-                            Click here to browse for photos
-                        </div>
-
-                    </label>
-
-                </div>
-
-                <div id="selectedPhotos"
-                    class="mt-6 hidden">
-                </div>
-
-                <div class="mt-6">
-                    <button type="submit"
-                            class="inline-flex items-center rounded-md bg-emerald-700 px-5 py-2.5 text-sm font-extrabold text-white shadow-sm hover:bg-emerald-800">
-
-                        Upload Photos
-
-                    </button>
-                </div>
-
-            </form>
-
-        </div>
-
-    </section>
-
     {{-- Header --}}
     <div class="mb-6 rounded-xl border border-slate-300 bg-white p-4 shadow-sm">
 
@@ -231,91 +165,156 @@
         </div>
 
     </section>
+        {{-- Upload Photos --}}
+    <section class="mb-6 overflow-hidden rounded-xl border border-slate-300 bg-white shadow-sm">
+
+        <div class="border-b border-slate-200 bg-slate-50 px-6 py-5">
+
+            <h2 class="text-xl font-extrabold text-slate-950">
+                Add Photos
+            </h2>
+
+            <p class="mt-1 text-sm text-slate-600">
+                Upload additional property photos. New photos will appear in the gallery below.
+            </p>
+
+        </div>
+
+        <div class="p-6">
+
+            <form method="POST"
+                action=""
+                enctype="multipart/form-data">
+
+                @csrf
+
+                <div class="rounded-lg border-2 border-dashed border-slate-300 bg-slate-50 p-10 text-center">
+
+                    <input type="file"
+                        id="photos"
+                        name="photos[]"
+                        multiple
+                        accept="image/*"
+                        class="hidden">
+
+                    <label for="photos" class="block cursor-pointer">
+
+                        <div class="text-4xl">
+                            📷
+                        </div>
+
+                        <div id="photoCount"
+                            class="mt-2 text-sm text-slate-500">
+                            Click here to browse for photos
+                        </div>
+
+                    </label>
+
+                </div>
+
+                <div id="selectedPhotos"
+                    class="mt-6 hidden">
+                </div>
+
+                <div class="mt-6">
+                    <button type="submit"
+                            class="inline-flex items-center rounded-md bg-emerald-700 px-5 py-2.5 text-sm font-extrabold text-white shadow-sm hover:bg-emerald-800">
+
+                        Upload Photos
+
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+
+    </section>
 
 </main>
     <script>
 
-document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function () {
 
-    const input = document.getElementById('photos');
+        const input = document.getElementById('photos');
 
-    if (!input) {
-        return;
-    }
-
-    input.addEventListener('change', function () {
-
-        const container = document.getElementById('selectedPhotos');
-        const photoCount = document.getElementById('photoCount');
-
-        container.innerHTML = '';
-
-        if (!this.files.length) {
-
-            photoCount.innerHTML = 'Click here to browse for photos';
-
-            container.classList.add('hidden');
-
+        if (!input) {
             return;
         }
 
-        photoCount.innerHTML =
-            this.files.length +
-            (this.files.length === 1
-                ? ' photo selected'
-                : ' photos selected');
+        input.addEventListener('change', function () {
 
-        const heading = document.createElement('div');
+            const container = document.getElementById('selectedPhotos');
+            const photoCount = document.getElementById('photoCount');
 
-        heading.className =
-            'mb-4 text-sm font-extrabold text-slate-700';
+            container.innerHTML = '';
 
-        heading.innerHTML = 'Photos Ready To Upload';
+            if (!this.files.length) {
 
-        const grid = document.createElement('div');
+                photoCount.innerHTML = 'Click here to browse for photos';
 
-        grid.className =
-            'grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4';
+                container.classList.add('hidden');
 
-        container.appendChild(heading);
-        container.appendChild(grid);
+                return;
+            }
 
-        Array.from(this.files).forEach(file => {
+            photoCount.innerHTML =
+                this.files.length +
+                (this.files.length === 1
+                    ? ' photo selected'
+                    : ' photos selected');
 
-            const reader = new FileReader();
+            const heading = document.createElement('div');
 
-            reader.onload = function(e) {
+            heading.className =
+                'mb-4 text-sm font-extrabold text-slate-700';
 
-                const card = document.createElement('div');
+            heading.innerHTML = 'Photos Ready To Upload';
 
-                card.className =
-                    'overflow-hidden rounded-lg border border-slate-300 bg-white shadow-sm';
+            const grid = document.createElement('div');
 
-                card.innerHTML = `
-                    <img
-                        src="${e.target.result}"
-                        class="aspect-[4/3] w-full object-cover"
-                    >
+            grid.className =
+                'grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4';
 
-                    <div class="border-t border-slate-200 p-2 text-xs text-slate-600 break-all">
-                        ${file.name}
-                    </div>
-                `;
+            container.appendChild(heading);
+            container.appendChild(grid);
 
-                grid.appendChild(card);
+            Array.from(this.files).forEach(file => {
 
-            };
+                const reader = new FileReader();
 
-            reader.readAsDataURL(file);
+                reader.onload = function(e) {
+
+                    const card = document.createElement('div');
+
+                    card.className =
+                        'overflow-hidden rounded-lg border border-slate-300 bg-white shadow-sm';
+
+                    card.innerHTML = `
+                        <img
+                            src="${e.target.result}"
+                            class="aspect-[4/3] w-full object-cover"
+                        >
+
+                        <div class="border-t border-slate-200 p-2 text-xs text-slate-600 break-all">
+                            ${file.name}
+                        </div>
+                    `;
+
+                    grid.appendChild(card);
+
+                };
+
+                reader.readAsDataURL(file);
+
+            });
+
+            container.classList.remove('hidden');
 
         });
 
-        container.classList.remove('hidden');
-
     });
 
-});
-
-</script>
+    </script>
 </body>
 </html>
