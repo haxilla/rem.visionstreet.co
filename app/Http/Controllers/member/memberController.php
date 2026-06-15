@@ -57,7 +57,7 @@ class memberController extends Controller
 
     public function flyerPhotos($flyerId)
     {
-        include app_path('queries/flyerdetails.php');
+        include app_path('queries/flyerphotos.php');
         return view('flyers.photoedit',compact('propInfo'));
     }
 
