@@ -78,29 +78,48 @@
 
                 @csrf
 
-                <div class="rounded-lg border-2 border-dashed border-slate-300 bg-slate-50 p-8">
+                <div class="rounded-lg border-2 border-dashed border-slate-300 bg-slate-50 p-10 text-center">
 
                     <input type="file"
                         id="photos"
                         name="photos[]"
                         multiple
                         accept="image/*"
-                        class="block w-full rounded-md border border-slate-300 bg-white px-3 py-2">
+                        class="hidden">
 
-                    <p class="mt-3 text-sm text-slate-500">
-                        Select one or more JPG, PNG, or WEBP images.
-                    </p>
+                    <label for="photos" class="block cursor-pointer">
+
+                        <div class="text-4xl">
+                            📷
+                        </div>
+
+                        <div class="mt-3 text-xl font-extrabold text-slate-800">
+                            Add Photos
+                        </div>
+
+                        <div id="photoCount"
+                            class="mt-2 text-sm text-slate-500">
+                            Click here to browse for photos
+                        </div>
+
+                        <div class="mt-1 text-xs text-slate-400">
+                            JPG, PNG and WEBP supported
+                        </div>
+
+                    </label>
 
                 </div>
 
                 <div id="selectedPhotos"
-                    class="mt-4 hidden">
+                    class="mt-6 hidden">
                 </div>
 
-                <div class="mt-4">
+                <div class="mt-6">
                     <button type="submit"
                             class="inline-flex items-center rounded-md bg-emerald-700 px-5 py-2.5 text-sm font-extrabold text-white shadow-sm hover:bg-emerald-800">
+
                         Upload Photos
+
                     </button>
                 </div>
 
@@ -230,70 +249,86 @@
     </section>
 
 </main>
-<script>
+    <script>
 
-document.getElementById('photos').addEventListener('change', function () {
+document.addEventListener('DOMContentLoaded', function () {
 
-    const container = document.getElementById('selectedPhotos');
+    const input = document.getElementById('photos');
 
-    container.innerHTML = '';
-
-    if (!this.files.length) {
-        container.classList.add('hidden');
+    if (!input) {
         return;
     }
 
-    let html = `
-        <div class="mb-4 text-sm font-extrabold text-slate-700">
-            Photos Ready To Upload
-        </div>
+    input.addEventListener('change', function () {
 
-        <div class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
-    `;
+        const container = document.getElementById('selectedPhotos');
+        const photoCount = document.getElementById('photoCount');
 
-    container.innerHTML = html;
+        container.innerHTML = '';
 
-    Array.from(this.files).forEach(file => {
+        if (!this.files.length) {
 
-        const reader = new FileReader();
+            photoCount.innerHTML = 'Click here to browse for photos';
 
-        reader.onload = function(e) {
+            container.classList.add('hidden');
 
-            const card = document.createElement('div');
+            return;
+        }
 
-            card.className =
-                'overflow-hidden rounded-lg border border-slate-300 bg-white shadow-sm';
+        photoCount.innerHTML =
+            this.files.length +
+            (this.files.length === 1
+                ? ' photo selected'
+                : ' photos selected');
 
-            card.innerHTML = `
-                <img
-                    src="${e.target.result}"
-                    class="aspect-[4/3] w-full object-cover"
-                >
+        const heading = document.createElement('div');
 
-                <div class="border-t border-slate-200 p-2 text-xs text-slate-600 break-all">
-                    ${file.name}
-                </div>
-            `;
+        heading.className =
+            'mb-4 text-sm font-extrabold text-slate-700';
 
-            container.querySelector('.grid').appendChild(card);
+        heading.innerHTML = 'Photos Ready To Upload';
 
-        };
+        const grid = document.createElement('div');
 
-        reader.readAsDataURL(file);
+        grid.className =
+            'grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4';
+
+        container.appendChild(heading);
+        container.appendChild(grid);
+
+        Array.from(this.files).forEach(file => {
+
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+
+                const card = document.createElement('div');
+
+                card.className =
+                    'overflow-hidden rounded-lg border border-slate-300 bg-white shadow-sm';
+
+                card.innerHTML = `
+                    <img
+                        src="${e.target.result}"
+                        class="aspect-[4/3] w-full object-cover"
+                    >
+
+                    <div class="border-t border-slate-200 p-2 text-xs text-slate-600 break-all">
+                        ${file.name}
+                    </div>
+                `;
+
+                grid.appendChild(card);
+
+            };
+
+            reader.readAsDataURL(file);
+
+        });
+
+        container.classList.remove('hidden');
 
     });
-
-    container.innerHTML += '</div>';
-
-    if (!container.querySelector('.grid')) {
-
-        container.innerHTML = `
-            <div class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4"></div>
-        `;
-
-    }
-
-    container.classList.remove('hidden');
 
 });
 
