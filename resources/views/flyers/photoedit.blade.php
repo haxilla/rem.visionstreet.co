@@ -94,10 +94,6 @@
                             Click here to browse for photos
                         </div>
 
-                        <div class="mt-1 text-xs text-slate-400">
-                            JPG, PNG and WEBP supported
-                        </div>
-
                     </label>
 
                 </div>
