@@ -43,14 +43,6 @@
 
             </a>
 
-            <button type="button"
-                    class="inline-flex items-center justify-center rounded-md bg-emerald-700 px-5 py-2.5 text-sm font-extrabold text-white shadow-sm hover:bg-emerald-800">
-
-                Save Photos
-                <span class="ml-2 text-lg leading-none">→</span>
-
-            </button>
-
         </div>
 
     </div>
