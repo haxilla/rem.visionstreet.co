@@ -87,7 +87,7 @@
         </div>
 
     </div>
-    
+
     {{-- Upload Photos --}}
     <section class="mb-6 overflow-hidden rounded-xl border border-slate-300 bg-white shadow-sm">
 
@@ -120,7 +120,7 @@
                         class="mx-auto block text-sm text-slate-700">
 
                     <p class="mt-3 text-sm text-slate-500">
-                        Select one or more JPG, PNG, or WEBP images.
+                        Select Images to Upload (you can select multiple photos at once)
                     </p>
 
                 </div>
