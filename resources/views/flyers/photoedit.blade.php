@@ -87,44 +87,7 @@
         </div>
 
     </div>
-
-    {{-- Featured Photo --}}
-    <section class="mb-6 overflow-hidden rounded-xl border border-slate-300 bg-white shadow-sm">
-
-        <div class="bg-gradient-to-r from-[#1b2f63] to-[#2a4486] px-6 py-5">
-
-            <h2 class="text-xl font-extrabold text-white">
-                Featured Photo
-            </h2>
-
-            <p class="mt-1 text-sm text-blue-100">
-                This is used as the main image for the flyer
-            </p>
-
-        </div>
-
-        <div class="p-6">
-
-            @if($featuredPhotoUrl)
-
-                <div class="overflow-auto text-center">
-                    <img src="{{ $featuredPhotoUrl }}"
-                        alt="Featured Photo"
-                        class="inline-block rounded-lg border border-slate-300 shadow-sm">
-                </div>
-
-            @else
-
-                <div class="rounded-lg border border-dashed border-slate-300 p-10 text-center text-slate-500">
-                    No featured photo available.
-                </div>
-
-            @endif
-
-        </div>
-
-    </section>
-
+    
     {{-- Upload Photos --}}
     <section class="mb-6 overflow-hidden rounded-xl border border-slate-300 bg-white shadow-sm">
 
@@ -170,6 +133,43 @@
                 </div>
 
             </form>
+
+        </div>
+
+    </section>
+
+    {{-- Featured Photo --}}
+    <section class="mb-6 overflow-hidden rounded-xl border border-slate-300 bg-white shadow-sm">
+
+        <div class="bg-gradient-to-r from-[#1b2f63] to-[#2a4486] px-6 py-5">
+
+            <h2 class="text-xl font-extrabold text-white">
+                Featured Photo
+            </h2>
+
+            <p class="mt-1 text-sm text-blue-100">
+                This is used as the main image for the flyer
+            </p>
+
+        </div>
+
+        <div class="p-6">
+
+            @if($featuredPhotoUrl)
+
+                <div class="overflow-auto text-center">
+                    <img src="{{ $featuredPhotoUrl }}"
+                        alt="Featured Photo"
+                        class="inline-block rounded-lg border border-slate-300 shadow-sm">
+                </div>
+
+            @else
+
+                <div class="rounded-lg border border-dashed border-slate-300 p-10 text-center text-slate-500">
+                    No featured photo available.
+                </div>
+
+            @endif
 
         </div>
 
