@@ -98,7 +98,7 @@
             </h2>
 
             <p class="mt-1 text-sm text-blue-100">
-                This is the primary photo used throughout the flyer.
+                This is used as the main image for the flyer
             </p>
 
         </div>
@@ -107,9 +107,11 @@
 
             @if($featuredPhotoUrl)
 
-                <img src="{{ $featuredPhotoUrl }}"
-                     alt="Featured Photo"
-                     class="w-full rounded-lg border border-slate-300 shadow-sm">
+                <div class="overflow-auto text-center">
+                    <img src="{{ $featuredPhotoUrl }}"
+                        alt="Featured Photo"
+                        class="inline-block rounded-lg border border-slate-300 shadow-sm">
+                </div>
 
             @else
 
