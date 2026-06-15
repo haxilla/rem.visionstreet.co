@@ -85,10 +85,6 @@
                             📷
                         </div>
 
-                        <div class="mt-3 text-xl font-extrabold text-slate-800">
-                            Add Photos
-                        </div>
-
                         <div id="photoCount"
                             class="mt-2 text-sm text-slate-500">
                             Click here to browse for photos
