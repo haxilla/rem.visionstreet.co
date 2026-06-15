@@ -54,7 +54,7 @@
         </div>
 
     </div>
-    
+
     {{-- Upload Photos --}}
     <section class="mb-6 overflow-hidden rounded-xl border border-slate-300 bg-white shadow-sm">
 
@@ -78,18 +78,23 @@
 
                 @csrf
 
-                <div class="rounded-lg border-2 border-dashed border-slate-300 bg-slate-50 p-8 text-center">
+                <div class="rounded-lg border-2 border-dashed border-slate-300 bg-slate-50 p-8">
 
                     <input type="file"
+                        id="photos"
                         name="photos[]"
                         multiple
                         accept="image/*"
-                        class="mx-auto block text-sm text-slate-700">
+                        class="block w-full rounded-md border border-slate-300 bg-white px-3 py-2">
 
                     <p class="mt-3 text-sm text-slate-500">
-                        Select Images to Upload (you can select multiple photos at once)
+                        Select one or more JPG, PNG, or WEBP images.
                     </p>
 
+                </div>
+
+                <div id="selectedPhotos"
+                    class="mt-4 hidden">
                 </div>
 
                 <div class="mt-4">
@@ -225,6 +230,73 @@
     </section>
 
 </main>
+<script>
 
+document.getElementById('photos').addEventListener('change', function () {
+
+    const container = document.getElementById('selectedPhotos');
+
+    container.innerHTML = '';
+
+    if (!this.files.length) {
+        container.classList.add('hidden');
+        return;
+    }
+
+    let html = `
+        <div class="mb-4 text-sm font-extrabold text-slate-700">
+            Photos Ready To Upload
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+    `;
+
+    container.innerHTML = html;
+
+    Array.from(this.files).forEach(file => {
+
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+
+            const card = document.createElement('div');
+
+            card.className =
+                'overflow-hidden rounded-lg border border-slate-300 bg-white shadow-sm';
+
+            card.innerHTML = `
+                <img
+                    src="${e.target.result}"
+                    class="aspect-[4/3] w-full object-cover"
+                >
+
+                <div class="border-t border-slate-200 p-2 text-xs text-slate-600 break-all">
+                    ${file.name}
+                </div>
+            `;
+
+            container.querySelector('.grid').appendChild(card);
+
+        };
+
+        reader.readAsDataURL(file);
+
+    });
+
+    container.innerHTML += '</div>';
+
+    if (!container.querySelector('.grid')) {
+
+        container.innerHTML = `
+            <div class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4"></div>
+        `;
+
+    }
+
+    container.classList.remove('hidden');
+
+});
+
+</script>
 </body>
 </html>
