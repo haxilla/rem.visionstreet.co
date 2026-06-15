@@ -54,47 +54,14 @@
         </div>
 
     </div>
-
-    {{-- Header --}}
-    <div class="mb-6 rounded-xl border border-slate-300 bg-white p-4 shadow-sm">
-
-        <div class="flex items-start gap-4">
-
-            @if($featuredPhotoUrl)
-                <div class="shrink-0">
-                    <img src="{{ $featuredPhotoUrl }}"
-                         alt="Property Photo"
-                         class="h-20 w-28 rounded-md border border-slate-300 bg-white object-cover shadow-sm sm:h-24 sm:w-36">
-                </div>
-            @endif
-
-            <div class="min-w-0 flex-1">
-
-                <div class="mt-1 text-xs font-bold text-slate-500 sm:text-sm">
-                    MLS #{{ $propInfo->xMlsNum }}
-                </div>
-
-                <h1 class="mt-1 text-xl font-extrabold leading-snug text-slate-950 sm:text-3xl">
-                    {{ $propInfo->xFullStreet }}
-                </h1>
-
-                <div class="mt-1 text-sm text-slate-600 sm:text-base">
-                    {{ $propInfo->xCity }}, {{ $propInfo->xState }} {{ $zipValue }}
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
+    
     {{-- Upload Photos --}}
     <section class="mb-6 overflow-hidden rounded-xl border border-slate-300 bg-white shadow-sm">
 
         <div class="border-b border-slate-200 bg-slate-50 px-6 py-5">
 
             <h2 class="text-xl font-extrabold text-slate-950">
-                Add More Photos
+                Add Photos
             </h2>
 
             <p class="mt-1 text-sm text-slate-600">
@@ -137,6 +104,39 @@
         </div>
 
     </section>
+
+    {{-- Header --}}
+    <div class="mb-6 rounded-xl border border-slate-300 bg-white p-4 shadow-sm">
+
+        <div class="flex items-start gap-4">
+
+            @if($featuredPhotoUrl)
+                <div class="shrink-0">
+                    <img src="{{ $featuredPhotoUrl }}"
+                         alt="Property Photo"
+                         class="h-20 w-28 rounded-md border border-slate-300 bg-white object-cover shadow-sm sm:h-24 sm:w-36">
+                </div>
+            @endif
+
+            <div class="min-w-0 flex-1">
+
+                <div class="mt-1 text-xs font-bold text-slate-500 sm:text-sm">
+                    MLS #{{ $propInfo->xMlsNum }}
+                </div>
+
+                <h1 class="mt-1 text-xl font-extrabold leading-snug text-slate-950 sm:text-3xl">
+                    {{ $propInfo->xFullStreet }}
+                </h1>
+
+                <div class="mt-1 text-sm text-slate-600 sm:text-base">
+                    {{ $propInfo->xCity }}, {{ $propInfo->xState }} {{ $zipValue }}
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
 
     {{-- Featured Photo --}}
     <section class="mb-6 overflow-hidden rounded-xl border border-slate-300 bg-white shadow-sm">
