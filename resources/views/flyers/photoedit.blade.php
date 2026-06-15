@@ -125,6 +125,56 @@
 
     </section>
 
+    {{-- Upload Photos --}}
+    <section class="mb-6 overflow-hidden rounded-xl border border-slate-300 bg-white shadow-sm">
+
+        <div class="border-b border-slate-200 bg-slate-50 px-6 py-5">
+
+            <h2 class="text-xl font-extrabold text-slate-950">
+                Add More Photos
+            </h2>
+
+            <p class="mt-1 text-sm text-slate-600">
+                Upload additional property photos. New photos will appear in the gallery below.
+            </p>
+
+        </div>
+
+        <div class="p-6">
+
+            <form method="POST"
+                action=""
+                enctype="multipart/form-data">
+
+                @csrf
+
+                <div class="rounded-lg border-2 border-dashed border-slate-300 bg-slate-50 p-8 text-center">
+
+                    <input type="file"
+                        name="photos[]"
+                        multiple
+                        accept="image/*"
+                        class="mx-auto block text-sm text-slate-700">
+
+                    <p class="mt-3 text-sm text-slate-500">
+                        Select one or more JPG, PNG, or WEBP images.
+                    </p>
+
+                </div>
+
+                <div class="mt-4">
+                    <button type="submit"
+                            class="inline-flex items-center rounded-md bg-emerald-700 px-5 py-2.5 text-sm font-extrabold text-white shadow-sm hover:bg-emerald-800">
+                        Upload Photos
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+
+    </section>
+
     {{-- Photo Gallery --}}
     <section class="overflow-hidden rounded-xl border border-slate-300 bg-white shadow-sm">
 
