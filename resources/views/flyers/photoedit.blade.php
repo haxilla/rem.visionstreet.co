@@ -121,10 +121,6 @@
 
             @endif
 
-            <div class="mt-4 rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm font-medium text-blue-900">
-                Click any photo below to make it the featured photo.
-            </div>
-
         </div>
 
     </section>
