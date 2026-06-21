@@ -17,8 +17,7 @@ $templateView = 'flyers.s'.$template;
 $subject = '';
 
 dd(
-    $data['waitingFlyerCamps']->keys()->take(5),
-    $propInfo->id
+    $data['waitingFlyerCamps'][64775]->first()
 );
 @endphp
 
