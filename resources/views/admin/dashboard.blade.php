@@ -313,7 +313,7 @@
                             </div>
 
                             <nav class="space-y-2">
-                                <a href="/admin" class="block rounded-xl px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-100">
+                                <a href="/admin/dashboard" class="block rounded-xl px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-100">
                                     Dashboard
                                 </a>
 
@@ -338,26 +338,6 @@
 
                     {{-- MAIN --}}
                     <main class="flex-1 px-2 py-4 sm:px-4 lg:px-10 lg:py-8">
-
-                        {{-- MOBILE MENU BAR --}}
-                        <div class="mb-4 flex items-center justify-between rounded-2xl bg-white px-4 py-3 shadow-sm lg:hidden">
-                            <div>
-                                <div class="text-xs font-semibold uppercase tracking-[0.18em] text-[#214e9b]/70">
-                                    Admin
-                                </div>
-                                <div class="text-sm font-semibold text-slate-900">
-                                    Campaigns
-                                </div>
-                            </div>
-
-                            <button
-                                type="button"
-                                id="adminMobileMenuButton"
-                                class="rounded-xl bg-[#214e9b] px-4 py-2 text-sm font-semibold text-white shadow"
-                            >
-                                Menu
-                            </button>
-                        </div>
 
                         {{-- HEADER --}}
                         <div class="rounded-[20px] bg-white px-4 py-5 sm:px-6 sm:py-6 lg:px-8 lg:py-7 shadow-[0_12px_35px_rgba(15,23,42,0.06)]">
