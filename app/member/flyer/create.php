@@ -1,3 +1,21 @@
 <?php
 
-dd("create.php reached");
+use App\Models\Core\Propflyer;
+
+$flyerId = (int) request('flyerId');
+
+if ($flyerId) {
+
+    $flyer = Propflyer::where('id', $flyerId)
+        ->where('propagent_id', auth()->id())
+        ->first();
+
+    if (!$flyer) {
+
+       dd("Error: Flyer not found or you don't have permission to view it.");
+
+    }
+
+    $data['flyer'] = $flyer;
+
+}
