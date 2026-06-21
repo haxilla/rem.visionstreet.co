@@ -15,9 +15,9 @@
 
         <div class="space-y-2">
 
-            <a href="/admin/campaigns"
+            <a href="/admin/dashboard"
                 class="flex items-center rounded-xl bg-white/10 px-4 py-3 text-[15px] font-medium text-white">
-                Campaigns
+                Dashboard
             </a>
 
             <a href="/admin/flyers"
