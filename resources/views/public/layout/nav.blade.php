@@ -28,11 +28,6 @@
           <span class="absolute left-1/2 -bottom-1 h-[2px] w-0 -translate-x-1/2 bg-white/60 rounded-full transition-all group-hover:w-8"></span>
         </a>
 
-        <a href="/freetrial" class="relative group hover:text-white transition">
-          Free Trial
-          <span class="absolute left-1/2 -bottom-1 h-[2px] w-0 -translate-x-1/2 bg-white/60 rounded-full transition-all group-hover:w-8"></span>
-        </a>
-
         <a href="/about" class="relative group hover:text-white transition">
           About
           <span class="absolute left-1/2 -bottom-1 h-[2px] w-0 -translate-x-1/2 bg-white/60 rounded-full transition-all group-hover:w-8"></span>
