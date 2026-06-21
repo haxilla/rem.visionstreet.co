@@ -1,4 +1,6 @@
 <?php
+
+dd(request()->all());
 // Validate the request data
 $validatedData = $request->validate([
     'address' => 'required|string|max:255',
@@ -7,6 +9,8 @@ $validatedData = $request->validate([
     'zip' => 'required|string|max:10',
     // Add other fields as necessary
 ]);
+
+
 
 redirect('/member/flyer/details')
     ->with('success', 'saving flyer with data: ' . json_encode($validatedData)  )
