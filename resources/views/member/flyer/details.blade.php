@@ -86,7 +86,6 @@
                     <input
                         type="text"
                         name="xListPrice"
-                        value="{{ $flyer->xListPrice }}"
                         class="w-full rounded-2xl border border-slate-300 px-4 py-3"
                         placeholder="549900"
                     >
@@ -101,8 +100,7 @@
 
                     <input
                         type="text"
-                        name="xxYrBuilt"
-                        value="{{ $flyer->xxYrBuilt }}"
+                        name="xYrBuilt"
                         class="w-full rounded-2xl border border-slate-300 px-4 py-3"
                     >
 
@@ -116,8 +114,7 @@
 
                     <input
                         type="text"
-                        name="xxBeds"
-                        value="{{ $flyer->xxBeds }}"
+                        name="xBeds"
                         class="w-full rounded-2xl border border-slate-300 px-4 py-3"
                     >
 
@@ -131,8 +128,7 @@
 
                     <input
                         type="text"
-                        name="xxBaths"
-                        value="{{ $flyer->xxBaths }}"
+                        name="xBaths"
                         class="w-full rounded-2xl border border-slate-300 px-4 py-3"
                     >
 
@@ -146,8 +142,7 @@
 
                     <input
                         type="text"
-                        name="xxSqft"
-                        value="{{ $flyer->xxSqft }}"
+                        name="xSqft"
                         class="w-full rounded-2xl border border-slate-300 px-4 py-3"
                     >
 
@@ -199,12 +194,6 @@
         </div>
 
         <div class="mt-8 flex items-center justify-between">
-
-            <a
-                href="/member/flyer/create?flyerId={{ $flyer->id }}"
-                class="rounded-xl bg-white px-5 py-3 font-bold text-slate-700 shadow-sm ring-1 ring-black/5">
-                ← Previous
-            </a>
 
             <button
                 type="submit"
