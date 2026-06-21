@@ -9,6 +9,8 @@ $validatedData = $request->validate([
     // Add other fields as necessary
 ]);
 
+dd($validatedData);
+
 if ($validator->fails()) {
 
     dd($validator->errors()->toArray());
