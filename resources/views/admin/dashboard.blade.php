@@ -231,7 +231,7 @@
     <div class="hidden lg:flex lg:items-center lg:gap-4 text-sm">
         <div class="w-32 shrink-0">
 
-            if($status === 'progress')
+            @if($status === 'progress')
 
                 <span class="font-semibold text-blue-700">
                     IN PROGRESS
