@@ -73,13 +73,17 @@ $templateView = 'flyers.s'.$template;
                 Flyer Preview
             </h2>
 
-            <div class="overflow-x-auto">
+            <div class="flyer-stage">
 
-                <div class="mx-auto" style="width:600px;">
+                <div id="flyer-scale-wrapper">
 
-                    @if(View::exists($templateView))
-                        @include($templateView)
-                    @endif
+                    <div class="flyer-panel active">
+
+                        @if(View::exists($templateView))
+                            @include($templateView)
+                        @endif
+
+                    </div>
 
                 </div>
 
