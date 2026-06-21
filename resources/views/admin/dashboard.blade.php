@@ -12,13 +12,335 @@
         <div class="pageswap p-2 sm:p-4 lg:p-6 w-full">
 
             @php
+                /*
+                    This page now displays individual propdelivnow campaigns.
+
+                    Status rules:
+                    - Waiting: emRequest <= now AND emStart is empty
+                    - In Progress: emStart filled AND emFinished empty
+                    - Complete: emRequest, emStart, emFinished all filled
+
+                    Authorization:
+                    Update the field list inside campaignAuthorized() if your actual authorization
+                    column is named differently.
+                */
+
                 $waitingFlyerCamps    = $data['waitingFlyerCamps'] ?? collect();
                 $inProgressFlyerCamps = $data['inProgressFlyerCamps'] ?? collect();
                 $completeFlyerCamps   = $data['completeFlyerCamps'] ?? collect();
 
-                $campaignsWaiting     = $data['campaignsWaiting'] ?? 0;
-                $campaignsInProgress  = $data['campaignsInProgress'] ?? 0;
-                $campaignsCompleted   = $data['campaignsCompleted'] ?? 0;
+                $directCampaigns      = $data['campaigns'] ?? collect();
+
+                $campaignValue = function ($campaign, $keys, $default = null) {
+                    foreach ((array) $keys as $key) {
+                        if (is_array($campaign) && array_key_exists($key, $campaign)) {
+                            return $campaign[$key];
+                        }
+
+                        if (is_object($campaign) && isset($campaign->{$key})) {
+                            return $campaign->{$key};
+                        }
+                    }
+
+                    return $default;
+                };
+
+                $campaignFlyer = function ($campaign) use ($campaignValue) {
+                    return $campaignValue($campaign, ['flyer', 'theFlyer'], null);
+                };
+
+                $campaignAuthorized = function ($campaign) use ($campaignValue) {
+                    $value = $campaignValue($campaign, [
+                        'emAuthorized',
+                        'campAuthorized',
+                        'authorized',
+                        'isAuthorized',
+                        'xAuthorized',
+                        'emAuth',
+                        'auth'
+                    ], null);
+
+                    return in_array($value, [1, '1', true, 'true', 'TRUE', 'yes', 'YES', 'Y', 'y'], true);
+                };
+
+                $campaignDate = function ($campaign, $keys) use ($campaignValue) {
+                    return $campaignValue($campaign, $keys, null);
+                };
+
+                $formatDate = function ($date) {
+                    if (!$date) {
+                        return 'N/A';
+                    }
+
+                    try {
+                        return \Carbon\Carbon::parse($date)->format('M j, Y g:i A');
+                    } catch (\Exception $e) {
+                        return $date;
+                    }
+                };
+
+                $isEmptyDate = function ($date) {
+                    return empty($date) || $date === '0000-00-00' || $date === '0000-00-00 00:00:00';
+                };
+
+                $allCampaigns = collect();
+
+                $addCampaigns = function ($items) use (&$allCampaigns) {
+                    if (!$items) {
+                        return;
+                    }
+
+                    foreach (collect($items) as $key => $item) {
+                        if ($item instanceof \Illuminate\Support\Collection) {
+                            foreach ($item as $campaign) {
+                                $allCampaigns->push($campaign);
+                            }
+                        } elseif (is_array($item) && isset($item[0])) {
+                            foreach ($item as $campaign) {
+                                $allCampaigns->push($campaign);
+                            }
+                        } else {
+                            $allCampaigns->push($item);
+                        }
+                    }
+                };
+
+                $addCampaigns($directCampaigns);
+                $addCampaigns($waitingFlyerCamps);
+                $addCampaigns($inProgressFlyerCamps);
+                $addCampaigns($completeFlyerCamps);
+
+                $now = now();
+
+                $waitingCampaigns = $allCampaigns->filter(function ($campaign) use ($campaignDate, $isEmptyDate, $now) {
+                    $emRequest = $campaignDate($campaign, ['emRequest']);
+                    $emStart   = $campaignDate($campaign, ['emStart']);
+
+                    if ($isEmptyDate($emRequest) || !$isEmptyDate($emStart)) {
+                        return false;
+                    }
+
+                    try {
+                        return \Carbon\Carbon::parse($emRequest)->lte($now);
+                    } catch (\Exception $e) {
+                        return false;
+                    }
+                })->values();
+
+                $waitingAuthorized = $waitingCampaigns->filter(function ($campaign) use ($campaignAuthorized) {
+                    return $campaignAuthorized($campaign);
+                })->values();
+
+                $waitingUnauthorized = $waitingCampaigns->filter(function ($campaign) use ($campaignAuthorized) {
+                    return !$campaignAuthorized($campaign);
+                })->values();
+
+                $inProgressCampaigns = $allCampaigns->filter(function ($campaign) use ($campaignDate, $isEmptyDate) {
+                    $emStart    = $campaignDate($campaign, ['emStart']);
+                    $emFinished = $campaignDate($campaign, ['emFinished', 'emComplete']);
+
+                    return !$isEmptyDate($emStart) && $isEmptyDate($emFinished);
+                })->values();
+
+                $completedCampaigns = $allCampaigns->filter(function ($campaign) use ($campaignDate, $isEmptyDate) {
+                    $emRequest  = $campaignDate($campaign, ['emRequest']);
+                    $emStart    = $campaignDate($campaign, ['emStart']);
+                    $emFinished = $campaignDate($campaign, ['emFinished', 'emComplete']);
+
+                    return !$isEmptyDate($emRequest) && !$isEmptyDate($emStart) && !$isEmptyDate($emFinished);
+                })->sortByDesc(function ($campaign) use ($campaignDate) {
+                    return $campaignDate($campaign, ['emFinished', 'emComplete']);
+                })->take(10)->values();
+
+                $getThumbUrl = function ($campaign) use ($campaignFlyer) {
+                    $flyer = $campaignFlyer($campaign);
+
+                    if (!$flyer) {
+                        return null;
+                    }
+
+                    $photo = $flyer?->thePhotos?->first();
+                    $meta  = $flyer?->theMeta;
+
+                    if ($photo && $meta && $meta->zipDir && $meta->mlsDir && $photo->photoName) {
+                        return "https://realtyrepublic.com/hqphotos/{$meta->zipDir}/{$meta->mlsDir}/{$photo->photoName}";
+                    }
+
+                    return null;
+                };
+
+                $getAddress = function ($campaign) use ($campaignValue, $campaignFlyer) {
+                    $directAddress = $campaignValue($campaign, ['address', 'xFullStreet', 'fullAddress'], null);
+
+                    if ($directAddress) {
+                        return $directAddress;
+                    }
+
+                    $flyer = $campaignFlyer($campaign);
+
+                    return $flyer?->xFullStreet ?? 'No Address';
+                };
+
+                $getFlyerId = function ($campaign) use ($campaignValue, $campaignFlyer) {
+                    $directId = $campaignValue($campaign, ['flyer_id', 'propflyer_id', 'ufid', 'flyerId'], null);
+
+                    if ($directId) {
+                        return $directId;
+                    }
+
+                    $flyer = $campaignFlyer($campaign);
+
+                    return $flyer?->id ?? null;
+                };
+
+                $getAgent = function ($campaign) use ($campaignFlyer) {
+                    $flyer = $campaignFlyer($campaign);
+
+                    return $flyer?->theAgent ?? null;
+                };
+
+                $renderCampaignCard = function ($campaign, $status) use (
+                    $campaignValue,
+                    $campaignDate,
+                    $campaignAuthorized,
+                    $formatDate,
+                    $getThumbUrl,
+                    $getAddress,
+                    $getFlyerId,
+                    $getAgent
+                ) {
+                    $thumbUrl   = $getThumbUrl($campaign);
+                    $address    = $getAddress($campaign);
+                    $flyerId    = $getFlyerId($campaign);
+                    $agent      = $getAgent($campaign);
+
+                    $subject    = $campaignValue($campaign, ['emSubject'], 'N/A');
+                    $label      = $campaignValue($campaign, ['campLabel'], 'N/A');
+                    $emails     = $campaignValue($campaign, ['emailCount', 'emCount', 'totalEmails', 'countEmails'], null);
+
+                    $emRequest  = $campaignDate($campaign, ['emRequest']);
+                    $emStart    = $campaignDate($campaign, ['emStart']);
+                    $emFinished = $campaignDate($campaign, ['emFinished', 'emComplete']);
+
+                    $authorized = $campaignAuthorized($campaign);
+                @endphp
+
+                    <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-[#214e9b]/40 hover:shadow-md">
+                        <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+
+                            <div class="flex flex-col gap-4 sm:flex-row sm:items-center">
+                                <div class="h-24 w-full overflow-hidden rounded-xl border border-slate-200 bg-slate-100 sm:h-20 sm:w-28 sm:shrink-0">
+                                    @if($thumbUrl)
+                                        <img
+                                            src="{{ $thumbUrl }}"
+                                            alt="{{ $address }}"
+                                            class="h-full w-full object-cover"
+                                        >
+                                    @else
+                                        <div class="flex h-full w-full items-center justify-center text-xs text-slate-400">
+                                            No Photo
+                                        </div>
+                                    @endif
+                                </div>
+
+                                <div class="min-w-0">
+                                    <div class="flex flex-wrap items-center gap-2">
+                                        @if($flyerId)
+                                            <a
+                                                href="/flyer/{{ $flyerId }}"
+                                                class="text-[15px] font-semibold text-[#214e9b] hover:underline"
+                                            >
+                                                ID#: {{ $flyerId }}
+                                            </a>
+                                        @else
+                                            <span class="text-[15px] font-semibold text-slate-700">
+                                                ID#: N/A
+                                            </span>
+                                        @endif
+
+                                        @if($status === 'waiting')
+                                            @if($authorized)
+                                                <span class="rounded-full bg-emerald-100 px-2.5 py-1 text-[11px] font-semibold text-emerald-700">
+                                                    Authorized
+                                                </span>
+                                            @else
+                                                <span class="rounded-full bg-red-100 px-2.5 py-1 text-[11px] font-semibold text-red-700">
+                                                    Unauthorized
+                                                </span>
+                                            @endif
+                                        @endif
+                                    </div>
+
+                                    <div class="mt-1 text-sm font-medium text-slate-800">
+                                        {{ $address }}
+                                    </div>
+
+                                    <div class="mt-1 text-sm text-slate-500">
+                                        <span class="font-semibold text-slate-600">Label:</span>
+                                        {{ $label }}
+                                    </div>
+
+                                    <div class="mt-1 text-sm text-slate-500">
+                                        <span class="font-semibold text-slate-600">Subject:</span>
+                                        {{ $subject }}
+                                    </div>
+
+                                    @if($agent)
+                                        <div class="mt-2 text-xs text-slate-500">
+                                            <span class="font-medium text-slate-400">Agent:</span>
+                                            <a href="#" class="ml-1 font-medium text-[#214e9b] hover:underline">
+                                                {{ $agent->agtFullName }}
+                                            </a>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 gap-2 text-xs text-slate-500 sm:grid-cols-3 md:min-w-[420px]">
+                                <div class="rounded-xl bg-slate-50 p-3">
+                                    <div class="font-semibold uppercase tracking-wide text-slate-400">
+                                        Requested
+                                    </div>
+                                    <div class="mt-1 font-medium text-slate-700">
+                                        {{ $formatDate($emRequest) }}
+                                    </div>
+                                </div>
+
+                                <div class="rounded-xl bg-slate-50 p-3">
+                                    <div class="font-semibold uppercase tracking-wide text-slate-400">
+                                        Started
+                                    </div>
+                                    <div class="mt-1 font-medium text-slate-700">
+                                        {{ $formatDate($emStart) }}
+                                    </div>
+                                </div>
+
+                                <div class="rounded-xl bg-slate-50 p-3">
+                                    <div class="font-semibold uppercase tracking-wide text-slate-400">
+                                        Finished
+                                    </div>
+                                    <div class="mt-1 font-medium text-slate-700">
+                                        {{ $formatDate($emFinished) }}
+                                    </div>
+                                </div>
+
+                                @if($emails !== null)
+                                    <div class="rounded-xl bg-slate-50 p-3 sm:col-span-3">
+                                        <div class="font-semibold uppercase tracking-wide text-slate-400">
+                                            Emails
+                                        </div>
+                                        <div class="mt-1 font-medium text-slate-700">
+                                            {{ number_format((int) $emails) }}
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
+
+                        </div>
+                    </div>
+
+                @php
+                };
             @endphp
 
             <div class="min-h-screen bg-[#f4f7fb]">
@@ -34,8 +356,18 @@
                         <div class="absolute inset-0 bg-slate-900/50" id="adminMobileMenuBackdrop"></div>
 
                         <div class="relative h-full w-72 bg-white shadow-2xl p-6">
-                            <div class="mb-6 text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">
-                                Admin Menu
+                            <div class="mb-6 flex items-center justify-between">
+                                <div class="text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">
+                                    Admin Menu
+                                </div>
+
+                                <button
+                                    type="button"
+                                    id="adminMobileMenuClose"
+                                    class="rounded-lg bg-slate-100 px-3 py-2 text-sm font-semibold text-slate-600"
+                                >
+                                    Close
+                                </button>
                             </div>
 
                             <nav class="space-y-2">
@@ -47,7 +379,7 @@
                                     Flyers
                                 </a>
 
-                                <a href="/admin/campaigns" class="block rounded-xl px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-100">
+                                <a href="/admin/campaigns" class="block rounded-xl bg-[#214e9b] px-4 py-3 text-sm font-semibold text-white">
                                     Campaigns
                                 </a>
 
@@ -65,58 +397,117 @@
                     {{-- MAIN --}}
                     <main class="flex-1 px-2 py-4 sm:px-4 lg:px-10 lg:py-8">
 
+                        {{-- MOBILE MENU BAR --}}
+                        <div class="mb-4 flex items-center justify-between rounded-2xl bg-white px-4 py-3 shadow-sm lg:hidden">
+                            <div>
+                                <div class="text-xs font-semibold uppercase tracking-[0.18em] text-[#214e9b]/70">
+                                    Admin
+                                </div>
+                                <div class="text-sm font-semibold text-slate-900">
+                                    Campaigns
+                                </div>
+                            </div>
+
+                            <button
+                                type="button"
+                                id="adminMobileMenuButton"
+                                class="rounded-xl bg-[#214e9b] px-4 py-2 text-sm font-semibold text-white shadow"
+                            >
+                                Menu
+                            </button>
+                        </div>
+
                         {{-- HEADER --}}
                         <div class="rounded-[20px] bg-white px-4 py-5 sm:px-6 sm:py-6 lg:px-8 lg:py-7 shadow-[0_12px_35px_rgba(15,23,42,0.06)]">
                             <div class="text-[12px] font-semibold uppercase tracking-[0.22em] text-[#214e9b]/70">
-                                Dashboard
+                                Campaign Operations
                             </div>
 
-                            <h1 class="mt-2 text-[32px] font-semibold text-slate-900">
+                            <h1 class="mt-2 text-[26px] font-semibold text-slate-900 sm:text-[32px]">
                                 Campaign Overview
                             </h1>
 
                             <p class="mt-2 text-[14px] text-slate-600">
-                                Campaign status summary
+                                Individual campaign status by authorization, delivery progress, and recent completions.
                             </p>
                         </div>
 
-                        {{-- TABBED GROUP PREVIEW --}}
-                        <div class="mt-10 rounded-[24px] bg-white shadow-[0_12px_35px_rgba(15,23,42,0.06)] overflow-hidden">
+                        {{-- SUMMARY CARDS --}}
+                        <div class="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
+                            <div class="rounded-2xl bg-white p-4 shadow-sm">
+                                <div class="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                                    Waiting
+                                </div>
+                                <div class="mt-2 text-2xl font-semibold text-slate-900">
+                                    {{ $waitingCampaigns->count() }}
+                                </div>
+                            </div>
 
-                            {{-- TAB BUTTONS --}}
-                            <div class="border-b border-slate-200 bg-slate-50 px-6 pt-5">
-                                <div class="flex flex-wrap gap-2">
+                            <div class="rounded-2xl bg-white p-4 shadow-sm">
+                                <div class="text-xs font-semibold uppercase tracking-wide text-emerald-600">
+                                    Authorized
+                                </div>
+                                <div class="mt-2 text-2xl font-semibold text-slate-900">
+                                    {{ $waitingAuthorized->count() }}
+                                </div>
+                            </div>
+
+                            <div class="rounded-2xl bg-white p-4 shadow-sm">
+                                <div class="text-xs font-semibold uppercase tracking-wide text-red-600">
+                                    Unauthorized
+                                </div>
+                                <div class="mt-2 text-2xl font-semibold text-slate-900">
+                                    {{ $waitingUnauthorized->count() }}
+                                </div>
+                            </div>
+
+                            <div class="rounded-2xl bg-white p-4 shadow-sm">
+                                <div class="text-xs font-semibold uppercase tracking-wide text-blue-600">
+                                    In Progress
+                                </div>
+                                <div class="mt-2 text-2xl font-semibold text-slate-900">
+                                    {{ $inProgressCampaigns->count() }}
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- CAMPAIGN DASHBOARD --}}
+                        <div class="mt-6 rounded-[24px] bg-white shadow-[0_12px_35px_rgba(15,23,42,0.06)] overflow-hidden">
+
+                            {{-- MAIN TAB BUTTONS --}}
+                            <div class="border-b border-slate-200 bg-slate-50 px-3 py-3 sm:px-6 sm:pt-5 sm:pb-0">
+                                <div class="grid grid-cols-1 gap-2 sm:flex sm:flex-wrap">
 
                                     <button
                                         type="button"
-                                        class="campaign-tab-btn bg-[#214e9b] text-white rounded-t-xl px-5 py-3 text-sm font-semibold shadow"
+                                        class="campaign-tab-btn bg-[#214e9b] text-white rounded-xl sm:rounded-b-none sm:rounded-t-xl px-5 py-3 text-sm font-semibold shadow"
                                         data-tab="waiting"
                                     >
                                         Waiting
                                         <span class="ml-2 rounded-full bg-white/20 px-2 py-0.5 text-xs">
-                                            {{ $waitingFlyerCamps->count() }}
+                                            {{ $waitingCampaigns->count() }}
                                         </span>
                                     </button>
 
                                     <button
                                         type="button"
-                                        class="campaign-tab-btn bg-slate-200 text-slate-700 rounded-t-xl px-5 py-3 text-sm font-semibold"
+                                        class="campaign-tab-btn bg-slate-200 text-slate-700 rounded-xl sm:rounded-b-none sm:rounded-t-xl px-5 py-3 text-sm font-semibold"
                                         data-tab="progress"
                                     >
                                         In Progress
                                         <span class="ml-2 rounded-full bg-white/50 px-2 py-0.5 text-xs">
-                                            {{ $inProgressFlyerCamps->count() }}
+                                            {{ $inProgressCampaigns->count() }}
                                         </span>
                                     </button>
 
                                     <button
                                         type="button"
-                                        class="campaign-tab-btn bg-slate-200 text-slate-700 rounded-t-xl px-5 py-3 text-sm font-semibold"
+                                        class="campaign-tab-btn bg-slate-200 text-slate-700 rounded-xl sm:rounded-b-none sm:rounded-t-xl px-5 py-3 text-sm font-semibold"
                                         data-tab="completed"
                                     >
                                         Completed
                                         <span class="ml-2 rounded-full bg-white/50 px-2 py-0.5 text-xs">
-                                            {{ $completeFlyerCamps->count() }}
+                                            {{ $completedCampaigns->count() }}
                                         </span>
                                     </button>
 
@@ -124,158 +515,76 @@
                             </div>
 
                             {{-- TAB CONTENT --}}
-                            <div class="p-6">
+                            <div class="p-3 sm:p-6">
 
                                 {{-- WAITING --}}
                                 <div class="campaign-panel" id="tab-waiting">
 
-                                    <div class="mb-5 flex items-center justify-between">
+                                    <div class="mb-5 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                                         <div>
                                             <h2 class="text-xl font-semibold text-slate-900">
-                                                Waiting Groups
+                                                Waiting Campaigns
                                             </h2>
 
                                             <p class="mt-1 text-sm text-slate-500">
-                                                Campaign groups that have been requested but not started.
+                                                Requested campaigns where the request time has passed and delivery has not started.
                                             </p>
                                         </div>
 
-                                        <span class="rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-700">
-                                            {{ $waitingFlyerCamps->count() }} groups
+                                        <span class="w-fit rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-700">
+                                            {{ $waitingCampaigns->count() }} waiting
                                         </span>
                                     </div>
 
-                                    <div class="space-y-3">
+                                    {{-- WAITING SUB MENU --}}
+                                    <div class="mb-5 grid grid-cols-1 gap-2 sm:flex sm:flex-wrap">
+                                        <button
+                                            type="button"
+                                            class="waiting-tab-btn bg-emerald-600 text-white rounded-xl px-4 py-2 text-sm font-semibold shadow"
+                                            data-waiting-tab="authorized"
+                                        >
+                                            Authorized
+                                            <span class="ml-2 rounded-full bg-white/20 px-2 py-0.5 text-xs">
+                                                {{ $waitingAuthorized->count() }}
+                                            </span>
+                                        </button>
 
-                                        @forelse($waitingFlyerCamps as $flyerId => $campaigns)
+                                        <button
+                                            type="button"
+                                            class="waiting-tab-btn bg-slate-200 text-slate-700 rounded-xl px-4 py-2 text-sm font-semibold"
+                                            data-waiting-tab="unauthorized"
+                                        >
+                                            Unauthorized
+                                            <span class="ml-2 rounded-full bg-white/50 px-2 py-0.5 text-xs">
+                                                {{ $waitingUnauthorized->count() }}
+                                            </span>
+                                        </button>
+                                    </div>
 
-                                            @php
-                                                $first = $campaigns->first();
-
-                                                $flyer = $first['flyer'] ?? null;
-                                                $photo = $flyer?->thePhotos?->first();
-                                                $meta  = $flyer?->theMeta;
-                                                $agent = $flyer?->theAgent;
-
-                                                $thumbUrl = null;
-
-                                                if ($photo && $meta && $meta->zipDir && $meta->mlsDir && $photo->photoName) {
-                                                    $thumbUrl = "https://realtyrepublic.com/hqphotos/{$meta->zipDir}/{$meta->mlsDir}/{$photo->photoName}";
-                                                }
-                                            @endphp
-
-                                            <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-[#214e9b]/40 hover:shadow-md">
-
-                                                <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-
-                                                    <div class="flex items-center gap-4">
-                                                        <div class="h-20 w-28 shrink-0 overflow-hidden rounded-xl border border-slate-200 bg-slate-100">
-                                                            @if($thumbUrl)
-                                                                <img
-                                                                    src="{{ $thumbUrl }}"
-                                                                    alt="{{ $first['address'] ?? 'Property photo' }}"
-                                                                    class="h-full w-full object-cover"
-                                                                >
-                                                            @else
-                                                                <div class="flex h-full w-full items-center justify-center text-xs text-slate-400">
-                                                                    No Photo
-                                                                </div>
-                                                            @endif
-                                                        </div>
-
-                                                        <div>
-                                                            <a
-                                                                href="/flyer/{{ $flyerId }}"
-                                                                class="text-[15px] font-semibold text-[#214e9b] hover:underline"
-                                                            >
-                                                                ID#: {{ $flyerId }}
-                                                            </a>
-
-                                                            <div class="mt-1 text-sm text-slate-700">
-                                                                {{ $first['address'] ?? 'No Address' }}
-                                                            </div>
-                                                            <div class="mt-2">
-
-                                                                @if($agent)
-                                                                    <div class="text-xs text-slate-500">
-
-                                                                        <span class="font-medium text-slate-400">
-                                                                            Agent:
-                                                                        </span>
-
-                                                                        <a
-                                                                            href="#"
-                                                                            class="ml-1 font-medium text-[#214e9b] hover:underline"
-                                                                        >
-                                                                            {{ $agent->agtFullName }}
-                                                                        </a>
-
-                                                                    </div>
-                                                                @endif
-
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <button
-                                                        type="button"
-                                                        class="campaign-toggle flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 text-sm font-semibold text-slate-600 hover:bg-slate-200"
-                                                    >
-                                                        {{ $campaigns->count() }} campaigns
-                                                        <span class="campaign-arrow transition-transform">▼</span>
-                                                    </button>
-
+                                    {{-- AUTHORIZED WAITING --}}
+                                    <div class="waiting-panel" id="waiting-authorized">
+                                        <div class="space-y-3">
+                                            @forelse($waitingAuthorized as $campaign)
+                                                @php $renderCampaignCard($campaign, 'waiting'); @endphp
+                                            @empty
+                                                <div class="rounded-2xl border border-dashed border-slate-300 p-8 text-center text-sm text-slate-500">
+                                                    No authorized waiting campaigns found.
                                                 </div>
+                                            @endforelse
+                                        </div>
+                                    </div>
 
-                                                <div class="campaign-details hidden mt-4 border-t border-slate-200 pt-4">
-                                                    <div class="space-y-2">
-
-                                                        @foreach($campaigns as $campaign)
-
-                                                            <div class="rounded-xl bg-slate-50 p-3 text-sm text-slate-700">
-
-                                                                <div>
-                                                                    <strong>Subject:</strong>
-                                                                    {{ $campaign['emSubject'] ?? 'N/A' }}
-                                                                </div>
-
-                                                                <div>
-                                                                    <strong>Requested:</strong>
-                                                                    {{ $campaign['emRequest'] ?? 'N/A' }}
-                                                                </div>
-
-                                                                <div>
-                                                                    <strong>Started:</strong>
-                                                                    {{ $campaign['emStart'] ?? 'N/A' }}
-                                                                </div>
-
-                                                                <div>
-                                                                    <strong>Completed:</strong>
-                                                                    {{ $campaign['emComplete'] ?? 'N/A' }}
-                                                                </div>
-
-                                                                <div>
-                                                                    <strong>Label:</strong>
-                                                                    {{ $campaign['campLabel'] ?? 'N/A' }}
-                                                                </div>
-
-                                                            </div>
-
-                                                        @endforeach
-
-                                                    </div>
+                                    {{-- UNAUTHORIZED WAITING --}}
+                                    <div class="waiting-panel hidden" id="waiting-unauthorized">
+                                        <div class="space-y-3">
+                                            @forelse($waitingUnauthorized as $campaign)
+                                                @php $renderCampaignCard($campaign, 'waiting'); @endphp
+                                            @empty
+                                                <div class="rounded-2xl border border-dashed border-slate-300 p-8 text-center text-sm text-slate-500">
+                                                    No unauthorized waiting campaigns found.
                                                 </div>
-
-                                            </div>
-
-                                        @empty
-
-                                            <div class="rounded-2xl border border-dashed border-slate-300 p-10 text-center text-sm text-slate-500">
-                                                No waiting groups found.
-                                            </div>
-
-                                        @endforelse
-
+                                            @endforelse
+                                        </div>
                                     </div>
 
                                 </div>
@@ -283,153 +592,30 @@
                                 {{-- IN PROGRESS --}}
                                 <div class="campaign-panel hidden" id="tab-progress">
 
-                                    <div class="mb-5 flex items-center justify-between">
+                                    <div class="mb-5 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                                         <div>
                                             <h2 class="text-xl font-semibold text-slate-900">
-                                                In Progress Groups
+                                                In Progress Campaigns
                                             </h2>
 
                                             <p class="mt-1 text-sm text-slate-500">
-                                                Campaign groups currently being processed.
+                                                Campaigns that have started delivery but have not finished.
                                             </p>
                                         </div>
 
-                                        <span class="rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">
-                                            {{ $inProgressFlyerCamps->count() }} groups
+                                        <span class="w-fit rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">
+                                            {{ $inProgressCampaigns->count() }} in progress
                                         </span>
                                     </div>
 
                                     <div class="space-y-3">
-
-                                        @forelse($inProgressFlyerCamps as $flyerId => $campaigns)
-
-                                            @php
-                                                $first = $campaigns->first();
-
-                                                $flyer = $first['flyer'] ?? null;
-                                                $photo = $flyer?->thePhotos?->first();
-                                                $meta  = $flyer?->theMeta;
-                                                $agent = $flyer?->theAgent;
-
-                                                $thumbUrl = null;
-
-                                                if ($photo && $meta && $meta->zipDir && $meta->mlsDir && $photo->photoName) {
-                                                    $thumbUrl = "https://realtyrepublic.com/hqphotos/{$meta->zipDir}/{$meta->mlsDir}/{$photo->photoName}";
-                                                }
-                                            @endphp
-
-                                            <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-[#214e9b]/40 hover:shadow-md">
-
-                                                <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-
-                                                    <div class="flex items-center gap-4">
-                                                        <div class="h-20 w-28 shrink-0 overflow-hidden rounded-xl border border-slate-200 bg-slate-100">
-                                                            @if($thumbUrl)
-                                                                <img
-                                                                    src="{{ $thumbUrl }}"
-                                                                    alt="{{ $first['address'] ?? 'Property photo' }}"
-                                                                    class="h-full w-full object-cover"
-                                                                >
-                                                            @else
-                                                                <div class="flex h-full w-full items-center justify-center text-xs text-slate-400">
-                                                                    No Photo
-                                                                </div>
-                                                            @endif
-                                                        </div>
-
-                                                        <div>
-                                                            <a
-                                                                href="/flyer/{{ $flyerId }}"
-                                                                class="text-[15px] font-semibold text-[#214e9b] hover:underline"
-                                                            >
-                                                                ID#: {{ $flyerId }}
-                                                            </a>
-
-                                                            <div class="mt-1 text-sm text-slate-700">
-                                                                {{ $first['address'] ?? 'No Address' }}
-                                                            </div>
-                                                            <div class="mt-2">
-
-                                                                @if($agent)
-                                                                    <div class="text-xs text-slate-500">
-
-                                                                        <span class="font-medium text-slate-400">
-                                                                            Agent:
-                                                                        </span>
-
-                                                                        <a
-                                                                            href="#"
-                                                                            class="ml-1 font-medium text-[#214e9b] hover:underline"
-                                                                        >
-                                                                            {{ $agent->agtFullName }}
-                                                                        </a>
-
-                                                                    </div>
-                                                                @endif
-
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <button
-                                                        type="button"
-                                                        class="campaign-toggle flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 text-sm font-semibold text-slate-600 hover:bg-slate-200"
-                                                    >
-                                                        {{ $campaigns->count() }} campaigns
-                                                        <span class="campaign-arrow transition-transform">▼</span>
-                                                    </button>
-
-                                                </div>
-
-                                                <div class="campaign-details hidden mt-4 border-t border-slate-200 pt-4">
-                                                    <div class="space-y-2">
-
-                                                        @foreach($campaigns as $campaign)
-
-                                                            <div class="rounded-xl bg-slate-50 p-3 text-sm text-slate-700">
-
-                                                                <div>
-                                                                    <strong>Subject:</strong>
-                                                                    {{ $campaign['emSubject'] ?? 'N/A' }}
-                                                                </div>
-
-                                                                <div>
-                                                                    <strong>Requested:</strong>
-                                                                    {{ $campaign['emRequest'] ?? 'N/A' }}
-                                                                </div>
-
-                                                                <div>
-                                                                    <strong>Started:</strong>
-                                                                    {{ $campaign['emStart'] ?? 'N/A' }}
-                                                                </div>
-
-                                                                <div>
-                                                                    <strong>Completed:</strong>
-                                                                    {{ $campaign['emComplete'] ?? 'N/A' }}
-                                                                </div>
-
-                                                                <div>
-                                                                    <strong>Label:</strong>
-                                                                    {{ $campaign['campLabel'] ?? 'N/A' }}
-                                                                </div>
-
-                                                            </div>
-
-                                                        @endforeach
-
-                                                    </div>
-                                                </div>
-
-                                            </div>
-
+                                        @forelse($inProgressCampaigns as $campaign)
+                                            @php $renderCampaignCard($campaign, 'progress'); @endphp
                                         @empty
-
-                                            <div class="rounded-2xl border border-dashed border-slate-300 p-10 text-center text-sm text-slate-500">
-                                                No in progress groups found.
+                                            <div class="rounded-2xl border border-dashed border-slate-300 p-8 text-center text-sm text-slate-500">
+                                                No in progress campaigns found.
                                             </div>
-
                                         @endforelse
-
                                     </div>
 
                                 </div>
@@ -437,153 +623,30 @@
                                 {{-- COMPLETED --}}
                                 <div class="campaign-panel hidden" id="tab-completed">
 
-                                    <div class="mb-5 flex items-center justify-between">
+                                    <div class="mb-5 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                                         <div>
                                             <h2 class="text-xl font-semibold text-slate-900">
-                                                Completed Groups
+                                                Recently Completed Campaigns
                                             </h2>
 
                                             <p class="mt-1 text-sm text-slate-500">
-                                                Campaign groups that have finished processing.
+                                                Last 10 completed campaigns, sorted by finish time.
                                             </p>
                                         </div>
 
-                                        <span class="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
-                                            {{ $completeFlyerCamps->count() }} groups
+                                        <span class="w-fit rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
+                                            Last {{ $completedCampaigns->count() }}
                                         </span>
                                     </div>
 
                                     <div class="space-y-3">
-
-                                        @forelse($completeFlyerCamps as $flyerId => $campaigns)
-
-                                            @php
-                                                $first = $campaigns->first();
-
-                                                $flyer = $first['flyer'] ?? null;
-                                                $photo = $flyer?->thePhotos?->first();
-                                                $meta  = $flyer?->theMeta;
-                                                $agent = $flyer?->theAgent;
-
-                                                $thumbUrl = null;
-
-                                                if ($photo && $meta && $meta->zipDir && $meta->mlsDir && $photo->photoName) {
-                                                    $thumbUrl = "https://realtyrepublic.com/hqphotos/{$meta->zipDir}/{$meta->mlsDir}/{$photo->photoName}";
-                                                }
-                                            @endphp
-
-                                            <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-[#214e9b]/40 hover:shadow-md">
-
-                                                <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-
-                                                    <div class="flex items-center gap-4">
-                                                        <div class="h-20 w-28 shrink-0 overflow-hidden rounded-xl border border-slate-200 bg-slate-100">
-                                                            @if($thumbUrl)
-                                                                <img
-                                                                    src="{{ $thumbUrl }}"
-                                                                    alt="{{ $first['address'] ?? 'Property photo' }}"
-                                                                    class="h-full w-full object-cover"
-                                                                >
-                                                            @else
-                                                                <div class="flex h-full w-full items-center justify-center text-xs text-slate-400">
-                                                                    No Photo
-                                                                </div>
-                                                            @endif
-                                                        </div>
-
-                                                        <div>
-                                                            <a
-                                                                href="/flyer/{{ $flyerId }}"
-                                                                class="text-[15px] font-semibold text-[#214e9b] hover:underline"
-                                                            >
-                                                                ID#: {{ $flyerId }}
-                                                            </a>
-
-                                                            <div class="mt-1 text-sm text-slate-700">
-                                                                {{ $first['address'] ?? 'No Address' }}
-                                                            </div>
-                                                            <div class="mt-2">
-
-                                                                @if($agent)
-                                                                    <div class="text-xs text-slate-500">
-
-                                                                        <span class="font-medium text-slate-400">
-                                                                            Agent:
-                                                                        </span>
-
-                                                                        <a
-                                                                            href="#"
-                                                                            class="ml-1 font-medium text-[#214e9b] hover:underline"
-                                                                        >
-                                                                            {{ $agent->agtFullName }}
-                                                                        </a>
-
-                                                                    </div>
-                                                                @endif
-
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <button
-                                                        type="button"
-                                                        class="campaign-toggle flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 text-sm font-semibold text-slate-600 hover:bg-slate-200"
-                                                    >
-                                                        {{ $campaigns->count() }} campaigns
-                                                        <span class="campaign-arrow transition-transform">▼</span>
-                                                    </button>
-
-                                                </div>
-
-                                                <div class="campaign-details hidden mt-4 border-t border-slate-200 pt-4">
-                                                    <div class="space-y-2">
-
-                                                        @foreach($campaigns as $campaign)
-
-                                                            <div class="rounded-xl bg-slate-50 p-3 text-sm text-slate-700">
-
-                                                                <div>
-                                                                    <strong>Subject:</strong>
-                                                                    {{ $campaign['emSubject'] ?? 'N/A' }}
-                                                                </div>
-
-                                                                <div>
-                                                                    <strong>Requested:</strong>
-                                                                    {{ $campaign['emRequest'] ?? 'N/A' }}
-                                                                </div>
-
-                                                                <div>
-                                                                    <strong>Started:</strong>
-                                                                    {{ $campaign['emStart'] ?? 'N/A' }}
-                                                                </div>
-
-                                                                <div>
-                                                                    <strong>Completed:</strong>
-                                                                    {{ $campaign['emComplete'] ?? 'N/A' }}
-                                                                </div>
-
-                                                                <div>
-                                                                    <strong>Label:</strong>
-                                                                    {{ $campaign['campLabel'] ?? 'N/A' }}
-                                                                </div>
-
-                                                            </div>
-
-                                                        @endforeach
-
-                                                    </div>
-                                                </div>
-
-                                            </div>
-
+                                        @forelse($completedCampaigns as $campaign)
+                                            @php $renderCampaignCard($campaign, 'completed'); @endphp
                                         @empty
-
-                                            <div class="rounded-2xl border border-dashed border-slate-300 p-10 text-center text-sm text-slate-500">
-                                                No completed groups found.
+                                            <div class="rounded-2xl border border-dashed border-slate-300 p-8 text-center text-sm text-slate-500">
+                                                No completed campaigns found.
                                             </div>
-
                                         @endforelse
-
                                     </div>
 
                                 </div>
@@ -651,25 +714,47 @@ document.addEventListener('DOMContentLoaded', function () {
 
     });
 
-    const campaignToggles = document.querySelectorAll('.campaign-toggle');
+    const waitingButtons = document.querySelectorAll('.waiting-tab-btn');
+    const waitingPanels = document.querySelectorAll('.waiting-panel');
 
-    campaignToggles.forEach(function(toggle) {
+    waitingButtons.forEach(function(button) {
 
-        toggle.addEventListener('click', function() {
+        button.addEventListener('click', function() {
 
-            const card = toggle.closest('.rounded-2xl');
-            const details = card.querySelector('.campaign-details');
-            const arrow = toggle.querySelector('.campaign-arrow');
+            const target = button.dataset.waitingTab;
+            const targetPanel = document.getElementById('waiting-' + target);
 
-            if (!details) {
-                return;
+            waitingPanels.forEach(function(panel) {
+                panel.classList.add('hidden');
+            });
+
+            if (targetPanel) {
+                targetPanel.classList.remove('hidden');
             }
 
-            details.classList.toggle('hidden');
+            waitingButtons.forEach(function(btn) {
+                btn.classList.remove(
+                    'bg-emerald-600',
+                    'text-white',
+                    'shadow'
+                );
 
-            if (arrow) {
-                arrow.classList.toggle('rotate-180');
-            }
+                btn.classList.add(
+                    'bg-slate-200',
+                    'text-slate-700'
+                );
+            });
+
+            button.classList.remove(
+                'bg-slate-200',
+                'text-slate-700'
+            );
+
+            button.classList.add(
+                'bg-emerald-600',
+                'text-white',
+                'shadow'
+            );
 
         });
 
@@ -680,6 +765,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const mobileMenuButton = document.getElementById('adminMobileMenuButton');
     const mobileMenuOverlay = document.getElementById('adminMobileMenuOverlay');
     const mobileMenuBackdrop = document.getElementById('adminMobileMenuBackdrop');
+    const mobileMenuClose = document.getElementById('adminMobileMenuClose');
 
     if (mobileMenuButton && mobileMenuOverlay) {
 
@@ -693,12 +779,15 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
 
+        if (mobileMenuClose) {
+            mobileMenuClose.addEventListener('click', function () {
+                mobileMenuOverlay.classList.add('hidden');
+            });
+        }
+
     }
 
 });
-
-
-
 </script>
 
 </body>
