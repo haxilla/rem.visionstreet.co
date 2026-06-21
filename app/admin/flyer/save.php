@@ -9,4 +9,8 @@ $validatedData = $request->validate([
     // Add other fields as necessary
 ]);
 
-dd($validatedData); // Dump and die to inspect the validated data
+redirect('/member/flyer/details')
+    ->with('success', 'saving flyer with data: ' . json_encode($validatedData)  )
+    ->send();// Dump and die to inspect the validated data
+
+exit();

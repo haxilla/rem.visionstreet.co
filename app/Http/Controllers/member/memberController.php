@@ -25,6 +25,10 @@ class memberController extends Controller
 
         require_once __DIR__ . '/../parts/dynamic_index.php';
 
+        if($redirect) {
+            return redirect($redirect);
+        }
+
         // ---- partial vs full ----
         $isPartial = $request->header('X-Pageswap') === '1';
         if ($isPartial) {

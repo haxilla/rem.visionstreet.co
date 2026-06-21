@@ -30,6 +30,8 @@ if ($renderfrom !== '') {
     $candidates[] = "$renderfrom.show";}
 
 $viewName = null;
+$data = null;
+$redirect=null;
 foreach ($candidates as $cand) {
     if ($cand !== '' && view()->exists($cand)) {
         $viewName = $cand;
