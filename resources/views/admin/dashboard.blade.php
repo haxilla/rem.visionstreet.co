@@ -285,15 +285,8 @@
 
         <div class="font-semibold">
 
-            @if($status === 'waiting')
 
-                @if($authorized)
-                    <span class="text-emerald-700">AUTHORIZED</span>
-                @else
-                    <span class="text-red-700">UNAUTHORIZED</span>
-                @endif
-
-            @elseif($status === 'progress')
+            @if($status === 'progress')
 
                 <span class="text-blue-700">IN PROGRESS</span>
 
@@ -305,7 +298,7 @@
 
         </div>
 
-        <div class="mt-1">
+        <div class="flex-1 truncate pl-3">
             {{ $address }}
         </div>
 
