@@ -6,11 +6,13 @@
 
 @php
 
-include(app_path().'/flyers/variables.php');
+    $propInfo = $data['propInfo'];
 
-$template = strtolower(
-    $propInfo->theStyle->template ?? ''
-);
+    include(app_path().'/flyers/variables.php');
+
+    $template = strtolower(
+        $propInfo->theStyle->template ?? ''
+    );
 
 @endphp
 <main
