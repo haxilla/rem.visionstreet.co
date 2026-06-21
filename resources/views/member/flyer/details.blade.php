@@ -94,7 +94,7 @@
 
         </div>
 
-        <form method="post" action="/member/flyer/saveDetails">
+        <form method="post" action="/member/flyer/save_details">
 
             @csrf
 
@@ -118,7 +118,6 @@
                             type="text"
                             name="xListPrice"
                             class="w-full rounded-2xl border border-slate-300 px-4 py-3"
-                            placeholder="549900"
                         >
 
                     </div>

@@ -222,12 +222,12 @@
                             </div>
 
                             <div class="flyer-actions">
-                                <a href="/member/send-campaign/{{ $flyer->id }}"
+                                <a href="/member/flyer/resume?flyerId={{ $flyer->id }}"
                                    class="flyer-btn rounded-lg bg-amber-50 px-4 py-2 text-xs font-bold text-amber-700 ring-1 ring-amber-200 hover:bg-amber-100">
                                     Resume
                                 </a>
 
-                                <a href="/member/delete-flyer/{{ $flyer->id }}"
+                                <a href="/member/flyer/delete?flyerId={{ $flyer->id }}"
                                    onclick="return confirm('Delete this flyer?')"
                                    class="flyer-btn rounded-lg bg-red-50 px-4 py-2 text-xs font-bold text-red-700 ring-1 ring-red-200 hover:bg-red-100">
                                     Delete

@@ -40,6 +40,11 @@ $flyer->xZip        = $validatedData['xZip'];
 $flyer->xxZip       = $validatedData['xZip'];
 $flyer->xMlsNum     = $validatedData['xMlsNum'] ?? null;
 
+// Step 1 completed
+if (($flyer->wizardStep ?? 0) < 1) {
+    $flyer->wizardStep = 1;
+}
+
 $flyer->save();
 
 redirect('/member/flyer/details?flyerId='.$flyer->id)->send();
