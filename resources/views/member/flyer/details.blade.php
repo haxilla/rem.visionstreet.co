@@ -219,17 +219,17 @@
                         <option value="">Select Pool Type</option>
 
                         <option value="Private Pool"
-                            @selected(old('xPool', $data['flyer']->xPool ?? '') == 'Private Pool')>
+                            @selected(old('xPool', $data['flyer']->xPoolPvt ?? '') == 'Private Pool')>
                             Private Pool
                         </option>
 
                         <option value="Community Pool"
-                            @selected(old('xPool', $data['flyer']->xPool ?? '') == 'Community Pool')>
+                            @selected(old('xPool', $data['flyer']->xPoolPvt ?? '') == 'Community Pool')>
                             Community Pool
                         </option>
 
                         <option value="No Pool"
-                            @selected(old('xPool', $data['flyer']->xPool ?? '') == 'No Pool')>
+                            @selected(old('xPool', $data['flyer']->xPoolPvt ?? '') == 'No Pool')>
                             No Pool
                         </option>
 
