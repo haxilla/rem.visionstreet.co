@@ -8,6 +8,7 @@ $validatedData = $request->validate([
     'xCity'       => 'required|string|max:100',
     'xState'      => 'required|string|max:2',
     'xZip'        => 'required|digits:5',
+    'xMlsNum'     => 'nullable|integer|digits_between:1,15',
 ]);
 
 $flyerId = (int) request('flyerId');
@@ -37,6 +38,7 @@ $flyer->xState      = $validatedData['xState'];
 $flyer->state       = $validatedData['xState'];
 $flyer->xZip        = $validatedData['xZip'];
 $flyer->xxZip       = $validatedData['xZip'];
+$flyer->xMlsNum     = $validatedData['xMlsNum'] ?? null;
 
 $flyer->save();
 
