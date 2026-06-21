@@ -8,8 +8,8 @@
     class="transition-all duration-300 min-h-screen pt-24 relative"
     :class="collapsed ? 'ml-20' : 'ml-64'"
 >
-    <div class="ml-8 mr-8 lg:ml-10 lg:mr-10">
-        <div class="pageswap p-6 w-full">
+    <div class="mx-2 sm:mx-4 lg:mx-10">
+        <div class="pageswap p-2 sm:p-4 lg:p-6 w-full">
 
             @php
                 $waitingFlyerCamps    = $data['waitingFlyerCamps'] ?? collect();
@@ -63,10 +63,10 @@
                     </div>
 
                     {{-- MAIN --}}
-                    <main class="flex-1 px-6 py-6 lg:px-10 lg:py-8">
+                    <main class="flex-1 px-2 py-4 sm:px-4 lg:px-10 lg:py-8">
 
                         {{-- HEADER --}}
-                        <div class="rounded-[24px] bg-white px-8 py-7 shadow-[0_12px_35px_rgba(15,23,42,0.06)]">
+                        <div class="rounded-[20px] bg-white px-4 py-5 sm:px-6 sm:py-6 lg:px-8 lg:py-7 shadow-[0_12px_35px_rgba(15,23,42,0.06)]">
                             <div class="text-[12px] font-semibold uppercase tracking-[0.22em] text-[#214e9b]/70">
                                 Dashboard
                             </div>
