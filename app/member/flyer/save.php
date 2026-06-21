@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Core\Propflyer;
+
 // Validate the request data
 $validatedData = $request->validate([
     'xFullStreet' => 'required|string|max:255',
