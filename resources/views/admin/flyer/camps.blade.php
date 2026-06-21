@@ -70,10 +70,6 @@ $subject = $campaigns->first()['emSubject'] ?? '';
         {{-- FLYER --}}
         <div class="bg-white rounded-2xl shadow-sm p-4 mb-6">
 
-            <h2 class="font-semibold text-slate-900 mb-4">
-                Flyer Preview
-            </h2>
-
             <div class="flyer-stage">
 
                 <div id="flyer-scale-wrapper">
