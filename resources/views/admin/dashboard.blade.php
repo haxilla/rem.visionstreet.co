@@ -482,7 +482,7 @@
                                     <div class="mb-5 grid grid-cols-1 gap-2 sm:flex sm:flex-wrap">
                                         <button
                                             type="button"
-                                            class="waiting-tab-btn bg-emerald-600 text-white rounded-xl px-4 py-2 text-sm font-semibold shadow"
+                                            class="waiting-tab-btn bg-slate-200 text-slate-700 rounded-xl px-4 py-2 text-sm font-semibold"
                                             data-waiting-tab="authorized"
                                         >
                                             Authorized
@@ -493,7 +493,7 @@
 
                                         <button
                                             type="button"
-                                            class="waiting-tab-btn bg-slate-200 text-slate-700 rounded-xl px-4 py-2 text-sm font-semibold"
+                                            class="waiting-tab-btn bg-emerald-600 text-white rounded-xl px-4 py-2 text-sm font-semibold shadow"
                                             data-waiting-tab="unauthorized"
                                         >
                                             Unauthorized
@@ -504,7 +504,7 @@
                                     </div>
 
                                     {{-- AUTHORIZED WAITING --}}
-                                    <div class="waiting-panel" id="waiting-authorized">
+                                    <div class="waiting-panel hidden" id="waiting-authorized">
 
                                         <div class="hidden lg:flex lg:items-center lg:gap-4 text-xs font-semibold uppercase tracking-wide text-slate-500 border-b border-slate-300 px-2 py-2">
                                             <div class="w-32 shrink-0">Area</div>
@@ -527,7 +527,7 @@
                                     </div>
 
                                     {{-- UNAUTHORIZED WAITING --}}
-                                    <div class="waiting-panel hidden" id="waiting-unauthorized">
+                                    <div class="waiting-panel" id="waiting-unauthorized">
 
                                         <div class="hidden lg:flex lg:items-center lg:gap-4 text-xs font-semibold uppercase tracking-wide text-slate-500 border-b border-slate-300 px-2 py-2">
                                             <div class="w-32 shrink-0">Area</div>
