@@ -171,7 +171,7 @@ $templateView = 'flyers.s'.$template;
 document.addEventListener('DOMContentLoaded', () => {
 
     function scaleFlyer() {
-
+        alert('scaling flyer');
         const stage = document.querySelector('.flyer-stage');
         const wrapper = document.getElementById('flyer-scale-wrapper');
 
