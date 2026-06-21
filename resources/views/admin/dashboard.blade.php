@@ -480,27 +480,24 @@
 
                                     {{-- WAITING SUB MENU --}}
                                     <div class="mb-5 grid grid-cols-1 gap-2 sm:flex sm:flex-wrap">
-                                        <button
-                                            type="button"
-                                            class="waiting-tab-btn bg-slate-200 text-slate-700 rounded-xl px-4 py-2 text-sm font-semibold"
-                                            data-waiting-tab="authorized"
-                                        >
+                                        <button type="button"
+                                        class="waiting-tab-btn bg-emerald-600 text-white rounded-xl px-4 py-2 text-sm font-semibold shadow"
+                                        data-waiting-tab="unauthorized">
+                                            Unauthorized
+                                            <span class="ml-2 rounded-full bg-white/50 px-2 py-0.5 text-xs">
+                                                {{ $waitingUnauthorized->count() }}
+                                            </span>
+                                        </button>
+
+                                        <button type="button"
+                                        class="waiting-tab-btn bg-slate-200 text-slate-700 rounded-xl px-4 py-2 text-sm font-semibold"
+                                        data-waiting-tab="authorized">
                                             Authorized
                                             <span class="ml-2 rounded-full bg-white/20 px-2 py-0.5 text-xs">
                                                 {{ $waitingAuthorized->count() }}
                                             </span>
                                         </button>
 
-                                        <button
-                                            type="button"
-                                            class="waiting-tab-btn bg-emerald-600 text-white rounded-xl px-4 py-2 text-sm font-semibold shadow"
-                                            data-waiting-tab="unauthorized"
-                                        >
-                                            Unauthorized
-                                            <span class="ml-2 rounded-full bg-white/50 px-2 py-0.5 text-xs">
-                                                {{ $waitingUnauthorized->count() }}
-                                            </span>
-                                        </button>
                                     </div>
 
                                     {{-- UNAUTHORIZED WAITING --}}
