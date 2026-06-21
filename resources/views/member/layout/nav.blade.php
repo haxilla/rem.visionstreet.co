@@ -11,7 +11,7 @@
     <div class="flex h-[72px] items-center justify-between text-white">
 
       {{-- LOGO --}}
-      <a href="/" class="flex items-center">
+      <a href="/member/dashboard" class="flex items-center">
         <img src="{{ asset('images/RealtyEmails_logo1.png') }}" alt="RealtyEmails" class="h-9 w-auto">
       </a>
 
