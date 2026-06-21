@@ -13,7 +13,6 @@ $flyer = $data['flyer'] ?? null;
 <div class="mx-auto flex w-full max-w-[1400px] gap-8 px-4 pb-16 sm:px-6 lg:px-8">
 
     {{-- SIDEBAR --}}
-    ...
 
     <section class="min-w-0 flex-1">
 
