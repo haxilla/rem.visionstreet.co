@@ -229,23 +229,6 @@
 <div class="border-b border-slate-200 px-2 py-2 hover:bg-slate-50">
 
     <div class="hidden lg:flex lg:items-center lg:gap-4 text-sm">
-        <div class="w-32 shrink-0">
-
-            @if($status === 'progress')
-
-                <span class="font-semibold text-blue-700">
-                    IN PROGRESS
-                </span>
-
-            @else
-
-                <span class="font-semibold text-slate-600">
-                    COMPLETE
-                </span>
-
-            @endif
-
-        </div>
 
         <div class="w-40 shrink-0 truncate">
             {{ $area }}
@@ -271,21 +254,6 @@
 
     <div class="lg:hidden text-sm">
 
-        <div class="font-semibold">
-
-
-            @if($status === 'progress')
-
-                <span class="text-blue-700">IN PROGRESS</span>
-
-            @else
-
-                <span class="text-slate-600">COMPLETE</span>
-
-            @endif
-
-        </div>
-
         <div class="flex-1 truncate pl-3">
             {{ $address }}
         </div>
@@ -303,10 +271,6 @@
     </div>
 
 </div>
-
-                @php
-                };
-            @endphp
 
             <div class="min-h-screen bg-[#f4f7fb]">
                 <div class="flex min-h-screen">
