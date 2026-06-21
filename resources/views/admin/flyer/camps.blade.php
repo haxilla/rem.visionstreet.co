@@ -88,6 +88,19 @@ $subject = $campaigns->first()['emSubject'] ?? '';
 
         </div>
 
+        @php
+
+        $waitingCampaigns =
+            $data['waitingFlyerCamps'][$propInfo->id] ?? collect();
+
+        $inProgressCampaigns =
+            $data['inProgressFlyerCamps'][$propInfo->id] ?? collect();
+
+        $completedCampaigns =
+            $data['completeFlyerCamps'][$propInfo->id] ?? collect();
+
+        @endphp
+
         {{-- ACTIVE CAMPAIGNS --}}
         <div class="bg-white rounded-2xl shadow-sm overflow-hidden mb-6">
 
@@ -99,7 +112,49 @@ $subject = $campaigns->first()['emSubject'] ?? '';
 
             <div class="divide-y divide-slate-100">
 
-                {{-- loop active campaigns here --}}
+                @foreach($waitingCampaigns as $camp)
+
+                    <div class="px-5 py-4 flex items-center justify-between">
+
+                        <div>
+                            <div class="font-semibold">
+                                {{ $camp['emArea'] }}
+                            </div>
+
+                            <div class="text-sm text-slate-500">
+                                Requested {{ $camp['emRequest'] }}
+                            </div>
+                        </div>
+
+                        <span class="bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-xs font-semibold">
+                            Waiting
+                        </span>
+
+                    </div>
+
+                @endforeach
+
+                @foreach($inProgressCampaigns as $camp)
+
+                    <div class="px-5 py-4 flex items-center justify-between">
+
+                        <div>
+                            <div class="font-semibold">
+                                {{ $camp['emArea'] }}
+                            </div>
+
+                            <div class="text-sm text-slate-500">
+                                Started {{ $camp['emStart'] }}
+                            </div>
+                        </div>
+
+                        <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-semibold">
+                            In Progress
+                        </span>
+
+                    </div>
+
+                @endforeach
 
             </div>
 
