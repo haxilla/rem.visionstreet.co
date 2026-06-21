@@ -2,7 +2,6 @@
 
 include app_path('queries/campaigns.php');
 
-
 $emailCounts = [
     'azphxmetro' => DB::connection('rememaildb')->table('azphxmetro')->count(),
     'azphxne'    => DB::connection('rememaildb')->table('azphxne')->count(),
