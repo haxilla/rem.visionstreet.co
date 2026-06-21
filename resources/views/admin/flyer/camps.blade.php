@@ -16,16 +16,10 @@ $templateView = 'flyers.s'.$template;
 
 $subject = '';
 
-if(isset($waitingFlyerCamps[$propInfo->id])) {
-    $subject = $waitingFlyerCamps[$propInfo->id]->first()['emSubject'] ?? '';
-}
-elseif(isset($inProgressFlyerCamps[$propInfo->id])) {
-    $subject = $inProgressFlyerCamps[$propInfo->id]->first()['emSubject'] ?? '';
-}
-elseif(isset($completeFlyerCamps[$propInfo->id])) {
-    $subject = $completeFlyerCamps[$propInfo->id]->first()['emSubject'] ?? '';
-}
-
+dd(
+    $data['waitingFlyerCamps']->keys()->take(5),
+    $propInfo->id
+);
 @endphp
 
 <main class="pt-[72px]">
