@@ -98,15 +98,22 @@
                                 </h2>
                             </div>
 
-                            <div class="flex justify-center">
+                            <div class="flyer-stage">
 
-                                <div class="w-full max-w-[700px] overflow-hidden">
+                                <div id="flyer-scale-wrapper">
 
-                                    @if($template)
-                                        @include('flyers.s'.$template)
+                                    @php
+                                        $template = strtolower($propInfo->theStyle->template ?? '');
+                                        $templateView = 'flyers.s' . $template;
+                                    @endphp
+
+                                    @if(View::exists($templateView))
+                                        <div class="flyer-panel active">
+                                            @include($templateView)
+                                        </div>
                                     @else
                                         <div class="rounded-xl border border-red-300 bg-red-50 p-6 text-center text-red-600">
-                                            Flyer template missing
+                                            Missing template: {{ $templateView }}
                                         </div>
                                     @endif
 
@@ -264,6 +271,54 @@
 </main>
 
 @include('public.layout.footer')
+
+<style>
+    .flyer-panel {
+        display: block;
+    }
+
+    .flyer-stage {
+        width: 100%;
+        overflow: hidden;
+        filter: drop-shadow(0 10px 25px rgba(0,0,0,.12));
+    }
+
+    #flyer-scale-wrapper {
+        width: 600px;
+        max-width: 600px;
+        transform-origin: top left;
+        margin: 0 auto;
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    function scaleFlyer() {
+
+        const stage = document.querySelector('.flyer-stage');
+        const wrapper = document.getElementById('flyer-scale-wrapper');
+
+        if (!stage || !wrapper) return;
+
+        const activeFlyer = wrapper.querySelector('.flyer-panel.active');
+
+        if (!activeFlyer) return;
+
+        const availableWidth = stage.clientWidth;
+        const scale = Math.min(availableWidth / 600, 1);
+
+        wrapper.style.transformOrigin = 'top left';
+        wrapper.style.transform = `scale(${scale})`;
+
+        wrapper.style.height = (activeFlyer.offsetHeight * scale) + 'px';
+    }
+
+    scaleFlyer();
+    window.addEventListener('resize', scaleFlyer);
+
+});
+</script>
 
 </body>
 </html>
