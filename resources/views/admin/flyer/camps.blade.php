@@ -16,9 +16,13 @@ $templateView = 'flyers.s'.$template;
 
 $subject = '';
 
-dd(
-    $data['waitingFlyerCamps'][64775]->first()
-);
+$campaigns =
+    $data['waitingFlyerCamps'][$propInfo->id]
+    ?? $data['inProgressFlyerCamps'][$propInfo->id]
+    ?? $data['completeFlyerCamps'][$propInfo->id]
+    ?? collect();
+
+$subject = $campaigns->first()['emSubject'] ?? '';
 @endphp
 
 <main class="pt-[72px]">
