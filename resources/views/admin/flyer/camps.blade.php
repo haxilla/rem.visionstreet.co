@@ -149,5 +149,54 @@ $templateView = 'flyers.s'.$template;
 
 @include('public.layout.footer')
 
+
+<style>
+.flyer-stage{
+    width:100%;
+    overflow:hidden;
+}
+
+#flyer-scale-wrapper{
+    width:600px;
+    transform-origin:top left;
+    margin:0 auto;
+}
+
+.flyer-panel.active{
+    display:block;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    function scaleFlyer() {
+
+        const stage = document.querySelector('.flyer-stage');
+        const wrapper = document.getElementById('flyer-scale-wrapper');
+
+        if (!stage || !wrapper) return;
+
+        const activeFlyer =
+            wrapper.querySelector('.flyer-panel.active');
+
+        if (!activeFlyer) return;
+
+        const availableWidth = stage.clientWidth;
+        const scale = Math.min(availableWidth / 600, 1);
+
+        wrapper.style.transformOrigin = 'top left';
+        wrapper.style.transform = `scale(${scale})`;
+
+        wrapper.style.height =
+            (activeFlyer.offsetHeight * scale) + 'px';
+    }
+
+    scaleFlyer();
+    window.addEventListener('resize', scaleFlyer);
+
+});
+</script>
+
 </body>
 </html>
