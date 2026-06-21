@@ -221,59 +221,66 @@
                     $area       = $campaignValue($campaign, ['emArea'], 'N/A');
                     $areaKey    = strtolower(trim($area));
                     $emailCount = $data['emailCounts'][$areaKey] ?? 0;
-                    
+
                     $emRequest  = $campaignDate($campaign, ['emRequest']);
                     $emStart    = $campaignDate($campaign, ['emStart']);
                     $emFinished = $campaignDate($campaign, ['emFinished', 'emComplete']);
+                    $lastEI     = $campaignValue($campaign, ['lastEI'], null);
 
                     $authorized = $campaignAuthorized($campaign);
                 @endphp
 
-<div class="border-b border-slate-200 px-2 py-2 hover:bg-slate-50">
+                <div class="border-b border-slate-200 px-2 py-2 hover:bg-slate-50">
 
-    <div class="hidden lg:flex lg:items-center lg:gap-4 text-sm">
+                    <div class="hidden lg:flex lg:items-center lg:gap-4 text-sm">
 
-        <div class="w-40 shrink-0 truncate">
-            {{ $area }}
-        </div>
+                        <div class="w-32 shrink-0 truncate">
+                            {{ $area }}
+                        </div>
 
-        <div class="flex-1 truncate pl-3">
-            {{ $address }}
-        </div>
+                        <div class="flex-1 truncate">
+                            {{ $address }}
+                        </div>
 
-        <div class="col-span-2 truncate">
-            {{ $agent?->agtFullName ?? 'N/A' }}
-        </div>
+                        <div class="w-48 shrink-0 truncate">
+                            {{ $agent?->agtFullName ?? 'N/A' }}
+                        </div>
 
-        <div class="w-24 shrink-0 text-right">
-            {{ number_format($emailCount) }}
-        </div>
+                        <div class="w-24 shrink-0 text-right">
+                            {{ number_format($emailCount) }}
+                        </div>
 
-        <div class="w-48 shrink-0 text-right">
-            {{ $formatDate($emRequest) }}
-        </div>
+                        <div class="w-32 shrink-0 text-right">
+                            @if($status === 'progress')
+                                {{ $lastEI ?? '-' }}
+                            @elseif($status === 'completed')
+                                {{ $formatDate($emFinished) }}
+                            @else
+                                {{ $formatDate($emRequest) }}
+                            @endif
+                        </div>
 
-    </div>
+                    </div>
 
-    <div class="lg:hidden text-sm">
+                    <div class="lg:hidden text-sm">
 
-        <div class="flex-1 truncate pl-3">
-            {{ $address }}
-        </div>
+                        <div class="flex-1 truncate pl-3">
+                            {{ $address }}
+                        </div>
 
-        <div class="text-xs text-slate-500 mt-1">
-            Area: {{ $area }}
-            · Agent: {{ $agent?->agtFullName ?? 'N/A' }}
-            · Emails: {{ $emails ? number_format($emails) : '-' }}
-        </div>
+                        <div class="text-xs text-slate-500 mt-1">
+                            Area: {{ $area }}
+                            · Agent: {{ $agent?->agtFullName ?? 'N/A' }}
+                            · Emails: {{ $emails ? number_format($emails) : '-' }}
+                        </div>
 
-        <div class="text-xs text-slate-400 mt-1">
-            {{ $formatDate($emRequest) }}
-        </div>
+                        <div class="text-xs text-slate-400 mt-1">
+                            {{ $formatDate($emRequest) }}
+                        </div>
 
-    </div>
+                    </div>
 
-</div>
+                </div>
 
                 @php
                 };
@@ -499,7 +506,16 @@
 
                                     {{-- AUTHORIZED WAITING --}}
                                     <div class="waiting-panel" id="waiting-authorized">
-                                        <div class="space-y-3">
+
+                                        <div class="hidden lg:flex lg:items-center lg:gap-4 text-xs font-semibold uppercase tracking-wide text-slate-500 border-b border-slate-300 px-2 py-2">
+                                            <div class="w-32 shrink-0">Area</div>
+                                            <div class="flex-1">Address</div>
+                                            <div class="w-48 shrink-0">Agent</div>
+                                            <div class="w-24 shrink-0 text-right">Emails</div>
+                                            <div class="w-32 shrink-0 text-right">Requested</div>
+                                        </div>
+
+                                        <div>
                                             @forelse($waitingAuthorized as $campaign)
                                                 @php $renderCampaignCard($campaign, 'waiting'); @endphp
                                             @empty
@@ -508,11 +524,21 @@
                                                 </div>
                                             @endforelse
                                         </div>
+
                                     </div>
 
                                     {{-- UNAUTHORIZED WAITING --}}
                                     <div class="waiting-panel hidden" id="waiting-unauthorized">
-                                        <div class="space-y-3">
+
+                                        <div class="hidden lg:flex lg:items-center lg:gap-4 text-xs font-semibold uppercase tracking-wide text-slate-500 border-b border-slate-300 px-2 py-2">
+                                            <div class="w-32 shrink-0">Area</div>
+                                            <div class="flex-1">Address</div>
+                                            <div class="w-48 shrink-0">Agent</div>
+                                            <div class="w-24 shrink-0 text-right">Emails</div>
+                                            <div class="w-32 shrink-0 text-right">Requested</div>
+                                        </div>
+
+                                        <div>
                                             @forelse($waitingUnauthorized as $campaign)
                                                 @php $renderCampaignCard($campaign, 'waiting'); @endphp
                                             @empty
@@ -521,6 +547,7 @@
                                                 </div>
                                             @endforelse
                                         </div>
+
                                     </div>
 
                                 </div>
@@ -544,7 +571,32 @@
                                         </span>
                                     </div>
 
-                                    <div class="space-y-3">
+                                    <div class="hidden lg:flex lg:items-center lg:gap-4 text-xs font-semibold uppercase tracking-wide text-slate-500 border-b border-slate-300 px-2 py-2">
+
+                                        <div class="w-32 shrink-0">
+                                            Area
+                                        </div>
+
+                                        <div class="flex-1">
+                                            Address
+                                        </div>
+
+                                        <div class="w-48 shrink-0">
+                                            Agent
+                                        </div>
+
+                                        <div class="w-24 shrink-0 text-right">
+                                            Emails
+                                        </div>
+
+                                        <div class="w-32 shrink-0 text-right">
+                                            Last EI
+                                        </div>
+
+                                    </div>
+
+                                    <div>
+
                                         @forelse($inProgressCampaigns as $campaign)
                                             @php $renderCampaignCard($campaign, 'progress'); @endphp
                                         @empty
@@ -552,6 +604,7 @@
                                                 No in progress campaigns found.
                                             </div>
                                         @endforelse
+
                                     </div>
 
                                 </div>
