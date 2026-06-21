@@ -103,7 +103,27 @@
             </div>
 
         </div>
+        @if ($errors->any())
 
+            <div class="mb-6 rounded-xl bg-red-50 border border-red-200 p-4">
+
+                <div class="font-bold text-red-700 mb-2">
+                    Please correct the following:
+                </div>
+
+                <ul class="list-disc pl-5 text-red-600">
+
+                    @foreach ($errors->all() as $error)
+
+                        <li>{{ $error }}</li>
+
+                    @endforeach
+
+                </ul>
+
+            </div>
+
+        @endif
         <form action="/member/flyer/save" method="post">
 
             @csrf
