@@ -34,18 +34,10 @@ $subject = $campaigns->first()['emSubject'] ?? '';
 
             <div class="flex flex-col gap-2">
 
-                <a href="/admin/campaigns"
+                <a href="/admin/dashboard"
                 class="text-sm text-[#214e9b] font-semibold">
                     ← Back to Campaigns
                 </a>
-
-                <h1 class="text-2xl font-bold text-slate-900">
-                    {{ $propInfo->xFullStreet }}
-                </h1>
-
-                <div class="text-sm text-slate-500">
-                    MLS #{{ $propInfo->xMlsNum }}
-                </div>
 
             </div>
 
