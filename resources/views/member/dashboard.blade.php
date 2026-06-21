@@ -1,4 +1,4 @@
-@include('public.layout.head')
+@include('member.layout.head')
 
 <body data-section="member" class="relative min-h-screen bg-[#f0f2f7] font-sans text-slate-800">
 
@@ -130,7 +130,7 @@
         {{-- DESKTOP SIDEBAR --}}
         <aside class="sticky top-28 hidden h-fit w-[240px] shrink-0 rounded-3xl bg-white p-5 shadow-sm ring-1 ring-black/5 lg:block">
             <nav class="space-y-2 text-sm font-bold">
-                <a href="/member/create-flyer" class="block rounded-xl px-4 py-3 text-slate-700 hover:bg-slate-100">Create New Flyer</a>
+                <a href="/member/flyer/create" class="block rounded-xl px-4 py-3 text-slate-700 hover:bg-slate-100">Create New Flyer</a>
                 <a href="/member/resend-flyer" class="block rounded-xl px-4 py-3 text-slate-700 hover:bg-slate-100">Resend Flyer</a>
                 <a href="/member/campaigns" class="block rounded-xl px-4 py-3 text-slate-700 hover:bg-slate-100">Campaigns</a>
                 <a href="/member/agent-info" class="block rounded-xl px-4 py-3 text-slate-700 hover:bg-slate-100">Agent Info</a>
@@ -151,7 +151,7 @@
 
                     <div class="absolute left-0 top-13 z-40 w-[320px] max-w-[calc(100vw-32px)] rounded-2xl bg-white p-3 shadow-xl ring-1 ring-black/10">
                         <nav class="space-y-2 text-sm font-bold">
-                            <a href="/member/create-flyer" class="whitespace-nowrap block rounded-xl bg-slate-50 px-4 py-3 text-slate-700 hover:bg-slate-100">Create New Flyer</a>
+                            <a href="/member/flyer/create" class="whitespace-nowrap block rounded-xl bg-slate-50 px-4 py-3 text-slate-700 hover:bg-slate-100">Create New Flyer</a>
                             <a href="/member/resend-flyer" class="whitespace-nowrap block rounded-xl bg-slate-50 px-4 py-3 text-slate-700 hover:bg-slate-100">Resend Flyer</a>
                             <a href="/member/campaigns" class="whitespace-nowrap block rounded-xl bg-slate-50 px-4 py-3 text-slate-700 hover:bg-slate-100">Campaigns</a>
                             <a href="/member/agent-info" class="whitespace-nowrap block rounded-xl bg-slate-50 px-4 py-3 text-slate-700 hover:bg-slate-100">Agent Info</a>
