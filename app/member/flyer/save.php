@@ -25,5 +25,5 @@ $flyer->save();
 
 $flyerId = $flyer->id;
 
-redirect("/member/flyer/details/$flyerId")->send();
+redirect('/member/flyer/details?flyerId='.$flyer->id)->send();
 exit();
