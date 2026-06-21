@@ -27,19 +27,19 @@
                 <div>
 
                     <div class="text-xl font-black text-slate-900">
-                        {{ $flyer->xFullStreet }}
+                        {{ $data['flyer']->xFullStreet }}
                     </div>
 
                     <div class="text-slate-600">
-                        {{ $flyer->xCity }},
-                        {{ $flyer->xState }}
-                        {{ $flyer->xZip }}
+                        {{ $data['flyer']->xCity }},
+                        {{ $data['flyer']->xState }}
+                        {{ $data['flyer']->xZip }}
                     </div>
 
-                    @if($flyer->xMlsNum)
+                    @if($data['flyer']->xMlsNum)
 
                         <div class="mt-2 text-sm font-semibold text-slate-500">
-                            MLS #{{ $flyer->xMlsNum }}
+                            MLS #{{ $data['flyer']->xMlsNum }}
                         </div>
 
                     @endif
@@ -47,7 +47,7 @@
                 </div>
 
                 <a
-                    href="/member/flyer/create?flyerId={{ $flyer->id }}"
+                    href="/member/flyer/create?flyerId={{ $data['flyer']->id }}"
                     class="rounded-xl bg-slate-100 px-4 py-2 text-sm font-bold text-slate-700 hover:bg-slate-200">
                     Edit
                 </a>
