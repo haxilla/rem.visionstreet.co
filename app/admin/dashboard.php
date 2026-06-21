@@ -4,12 +4,12 @@ include app_path('queries/campaigns.php');
 
 
 $emailCounts = [
-    'azphxmetro' => DB::table('azphxmetro')->count(),
-    'azphxne'    => DB::table('azphxne')->count(),
-    'azphxse'    => DB::table('azphxse')->count(),
-    'azphxwv'    => DB::table('azphxwv')->count(),
-    'aznaz'      => DB::table('aznaz')->count(),
-    'azsaz'      => DB::table('azsaz')->count(),
+    'azphxmetro' => DB::connection('rememaildb')->table('azphxmetro')->count(),
+    'azphxne'    => DB::connection('rememaildb')->table('azphxne')->count(),
+    'azphxse'    => DB::connection('rememaildb')->table('azphxse')->count(),
+    'azphxwv'    => DB::connection('rememaildb')->table('azphxwv')->count(),
+    'aznaz'      => DB::connection('rememaildb')->table('aznaz')->count(),
+    'azsaz'      => DB::connection('rememaildb')->table('azsaz')->count(),
 ];
 
 $data = [
