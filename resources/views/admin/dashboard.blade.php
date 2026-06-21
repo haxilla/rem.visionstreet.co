@@ -231,19 +231,7 @@
     <div class="hidden lg:flex lg:items-center lg:gap-4 text-sm">
         <div class="w-32 shrink-0">
 
-            @if($status === 'waiting')
-
-                @if($authorized)
-                    <span class="font-semibold text-emerald-700">
-                        AUTHORIZED
-                    </span>
-                @else
-                    <span class="font-semibold text-red-700">
-                        UNAUTHORIZED
-                    </span>
-                @endif
-
-            @elseif($status === 'progress')
+            if($status === 'progress')
 
                 <span class="font-semibold text-blue-700">
                     IN PROGRESS
@@ -263,7 +251,7 @@
             {{ $area }}
         </div>
 
-        <div class="flex-1 truncate">
+        <div class="flex-1 truncate pl-3">
             {{ $address }}
         </div>
 
