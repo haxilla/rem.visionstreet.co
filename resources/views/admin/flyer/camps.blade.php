@@ -285,7 +285,6 @@
 
     #flyer-scale-wrapper {
         width: 600px;
-        max-width: 600px;
         transform-origin: top left;
         margin: 0 auto;
     }
