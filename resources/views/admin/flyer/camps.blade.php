@@ -90,7 +90,7 @@
                         </div>
 
                         {{-- FLYER --}}
-                        <div class="mt-6 rounded-[24px] bg-white p-6 shadow-[0_12px_35px_rgba(15,23,42,0.06)]">
+                        <div class="mt-6 rounded-[24px] bg-white p-6 overflow-hidden shadow-[0_12px_35px_rgba(15,23,42,0.06)]">
 
                             <div class="mb-6">
                                 <h2 class="text-lg font-semibold text-slate-900">
