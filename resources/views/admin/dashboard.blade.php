@@ -293,49 +293,6 @@
                         @include('admin.includes.sidebar')
                     </div>
 
-                    {{-- MOBILE SIDEBAR OVERLAY --}}
-                    <div id="adminMobileMenuOverlay" class="fixed inset-0 z-[60] hidden lg:hidden">
-                        <div class="absolute inset-0 bg-slate-900/50" id="adminMobileMenuBackdrop"></div>
-
-                        <div class="relative h-full w-72 bg-white shadow-2xl p-6">
-                            <div class="mb-6 flex items-center justify-between">
-                                <div class="text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">
-                                    Admin Menu
-                                </div>
-
-                                <button
-                                    type="button"
-                                    id="adminMobileMenuClose"
-                                    class="rounded-lg bg-slate-100 px-3 py-2 text-sm font-semibold text-slate-600"
-                                >
-                                    Close
-                                </button>
-                            </div>
-
-                            <nav class="space-y-2">
-                                <a href="/admin/dashboard" class="block rounded-xl px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-100">
-                                    Dashboard
-                                </a>
-
-                                <a href="/admin/flyers" class="block rounded-xl px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-100">
-                                    Flyers
-                                </a>
-
-                                <a href="/admin/campaigns" class="block rounded-xl bg-[#214e9b] px-4 py-3 text-sm font-semibold text-white">
-                                    Campaigns
-                                </a>
-
-                                <a href="/admin/agents" class="block rounded-xl px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-100">
-                                    Agents
-                                </a>
-
-                                <a href="/admin/logout" class="block rounded-xl px-4 py-3 text-sm font-semibold text-red-600 hover:bg-red-50">
-                                    Log Out
-                                </a>
-                            </nav>
-                        </div>
-                    </div>
-
                     {{-- MAIN --}}
                     <main class="flex-1 px-2 py-4 sm:px-4 lg:px-10 lg:py-8">
 

@@ -48,7 +48,7 @@
         </div>
 
         <nav class="space-y-2">
-            <a href="/admin" class="block rounded-xl px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-100">
+            <a href="/admin/dashboard" class="block rounded-xl px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-100">
                 Dashboard
             </a>
 
