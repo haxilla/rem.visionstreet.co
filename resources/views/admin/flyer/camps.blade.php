@@ -6,6 +6,7 @@
 
 @php
 
+$fromURL="https://rem.visionstreet.co";
 $propInfo = $data['propInfo'];
 
 $template = strtolower(
