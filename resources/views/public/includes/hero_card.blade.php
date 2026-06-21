@@ -24,7 +24,7 @@
                     @foreach($newAdds as $the)
                         @php
                             $photo = $the->thePhotos->where('def','=','1')->first()->photoName;
-                            $listingImg = /hqphotos/{$the->theMeta->zipDir}/{$the->theMeta->mlsDir}/{$photo}";
+                            $listingImg = "/hqphotos/{$the->theMeta->zipDir}/{$the->theMeta->mlsDir}/{$photo}";
 
                             $agentImg = null;
                             if ($the->theAgent->agtPhoto && $the->theAgent->theAgentCleanup) {
