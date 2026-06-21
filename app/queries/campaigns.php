@@ -118,6 +118,7 @@ $completeCampsQuery = Propdelivnow::with([
 ])->select(
         'propflyer_id',
         'propagent_id',
+        'lastEI',
         'emRequest',
         'campLabel',
         'authorized',
