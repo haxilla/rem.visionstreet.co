@@ -226,104 +226,103 @@
                     $authorized = $campaignAuthorized($campaign);
                 @endphp
 
-                    <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-[#214e9b]/40 hover:shadow-md">
-                        <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+<div class="border-b border-slate-200 px-2 py-2 hover:bg-slate-50">
 
-                                <div class="min-w-0 flex-1">
-                                    <div class="flex flex-wrap items-center gap-2">
-                                        @if($flyerId)
-                                            <a
-                                                href="/flyer/{{ $flyerId }}"
-                                                class="text-[15px] font-semibold text-[#214e9b] hover:underline"
-                                            >
-                                                ID#: {{ $flyerId }}
-                                            </a>
-                                        @else
-                                            <span class="text-[15px] font-semibold text-slate-700">
-                                                ID#: N/A
-                                            </span>
-                                        @endif
+    <div class="hidden lg:grid lg:grid-cols-12 lg:gap-3 lg:items-center text-sm">
 
-                                        @if($status === 'waiting')
-                                            @if($authorized)
-                                                <span class="rounded-full bg-emerald-100 px-2.5 py-1 text-[11px] font-semibold text-emerald-700">
-                                                    Authorized
-                                                </span>
-                                            @else
-                                                <span class="rounded-full bg-red-100 px-2.5 py-1 text-[11px] font-semibold text-red-700">
-                                                    Unauthorized
-                                                </span>
-                                            @endif
-                                        @endif
-                                    </div>
+        <div class="col-span-2">
 
-                                    <div class="mt-1 text-sm font-medium text-slate-800">
-                                        {{ $address }}
-                                    </div>
+            @if($status === 'waiting')
 
-                                    <div class="mt-1 text-sm text-slate-500">
-                                        <span class="font-semibold text-slate-600">Label:</span>
-                                        {{ $label }}
-                                    </div>
+                @if($authorized)
+                    <span class="font-semibold text-emerald-700">
+                        AUTHORIZED
+                    </span>
+                @else
+                    <span class="font-semibold text-red-700">
+                        UNAUTHORIZED
+                    </span>
+                @endif
 
-                                    <div class="mt-1 text-sm text-slate-500">
-                                        <span class="font-semibold text-slate-600">Subject:</span>
-                                        {{ $subject }}
-                                    </div>
+            @elseif($status === 'progress')
 
-                                    @if($agent)
-                                        <div class="mt-2 text-xs text-slate-500">
-                                            <span class="font-medium text-slate-400">Agent:</span>
-                                            <a href="#" class="ml-1 font-medium text-[#214e9b] hover:underline">
-                                                {{ $agent->agtFullName }}
-                                            </a>
-                                        </div>
-                                    @endif
-                                </div>
-                            </div>
+                <span class="font-semibold text-blue-700">
+                    IN PROGRESS
+                </span>
 
-                            <div class="grid grid-cols-1 gap-2 text-xs text-slate-500 sm:grid-cols-3 md:min-w-[420px]">
-                                <div class="rounded-xl bg-slate-50 p-3">
-                                    <div class="font-semibold uppercase tracking-wide text-slate-400">
-                                        Requested
-                                    </div>
-                                    <div class="mt-1 font-medium text-slate-700">
-                                        {{ $formatDate($emRequest) }}
-                                    </div>
-                                </div>
+            @else
 
-                                <div class="rounded-xl bg-slate-50 p-3">
-                                    <div class="font-semibold uppercase tracking-wide text-slate-400">
-                                        Started
-                                    </div>
-                                    <div class="mt-1 font-medium text-slate-700">
-                                        {{ $formatDate($emStart) }}
-                                    </div>
-                                </div>
+                <span class="font-semibold text-slate-600">
+                    COMPLETE
+                </span>
 
-                                <div class="rounded-xl bg-slate-50 p-3">
-                                    <div class="font-semibold uppercase tracking-wide text-slate-400">
-                                        Finished
-                                    </div>
-                                    <div class="mt-1 font-medium text-slate-700">
-                                        {{ $formatDate($emFinished) }}
-                                    </div>
-                                </div>
+            @endif
 
-                                @if($emails !== null)
-                                    <div class="rounded-xl bg-slate-50 p-3 sm:col-span-3">
-                                        <div class="font-semibold uppercase tracking-wide text-slate-400">
-                                            Emails
-                                        </div>
-                                        <div class="mt-1 font-medium text-slate-700">
-                                            {{ number_format((int) $emails) }}
-                                        </div>
-                                    </div>
-                                @endif
-                            </div>
+        </div>
 
-                        </div>
-                    </div>
+        <div class="col-span-2 truncate">
+            {{ $area }}
+        </div>
+
+        <div class="col-span-3 truncate">
+            {{ $address }}
+        </div>
+
+        <div class="col-span-2 truncate">
+            {{ $agent?->agtFullName ?? 'N/A' }}
+        </div>
+
+        <div class="col-span-1 text-right">
+            {{ $emails ? number_format($emails) : '-' }}
+        </div>
+
+        <div class="col-span-2 text-right">
+            {{ $formatDate($emRequest) }}
+        </div>
+
+    </div>
+
+    <div class="lg:hidden text-sm">
+
+        <div class="font-semibold">
+
+            @if($status === 'waiting')
+
+                @if($authorized)
+                    <span class="text-emerald-700">AUTHORIZED</span>
+                @else
+                    <span class="text-red-700">UNAUTHORIZED</span>
+                @endif
+
+            @elseif($status === 'progress')
+
+                <span class="text-blue-700">IN PROGRESS</span>
+
+            @else
+
+                <span class="text-slate-600">COMPLETE</span>
+
+            @endif
+
+        </div>
+
+        <div class="mt-1">
+            {{ $address }}
+        </div>
+
+        <div class="text-xs text-slate-500 mt-1">
+            Area: {{ $area }}
+            · Agent: {{ $agent?->agtFullName ?? 'N/A' }}
+            · Emails: {{ $emails ? number_format($emails) : '-' }}
+        </div>
+
+        <div class="text-xs text-slate-400 mt-1">
+            {{ $formatDate($emRequest) }}
+        </div>
+
+    </div>
+
+</div>
 
                 @php
                 };
