@@ -1,5 +1,5 @@
 <?php
-
+  dd(request()->all());
 // Validate the request data
 $validatedData = $request->validate([
     'address' => 'required|string|max:255',
