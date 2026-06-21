@@ -67,7 +67,7 @@ class adminController extends Controller
         return redirect('/member/dashboard');
     }
 
-    public function flyerCamps($flyerid)
+    public function flyerCamps($flyerId)
     {
 
         include(app_path().'/admin/flyer/camps.php');
