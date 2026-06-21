@@ -13,7 +13,5 @@ $flyer = Propflyer::where('id', $flyerId)
     ->first();
 
 if (!$flyer) {
-    dd("Error: Flyer not found or you don't have permission to view it.");
-}
+    dd("Error: Flyer not found or you don't have permission to view it.");}
 
-dd($flyerId);
