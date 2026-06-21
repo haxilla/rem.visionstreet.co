@@ -2,11 +2,6 @@
 
 include app_path('queries/campaigns.php');
 
-dd(
-    DB::connection('rememaildb')
-        ->table('azphxmetro')
-        ->count()
-);
 
 $emailCounts = [
     'azphxmetro' => DB::table('azphxmetro')->count(),
@@ -21,7 +16,7 @@ $data = [
     'waitingFlyerCamps'    => $waitingFlyerCamps,
     'inProgressFlyerCamps' => $inProgressFlyerCamps,
     'completeFlyerCamps'   => $completeFlyerCamps,
-
+    'emailCounts'          => $emailCounts,
     'campaignsWaiting'     => $campaignsWaiting,
     'campaignsInProgress'  => $campaignsInProgress,
     'campaignsCompleted'   => $campaignsCompleted,

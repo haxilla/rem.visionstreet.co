@@ -200,6 +200,7 @@
                 };
 
                 $renderCampaignCard = function ($campaign, $status) use (
+                    $data,
                     $campaignValue,
                     $campaignDate,
                     $campaignAuthorized,
@@ -243,7 +244,7 @@
         </div>
 
         <div class="w-24 shrink-0 text-right">
-            {{ $emails ? number_format($emails) : '-' }}
+            {{ number_format($emailCount) }}
         </div>
 
         <div class="w-48 shrink-0 text-right">
