@@ -71,6 +71,9 @@ class adminController extends Controller
     {
 
         include(app_path().'/admin/flyer/camps.php');
+        return view('admin.flyer.camps', [
+            'data' => $data
+        ]);
 
     }
 }
