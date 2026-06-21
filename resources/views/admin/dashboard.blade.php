@@ -216,6 +216,7 @@
 
                     $subject    = $campaignValue($campaign, ['emSubject'], 'N/A');
                     $label      = $campaignValue($campaign, ['campLabel'], 'N/A');
+                    $area       = $campaignValue($campaign, ['emArea'], 'N/A');
                     $emails     = $campaignValue($campaign, ['emailCount', 'emCount', 'totalEmails', 'countEmails'], null);
 
                     $emRequest  = $campaignDate($campaign, ['emRequest']);
@@ -228,22 +229,7 @@
                     <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-[#214e9b]/40 hover:shadow-md">
                         <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
 
-                            <div class="flex flex-col gap-4 sm:flex-row sm:items-center">
-                                <div class="h-24 w-full overflow-hidden rounded-xl border border-slate-200 bg-slate-100 sm:h-20 sm:w-28 sm:shrink-0">
-                                    @if($thumbUrl)
-                                        <img
-                                            src="{{ $thumbUrl }}"
-                                            alt="{{ $address }}"
-                                            class="h-full w-full object-cover"
-                                        >
-                                    @else
-                                        <div class="flex h-full w-full items-center justify-center text-xs text-slate-400">
-                                            No Photo
-                                        </div>
-                                    @endif
-                                </div>
-
-                                <div class="min-w-0">
+                                <div class="min-w-0 flex-1">
                                     <div class="flex flex-wrap items-center gap-2">
                                         @if($flyerId)
                                             <a
