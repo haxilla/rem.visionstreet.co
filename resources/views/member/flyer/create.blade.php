@@ -104,7 +104,7 @@
 
         </div>
 
-        <form action="/member/create-flyer" method="post">
+        <form action="/member/flyer/save" method="post">
 
             @csrf
 
