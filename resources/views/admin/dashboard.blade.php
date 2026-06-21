@@ -272,6 +272,10 @@
 
 </div>
 
+                @php
+                };
+            @endphp
+
             <div class="min-h-screen bg-[#f4f7fb]">
                 <div class="flex min-h-screen">
 
