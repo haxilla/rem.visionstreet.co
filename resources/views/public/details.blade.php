@@ -42,7 +42,7 @@
     $zip = $details->theMeta->zipDir ?? '';
     $mls = $details->theMeta->mlsDir ?? '';
 
-    $photoPath = fn ($photo) => "https://realtyrepublic.com/hqphotos/{$zip}/{$mls}/{$photo->photoName}";
+    $photoPath = fn ($photo) => "/hqphotos/{$zip}/{$mls}/{$photo->photoName}";
 
     $mapAddress = urlencode(
         $details->xFullStreet . ', ' .
@@ -57,7 +57,7 @@
     $agentImg = null;
 
     if ($agent?->agtPhoto && $agent?->theAgentCleanup) {
-        $agentImg = "https://realtyrepublic.com/agentPhotos/{$agent->theAgentCleanup->newRemID}/{$agent->agtPhoto}";
+        $agentImg = "/agentPhotos/{$agent->theAgentCleanup->newRemID}/{$agent->agtPhoto}";
     } elseif ($agent?->agtPhoto && $office?->officeID) {
         $agentImg = "https://realtyemails.com/HQoffice/{$office->officeID}/{$agent->agtPhoto}";
     }
@@ -65,7 +65,7 @@
     $officeLogo = null;
 
     if ($agent?->agtLogo && $office?->officeID) {
-        $officeLogo = "https://realtyrepublic.com/officeLogos/{$office->officeID}/{$agent->agtLogo}";
+        $officeLogo = "/officeLogos/{$office->officeID}/{$agent->agtLogo}";
     }
 @endphp
 
