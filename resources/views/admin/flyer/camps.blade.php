@@ -101,7 +101,7 @@ $template = strtolower(
                                 <div class="w-full max-w-[700px] overflow-hidden">
 
                                     @if($template)
-                                        @include('flyers.'.$template)
+                                        @include('flyers.s'.$template)
                                     @else
                                         <div class="rounded-xl border border-red-300 bg-red-50 p-6 text-center text-red-600">
                                             Flyer template missing
