@@ -4,6 +4,15 @@
 
 @include('admin.layout.nav')
 
+@php
+
+$propInfo = $data['propInfo'];
+
+$template = strtolower(
+    $propInfo->theStyle->template ?? ''
+);
+
+@endphp
 <main
     class="transition-all duration-300 min-h-screen pt-24 relative"
     :class="collapsed ? 'ml-20' : 'ml-64'"
@@ -89,13 +98,15 @@
 
                             <div class="flex justify-center">
 
-                                <div class="w-full max-w-[700px] rounded-xl border border-slate-200 bg-slate-50 p-10">
+                                <div class="w-full max-w-[700px] overflow-hidden">
 
-                                    <div class="flex h-[900px] items-center justify-center rounded-lg border border-dashed border-slate-300 text-slate-400">
-
-                                        FLYER GOES HERE
-
-                                    </div>
+                                    @if($template)
+                                        @include('flyers.'.$template)
+                                    @else
+                                        <div class="rounded-xl border border-red-300 bg-red-50 p-6 text-center text-red-600">
+                                            Flyer template missing
+                                        </div>
+                                    @endif
 
                                 </div>
 
