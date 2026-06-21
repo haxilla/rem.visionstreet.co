@@ -228,9 +228,8 @@
 
 <div class="border-b border-slate-200 px-2 py-2 hover:bg-slate-50">
 
-    <div class="hidden lg:grid lg:grid-cols-12 lg:gap-3 lg:items-center text-sm">
-
-        <div class="col-span-2">
+    <div class="hidden lg:flex lg:items-center lg:gap-4 text-sm">
+        <div class="w-32 shrink-0">
 
             @if($status === 'waiting')
 
@@ -260,11 +259,11 @@
 
         </div>
 
-        <div class="col-span-2 truncate">
+        <div class="w-40 shrink-0 truncate">
             {{ $area }}
         </div>
 
-        <div class="col-span-3 truncate">
+        <div class="flex-1 truncate">
             {{ $address }}
         </div>
 
@@ -272,11 +271,11 @@
             {{ $agent?->agtFullName ?? 'N/A' }}
         </div>
 
-        <div class="col-span-1 text-right">
+        <div class="w-24 shrink-0 text-right">
             {{ $emails ? number_format($emails) : '-' }}
         </div>
 
-        <div class="col-span-2 text-right">
+        <div class="w-48 shrink-0 text-right">
             {{ $formatDate($emRequest) }}
         </div>
 
