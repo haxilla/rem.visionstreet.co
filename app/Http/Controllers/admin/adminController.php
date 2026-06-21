@@ -66,4 +66,11 @@ class adminController extends Controller
         include(app_path().'/admin/agent/login.php');
         return redirect('/member/dashboard');
     }
+
+    public function flyerCamps($id)
+    {
+
+        include(app_path().'/admin/flyer/camps.php');
+
+    }
 }

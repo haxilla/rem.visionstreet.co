@@ -56,6 +56,7 @@ Route::get('/member/flyer/photos/{flyerId}', [memberController::class, 'flyerPho
 
 
 Route::get('/admin/flyerEdit/{flyerId}', [adminController::class, 'flyerEdit'])->name('admin.flyeredit');
+Route::get('/admin/flyerCamps/{flyerId}', [adminController::class, 'flyerCamps'])->name('admin.flyerCamps');
 
 
 Route::match(['get', 'post'], '/admin/{segments}', [adminController::class, 'segments'])

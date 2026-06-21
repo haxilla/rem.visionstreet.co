@@ -238,7 +238,7 @@
                         </div>
 
                         <div class="flex-1 truncate">
-                            {{ $address }}
+                            <a href="/admin/flyerCamps/{{ $flyerId }}" class="text-blue-500 hover:underline">{{ $address }}</a>
                         </div>
 
                         <div class="w-48 shrink-0 truncate">
