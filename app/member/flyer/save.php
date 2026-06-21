@@ -9,6 +9,12 @@ $validatedData = $request->validate([
     // Add other fields as necessary
 ]);
 
+if ($validator->fails()) {
+
+    dd($validator->errors()->toArray());
+
+}
+
 echo "BEFORE REDIRECT<br>";
 
 redirect('/member/flyer/details')->send();
