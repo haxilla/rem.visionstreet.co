@@ -70,7 +70,7 @@
         <input
             type="hidden"
             name="flyerId"
-            value="{{ $flyer->id }}"
+            value="{{ $data['flyer']->id }}"
         >
 
         <div class="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-black/5">
