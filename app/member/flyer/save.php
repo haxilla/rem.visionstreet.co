@@ -1,6 +1,5 @@
 <?php
 
-dd(request()->all());
 // Validate the request data
 $validatedData = $request->validate([
     'address' => 'required|string|max:255',
@@ -10,10 +9,9 @@ $validatedData = $request->validate([
     // Add other fields as necessary
 ]);
 
+echo "BEFORE REDIRECT<br>";
 
+redirect('/member/flyer/details')->send();
 
-redirect('/member/flyer/details')
-    ->with('success', 'saving flyer with data: ' . json_encode($validatedData)  )
-    ->send();// Dump and die to inspect the validated data
-
+echo "AFTER REDIRECT";
 exit();
