@@ -16,7 +16,9 @@
 
 @endphp
 <main
-    class="transition-all duration-300 min-h-screen pt-24 relative">
+    class="transition-all duration-300 min-h-screen pt-24 relative"
+    :class="collapsed ? 'ml-20' : 'ml-64'"
+>
     <div class="mx-0 sm:mx-4 lg:mx-10">
         <div class="pageswap p-0 sm:p-4 lg:p-6 w-full">
 
@@ -96,8 +98,7 @@
                                 </h2>
                             </div>
 
-                            <div class="flyer-stage">
-
+                            <div class="flex-1 min-w-0 flyer-stage">
                                 <div id="flyer-scale-wrapper">
 
                                     @php
