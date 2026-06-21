@@ -177,13 +177,13 @@
                         <div>
 
                             <label class="mb-2 block text-sm font-bold text-slate-700">
-                                State
+                                State <span class="text-slate-400">(2-letter abbreviation)</span>
                             </label>
 
                             <input
                                 type="text"
                                 name="xState"
-                                value="AZ"
+                                maxlength="2"
                                 class="w-full rounded-2xl border border-slate-300 px-4 py-3"
                                 required
                             >
