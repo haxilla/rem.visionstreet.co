@@ -219,7 +219,8 @@
                     $label      = $campaignValue($campaign, ['campLabel'], 'N/A');
                     $area       = $campaignValue($campaign, ['emArea'], 'N/A');
                     $emails     = $campaignValue($campaign, ['emailCount', 'emCount', 'totalEmails', 'countEmails'], null);
-
+                    $emailCount = $data['emailCounts'][$area] ?? 0;
+                    
                     $emRequest  = $campaignDate($campaign, ['emRequest']);
                     $emStart    = $campaignDate($campaign, ['emStart']);
                     $emFinished = $campaignDate($campaign, ['emFinished', 'emComplete']);
