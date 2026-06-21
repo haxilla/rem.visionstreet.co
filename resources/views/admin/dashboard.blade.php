@@ -503,29 +503,6 @@
                                         </button>
                                     </div>
 
-                                    {{-- AUTHORIZED WAITING --}}
-                                    <div class="waiting-panel hidden" id="waiting-authorized">
-
-                                        <div class="hidden lg:flex lg:items-center lg:gap-4 text-xs font-semibold uppercase tracking-wide text-slate-500 border-b border-slate-300 px-2 py-2">
-                                            <div class="w-32 shrink-0">Area</div>
-                                            <div class="flex-1">Address</div>
-                                            <div class="w-48 shrink-0">Agent</div>
-                                            <div class="w-24 shrink-0 text-right">Emails</div>
-                                            <div class="w-32 shrink-0 text-right">Requested</div>
-                                        </div>
-
-                                        <div>
-                                            @forelse($waitingAuthorized as $campaign)
-                                                @php $renderCampaignCard($campaign, 'waiting'); @endphp
-                                            @empty
-                                                <div class="rounded-2xl border border-dashed border-slate-300 p-8 text-center text-sm text-slate-500">
-                                                    No authorized waiting campaigns found.
-                                                </div>
-                                            @endforelse
-                                        </div>
-
-                                    </div>
-
                                     {{-- UNAUTHORIZED WAITING --}}
                                     <div class="waiting-panel" id="waiting-unauthorized">
 
@@ -543,6 +520,29 @@
                                             @empty
                                                 <div class="rounded-2xl border border-dashed border-slate-300 p-8 text-center text-sm text-slate-500">
                                                     No unauthorized waiting campaigns found.
+                                                </div>
+                                            @endforelse
+                                        </div>
+
+                                    </div>
+
+                                    {{-- AUTHORIZED WAITING --}}
+                                    <div class="waiting-panel hidden" id="waiting-authorized">
+
+                                        <div class="hidden lg:flex lg:items-center lg:gap-4 text-xs font-semibold uppercase tracking-wide text-slate-500 border-b border-slate-300 px-2 py-2">
+                                            <div class="w-32 shrink-0">Area</div>
+                                            <div class="flex-1">Address</div>
+                                            <div class="w-48 shrink-0">Agent</div>
+                                            <div class="w-24 shrink-0 text-right">Emails</div>
+                                            <div class="w-32 shrink-0 text-right">Requested</div>
+                                        </div>
+
+                                        <div>
+                                            @forelse($waitingAuthorized as $campaign)
+                                                @php $renderCampaignCard($campaign, 'waiting'); @endphp
+                                            @empty
+                                                <div class="rounded-2xl border border-dashed border-slate-300 p-8 text-center text-sm text-slate-500">
+                                                    No authorized waiting campaigns found.
                                                 </div>
                                             @endforelse
                                         </div>
