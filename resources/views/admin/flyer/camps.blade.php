@@ -6,9 +6,11 @@
 
 @php
 
-include(app_path().'/flyers/variables.php');
 
 $propInfo = $data['propInfo'];
+
+include(app_path().'/flyers/variables.php');
+
 $template = strtolower($propInfo->theStyle->template ?? '');
 $templateView = 'flyers.s'.$template;
 
