@@ -628,7 +628,32 @@
                                         </span>
                                     </div>
 
-                                    <div class="space-y-3">
+                                    <div class="hidden lg:flex lg:items-center lg:gap-4 text-xs font-semibold uppercase tracking-wide text-slate-500 border-b border-slate-300 px-2 py-2">
+
+                                        <div class="w-32 shrink-0">
+                                            Area
+                                        </div>
+
+                                        <div class="flex-1">
+                                            Address
+                                        </div>
+
+                                        <div class="w-48 shrink-0">
+                                            Agent
+                                        </div>
+
+                                        <div class="w-24 shrink-0 text-right">
+                                            Emails
+                                        </div>
+
+                                        <div class="w-32 shrink-0 text-right">
+                                            Finished
+                                        </div>
+
+                                    </div>
+
+                                    <div>
+
                                         @forelse($completedCampaigns as $campaign)
                                             @php $renderCampaignCard($campaign, 'completed'); @endphp
                                         @empty
@@ -636,6 +661,7 @@
                                                 No completed campaigns found.
                                             </div>
                                         @endforelse
+
                                     </div>
 
                                 </div>
