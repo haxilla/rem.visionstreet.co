@@ -31,7 +31,7 @@
                     </div>
 
                     {{-- MAIN --}}
-                    <main class="flex-1 px-2 py-4 sm:px-4 lg:px-10 lg:py-8">
+                    <div class="flex-1 px-2 py-4 sm:px-4 lg:px-10 lg:py-8">
 
                         {{-- HEADER --}}
                         <div class="rounded-[20px] bg-white px-4 py-5 sm:px-6 sm:py-6 lg:px-8 lg:py-7 shadow-[0_12px_35px_rgba(15,23,42,0.06)]">
@@ -261,7 +261,7 @@
 
                         </div>
 
-                    </main>
+                    </div>
 
                 </div>
             </div>
