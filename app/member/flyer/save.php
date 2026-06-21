@@ -2,10 +2,10 @@
 
 // Validate the request data
 $validatedData = $request->validate([
-    'address' => 'required|string|max:255',
-    'city' => 'required|string|max:100',
-    'state' => 'required|string|max:2',
-    'zip' => 'required|string|max:10',
+    'xFullStreet' => 'required|string|max:255',
+    'xCity' => 'required|string|max:100',
+    'xState' => 'required|string|max:2',
+    'xZip' => 'required|string|max:10',
     // Add other fields as necessary
 ]);
 
