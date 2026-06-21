@@ -193,7 +193,33 @@ $subject = $campaigns->first()['emSubject'] ?? '';
 
             <div class="divide-y divide-slate-100">
 
-                {{-- loop completed campaigns here --}}
+                @forelse($completedCampaigns as $camp)
+
+                    <div class="px-5 py-4 flex items-center justify-between">
+
+                        <div>
+                            <div class="font-semibold">
+                                {{ $camp['emArea'] }}
+                            </div>
+
+                            <div class="text-sm text-slate-500">
+                                Completed {{ $camp['emComplete'] }}
+                            </div>
+                        </div>
+
+                        <span class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-xs font-semibold">
+                            Completed
+                        </span>
+
+                    </div>
+
+                @empty
+
+                    <div class="px-5 py-8 text-center text-slate-500">
+                        No completed campaigns found.
+                    </div>
+
+                @endforelse
 
             </div>
 
