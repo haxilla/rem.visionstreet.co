@@ -14,6 +14,18 @@ include(app_path().'/flyers/variables.php');
 $template = strtolower($propInfo->theStyle->template ?? '');
 $templateView = 'flyers.s'.$template;
 
+$subject = '';
+
+if(isset($waitingFlyerCamps[$propInfo->id])) {
+    $subject = $waitingFlyerCamps[$propInfo->id]->first()['emSubject'] ?? '';
+}
+elseif(isset($inProgressFlyerCamps[$propInfo->id])) {
+    $subject = $inProgressFlyerCamps[$propInfo->id]->first()['emSubject'] ?? '';
+}
+elseif(isset($completeFlyerCamps[$propInfo->id])) {
+    $subject = $completeFlyerCamps[$propInfo->id]->first()['emSubject'] ?? '';
+}
+
 @endphp
 
 <main class="pt-[72px]">
@@ -53,7 +65,7 @@ $templateView = 'flyers.s'.$template;
 
                 <input
                     type="text"
-                    value=""
+                    value="{{ $subject }}"
                     class="flex-1 border border-slate-300 rounded-xl px-4 py-3"
                 >
 
