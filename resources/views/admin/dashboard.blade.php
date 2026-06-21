@@ -225,7 +225,6 @@
                     $emRequest  = $campaignDate($campaign, ['emRequest']);
                     $emStart    = $campaignDate($campaign, ['emStart']);
                     $emFinished = $campaignDate($campaign, ['emFinished', 'emComplete']);
-                    $lastEI     = $campaignValue($campaign, ['lastEI'], null);
 
                     $authorized = $campaignAuthorized($campaign);
                 @endphp
@@ -252,7 +251,7 @@
 
                         <div class="w-32 shrink-0 text-right">
                             @if($status === 'progress')
-                                {{ $lastEI ?? '-' }}
+                                {{ $formatDate($emStart) }}
                             @elseif($status === 'completed')
                                 {{ $formatDate($emFinished) }}
                             @else
@@ -590,7 +589,7 @@
                                         </div>
 
                                         <div class="w-32 shrink-0 text-right">
-                                            Last EI
+                                            Started
                                         </div>
 
                                     </div>
