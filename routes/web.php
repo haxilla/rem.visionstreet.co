@@ -62,7 +62,7 @@ Route::match(['get', 'post'], '/admin/{segments}', [adminController::class, 'seg
     ->where('segments', '.+');
 
 //route for multiple segments
-Route::get('/member/{segments}', [memberController::class, 'segments'])
+Route::match(['get', 'post'], '/member/{segments}', [memberController::class, 'segments'])
     ->where('segments', '.+');
 
 //route for single segment only
