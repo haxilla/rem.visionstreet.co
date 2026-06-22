@@ -1,4 +1,6 @@
-
+@import "swiper/css";
+@import "swiper/css/navigation";
+@import "swiper/css/pagination";
 
 /* ---- Swiper overrides ---- */
 /*
@@ -19,10 +21,11 @@
 @import "./components/custom-swiper.css";
 @import "../icons/themify/css/themify-icons.css";
 
-@import 'tailwindcss';
+
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
+
 @source '../**/*.blade.php';
 @source '../**/*.js';
 
