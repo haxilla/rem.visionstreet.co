@@ -38,6 +38,7 @@ if($zipDir && $mlsDir) {
     $folder = public_path('hqphotos/' . $zipDir . '/' . $mlsDir);
     if (is_dir($folder)) {
         rmdir($folder);}
+}
 
 //delete from propphoto
 Propphoto::where('propflyer_id', $flyer->id)->delete();
