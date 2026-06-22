@@ -93,7 +93,10 @@ $flyer = $data['flyer'] ?? null;
 
         </div>
 
-        <form action="/member/flyer/savePhotos" method="post">
+        <form 
+        action="/member/flyer/savePhotos" 
+        method="post"
+        enctype="multipart/form-data">
 
             @csrf
 
@@ -118,12 +121,42 @@ $flyer = $data['flyer'] ?? null;
 
                     <div class="text-center">
 
-                        <div class="text-lg font-bold text-slate-700">
-                            No Photos Added Yet
-                        </div>
+                        <div class="mt-8">
 
-                        <div class="mt-2 text-sm text-slate-500">
-                            Photo uploads coming soon.
+                            {{-- FILE PICKER --}}
+                            <div class="rounded-2xl border-2 border-dashed border-slate-300 p-8">
+
+                                <div class="text-center">
+
+                                    <label
+                                        for="photos"
+                                        class="inline-flex cursor-pointer items-center rounded-xl bg-[#123f91] px-5 py-3 font-bold text-white hover:bg-[#0f3274]"
+                                    >
+                                        Select Photos
+                                    </label>
+
+                                    <input
+                                        id="photos"
+                                        name="photos[]"
+                                        type="file"
+                                        multiple
+                                        accept="image/*"
+                                        class="hidden"
+                                    >
+
+                                    <p class="mt-3 text-sm text-slate-500">
+                                        Select one or more property photos.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                            {{-- PREVIEWS --}}
+                            <div id="photoPreviewGrid" 
+                            class="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+                            </div>
+
                         </div>
 
                     </div>
@@ -158,6 +191,56 @@ $flyer = $data['flyer'] ?? null;
 </main>
 
 @include('public.layout.footer')
+<script>
 
+document.addEventListener('DOMContentLoaded', () => {
+
+    const input = document.getElementById('photos');
+    const previewGrid = document.getElementById('photoPreviewGrid');
+
+    input.addEventListener('change', function () {
+
+        previewGrid.innerHTML = '';
+
+        Array.from(this.files).forEach((file, index) => {
+
+            if (!file.type.startsWith('image/')) {
+                return;
+            }
+
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+
+                const card = document.createElement('div');
+
+                card.className =
+                    'overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm';
+
+                card.innerHTML = `
+                    <div class="aspect-square bg-slate-100">
+                        <img
+                            src="${e.target.result}"
+                            class="h-full w-full object-cover"
+                        >
+                    </div>
+
+                    <div class="truncate px-2 py-2 text-xs text-slate-600">
+                        ${file.name}
+                    </div>
+                `;
+
+                previewGrid.appendChild(card);
+            };
+
+            reader.readAsDataURL(file);
+
+        });
+
+    });
+
+});
+
+</script>
 </body>
 </html>
