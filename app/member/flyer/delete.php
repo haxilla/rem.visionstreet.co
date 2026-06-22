@@ -37,9 +37,7 @@ if($zipDir && $mlsDir) {
     //delete the folder if empty
     $folder = public_path('hqphotos/' . $zipDir . '/' . $mlsDir);
     if (is_dir($folder)) {
-        rmdir($folder);
-    }else{
-        dd("Error deleting folder");}}
+        rmdir($folder);}
 
 //delete from propphoto
 Propphoto::where('propflyer_id', $flyer->id)->delete();
