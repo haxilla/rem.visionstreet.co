@@ -105,14 +105,6 @@ $flyer = $data['flyer'] ?? null;
             {{-- MLS CARD --}}
             <div class="mb-6 rounded-3xl bg-white p-8 shadow-sm ring-1 ring-black/5">
 
-                <h2 class="text-2xl font-black text-slate-900">
-                    MLS Information
-                </h2>
-
-                <p class="mt-1 text-sm text-slate-500">
-                    Enter the MLS number if this property is listed in the MLS.
-                </p>
-
                 <div class="mt-6">
 
                     <label class="mb-2 block text-sm font-bold text-slate-700">
