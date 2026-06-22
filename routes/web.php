@@ -14,6 +14,11 @@ Route::get('/test-image', function () {
         public_path('hqphotos/FD922A7C-C740-1A4E-441B7B0243A34029.jpg')
     );
 
+        dd(
+        get_class($image),
+        get_class_methods($image)
+    );
+
     return [
         'width'  => $image->width(),
         'height' => $image->height(),
