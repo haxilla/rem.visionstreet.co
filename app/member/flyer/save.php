@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Core\Propflyer;
+use App\Models\Core\Propmeta;
 
 // Validate the request data
 $validatedData = $request->validate([
@@ -13,6 +14,9 @@ $validatedData = $request->validate([
 
 $flyerId = (int) request('flyerId');
 
+//set to false by default, if flyerId is not provided, it will be treated as a new flyer
+$isNewFlyer = false;
+
 if ($flyerId) {
 
     // Load existing flyer and verify ownership
@@ -21,15 +25,16 @@ if ($flyerId) {
         ->first();
 
     if (!$flyer) {
-        abort(403);
+        dd("Error: Flyer not found or you don't have permission to edit it.");
     }
 
 } else {
 
     // Create new flyer
     $flyer = new Propflyer();
-
     $flyer->propagent_id = auth()->id();
+    $isNewFlyer = true;
+    
 }
 
 $flyer->xFullStreet = $validatedData['xFullStreet'];
@@ -46,6 +51,17 @@ if (($flyer->wizardStep ?? 0) < 1) {
 }
 
 $flyer->save();
+
+//must populate meta with zipDir and mlsDir for new flyers
+if ($isNewFlyer) {
+    Propmeta::create([
+        'propflyer_id' => $flyer->id,
+        'zipDir'       => $validatedData['xZip'],
+        'mlsDir'       => !empty($validatedData['xMlsNum'])
+            ? $validatedData['xMlsNum']
+            : 'U' . $flyer->id,
+    ]);
+}
 
 redirect('/member/flyer/details?flyerId='.$flyer->id)->send();
 exit();
