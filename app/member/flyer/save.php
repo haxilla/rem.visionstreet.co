@@ -56,6 +56,7 @@ $flyer->save();
 if ($isNewFlyer) {
     Propmeta::create([
         'propflyer_id' => $flyer->id,
+        'propagent_id' => auth()->id(),
         'zipDir'       => $validatedData['xZip'],
         'mlsDir'       => !empty($validatedData['xMlsNum'])
             ? $validatedData['xMlsNum']
