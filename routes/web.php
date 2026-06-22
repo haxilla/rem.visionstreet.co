@@ -5,9 +5,20 @@ use App\Http\Controllers\guest\guestController;
 use App\Http\Controllers\admin\adminController;
 use App\Http\Controllers\member\memberController;
 use App\Http\Controllers\admin\bounceboxController;
+
 use Intervention\Image\Laravel\Facades\Image;
 
+Route::get('/test-image', function () {
 
+    $image = Image::read(
+        public_path('hqphotos/FD922A7C-C740-1A4E-441B7B0243A34029.jpg')
+    );
+
+    return [
+        'width'  => $image->width(),
+        'height' => $image->height(),
+    ];
+});
 
 //index
 Route::get('/', [
