@@ -117,46 +117,42 @@ $flyer = $data['flyer'] ?? null;
                     Photos will appear here once photo uploads are enabled.
                 </p>
 
-                <div class="mt-8 rounded-2xl border-2 border-dashed border-slate-300 p-12">
+                <div class="text-center">
 
-                    <div class="text-center">
+                    <div class="mt-8">
 
-                        <div class="mt-8">
+                        {{-- FILE PICKER --}}
+                        <div class="rounded-2xl border-2 border-dashed border-slate-300 p-8">
 
-                            {{-- FILE PICKER --}}
-                            <div class="rounded-2xl border-2 border-dashed border-slate-300 p-8">
+                            <div class="text-center">
 
-                                <div class="text-center">
+                                <label
+                                    for="photos"
+                                    class="inline-flex cursor-pointer items-center rounded-xl bg-[#123f91] px-5 py-3 font-bold text-white hover:bg-[#0f3274]"
+                                >
+                                    Select Photos
+                                </label>
 
-                                    <label
-                                        for="photos"
-                                        class="inline-flex cursor-pointer items-center rounded-xl bg-[#123f91] px-5 py-3 font-bold text-white hover:bg-[#0f3274]"
-                                    >
-                                        Select Photos
-                                    </label>
+                                <input
+                                    id="photos"
+                                    name="photos[]"
+                                    type="file"
+                                    multiple
+                                    accept="image/*"
+                                    class="hidden"
+                                >
 
-                                    <input
-                                        id="photos"
-                                        name="photos[]"
-                                        type="file"
-                                        multiple
-                                        accept="image/*"
-                                        class="hidden"
-                                    >
-
-                                    <p class="mt-3 text-sm text-slate-500">
-                                        Select one or more property photos.
-                                    </p>
-
-                                </div>
+                                <p class="mt-3 text-sm text-slate-500">
+                                    Select one or more property photos.
+                                </p>
 
                             </div>
 
-                            {{-- PREVIEWS --}}
-                            <div id="photoPreviewGrid" 
-                            class="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-                            </div>
+                        </div>
 
+                        {{-- PREVIEWS --}}
+                        <div id="photoPreviewGrid" 
+                        class="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
                         </div>
 
                     </div>
