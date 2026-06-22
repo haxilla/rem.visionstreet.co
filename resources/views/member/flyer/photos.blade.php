@@ -72,9 +72,11 @@ $flyer = $data['flyer'] ?? null;
                     </div>
 
                     @if($flyer->xMlsNum)
+
                         <div class="mt-1 text-sm text-slate-500">
                             MLS #{{ $flyer->xMlsNum }}
                         </div>
+
                     @endif
 
                 </div>
@@ -83,24 +85,15 @@ $flyer = $data['flyer'] ?? null;
 
         </div>
 
-        <form
-            action="/member/flyer/savePhotos"
-            method="post"
-            enctype="multipart/form-data"
+        <div
+            id="photoUploader"
+            data-flyer-id="{{ $flyer->id }}"
         >
-
-            @csrf
-
-            <input
-                type="hidden"
-                name="flyerId"
-                value="{{ $flyer->id }}"
-            >
 
             {{-- PHOTO SECTION --}}
             <div class="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-black/5">
 
-                <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
 
                     <div>
 
@@ -109,75 +102,52 @@ $flyer = $data['flyer'] ?? null;
                         </h2>
 
                         <p class="mt-1 text-sm text-slate-500">
-                            Select photos for your flyer.
+                            Drop photos here or click to browse. Uploads begin automatically.
                         </p>
 
                     </div>
 
-                    <div>
-
-                        <label
-                            for="photos"
-                            class="inline-flex cursor-pointer items-center rounded-xl bg-[#123f91] px-5 py-3 font-bold text-white hover:bg-[#0f3274]"
-                        >
-                            + Add Photos
-                        </label>
-
-                        <input
-                            id="photos"
-                            name="photos[]"
-                            type="file"
-                            multiple
-                            accept="image/*"
-                            class="hidden"
-                        >
-
+                    <div
+                        id="photoCount"
+                        class="hidden text-sm font-bold text-slate-600"
+                    >
                     </div>
 
                 </div>
 
-                {{-- EMPTY STATE --}}
+                {{-- DROPZONE --}}
                 <div
-                    id="emptyState"
-                    class="mt-8 rounded-2xl border border-slate-200 bg-slate-50 p-12 text-center"
+                    id="dropZone"
+                    class="mt-6 cursor-pointer rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 px-6 py-10 text-center transition hover:border-[#123f91] hover:bg-white"
                 >
 
-                    <div class="text-lg font-bold text-slate-700">
-                        No Photos Selected
+                    <div class="text-lg font-black text-slate-800">
+                        Drop Photos Here
                     </div>
 
-                    <div class="mt-2 text-sm text-slate-500">
-                        Click "Add Photos" to begin building your flyer gallery.
+                    <div class="mt-2 text-sm font-semibold text-slate-500">
+                        or click anywhere in this box to browse
+                    </div>
+
+                    <div class="mt-1 text-xs text-slate-400">
+                        You can select multiple photos at once.
                     </div>
 
                 </div>
+
+                <input
+                    id="photos"
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    class="hidden"
+                >
 
                 {{-- PREVIEW GRID --}}
                 <div
                     id="photoPreviewGrid"
-                    class="mt-8 hidden grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5"
+                    class="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5"
                 >
-                </div>
-
-                {{-- FOOTER --}}
-                <div
-                    id="photoSummary"
-                    class="mt-8 hidden items-center justify-between border-t border-slate-200 pt-6"
-                >
-
-                    <div
-                        id="photoCount"
-                        class="font-bold text-slate-700"
-                    >
-                    </div>
-
-                    <button
-                        type="submit"
-                        class="rounded-xl bg-[#123f91] px-6 py-3 font-bold text-white hover:bg-[#0f3274]"
-                    >
-                        Upload Photos
-                    </button>
-
                 </div>
 
             </div>
@@ -192,9 +162,16 @@ $flyer = $data['flyer'] ?? null;
                     ← Back
                 </a>
 
+                <a
+                    href="/member/flyer/text?flyerId={{ $flyer->id }}"
+                    class="rounded-xl bg-[#123f91] px-6 py-3 font-bold text-white hover:bg-[#0f3274]"
+                >
+                    Continue →
+                </a>
+
             </div>
 
-        </form>
+        </div>
 
     </section>
 
@@ -208,73 +185,248 @@ $flyer = $data['flyer'] ?? null;
 
 document.addEventListener('DOMContentLoaded', () => {
 
+    const uploader = document.getElementById('photoUploader');
+    const dropZone = document.getElementById('dropZone');
     const input = document.getElementById('photos');
     const previewGrid = document.getElementById('photoPreviewGrid');
-    const emptyState = document.getElementById('emptyState');
-    const photoSummary = document.getElementById('photoSummary');
     const photoCount = document.getElementById('photoCount');
+
+    const flyerId = uploader.dataset.flyerId;
+
+    const csrfMeta = document.querySelector('meta[name="csrf-token"]');
+
+    const csrfToken = csrfMeta
+        ? csrfMeta.content
+        : '{{ csrf_token() }}';
+
+    let totalPhotos = 0;
+
+    dropZone.addEventListener('click', () => {
+        input.click();
+    });
+
+    dropZone.addEventListener('dragover', (e) => {
+
+        e.preventDefault();
+
+        dropZone.classList.add(
+            'border-[#123f91]',
+            'bg-white'
+        );
+
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+
+        dropZone.classList.remove(
+            'border-[#123f91]',
+            'bg-white'
+        );
+
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+
+        e.preventDefault();
+
+        dropZone.classList.remove(
+            'border-[#123f91]',
+            'bg-white'
+        );
+
+        handleFiles(
+            Array.from(e.dataTransfer.files)
+        );
+
+    });
 
     input.addEventListener('change', function () {
 
-        previewGrid.innerHTML = '';
+        handleFiles(
+            Array.from(this.files)
+        );
 
-        const files = Array.from(this.files);
+        this.value = '';
 
-        if (!files.length) {
+    });
 
-            emptyState.classList.remove('hidden');
-            previewGrid.classList.add('hidden');
-            photoSummary.classList.add('hidden');
-
-            return;
-        }
-
-        emptyState.classList.add('hidden');
-
-        previewGrid.classList.remove('hidden');
-
-        photoSummary.classList.remove('hidden');
-        photoSummary.classList.add('flex');
-
-        photoCount.textContent =
-            files.length +
-            (files.length === 1
-                ? ' Photo Selected'
-                : ' Photos Selected');
-
+    function handleFiles(files)
+    {
         files.forEach((file) => {
 
             if (!file.type.startsWith('image/')) {
                 return;
             }
 
-            const reader = new FileReader();
+            totalPhotos++;
 
-            reader.onload = function (e) {
+            updatePhotoCount();
 
-                const card = document.createElement('div');
+            createPreviewAndUpload(file);
 
-                card.className =
-                    'overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm';
+        });
+    }
 
-                card.innerHTML = `
-                    <div class="aspect-square bg-slate-100">
-                        <img
-                            src="${e.target.result}"
-                            class="h-full w-full object-cover"
-                        >
+    function updatePhotoCount()
+    {
+        photoCount.classList.remove('hidden');
+
+        photoCount.textContent =
+            totalPhotos +
+            (totalPhotos === 1
+                ? ' Photo Selected'
+                : ' Photos Selected');
+    }
+
+    function createPreviewAndUpload(file)
+    {
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+
+            const card = document.createElement('div');
+
+            card.className =
+                'group overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm';
+
+            card.innerHTML = `
+                <div class="relative">
+
+                    <img
+                        src="${e.target.result}"
+                        class="aspect-square w-full object-cover"
+                    >
+
+                    <button
+                        type="button"
+                        class="remove-preview absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-white text-lg font-black leading-none text-slate-700 opacity-90 shadow hover:bg-red-600 hover:text-white"
+                        title="Remove"
+                    >
+                        ×
+                    </button>
+
+                    <div
+                        class="upload-badge absolute bottom-2 left-2 rounded-full bg-white/95 px-2 py-1 text-xs font-bold text-slate-700 shadow"
+                    >
+                        Waiting
                     </div>
-                `;
 
-                previewGrid.appendChild(card);
+                </div>
 
-            };
+                <div class="h-2 bg-slate-200">
 
-            reader.readAsDataURL(file);
+                    <div
+                        class="upload-progress h-2 bg-[#123f91] transition-all"
+                        style="width:0%"
+                    ></div>
+
+                </div>
+            `;
+
+            previewGrid.appendChild(card);
+
+            const removeButton = card.querySelector('.remove-preview');
+
+            removeButton.addEventListener('click', () => {
+
+                card.remove();
+
+                totalPhotos = Math.max(0, totalPhotos - 1);
+
+                if (totalPhotos === 0) {
+                    photoCount.classList.add('hidden');
+                } else {
+                    updatePhotoCount();
+                }
+
+            });
+
+            uploadFile(file, card);
+
+        };
+
+        reader.readAsDataURL(file);
+    }
+
+    function uploadFile(file, card)
+    {
+        const progressBar = card.querySelector('.upload-progress');
+        const badge = card.querySelector('.upload-badge');
+
+        const xhr = new XMLHttpRequest();
+
+        const formData = new FormData();
+
+        formData.append('flyerId', flyerId);
+        formData.append('photo', file);
+
+        badge.textContent = 'Uploading';
+
+        xhr.upload.addEventListener('progress', function (e) {
+
+            if (!e.lengthComputable) {
+                return;
+            }
+
+            const percent = Math.round(
+                (e.loaded / e.total) * 100
+            );
+
+            progressBar.style.width = percent + '%';
+
+            badge.textContent = percent + '%';
 
         });
 
-    });
+        xhr.addEventListener('load', function () {
+
+            if (xhr.status >= 200 && xhr.status < 300) {
+
+                progressBar.style.width = '100%';
+
+                progressBar.classList.remove('bg-[#123f91]');
+                progressBar.classList.add('bg-emerald-500');
+
+                badge.textContent = 'Uploaded ✓';
+                badge.classList.remove('text-slate-700');
+                badge.classList.add('text-emerald-700');
+
+            } else {
+
+                progressBar.classList.remove('bg-[#123f91]');
+                progressBar.classList.add('bg-red-500');
+
+                badge.textContent = 'Failed';
+                badge.classList.remove('text-slate-700');
+                badge.classList.add('text-red-700');
+
+            }
+
+        });
+
+        xhr.addEventListener('error', function () {
+
+            progressBar.classList.remove('bg-[#123f91]');
+            progressBar.classList.add('bg-red-500');
+
+            badge.textContent = 'Failed';
+            badge.classList.remove('text-slate-700');
+            badge.classList.add('text-red-700');
+
+        });
+
+        xhr.open(
+            'POST',
+            '/member/flyer/uploadPhoto'
+        );
+
+        xhr.setRequestHeader(
+            'X-CSRF-TOKEN',
+            csrfToken
+        );
+
+        xhr.send(formData);
+    }
 
 });
 
