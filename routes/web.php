@@ -10,12 +10,7 @@ use Intervention\Image\Laravel\Facades\Image;
 
 Route::get('/test-image', function () {
 
- dd(
-        get_class(Image::getFacadeRoot()),
-        get_class_methods(Image::getFacadeRoot())
-    );
-
-    $image = Image::read(
+    $image = Image::decodePath(
         public_path('hqphotos/FD922A7C-C740-1A4E-441B7B0243A34029.jpg')
     );
 
