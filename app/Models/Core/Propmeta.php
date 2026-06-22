@@ -12,6 +12,7 @@ class Propmeta extends Model
 
    protected $fillable = [
     'propflyer_id',
+    'propagent_id',
     'zipDir',
     'mlsDir',
    ];
