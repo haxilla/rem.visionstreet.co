@@ -7,19 +7,7 @@ use App\Http\Controllers\member\memberController;
 use App\Http\Controllers\admin\bounceboxController;
 use Intervention\Image\Laravel\Facades\Image;
 
-Route::get('/test-image', function () {
 
-    dd(Image::class);
-    
-    $img = Image::read(
-        public_path('hqphotos/FD98615C-F407-92F6-D140A5E40FFBA19D.jpg')
-    );
-
-    return [
-        'width' => $img->width(),
-        'height' => $img->height(),
-    ];
-});
 
 //index
 Route::get('/', [
