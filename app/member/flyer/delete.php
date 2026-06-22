@@ -32,10 +32,14 @@ if($zipDir && $mlsDir) {
         $photoPath=public_path('hqphotos/' . $zipDir . '/' . $mlsDir . '/' . $photo->photoName);
         //delete the photo file if it exists
         if (file_exists($photoPath)) {
-            unlink($photoPath);
-        }
-    }
-}
+            unlink($photoPath);}}
+
+    //delete the folder if empty
+    $folder = public_path('hqphotos/' . $zipDir . '/' . $mlsDir);
+    if (is_dir($folder)) {
+        rmdir($folder);
+    }else{
+        dd("Error deleting folder");}}
 
 //delete from propphoto
 Propphoto::where('propflyer_id', $flyer->id)->delete();
