@@ -237,7 +237,7 @@
 
             {{-- Remarks --}}
             <section class="max-w-[760px]">
-                <h2 class="text-2xl font-bold mb-5">What's special</h2>
+                <h2 class="text-2xl font-bold mb-5">About this Home</h2>
 
                 <p class="text-lg leading-8">
                     {{ $details->theRemarks->xPubRemarks ?? '' }}
