@@ -180,9 +180,11 @@
 
             </div>
 
+            <!---
             <div class="mt-5">
                 <u>Property Summary</u>
             </div>
+            --->
 
             {{-- Facts --}}
             <div class="grid grid-cols-1 md:grid-cols-2 gap-2 mt-6 max-w-[760px]">
