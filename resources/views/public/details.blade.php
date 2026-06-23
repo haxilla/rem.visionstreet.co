@@ -181,11 +181,7 @@
             </div>
 
             <div class="mt-5">
-                <a href="#"
-                   class="inline-block bg-sky-100 text-blue-900 font-semibold rounded-lg px-4 py-2">
-                    Est.: <strong>$3,950/mo</strong>
-                    <span class="ml-2">Get pre-qualified</span>
-                </a>
+                Property Summary
             </div>
 
             {{-- Facts --}}
