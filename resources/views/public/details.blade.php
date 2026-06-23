@@ -38,6 +38,7 @@
     $baths = $details->xxBaths ?: $details->xBaths;
     $sqft = $details->xxSqft ?: $details->xSqft;
     $year = $details->xxYrBuilt ?: $details->xYrBuilt;
+    $headline = $details->xxHeadline ?: $details->xHeadline;
 
     $zip = $details->theMeta->zipDir ?? '';
     $mls = $details->theMeta->mlsDir ?? '';
@@ -144,7 +145,7 @@
 
             <div class="mb-3">
                 <span class="inline-block bg-red-100 text-red-700 text-sm font-bold px-2 py-1 rounded">
-                    Special statement goes here
+                    {{$details->xxHeadline ?: $details->xHeadline}}
                 </span>
             </div>
 
