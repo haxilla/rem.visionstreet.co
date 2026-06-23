@@ -138,7 +138,7 @@ $priceLabel = function($item) {
                 $img    = $listingImg($the);
                 $agt    = $agentImg($the);
                 $price  = $priceLabel($the);
-                $url    = "https://realtyrepublic.com/homedetails/{$the->url_slug}";
+                $url    = "/homedetails/{$the->url_slug}";
                 $street = $the->xFullStreet;
                 $city   = trim("{$the->xCity} {$the->xState} {$the->xxZip}");
             @endphp
