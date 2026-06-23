@@ -181,7 +181,7 @@
             </div>
 
             <div class="mt-5">
-                Property Summary
+                <u>Property Summary</u>
             </div>
 
             {{-- Facts --}}
