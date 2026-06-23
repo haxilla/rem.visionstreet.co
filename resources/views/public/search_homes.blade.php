@@ -11,14 +11,14 @@ $listingImg = function($item) {
     $photoObj = $item->thePhotos->where('def', '=', '1')->first();
     $photo    = $photoObj?->photoName;
     if ($photo && $item->theMeta?->zipDir && $item->theMeta?->mlsDir) {
-        return "https://realtyrepublic.com/hqphotos/{$item->theMeta->zipDir}/{$item->theMeta->mlsDir}/{$photo}";
+        return "/hqphotos/{$item->theMeta->zipDir}/{$item->theMeta->mlsDir}/{$photo}";
     }
     return null;
 };
 
 $agentImg = function($item) {
     if (!empty($item->theAgent?->agtPhoto) && !empty($item->theAgent?->theAgentCleanup?->newRemID)) {
-        return "https://realtyrepublic.com/agentPhotos/{$item->theAgent->theAgentCleanup->newRemID}/{$item->theAgent->agtPhoto}";
+        return "/agentPhotos/{$item->theAgent->theAgentCleanup->newRemID}/{$item->theAgent->agtPhoto}";
     }
     return null;
 };
@@ -43,7 +43,7 @@ $priceLabel = function($item) {
         $fImg    = $listingImg($featured);
         $fAgt    = $agentImg($featured);
         $fPrice  = $priceLabel($featured);
-        $fURL    = "https://realtyrepublic.com/homedetails/{$featured->url_slug}";
+        $fURL    = "/homedetails/{$featured->url_slug}";
         $fStreet = $featured->xFullStreet;
         $fCity   = trim("{$featured->xCity} {$featured->xState} {$featured->xxZip}");
     @endphp

@@ -20,7 +20,7 @@ $meta = Propmeta::where('propflyer_id', $flyer->id)->first();
 $zipDir = $meta->zipDir ?? null;    
 $mlsDir = $meta->mlsDir ?? null;
 
-//do not delete photos if no zipDir or mlsDir, 
+// do not delete photos if no zipDir or mlsDir, 
 // as we won't know where they are stored, 
 // and we want to avoid accidentally deleting 
 // unrelated photos if the directories 
