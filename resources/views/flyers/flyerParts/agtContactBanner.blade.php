@@ -1,13 +1,8 @@
 
 @php
 
-if ($agentInfo->agtPhoto && $agentInfo->theAgentCleanup) {
-    $agentImg = "https://realtyrepublic.com/agentPhotos/{$agentInfo->theAgentCleanup->newRemID}/{$agentInfo->agtPhoto}";
-} elseif ($agentInfo->agtPhoto) {
-    $agentImg = "https://realtyemails.com/HQoffice/{$officeInfo->officeID}/{$agentInfo->agtPhoto}";
-}
-
-$officeLogo="https://realtyrepublic.com/officeLogos/{$officeInfo->officeID}/{$agentInfo->agtLogo}";
+$agentImg = "https://rem.visionstreet.co/agentPhotos/{$agentInfo->theAgentCleanup->newRemID}/{$agentInfo->agtPhoto}";
+$officeLogo="https://rem.visionstreet.co/officeLogos/{$officeInfo->officeID}/{$agentInfo->agtLogo}";
 @endphp
 
 <div style="background-color:#f9f9f9;line-height:1.45;color:#333;
