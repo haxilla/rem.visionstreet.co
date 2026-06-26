@@ -1,7 +1,7 @@
 
 @php
-$agentImg = "{{$fromURL}}/agentPhotos/{$agentInfo->theAgentCleanup->newRemID}/{$agentInfo->agtPhoto}";
-$officeLogo="{{$fromURL}}/officeLogos/{$officeInfo->officeID}/{$agentInfo->agtLogo}";
+$agentImg = "{$fromURL}/agentPhotos/{$agentInfo->theAgentCleanup->newRemID}/{$agentInfo->agtPhoto}";
+$officeLogo="{$fromURL}/officeLogos/{$officeInfo->officeID}/{$agentInfo->agtLogo}";
 @endphp
 
 <div style="background-color:#f9f9f9;line-height:1.45;color:#333;
