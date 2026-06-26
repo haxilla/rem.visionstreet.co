@@ -2,8 +2,8 @@
 
 include('countBullets.php');
 
-$fromURL='https://www.realtyrepublic.com';
-$fromURL2='https://www.realtyrepublic.com';
+$fromURL='https://rem.visionstreet.co';
+$fromURL2='https://rem.visionstreet.co';
 $display="screen";
 $enc=0;
 
