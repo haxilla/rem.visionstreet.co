@@ -279,6 +279,7 @@ function runSync() {
 
             if (document.getElementById('syncLog').innerText.includes('Click "Start Sync"')) {
                 document.getElementById('syncLog').innerHTML = '';}
+
             document.getElementById('syncLog').insertAdjacentHTML('beforeend', rows);
 
             if (data.remaining > 0) {
@@ -287,12 +288,7 @@ function runSync() {
 
             } else {
 
-                const button = document.getElementById('startSync');
-
-                button.disabled = false;
-                button.style.cursor = 'pointer';
-                button.classList.remove('opacity-50', 'cursor-not-allowed', 'animate-pulse');
-                button.innerHTML = 'Start Sync';
+                runResize();
 
             }
 
@@ -306,9 +302,38 @@ function runSync() {
 
 }
 
+function runResize() {
+
+    fetch('/admin/photosync/resize')
+
+        .then(response => response.json())
+
+        .then(data => {
+
+            document.getElementById('resizeTotal').textContent = data.total;
+
+        })
+
+        .catch(error => {
+
+            console.error(error);
+
+        });
+    /*
+    const button = document.getElementById('startSync');
+
+    button.disabled = false;
+    button.style.cursor = 'pointer';
+    button.classList.remove('opacity-50', 'cursor-not-allowed', 'animate-pulse');
+    button.innerHTML = 'Start Sync';
+    */
+}
+
 </script>
 
 @include('admin.layout.footer')
 
 </body>
 </html>
+
+
