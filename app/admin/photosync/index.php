@@ -3,6 +3,19 @@
 Use App\Models\Core\Propphoto;
 use Illuminate\Support\Facades\Http;
 
+$total = Propphoto::whereDate('photoDate', '>=', '2026-05-01')->count();
+
+$remaining = Propphoto::whereDate('photoDate', '>=', '2026-05-01')
+    ->where(function ($q) {
+        $q->whereNull('existCheck')
+          ->orWhereDate('existCheck', '<', '2026-06-27');
+    })
+    ->count();
+
+$completed = $total - $remaining;
+
+echo "<h2>$completed / $total Photos Processed</h2>";
+
 $photos = Propphoto::with([
     'theMeta' => function ($query) {
         $query->select('propflyer_id', 'zipDir', 'mlsDir');
@@ -88,3 +101,28 @@ echo "OK: $ok<br>";
 echo "Uploaded: $uploaded<br>";
 echo "Downloaded: $downloaded<br>";
 echo "Missing: $missing<br>";
+
+$remaining = Propphoto::whereDate('photoDate', '>=', '2026-05-01')
+    ->where(function ($q) {
+        $q->whereNull('existCheck')
+          ->orWhereDate('existCheck', '<', '2026-06-27');
+    })
+    ->count();
+
+echo "Remaining: $remaining<br>";
+
+if ($remaining > 0) {
+
+    echo "<br>Refreshing in 2 seconds...<br>";
+
+    echo '<script>
+        setTimeout(function () {
+            window.location.reload();
+        }, 2000);
+    </script>';
+
+} else {
+
+    echo "<h2>✔ Synchronization Complete</h2>";
+
+}
