@@ -1,9 +1,9 @@
 <?php
 
-use App\autosynch\models\propphoto\propphotos;
-use App\autosynch\models\propphoto\propphotoOld;
-use App\autosynch\models\propphoto\propphotoOldArc;
-use App\autosynch\models\propphoto\propphotoCurArc;
+use App\Models\sync\propphotos;
+use App\Models\sync\propphotoOld;
+use App\Models\sync\propphotoOldArc;
+use App\Models\sync\propphotoCurArc;
 
 //set existCheck
 $existCheck=\Carbon\Carbon::now();
