@@ -191,7 +191,7 @@
 </main>
 
 <script>
-
+alert('script loaded');
 function runSync() {
     fetch(window.location.href)
 
