@@ -117,13 +117,6 @@
                                         </div>
                                     </div>
 
-                                    <div class="rounded-xl bg-white p-6 shadow">
-                                        <div class="text-sm text-slate-500">Resized</div>
-                                        <div id="resizeCount" class="text-3xl font-bold">
-                                            0
-                                        </div>
-                                    </div>
-
                                 </div>
 
                             </div>
@@ -311,6 +304,8 @@ function runResize() {
         .then(data => {
 
             document.getElementById('resizeTotal').textContent = data.total;
+            document.getElementById('resizeProcessed').textContent = data.processed;
+            document.getElementById('resizeRemaining').textContent = data.remaining;
 
         })
 
