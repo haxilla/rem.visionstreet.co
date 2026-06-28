@@ -256,8 +256,11 @@ function runSync() {
 
             document.getElementById('completed').textContent = data.completed;
             document.getElementById('remaining').textContent = data.remaining;
-            document.getElementById('uploaded').textContent = data.uploaded;
-            document.getElementById('downloaded').textContent = data.downloaded;
+            document.getElementById('uploaded').textContent =
+                Number(document.getElementById('uploaded').textContent) + data.uploaded;
+
+            document.getElementById('downloaded').textContent =
+                Number(document.getElementById('downloaded').textContent) + data.downloaded;
 
             let rows = '';
 
