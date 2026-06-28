@@ -1,5 +1,38 @@
 <?php
 
+<?php
+
+$data['completed'] = 123;
+$data['remaining'] = 456;
+$data['uploaded'] = 12;
+$data['downloaded'] = 34;
+$data['missing'] = 5;
+
+$data['results'] = [
+
+    [
+        'date'   => '2026-06-27',
+        'flyer'  => 12345,
+        'photo'  => 'photo1.jpg',
+        'status' => 'Downloaded',
+    ],
+
+    [
+        'date'   => '2026-06-27',
+        'flyer'  => 12346,
+        'photo'  => 'photo2.jpg',
+        'status' => 'OK',
+    ],
+
+    [
+        'date'   => '2026-06-27',
+        'flyer'  => 12347,
+        'photo'  => 'photo3.jpg',
+        'status' => 'Missing',
+    ],
+
+];
+
 /*
 use App\Models\Core\Propphoto;
 
