@@ -62,21 +62,21 @@
 
                                 <div class="rounded-xl bg-white p-6 shadow">
                                     <div class="text-sm text-slate-500">Remaining</div>
-                                    <div class="text-3xl font-bold">
+                                    <div id="remaining" class="text-3xl font-bold">
                                         {{ $data['remaining'] ?? 0 }}
                                     </div>
                                 </div>
 
                                 <div class="rounded-xl bg-white p-6 shadow">
                                     <div class="text-sm text-slate-500">Uploaded</div>
-                                    <div class="text-3xl font-bold">
+                                    <div id="uploaded" class="text-3xl font-bold">
                                         {{ $data['uploaded'] ?? 0 }}
                                     </div>
                                 </div>
 
                                 <div class="rounded-xl bg-white p-6 shadow">
                                     <div class="text-sm text-slate-500">Downloaded</div>
-                                    <div class="text-3xl font-bold">
+                                    <div id="downloaded" class="text-3xl font-bold">
                                         {{ $data['downloaded'] ?? 0 }}
                                     </div>
                                 </div>
@@ -202,7 +202,10 @@ function runSync() {
         .then(data => {
 
             document.getElementById('completed').textContent = data.completed;
-
+            document.getElementById('remaining').textContent = data.remaining;
+            document.getElementById('uploaded').textContent = data.uploaded;
+            document.getElementById('downloaded').textContent = data.downloaded;
+            
         })
 
         .catch(error => {
