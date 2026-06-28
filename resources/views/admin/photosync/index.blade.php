@@ -61,7 +61,7 @@
                             <div class="rounded-xl bg-white p-6 shadow">
                                 <div class="text-sm text-slate-500">Remaining</div>
                                 <div class="text-3xl font-bold">
-                                    {{ $data'remaining'] ?? 0 }}
+                                    {{ $data['remaining'] ?? 0 }}
                                 </div>
                             </div>
 
