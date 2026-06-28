@@ -85,7 +85,46 @@ foreach($photos as $photo){
 
     }
 
-    @ob_flush();
-    @flush();
+}
+
+echo "<hr>";
+
+echo "OK: $ok<br>";
+echo "Uploaded: $uploaded<br>";
+echo "Downloaded: $downloaded<br>";
+echo "Missing: $missing<br>";
+
+$total = Propphoto::whereDate('photoDate','>=','2026-05-01')
+    ->where('resized','!=',1000)
+    ->count();
+
+$remaining = Propphoto::whereDate('photoDate','>=','2026-05-01')
+    ->where(function($q){
+        $q->whereNull('existCheck')
+          ->orWhereDate('existCheck','<','2026-06-27');
+    })
+    ->where('resized','!=',1000)
+    ->count();
+
+$completed = $total - $remaining;
+
+echo "<hr>";
+
+echo "<b>Processed:</b> $completed of $total<br>";
+echo "<b>Remaining:</b> $remaining<br>";
+
+if($remaining > 0){
+
+    echo "<br>Refreshing...<br>";
+
+    echo '<script>
+        setTimeout(function(){
+            location.reload();
+        },1000);
+    </script>';
+
+}else{
+
+    echo "<h2>✔ Photo Synchronization Complete</h2>";
 
 }
