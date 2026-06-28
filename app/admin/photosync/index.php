@@ -1,6 +1,7 @@
 <?php
 
 Use App\Models\Core\Propphoto;
+use Illuminate\Support\Facades\Http;
 
 $photos = Propphoto::with([
     'theMeta' => function ($query) {
@@ -11,23 +12,72 @@ $photos = Propphoto::with([
 ->take(10)
 ->get();
 
+$uploaded = 0;
+$downloaded = 0;
+$missing = 0;
+$ok = 0;
+
 foreach ($photos as $photo) {
 
+    // Build local path
     $localPath = public_path(
         "hqphotos/{$photo->theMeta->zipDir}/{$photo->theMeta->mlsDir}/{$photo->photoName}"
     );
 
+    // Build remote URL
     $remoteUrl = "https://realtyemails.com/hqphotos/{$photo->theMeta->zipDir}/{$photo->theMeta->mlsDir}/{$photo->photoName}";
 
     $localFound = file_exists($localPath);
+    try {
 
-    $remoteFound = Http::head($remoteUrl)->successful();
+        $remoteFound = Http::timeout(15)
+            ->head($remoteUrl)
+            ->successful();
 
-    echo "Local Photo Link: <a href='{$localPath}' target='_blank'>View</a><br>";
-    echo "Photo ID: {$photo->photoID}<br>";
-    echo "Photo Date: {$photo->photoDate}<br>";
-    echo "Photo Name: {$photo->photoName}<br>";
-    echo "Flyer ID: {$photo->propflyer_id}<br>";
-    echo "Local: " . ($localFound ? 'Yes' : 'No') . "<br>";
-    echo "Remote: " . ($remoteFound ? 'Yes' : 'No') . "<hr>";
+    } catch (\Exception $e) {
+
+        echo "HEAD failed for {$photo->photoName}<br>";
+        $remoteFound = false;
+
+    }
+
+    echo "{$photo->propflyer_id} - {$photo->photoName} : ";
+
+    if ($localFound && $remoteFound) {
+
+        echo "OK<br>";
+        $ok++;
+
+    } elseif ($localFound && !$remoteFound) {
+
+        echo "Uploading {$photo->photoName}...<br>";
+        $result=include('upload.php');
+        if($result){
+            $uploaded++;
+        } else {
+            echo "Upload failed for {$photo->photoName}<br>";
+        }   
+
+    } elseif (!$localFound && $remoteFound) {
+
+        echo "Downloading...<br>";
+        $result=include('download.php');
+        if($result){
+            $downloaded++;
+        } else {
+            echo "Download failed for {$photo->photoName}<br>";
+        }
+
+    } else {
+
+        echo "Missing on both<br>";
+        $missing++;
+
+    }
+
 }
+
+echo "OK: $ok<br>";
+echo "Uploaded: $uploaded<br>";
+echo "Downloaded: $downloaded<br>";
+echo "Missing: $missing<br>";
