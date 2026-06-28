@@ -136,13 +136,13 @@
 
                                                 <td class="px-5 py-4">
 
-                                                    {{ $result['propflyer'] }}
+                                                    {{ $result['propflyer_id'] }}
 
                                                 </td>
 
                                                 <td class="px-5 py-4">
 
-                                                    {{ $result['photo'] }}
+                                                    {{ $result['photoName'] }}
 
                                                 </td>
 
