@@ -95,6 +95,8 @@ foreach ($photos as $photo) {
     } else {
 
         echo "Missing on both<br>";
+        echo "$localPath<br>";
+        echo "$remoteUrl<br>";
         $missing++;
 
     }
