@@ -2,7 +2,7 @@
 
 use App\Models\Core\Propphoto;
 
-$batchSize = 5;
+$batchSize = 1;
 $uploaded = 0;
 $downloaded = 0;
 $missing = 0;
