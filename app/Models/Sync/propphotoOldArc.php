@@ -2,7 +2,7 @@
 
 namespace App\autosynch\models\propphoto;
 
-class propphotoOldArc extends \App\Model
+class propphotoOldArc extends Model
 {
 
 	protected $connection = 'oldsite';

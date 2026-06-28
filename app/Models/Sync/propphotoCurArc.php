@@ -2,7 +2,7 @@
 
 namespace App\autosynch\models\propphoto;
 
-class propphotoCurArc extends \App\Model
+class propphotoCurArc extends Model
 {
 
    protected $table = 'remarchives.remailphotosmaster';

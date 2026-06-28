@@ -2,7 +2,7 @@
 
 namespace App\autosynch\models\propphoto;
 
-class propphotos extends \App\Model
+class propphotos extends Model
 {
 
 	protected $table = 'propphotos';
