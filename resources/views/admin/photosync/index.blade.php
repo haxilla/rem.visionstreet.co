@@ -37,12 +37,14 @@
 
                                 </div>
 
-                                <a href="/admin/photosync/run"
-                                   class="rounded-full bg-[#214e9b] px-6 py-3 text-white font-semibold hover:bg-[#1a3f7f]">
+                                <button
+                                    type="button"
+                                    onclick="runSync()"
+                                    class="rounded-full bg-[#214e9b] px-6 py-3 text-white font-semibold hover:bg-[#1a3f7f]">
 
                                     Start Sync
 
-                                </a>
+                                </button>
 
                             </div>
 
@@ -210,8 +212,6 @@ function runSync() {
         });
 
 }
-
-runSync();
 
 </script>
 
