@@ -108,7 +108,7 @@ $remaining = Propphoto::whereDate('photoDate','>=','2026-04-15')
     ->count();
 
 $completed = $total - $remaining;
-
+/*
 if($remaining > 0){
 
     echo "<br>Refreshing...<br>";
@@ -124,3 +124,4 @@ if($remaining > 0){
     echo "<h2>✔ Photo Synchronization Complete</h2>";
 
 }
+*/
