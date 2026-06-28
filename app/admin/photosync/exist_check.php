@@ -8,11 +8,6 @@ use App\Models\Sync\propphotoCurArc;
 //set existCheck
 $existCheck=\Carbon\Carbon::now();
 
-//update LOCAL
-propphotos::where('photoName','=',"$photo->photoName")
-->update([
-    'existCheck'   => $existCheck,
-]);
 //update REMOTE
 propphotoOld::where('locname','=',"$photo->photoName")
 ->update([
@@ -23,6 +18,13 @@ propphotoOldArc::where('locname','=',"$photo->photoName")
 ->update([
     'exist_check'  => $existCheck,
 ]);
+
+//update LOCAL
+propphotos::where('photoName','=',"$photo->photoName")
+->update([
+    'existCheck'   => $existCheck,
+]);
+
 //update LOCAL Archive
 propphotoCurArc::where('locname','=',"$photo->photoName")
 ->update([
