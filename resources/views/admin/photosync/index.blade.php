@@ -51,7 +51,7 @@
 
                         </div>
                         <div id="syncResults">
-                            <div class="text-[12px] font-semibold uppercase tracking-[0.22em] text-[#214e9b]/70">
+                            <div class="text-[12px] font-semibold uppercase tracking-[0.22em] text-[#214e9b]/70 mt-4">
                                 Download Photos
                             </div>
                             {{-- SUMMARY --}}
