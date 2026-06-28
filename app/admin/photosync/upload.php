@@ -1,54 +1,40 @@
 <?php
 
-use Illuminate\Support\Facades\Http;
+if (!file_exists($localPath)) {
+    return false;
+}
 
-try {
+$curl = curl_init();
 
-    if (!file_exists($localPath)) {
-        echo "❌ Local file disappeared: {$photo->photoName}<br>";
-        return false;}
+curl_setopt_array($curl, [
 
-    $response = Http::timeout(30)
-        ->attach(
-            'photo',
-            fopen($localPath, 'r'),
+    CURLOPT_URL => "https://realtyemails.com/photosync/upload.cfm",
+    CURLOPT_POST => true,
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_TIMEOUT => 30,
+
+    CURLOPT_POSTFIELDS => [
+
+        "secret" => "5db2d7b8f4c74d5abcc42fd3e9183c44",
+
+        "zipDir" => $photo->theMeta->zipDir,
+
+        "mlsDir" => $photo->theMeta->mlsDir,
+
+        "photo" => new CURLFile(
+            $localPath,
+            mime_content_type($localPath),
             $photo->photoName
         )
-        ->post('https://realtyemails.com/photosync/upload.cfm', [
 
-            'secret' => '5db2d7b8f4c74d5abcc42fd3e9183c44',
-            'zipDir' => $photo->theMeta->zipDir,
-            'mlsDir' => $photo->theMeta->mlsDir,
+    ]
 
-        ]);
+]);
 
-    if ($response->successful()) {
+curl_exec($curl);
 
-        // Optional: verify the remote file now exists
-        $verify = Http::timeout(15)->head($remoteUrl);
+$httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
-        if ($verify->successful()) {
+curl_close($curl);
 
-            echo "✅ Uploaded {$photo->photoName}<br>";
-            return true;
-
-        } else {
-
-            echo "❌ Upload verification failed: {$photo->photoName}<br>";
-            return false;
-
-        }
-
-    } else {
-
-        echo "❌ HTTP {$response->status()} uploading {$photo->photoName}<br>";
-        return false;
-
-    }
-
-} catch (\Exception $e) {
-
-    echo "❌ Exception uploading {$photo->photoName}: {$e->getMessage()}<br>";
-    return false;
-
-}
+return ($httpCode == 200);

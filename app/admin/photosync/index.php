@@ -3,6 +3,10 @@
 use App\Models\Core\Propphoto;
 
 $batchSize = 5;
+$uploaded = 0;
+$downloaded = 0;
+$missing = 0;
+$ok = 0;
 
 $photos = Propphoto::with([
     'theMeta' => function ($query) {
@@ -35,16 +39,10 @@ foreach($photos as $photo){
 
     // Remote check
     $header = @get_headers($remoteUrl, 1);
-
     $remoteFound = false;
-
     if ($header && isset($header[0])) {
-
         if (strpos($header[0], "404") === false) {
-            $remoteFound = true;
-        }
-
-    }
+            $remoteFound = true;}}
 
     echo "{$photo->photoDate} - ";
     echo "{$photo->propflyer_id} - ";
@@ -52,17 +50,33 @@ foreach($photos as $photo){
 
     if ($localFound && $remoteFound) {
 
-        echo "OK (both exist)<br>";
+        include('exist_check.php');
+        echo "OK<br>";
+        $ok++;
 
     }
     elseif ($localFound && !$remoteFound) {
 
-        echo "Would UPLOAD<br>";
+        echo "Uploading {$photo->photoName}...<br>";
+        $result=include('upload.php');
+        if($result){
+            include('exist_check.php');
+            $uploaded++;
+        } else {
+            echo "Upload failed for {$photo->photoName}<br>";
+        }   
 
     }
     elseif (!$localFound && $remoteFound) {
 
-        echo "Would DOWNLOAD<br>";
+        echo "Downloading {$photo->photoName}...<br>";
+        $result=include('download.php');
+        if($result){
+            include('exist_check.php');
+            $downloaded++;
+        } else {
+            echo "Download failed for {$photo->photoName}<br>";
+        }
 
     }
     else {
