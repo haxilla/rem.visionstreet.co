@@ -8,28 +8,6 @@ try {
         echo "❌ Local file disappeared: {$photo->photoName}<br>";
         return false;}
 
-$response = Http::timeout(30)
-    ->attach(
-        'photo',
-        fopen($localPath, 'r'),
-        $photo->photoName
-    )
-    ->post('https://realtyemails.com/photosync/upload.cfm', [
-
-        'secret' => '5db2d7b8f4c74d5abcc42fd3e9183c44',
-        'zipDir' => $photo->theMeta->zipDir,
-        'mlsDir' => $photo->theMeta->mlsDir,
-
-    ]);
-
-echo "HTTP Status: {$response->status()}<br><br>";
-
-echo "<pre>";
-echo htmlentities($response->body());
-echo "</pre>";
-
-die();
-
     $response = Http::timeout(30)
         ->attach(
             'photo',
