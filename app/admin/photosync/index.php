@@ -1,38 +1,14 @@
 <?php
 
-$data['completed'] = 123;
-$data['remaining'] = 456;
-$data['uploaded'] = 12;
-$data['downloaded'] = 34;
-$data['missing'] = 5;
-
-$data['results'] = [
-
-    [
-        'photoDate'   => '2026-06-27',
-        'propflyer_id'  => 12345,
-        'photoName'  => 'photo1.jpg',
-        'status' => 'Downloaded',
-    ],
-
-    [
-        'photoDate'   => '2026-06-27',
-        'propflyer_id'  => 12346,
-        'photoName'  => 'photo2.jpg',
-        'status' => 'OK',
-    ],
-
-    [
-        'photoDate'   => '2026-06-27',
-        'propflyer_id'  => 12347,
-        'photoName'  => 'photo3.jpg',
-        'status' => 'Missing',
-    ],
-
-];
-
-/*
 use App\Models\Core\Propphoto;
+
+$data['completed'] = 0;
+$data['remaining'] = 0;
+$data['uploaded'] = 0;
+$data['downloaded'] = 0;
+$data['missing'] = 0;
+
+$data['results'] = [];
 
 $batchSize = 1;
 $uploaded = 0;
@@ -45,7 +21,7 @@ $photos = Propphoto::with([
         $query->select('propflyer_id','zipDir','mlsDir');
     }
 ])
-->whereDate('photoDate','>=','2026-05-01')
+->whereDate('photoDate','>=','2026-04-15')
 ->where(function($q){
     $q->whereNull('existCheck')
       ->orWhereDate('existCheck','<','2026-06-27');
@@ -75,15 +51,16 @@ foreach($photos as $photo){
         if (strpos($header[0], "404") === false) {
             $remoteFound = true;}}
 
-    echo "{$photo->photoDate} - ";
-    echo "{$photo->propflyer_id} - ";
-    echo "{$photo->photoName} : ";
-
     if ($localFound && $remoteFound) {
 
         include('exist_check.php');
-        echo "OK<br>";
         $ok++;
+        $data['results'][] = [
+            'date'   => $photo->photoDate,
+            'flyer'  => $photo->propflyer_id,
+            'photo'  => $photo->photoName,
+            'status' => 'OK',
+        ];
 
     }
     elseif ($localFound && !$remoteFound) {
@@ -100,7 +77,6 @@ foreach($photos as $photo){
     }
     elseif (!$localFound && $remoteFound) {
 
-        echo "Downloading {$photo->photoName}...<br>";
         $result=include('download.php');
         if($result){
             include('exist_check.php');
@@ -118,18 +94,12 @@ foreach($photos as $photo){
 
 }
 
-echo "<hr>";
-
-echo "OK: $ok<br>";
-echo "Uploaded: $uploaded<br>";
-echo "Downloaded: $downloaded<br>";
-echo "Missing: $missing<br>";
 
 $total = Propphoto::whereDate('photoDate','>=','2026-05-01')
     ->where('resized','!=',1000)
     ->count();
 
-$remaining = Propphoto::whereDate('photoDate','>=','2026-05-01')
+$remaining = Propphoto::whereDate('photoDate','>=','2026-04-15')
     ->where(function($q){
         $q->whereNull('existCheck')
           ->orWhereDate('existCheck','<','2026-06-27');
@@ -138,11 +108,6 @@ $remaining = Propphoto::whereDate('photoDate','>=','2026-05-01')
     ->count();
 
 $completed = $total - $remaining;
-
-echo "<hr>";
-
-echo "<b>Processed:</b> $completed of $total<br>";
-echo "<b>Remaining:</b> $remaining<br>";
 
 if($remaining > 0){
 
@@ -159,5 +124,3 @@ if($remaining > 0){
     echo "<h2>✔ Photo Synchronization Complete</h2>";
 
 }
-
-*/
