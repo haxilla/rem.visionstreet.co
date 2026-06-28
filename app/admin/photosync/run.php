@@ -14,7 +14,7 @@ $photos = Propphoto::with([
         $query->select('propflyer_id','zipDir','mlsDir');
     }
 ])
-->whereDate('photoDate','>=','2026-04-15')
+->whereDate('photoDate','>=','2026-05-01')
 ->where(function($q){
     $q->whereNull('existCheck')
       ->orWhereDate('existCheck','<','2026-06-27');
