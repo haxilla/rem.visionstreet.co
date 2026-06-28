@@ -199,7 +199,7 @@ function runSync() {
 
     .then(html => {
 
-        console.log(html);
+        console.log('runSync Called');
 
     });
 }
