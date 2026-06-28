@@ -51,7 +51,7 @@
 
                         </div>
                         <div id="syncResults">
-                            <div class="text-[12px] font-semibold uppercase tracking-[0.22em] text-[#214e9b]/70 mb-4">
+                            <div class="text-[12px] font-semibold uppercase tracking-[0.22em] text-[#214e9b]/70">
                                 Download Photos
                             </div>
                             {{-- SUMMARY --}}
@@ -90,7 +90,7 @@
                             {{-- RESIZE PHOTOS --}}
                             <div class="mt-10">
 
-                                <div class="text-[12px] font-semibold uppercase tracking-[0.22em] text-[#214e9b]/70 mb-4">
+                                <div class="text-[12px] font-semibold uppercase tracking-[0.22em] text-[#214e9b]/70">
                                     Resize Photos
                                 </div>
 
