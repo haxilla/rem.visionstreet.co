@@ -54,28 +54,28 @@
                             <div class="rounded-xl bg-white p-6 shadow">
                                 <div class="text-sm text-slate-500">Processed</div>
                                 <div class="text-3xl font-bold">
-                                    {{ $completed ?? 0 }}
+                                    {{ $data['completed'] ?? 0 }}
                                 </div>
                             </div>
 
                             <div class="rounded-xl bg-white p-6 shadow">
                                 <div class="text-sm text-slate-500">Remaining</div>
                                 <div class="text-3xl font-bold">
-                                    {{ $remaining ?? 0 }}
+                                    {{ $data'remaining'] ?? 0 }}
                                 </div>
                             </div>
 
                             <div class="rounded-xl bg-white p-6 shadow">
                                 <div class="text-sm text-slate-500">Uploaded</div>
                                 <div class="text-3xl font-bold">
-                                    {{ $uploaded ?? 0 }}
+                                    {{ $data['uploaded'] ?? 0 }}
                                 </div>
                             </div>
 
                             <div class="rounded-xl bg-white p-6 shadow">
                                 <div class="text-sm text-slate-500">Downloaded</div>
                                 <div class="text-3xl font-bold">
-                                    {{ $downloaded ?? 0 }}
+                                    {{ $data['downloaded'] ?? 0 }}
                                 </div>
                             </div>
 
@@ -93,11 +93,6 @@
                                 </div>
 
                             </div>
-
-                            <pre>
-                            {{ print_r($data, true) }}
-                            </pre>
-
 
                             <div class="overflow-y-auto max-h-[600px]">
 
@@ -129,7 +124,7 @@
 
                                     <tbody>
 
-                                        @forelse($results ?? [] as $result)
+                                        @forelse($data['results'] ?? [] as $result)
 
                                             <tr>
 
