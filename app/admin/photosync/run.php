@@ -37,12 +37,17 @@ foreach($photos as $photo){
     // Local check
     $localFound  = file_exists($localPath);
 
-    // Remote check
-    $header = @get_headers($remoteUrl, 1);
-    $remoteFound = false;
-    if ($header && isset($header[0])) {
-        if (strpos($header[0], "404") === false) {
-            $remoteFound = true;}}
+    if(!$localFound){
+        // Remote check
+        $header = @get_headers($remoteUrl, 1);
+        $remoteFound = false;
+        if ($header && isset($header[0])) {
+            if (strpos($header[0], "404") === false) {
+                $remoteFound = true;}}
+    }else{
+        $remoteFound=true;
+    }
+
 
     if ($localFound && $remoteFound) {
 
@@ -107,6 +112,7 @@ header('Content-Type: application/json');
 echo json_encode([
     'completed'  => $completed,
     'remaining'  => $remaining,
+    'ok'         => $ok,
     'uploaded'   => $uploaded,
     'downloaded' => $downloaded,
     'missing'    => $missing,
