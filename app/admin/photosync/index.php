@@ -9,6 +9,10 @@ $photos = Propphoto::with([
     }
 ])
 ->whereDate('photoDate', '>=', '2026-05-01')
+->where(function ($q) {
+    $q->whereNull('existCheck')
+      ->orWhereDate('existCheck', '<=', '2026-06-26');
+})
 ->take(10)
 ->get();
 
@@ -45,6 +49,7 @@ foreach ($photos as $photo) {
 
     if ($localFound && $remoteFound) {
 
+        include('exist_check.php');
         echo "OK<br>";
         $ok++;
 
@@ -53,6 +58,7 @@ foreach ($photos as $photo) {
         echo "Uploading {$photo->photoName}...<br>";
         $result=include('upload.php');
         if($result){
+            include('exist_check.php');
             $uploaded++;
         } else {
             echo "Upload failed for {$photo->photoName}<br>";
@@ -63,6 +69,7 @@ foreach ($photos as $photo) {
         echo "Downloading...<br>";
         $result=include('download.php');
         if($result){
+            include('exist_check.php');
             $downloaded++;
         } else {
             echo "Download failed for {$photo->photoName}<br>";
