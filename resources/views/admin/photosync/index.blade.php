@@ -223,6 +223,12 @@ function runSync() {
 
             document.getElementById('syncLog').innerHTML = rows;
 
+            if (data.remaining > 0) {
+
+                setTimeout(runSync, 100);
+
+            }
+
         })
 
         .catch(error => {
