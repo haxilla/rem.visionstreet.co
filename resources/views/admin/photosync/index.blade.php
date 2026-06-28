@@ -124,7 +124,7 @@
 
                                         </thead>
 
-                                        <tbody>
+                                        <tbody id="syncLog">
 
                                             @forelse($data['results'] ?? [] as $result)
 
@@ -205,7 +205,24 @@ function runSync() {
             document.getElementById('remaining').textContent = data.remaining;
             document.getElementById('uploaded').textContent = data.uploaded;
             document.getElementById('downloaded').textContent = data.downloaded;
-            
+
+            let rows = '';
+
+            data.results.forEach(function(result){
+
+                rows += `
+                    <tr>
+                        <td class="px-5 py-4">${result.photoDate}</td>
+                        <td class="px-5 py-4">${result.propflyer_id}</td>
+                        <td class="px-5 py-4">${result.photoName}</td>
+                        <td class="px-5 py-4">${result.status}</td>
+                    </tr>
+                `;
+
+            });
+
+            document.getElementById('syncLog').innerHTML = rows;
+
         })
 
         .catch(error => {
