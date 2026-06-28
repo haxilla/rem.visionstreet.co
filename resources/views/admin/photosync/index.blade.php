@@ -84,6 +84,25 @@
 
                             </div>
 
+                            <div class="grid grid-cols-3 gap-6 mt-6">
+
+                                <div class="rounded-xl bg-white p-6 shadow">
+                                    <div class="text-sm text-slate-500">Resize Processed</div>
+                                    <div id="resizeCompleted" class="text-3xl font-bold">0</div>
+                                </div>
+
+                                <div class="rounded-xl bg-white p-6 shadow">
+                                    <div class="text-sm text-slate-500">Resize Remaining</div>
+                                    <div id="resizeRemaining" class="text-3xl font-bold">0</div>
+                                </div>
+
+                                <div class="rounded-xl bg-white p-6 shadow">
+                                    <div class="text-sm text-slate-500">Images Resized</div>
+                                    <div id="resized" class="text-3xl font-bold">0</div>
+                                </div>
+
+                            </div>
+
                             {{-- LOG --}}
                             <div class="mt-8 rounded-[24px] bg-white shadow overflow-hidden">
 
