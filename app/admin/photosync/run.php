@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Core\Propphoto;
+
 $batchSize = 1;
 $uploaded = 0;
 $downloaded = 0;
