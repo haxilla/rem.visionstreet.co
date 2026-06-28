@@ -11,4 +11,19 @@ $photos = Propphoto::with([
 ->take(10)
 ->get();
 
-dd($photos);
+foreach ($photos as $photo) {
+
+    $localPath = public_path(
+        "hqphotos/{$photo->theMeta->zipDir}/{$photo->theMeta->mlsDir}/{$photo->photoName}"
+    );
+
+    $remoteUrl = "https://www.realtyemails.com/hqphotos/{$photo->theMeta->zipDir}/{$photo->theMeta->mlsDir}/{$photo->photoName}";
+
+    $localFound = file_exists($localPath);
+
+    $remoteFound = Http::head($remoteUrl)->successful();
+
+    echo "{$photo->photoName}<br>";
+    echo "Local: " . ($localFound ? 'Yes' : 'No') . "<br>";
+    echo "Remote: " . ($remoteFound ? 'Yes' : 'No') . "<hr>";
+}
