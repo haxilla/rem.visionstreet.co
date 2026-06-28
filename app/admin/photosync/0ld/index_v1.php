@@ -1,0 +1,135 @@
+<?php
+
+Use App\Models\Core\Propphoto;
+use Illuminate\Support\Facades\Http;
+
+$total = Propphoto::whereDate('photoDate', '>=', '2026-05-01')
+->where('resized', '!=', 1000)
+->count();
+
+$remaining = Propphoto::whereDate('photoDate', '>=', '2026-05-01')
+    ->where(function ($q) {
+        $q->whereNull('existCheck')
+          ->orWhereDate('existCheck', '<', '2026-06-27');
+    })
+    ->where('resized', '!=', 1000)
+    ->count();
+
+$completed = $total - $remaining;
+
+echo "<h2>$completed / $total Photos Processed</h2>";
+
+$photos = Propphoto::with([
+    'theMeta' => function ($query) {
+        $query->select('propflyer_id', 'zipDir', 'mlsDir');
+    }
+])
+->whereDate('photoDate', '>=', '2026-05-01')
+->where(function ($q) {
+    $q->whereNull('existCheck')
+      ->orWhereDate('existCheck', '<=', '2026-06-26');
+})
+->where('resized', '!=', 1000)
+->take(1)
+->get();
+
+$uploaded = 0;
+$downloaded = 0;
+$missing = 0;
+$ok = 0;
+
+foreach ($photos as $photo) {
+
+    // Build local path
+    $localPath = public_path(
+        "hqphotos/{$photo->theMeta->zipDir}/{$photo->theMeta->mlsDir}/{$photo->photoName}"
+    );
+
+    // Build remote URL
+    $remoteUrl = "https://realtyemails.com/hqphotos/{$photo->theMeta->zipDir}/{$photo->theMeta->mlsDir}/{$photo->photoName}";
+
+    $localFound = file_exists($localPath);
+    try {
+
+        $remoteFound = Http::timeout(15)
+            ->head($remoteUrl)
+            ->successful();
+
+    } catch (\Exception $e) {
+
+        echo "HEAD failed for {$photo->photoName}<br>";
+        $remoteFound = false;
+
+    }
+
+    echo "{$photo->photoDate} - {$photo->propflyer_id} - {$photo->photoName} : ";
+
+    if ($localFound && $remoteFound) {
+
+        include('exist_check.php');
+        echo "OK<br>";
+        $ok++;
+
+    } elseif ($localFound && !$remoteFound) {
+
+        echo "Uploading {$photo->photoName}...<br>";
+        $result=include('upload.php');
+        if($result){
+            include('exist_check.php');
+            $uploaded++;
+        } else {
+            echo "Upload failed for {$photo->photoName}<br>";
+        }   
+
+    } elseif (!$localFound && $remoteFound) {
+
+        echo "Downloading...<br>";
+        $result=include('download.php');
+        if($result){
+            include('exist_check.php');
+            $downloaded++;
+        } else {
+            echo "Download failed for {$photo->photoName}<br>";
+        }
+
+    } else {
+
+        echo "Missing on both<br>";
+        echo "$localPath<br>";
+        echo "$remoteUrl<br>";
+        $missing++;
+
+    }
+
+}
+
+echo "OK: $ok<br>";
+echo "Uploaded: $uploaded<br>";
+echo "Downloaded: $downloaded<br>";
+echo "Missing: $missing<br>";
+
+$remaining = Propphoto::whereDate('photoDate', '>=', '2026-05-01')
+    ->where(function ($q) {
+        $q->whereNull('existCheck')
+          ->orWhereDate('existCheck', '<', '2026-06-27');
+    })
+    ->where('resized', '!=', 1000)
+    ->count();
+
+echo "Remaining: $remaining<br>";
+
+if ($remaining > 0) {
+
+    echo "<br>Refreshing in 1 second...<br>";
+
+    echo '<script>
+        setTimeout(function () {
+            window.location.reload();
+        }, 1000);
+    </script>';
+
+} else {
+
+    echo "<h2>✔ Synchronization Complete</h2>";
+
+}

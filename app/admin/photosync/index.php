@@ -1,135 +1,74 @@
 <?php
 
-Use App\Models\Core\Propphoto;
-use Illuminate\Support\Facades\Http;
+use App\Models\Core\Propphoto;
 
-$total = Propphoto::whereDate('photoDate', '>=', '2026-05-01')
-->where('resized', '!=', 1000)
-->count();
-
-$remaining = Propphoto::whereDate('photoDate', '>=', '2026-05-01')
-    ->where(function ($q) {
-        $q->whereNull('existCheck')
-          ->orWhereDate('existCheck', '<', '2026-06-27');
-    })
-    ->where('resized', '!=', 1000)
-    ->count();
-
-$completed = $total - $remaining;
-
-echo "<h2>$completed / $total Photos Processed</h2>";
+$batchSize = 10;
 
 $photos = Propphoto::with([
     'theMeta' => function ($query) {
-        $query->select('propflyer_id', 'zipDir', 'mlsDir');
+        $query->select('propflyer_id','zipDir','mlsDir');
     }
 ])
-->whereDate('photoDate', '>=', '2026-05-01')
-->where(function ($q) {
+->whereDate('photoDate','>=','2026-05-01')
+->where(function($q){
     $q->whereNull('existCheck')
-      ->orWhereDate('existCheck', '<=', '2026-06-26');
+      ->orWhereDate('existCheck','<','2026-06-27');
 })
-->where('resized', '!=', 1000)
-->take(1)
+->where('resized','!=',1000)
+->take($batchSize)
 ->get();
 
-$uploaded = 0;
-$downloaded = 0;
-$missing = 0;
-$ok = 0;
+foreach($photos as $photo){
 
-foreach ($photos as $photo) {
+    $zipDir = $photo->theMeta->zipDir;
+    $mlsDir = $photo->theMeta->mlsDir;
 
-    // Build local path
     $localPath = public_path(
-        "hqphotos/{$photo->theMeta->zipDir}/{$photo->theMeta->mlsDir}/{$photo->photoName}"
+        "hqphotos/$zipDir/$mlsDir/$photo->photoName"
     );
 
-    // Build remote URL
-    $remoteUrl = "https://realtyemails.com/hqphotos/{$photo->theMeta->zipDir}/{$photo->theMeta->mlsDir}/{$photo->photoName}";
+    $remoteUrl =
+        "https://realtyemails.com/hqphotos/$zipDir/$mlsDir/$photo->photoName";
 
+    // Local check
     $localFound = file_exists($localPath);
-    try {
 
-        $remoteFound = Http::timeout(15)
-            ->head($remoteUrl)
-            ->successful();
+    // Remote check
+    $header = @get_headers($remoteUrl, 1);
 
-    } catch (\Exception $e) {
+    $remoteFound = false;
 
-        echo "HEAD failed for {$photo->photoName}<br>";
-        $remoteFound = false;
+    if ($header && isset($header[0])) {
+
+        if (strpos($header[0], "404") === false) {
+            $remoteFound = true;
+        }
 
     }
 
-    echo "{$photo->photoDate} - {$photo->propflyer_id} - {$photo->photoName} : ";
+    echo "{$photo->photoDate} - ";
+    echo "{$photo->propflyer_id} - ";
+    echo "{$photo->photoName} : ";
 
     if ($localFound && $remoteFound) {
 
-        include('exist_check.php');
-        echo "OK<br>";
-        $ok++;
-
-    } elseif ($localFound && !$remoteFound) {
-
-        echo "Uploading {$photo->photoName}...<br>";
-        $result=include('upload.php');
-        if($result){
-            include('exist_check.php');
-            $uploaded++;
-        } else {
-            echo "Upload failed for {$photo->photoName}<br>";
-        }   
-
-    } elseif (!$localFound && $remoteFound) {
-
-        echo "Downloading...<br>";
-        $result=include('download.php');
-        if($result){
-            include('exist_check.php');
-            $downloaded++;
-        } else {
-            echo "Download failed for {$photo->photoName}<br>";
-        }
-
-    } else {
-
-        echo "Missing on both<br>";
-        echo "$localPath<br>";
-        echo "$remoteUrl<br>";
-        $missing++;
+        echo "OK (both exist)<br>";
 
     }
+    elseif ($localFound && !$remoteFound) {
 
-}
+        echo "Would UPLOAD<br>";
 
-echo "OK: $ok<br>";
-echo "Uploaded: $uploaded<br>";
-echo "Downloaded: $downloaded<br>";
-echo "Missing: $missing<br>";
+    }
+    elseif (!$localFound && $remoteFound) {
 
-$remaining = Propphoto::whereDate('photoDate', '>=', '2026-05-01')
-    ->where(function ($q) {
-        $q->whereNull('existCheck')
-          ->orWhereDate('existCheck', '<', '2026-06-27');
-    })
-    ->where('resized', '!=', 1000)
-    ->count();
+        echo "Would DOWNLOAD<br>";
 
-echo "Remaining: $remaining<br>";
+    }
+    else {
 
-if ($remaining > 0) {
+        echo "Missing on BOTH<br>";
 
-    echo "<br>Refreshing in 1 second...<br>";
-
-    echo '<script>
-        setTimeout(function () {
-            window.location.reload();
-        }, 1000);
-    </script>';
-
-} else {
-
-    echo "<h2>✔ Synchronization Complete</h2>";
+    }
 
 }
