@@ -112,19 +112,3 @@ echo json_encode([
 ]);
 
 exit;
-/*
-if($remaining > 0){
-
-    echo "<br>Refreshing...<br>";
-
-    echo '<script>
-        setTimeout(function(){
-            location.reload();
-        },1000);
-    </script>';
-
-}else{
-
-    echo "<h2>✔ Photo Synchronization Complete</h2>";
-
-}
