@@ -56,9 +56,9 @@ foreach($photos as $photo){
         include('exist_check.php');
         $ok++;
         $data['results'][] = [
-            'date'   => $photo->photoDate,
-            'flyer'  => $photo->propflyer_id,
-            'photo'  => $photo->photoName,
+            'photoDate'   => $photo->photoDate,
+            'propflyer_id'  => $photo->propflyer_id,
+            'photoName'  => $photo->photoName,
             'status' => 'OK',
         ];
 
