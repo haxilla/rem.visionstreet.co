@@ -197,11 +197,11 @@ function runSync() {
 
     fetch('/admin/photosync/run')
 
-        .then(response => response.text())
+        .then(response => response.json())
 
-        .then(html => {
+        .then(data => {
 
-            console.log("Success");
+            console.log(data);
 
         })
 
