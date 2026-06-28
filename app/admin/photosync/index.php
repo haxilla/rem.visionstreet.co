@@ -2,7 +2,7 @@
 
 use App\Models\Core\Propphoto;
 
-$batchSize = 1;
+$batchSize = 5;
 
 $photos = Propphoto::with([
     'theMeta' => function ($query) {
