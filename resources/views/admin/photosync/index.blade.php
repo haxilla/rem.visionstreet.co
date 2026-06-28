@@ -201,7 +201,7 @@ function runSync() {
 
         .then(data => {
 
-            console.log(data);
+            console.log(data.completed);
 
         })
 
