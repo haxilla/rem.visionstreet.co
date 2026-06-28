@@ -47,134 +47,135 @@
                             </div>
 
                         </div>
+                        <div id="syncResults">
+                            {{-- SUMMARY --}}
+                            <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
 
-                        {{-- SUMMARY --}}
-                        <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
-
-                            <div class="rounded-xl bg-white p-6 shadow">
-                                <div class="text-sm text-slate-500">Processed</div>
-                                <div class="text-3xl font-bold">
-                                    {{ $data['completed'] ?? 0 }}
+                                <div class="rounded-xl bg-white p-6 shadow">
+                                    <div class="text-sm text-slate-500">Processed</div>
+                                    <div class="text-3xl font-bold">
+                                        {{ $data['completed'] ?? 0 }}
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="rounded-xl bg-white p-6 shadow">
-                                <div class="text-sm text-slate-500">Remaining</div>
-                                <div class="text-3xl font-bold">
-                                    {{ $data['remaining'] ?? 0 }}
+                                <div class="rounded-xl bg-white p-6 shadow">
+                                    <div class="text-sm text-slate-500">Remaining</div>
+                                    <div class="text-3xl font-bold">
+                                        {{ $data['remaining'] ?? 0 }}
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="rounded-xl bg-white p-6 shadow">
-                                <div class="text-sm text-slate-500">Uploaded</div>
-                                <div class="text-3xl font-bold">
-                                    {{ $data['uploaded'] ?? 0 }}
+                                <div class="rounded-xl bg-white p-6 shadow">
+                                    <div class="text-sm text-slate-500">Uploaded</div>
+                                    <div class="text-3xl font-bold">
+                                        {{ $data['uploaded'] ?? 0 }}
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="rounded-xl bg-white p-6 shadow">
-                                <div class="text-sm text-slate-500">Downloaded</div>
-                                <div class="text-3xl font-bold">
-                                    {{ $data['downloaded'] ?? 0 }}
-                                </div>
-                            </div>
-
-                        </div>
-
-                        {{-- LOG --}}
-                        <div class="mt-8 rounded-[24px] bg-white shadow overflow-hidden">
-
-                            <div class="border-b border-slate-200 px-6 py-5">
-
-                                <div class="text-sm font-semibold text-slate-700">
-
-                                    Synchronization Log
-
+                                <div class="rounded-xl bg-white p-6 shadow">
+                                    <div class="text-sm text-slate-500">Downloaded</div>
+                                    <div class="text-3xl font-bold">
+                                        {{ $data['downloaded'] ?? 0 }}
+                                    </div>
                                 </div>
 
                             </div>
 
-                            <div class="overflow-y-auto max-h-[600px]">
+                            {{-- LOG --}}
+                            <div class="mt-8 rounded-[24px] bg-white shadow overflow-hidden">
 
-                                <table class="w-full text-sm">
+                                <div class="border-b border-slate-200 px-6 py-5">
 
-                                    <thead class="border-b bg-slate-50">
+                                    <div class="text-sm font-semibold text-slate-700">
 
-                                        <tr>
+                                        Synchronization Log
 
-                                            <th class="px-5 py-4 text-left">
-                                                Date
-                                            </th>
+                                    </div>
 
-                                            <th class="px-5 py-4 text-left">
-                                                Flyer
-                                            </th>
+                                </div>
 
-                                            <th class="px-5 py-4 text-left">
-                                                Photo
-                                            </th>
+                                <div class="overflow-y-auto max-h-[600px]">
 
-                                            <th class="px-5 py-4 text-left">
-                                                Status
-                                            </th>
+                                    <table class="w-full text-sm">
 
-                                        </tr>
-
-                                    </thead>
-
-                                    <tbody>
-
-                                        @forelse($data['results'] ?? [] as $result)
+                                        <thead class="border-b bg-slate-50">
 
                                             <tr>
 
-                                                <td class="px-5 py-4">
+                                                <th class="px-5 py-4 text-left">
+                                                    Date
+                                                </th>
 
-                                                    {{ $result['photoDate'] }}
+                                                <th class="px-5 py-4 text-left">
+                                                    Flyer
+                                                </th>
 
-                                                </td>
+                                                <th class="px-5 py-4 text-left">
+                                                    Photo
+                                                </th>
 
-                                                <td class="px-5 py-4">
-
-                                                    {{ $result['propflyer_id'] }}
-
-                                                </td>
-
-                                                <td class="px-5 py-4">
-
-                                                    {{ $result['photoName'] }}
-
-                                                </td>
-
-                                                <td class="px-5 py-4">
-
-                                                    {{ $result['status'] }}
-
-                                                </td>
+                                                <th class="px-5 py-4 text-left">
+                                                    Status
+                                                </th>
 
                                             </tr>
 
-                                        @empty
+                                        </thead>
 
-                                            <tr>
+                                        <tbody>
 
-                                                <td colspan="4"
-                                                    class="text-center text-slate-400 py-12">
+                                            @forelse($data['results'] ?? [] as $result)
 
-                                                    Click "Start Sync" to begin.
+                                                <tr>
 
-                                                </td>
+                                                    <td class="px-5 py-4">
 
-                                            </tr>
+                                                        {{ $result['photoDate'] }}
 
-                                        @endforelse
+                                                    </td>
 
-                                    </tbody>
+                                                    <td class="px-5 py-4">
 
-                                </table>
+                                                        {{ $result['propflyer_id'] }}
+
+                                                    </td>
+
+                                                    <td class="px-5 py-4">
+
+                                                        {{ $result['photoName'] }}
+
+                                                    </td>
+
+                                                    <td class="px-5 py-4">
+
+                                                        {{ $result['status'] }}
+
+                                                    </td>
+
+                                                </tr>
+
+                                            @empty
+
+                                                <tr>
+
+                                                    <td colspan="4"
+                                                        class="text-center text-slate-400 py-12">
+
+                                                        Click "Start Sync" to begin.
+
+                                                    </td>
+
+                                                </tr>
+
+                                            @endforelse
+
+                                        </tbody>
+
+                                    </table>
+
+                                </div>
 
                             </div>
-
                         </div>
 
                     </main>
@@ -188,6 +189,24 @@
     </div>
 
 </main>
+
+<script>
+
+function runSync() {
+    fetch(window.location.href)
+
+    .then(response => response.text())
+
+    .then(html => {
+
+        console.log(html);
+
+    });
+}
+
+runSync();
+
+</script>
 
 @include('admin.layout.footer')
 
