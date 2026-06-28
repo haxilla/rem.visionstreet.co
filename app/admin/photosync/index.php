@@ -23,6 +23,7 @@ foreach ($photos as $photo) {
 
     $remoteFound = Http::head($remoteUrl)->successful();
 
+    echo "Local Photo Link: <a href='{$localPath}' target='_blank'>View</a><br>";
     echo "Photo ID: {$photo->photoID}<br>";
     echo "Photo Date: {$photo->photoDate}<br>";
     echo "Photo Name: {$photo->photoName}<br>";
