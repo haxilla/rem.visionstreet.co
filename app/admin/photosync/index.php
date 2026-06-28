@@ -2,7 +2,7 @@
 
 use App\Models\Core\Propphoto;
 
-$batchSize = 10;
+$batchSize = 1;
 
 $photos = Propphoto::with([
     'theMeta' => function ($query) {
@@ -70,5 +70,8 @@ foreach($photos as $photo){
         echo "Missing on BOTH<br>";
 
     }
+
+    @ob_flush();
+    @flush();
 
 }
