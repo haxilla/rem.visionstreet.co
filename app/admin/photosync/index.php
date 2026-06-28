@@ -111,6 +111,7 @@ $remaining = Propphoto::whereDate('photoDate', '>=', '2026-05-01')
         $q->whereNull('existCheck')
           ->orWhereDate('existCheck', '<', '2026-06-27');
     })
+    ->where('resized', '!=', 1000)
     ->count();
 
 echo "Remaining: $remaining<br>";
