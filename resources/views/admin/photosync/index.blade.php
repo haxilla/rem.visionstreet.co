@@ -199,6 +199,7 @@ function runSync() {
     const button = document.getElementById('startSync');
 
     button.disabled = true;
+    button.style.cursor = 'default';
     button.classList.add('opacity-50', 'cursor-not-allowed', 'animate-pulse');
 
     button.innerHTML = '⟳ Synchronizing...';
@@ -242,6 +243,7 @@ function runSync() {
                 const button = document.getElementById('startSync');
 
                 button.disabled = false;
+                button.style.cursor = 'pointer';
                 button.classList.remove('opacity-50', 'cursor-not-allowed', 'animate-pulse');
                 button.innerHTML = 'Start Sync';
 
