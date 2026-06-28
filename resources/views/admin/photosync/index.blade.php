@@ -55,7 +55,7 @@
 
                                 <div class="rounded-xl bg-white p-6 shadow">
                                     <div class="text-sm text-slate-500">Processed</div>
-                                    <div class="text-3xl font-bold">
+                                    <div id="completed" class="text-3xl font-bold">
                                         {{ $data['completed'] ?? 0 }}
                                     </div>
                                 </div>
@@ -201,7 +201,7 @@ function runSync() {
 
         .then(data => {
 
-            console.log(data.completed);
+            document.getElementById('completed').textContent = data.completed;
 
         })
 
