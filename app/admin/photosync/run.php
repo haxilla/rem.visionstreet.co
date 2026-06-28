@@ -37,17 +37,12 @@ foreach($photos as $photo){
     // Local check
     $localFound  = file_exists($localPath);
 
-    if(!$localFound){
-        // Remote check
-        $header = @get_headers($remoteUrl, 1);
-        $remoteFound = false;
-        if ($header && isset($header[0])) {
-            if (strpos($header[0], "404") === false) {
-                $remoteFound = true;}}
-    }else{
-        $remoteFound=true;
-    }
-
+    // Remote check
+    $header = @get_headers($remoteUrl, 1);
+    $remoteFound = false;
+    if ($header && isset($header[0])) {
+        if (strpos($header[0], "404") === false) {
+            $remoteFound = true;}}
 
     if ($localFound && $remoteFound) {
 
