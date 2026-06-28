@@ -193,7 +193,7 @@
 <script>
 function runSync() {
 
-    fetch(window.location.href)
+    fetch('/admin/photosync/run')
 
         .then(response => response.text())
 
