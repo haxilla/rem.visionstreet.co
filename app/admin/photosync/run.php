@@ -58,11 +58,16 @@ foreach($photos as $photo){
     }
     elseif ($localFound && !$remoteFound) {
 
-        echo "Uploading {$photo->photoName}...<br>";
         $result=include('upload.php');
         if($result){
             include('exist_check.php');
             $uploaded++;
+            $data['results'][] = [
+                'photoDate'   => $photo->photoDate,
+                'propflyer_id'  => $photo->propflyer_id,
+                'photoName'  => $photo->photoName,
+                'status' => 'Uploaded',
+            ];
         } else {
             echo "Upload failed for {$photo->photoName}<br>";
         }   
