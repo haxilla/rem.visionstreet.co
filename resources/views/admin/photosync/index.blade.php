@@ -55,7 +55,7 @@
                                 Download Photos
                             </div>
                             {{-- SUMMARY --}}
-                            <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
+                            <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
 
                                 <div class="rounded-xl bg-white p-6 shadow">
                                     <div class="text-sm text-slate-500">Processed</div>
