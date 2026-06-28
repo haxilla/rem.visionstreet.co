@@ -11,6 +11,7 @@ try {
 
         // Make sure the destination folder exists
         File::ensureDirectoryExists(dirname($localPath));
+        echo "PHP User: " . exec('whoami') . "<br>";
 
         echo "Writing to: $localPath<br>";
         echo "Directory: " . dirname($localPath) . "<br>";
