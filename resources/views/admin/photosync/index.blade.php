@@ -1,3 +1,195 @@
-<div>
-    PHOTO SYNC INDEX
-</div>
+@include('admin.layout.head')
+
+<body data-section="admin" class="relative bg-white min-h-screen font-sans text-gray-800">
+
+@include('admin.layout.nav')
+
+<main
+    class="transition-all duration-300 min-h-screen pt-24 relative"
+    :class="collapsed ? 'ml-20' : 'ml-64'"
+>
+    <div class="ml-8 mr-8 lg:ml-10 lg:mr-10">
+
+        <div class="pageswap p-6 w-full">
+
+            <div class="min-h-screen bg-[#f4f7fb]">
+
+                <div class="flex min-h-screen">
+
+                    @include('admin.includes.sidebar')
+
+                    <main class="flex-1 px-6 py-6 lg:px-10 lg:py-8">
+
+                        {{-- HEADER --}}
+                        <div class="rounded-[24px] bg-white px-8 py-7 shadow-[0_12px_35px_rgba(15,23,42,0.06)]">
+
+                            <div class="flex justify-between items-center">
+
+                                <div>
+
+                                    <div class="text-[12px] font-semibold uppercase tracking-[0.22em] text-[#214e9b]/70">
+                                        Photo Maintenance
+                                    </div>
+
+                                    <h1 class="mt-2 text-[32px] font-semibold text-slate-900">
+                                        Photo Synchronization
+                                    </h1>
+
+                                </div>
+
+                                <a href="/admin/photosync/run"
+                                   class="rounded-full bg-[#214e9b] px-6 py-3 text-white font-semibold hover:bg-[#1a3f7f]">
+
+                                    Start Sync
+
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                        {{-- SUMMARY --}}
+                        <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
+
+                            <div class="rounded-xl bg-white p-6 shadow">
+                                <div class="text-sm text-slate-500">Processed</div>
+                                <div class="text-3xl font-bold">
+                                    {{ $completed ?? 0 }}
+                                </div>
+                            </div>
+
+                            <div class="rounded-xl bg-white p-6 shadow">
+                                <div class="text-sm text-slate-500">Remaining</div>
+                                <div class="text-3xl font-bold">
+                                    {{ $remaining ?? 0 }}
+                                </div>
+                            </div>
+
+                            <div class="rounded-xl bg-white p-6 shadow">
+                                <div class="text-sm text-slate-500">Uploaded</div>
+                                <div class="text-3xl font-bold">
+                                    {{ $uploaded ?? 0 }}
+                                </div>
+                            </div>
+
+                            <div class="rounded-xl bg-white p-6 shadow">
+                                <div class="text-sm text-slate-500">Downloaded</div>
+                                <div class="text-3xl font-bold">
+                                    {{ $downloaded ?? 0 }}
+                                </div>
+                            </div>
+
+                        </div>
+
+                        {{-- LOG --}}
+                        <div class="mt-8 rounded-[24px] bg-white shadow overflow-hidden">
+
+                            <div class="border-b border-slate-200 px-6 py-5">
+
+                                <div class="text-sm font-semibold text-slate-700">
+
+                                    Synchronization Log
+
+                                </div>
+
+                            </div>
+
+                            <div class="overflow-y-auto max-h-[600px]">
+
+                                <table class="w-full text-sm">
+
+                                    <thead class="border-b bg-slate-50">
+
+                                        <tr>
+
+                                            <th class="px-5 py-4 text-left">
+                                                Date
+                                            </th>
+
+                                            <th class="px-5 py-4 text-left">
+                                                Flyer
+                                            </th>
+
+                                            <th class="px-5 py-4 text-left">
+                                                Photo
+                                            </th>
+
+                                            <th class="px-5 py-4 text-left">
+                                                Status
+                                            </th>
+
+                                        </tr>
+
+                                    </thead>
+
+                                    <tbody>
+
+                                        @forelse($results ?? [] as $result)
+
+                                            <tr>
+
+                                                <td class="px-5 py-4">
+
+                                                    {{ $result['photoDate'] }}
+
+                                                </td>
+
+                                                <td class="px-5 py-4">
+
+                                                    {{ $result['propflyer'] }}
+
+                                                </td>
+
+                                                <td class="px-5 py-4">
+
+                                                    {{ $result['photo'] }}
+
+                                                </td>
+
+                                                <td class="px-5 py-4">
+
+                                                    {{ $result['status'] }}
+
+                                                </td>
+
+                                            </tr>
+
+                                        @empty
+
+                                            <tr>
+
+                                                <td colspan="4"
+                                                    class="text-center text-slate-400 py-12">
+
+                                                    Click "Start Sync" to begin.
+
+                                                </td>
+
+                                            </tr>
+
+                                        @endforelse
+
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+
+                        </div>
+
+                    </main>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+
+@include('admin.layout.footer')
+
+</body>
+</html>

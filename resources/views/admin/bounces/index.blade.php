@@ -1,8 +1,8 @@
-@include('public.layout.head')
+@include('admin.layout.head')
 
 <body data-section="admin" class="relative bg-white min-h-screen font-sans text-gray-800">
 
-@include('public.layout.nav')
+@include('admin.layout.nav')
 
 <main
     class="transition-all duration-300 min-h-screen pt-24 relative"
@@ -213,7 +213,7 @@
     </div>
 </main>
 
-@include('public.layout.footer')
+@include('admin.layout.footer')
 
 </body>
 </html>
