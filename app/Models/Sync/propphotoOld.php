@@ -1,6 +1,6 @@
 <?php
 
-namespace App\autosynch\models\propphoto;
+namespace App\Models\Sync;
 
 class propphotoOld extends Model
 {
