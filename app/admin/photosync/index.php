@@ -3,13 +3,16 @@
 Use App\Models\Core\Propphoto;
 use Illuminate\Support\Facades\Http;
 
-$total = Propphoto::whereDate('photoDate', '>=', '2026-05-01')->count();
+$total = Propphoto::whereDate('photoDate', '>=', '2026-05-01')
+->where('resized', '!=', 1000)
+->count();
 
 $remaining = Propphoto::whereDate('photoDate', '>=', '2026-05-01')
     ->where(function ($q) {
         $q->whereNull('existCheck')
           ->orWhereDate('existCheck', '<', '2026-06-27');
     })
+    ->where('resized', '!=', 1000)
     ->count();
 
 $completed = $total - $remaining;
@@ -26,6 +29,7 @@ $photos = Propphoto::with([
     $q->whereNull('existCheck')
       ->orWhereDate('existCheck', '<=', '2026-06-26');
 })
+->where('resized', '!=', 1000)
 ->take(1)
 ->get();
 
