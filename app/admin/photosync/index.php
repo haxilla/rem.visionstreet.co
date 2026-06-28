@@ -26,7 +26,7 @@ $photos = Propphoto::with([
     $q->whereNull('existCheck')
       ->orWhereDate('existCheck', '<=', '2026-06-26');
 })
-->take(10)
+->take(5)
 ->get();
 
 $uploaded = 0;
