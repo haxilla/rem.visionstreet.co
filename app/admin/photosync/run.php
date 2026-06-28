@@ -97,7 +97,7 @@ $total = Propphoto::whereDate('photoDate','>=','2026-05-01')
     ->where('resized','!=',1000)
     ->count();
 
-$remaining = Propphoto::whereDate('photoDate','>=','2026-04-15')
+$remaining = Propphoto::whereDate('photoDate','>=','2026-05-01')
     ->where(function($q){
         $q->whereNull('existCheck')
           ->orWhereDate('existCheck','<','2026-06-27');
