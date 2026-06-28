@@ -45,7 +45,7 @@ foreach ($photos as $photo) {
 
     }
 
-    echo "{$photo->propflyer_id} - {$photo->photoName} : ";
+    echo "{$photo->photoDate} - {$photo->propflyer_id} - {$photo->photoName} : ";
 
     if ($localFound && $remoteFound) {
 
