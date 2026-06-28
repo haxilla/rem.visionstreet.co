@@ -12,7 +12,7 @@ if (!session()->has('resizeTotal')) {
             ->count()
     ]);}
 
-include app_path().'/admin/photosync/functions/smart_resize_image.php');
+include app_path().'/admin/photosync/functions/smart_resize_image.php';
 
 $photos = Propphoto::whereDate('photoDate','>=','2026-05-01')
     ->where('resized',0)
@@ -45,7 +45,7 @@ foreach ($photos as $photo) {
     }else{
         //include update only 
         include('updatePhoto.php');}
-        
+
 
 }
 
