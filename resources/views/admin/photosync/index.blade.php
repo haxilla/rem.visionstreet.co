@@ -84,21 +84,43 @@
 
                             </div>
 
-                            <div class="grid grid-cols-3 gap-6 mt-6">
+                            {{-- RESIZE PHOTOS --}}
+                            <div class="mt-10">
 
-                                <div class="rounded-xl bg-white p-6 shadow">
-                                    <div class="text-sm text-slate-500">Resize Processed</div>
-                                    <div id="resizeCompleted" class="text-3xl font-bold">0</div>
+                                <div class="text-[12px] font-semibold uppercase tracking-[0.22em] text-[#214e9b]/70 mb-4">
+                                    Resize Photos
                                 </div>
 
-                                <div class="rounded-xl bg-white p-6 shadow">
-                                    <div class="text-sm text-slate-500">Resize Remaining</div>
-                                    <div id="resizeRemaining" class="text-3xl font-bold">0</div>
-                                </div>
+                                <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
 
-                                <div class="rounded-xl bg-white p-6 shadow">
-                                    <div class="text-sm text-slate-500">Images Resized</div>
-                                    <div id="resized" class="text-3xl font-bold">0</div>
+                                    <div class="rounded-xl bg-white p-6 shadow">
+                                        <div class="text-sm text-slate-500">Total</div>
+                                        <div id="resizeTotal" class="text-3xl font-bold">
+                                            0
+                                        </div>
+                                    </div>
+
+                                    <div class="rounded-xl bg-white p-6 shadow">
+                                        <div class="text-sm text-slate-500">Processed</div>
+                                        <div id="resizeProcessed" class="text-3xl font-bold">
+                                            0
+                                        </div>
+                                    </div>
+
+                                    <div class="rounded-xl bg-white p-6 shadow">
+                                        <div class="text-sm text-slate-500">Remaining</div>
+                                        <div id="resizeRemaining" class="text-3xl font-bold">
+                                            0
+                                        </div>
+                                    </div>
+
+                                    <div class="rounded-xl bg-white p-6 shadow">
+                                        <div class="text-sm text-slate-500">Resized</div>
+                                        <div id="resizeCount" class="text-3xl font-bold">
+                                            0
+                                        </div>
+                                    </div>
+
                                 </div>
 
                             </div>
