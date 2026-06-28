@@ -51,6 +51,9 @@
 
                         </div>
                         <div id="syncResults">
+                            <div class="text-[12px] font-semibold uppercase tracking-[0.22em] text-[#214e9b]/70 mb-4">
+                                Download Photos
+                            </div>
                             {{-- SUMMARY --}}
                             <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
 
