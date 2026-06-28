@@ -1,5 +1,6 @@
 <?php
 
+/*
 use App\Models\Core\Propphoto;
 
 $batchSize = 1;
@@ -127,3 +128,5 @@ if($remaining > 0){
     echo "<h2>✔ Photo Synchronization Complete</h2>";
 
 }
+
+*/
