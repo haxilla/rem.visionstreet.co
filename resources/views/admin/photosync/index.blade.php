@@ -191,17 +191,24 @@
 </main>
 
 <script>
-alert('script loaded');
 function runSync() {
+
     fetch(window.location.href)
 
-    .then(response => response.text())
+        .then(response => response.text())
 
-    .then(html => {
+        .then(html => {
 
-        console.log('runSync Called');
+            console.log("Success");
 
-    });
+        })
+
+        .catch(error => {
+
+            console.error(error);
+
+        });
+
 }
 
 runSync();
