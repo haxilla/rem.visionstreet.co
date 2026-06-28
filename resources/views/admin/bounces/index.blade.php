@@ -1,3 +1,8 @@
+<pre>
+{{ print_r($data, true) }}
+</pre>
+
+
 @include('admin.layout.head')
 
 <body data-section="admin" class="relative bg-white min-h-screen font-sans text-gray-800">
