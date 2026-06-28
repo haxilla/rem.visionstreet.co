@@ -1,7 +1,5 @@
 <?php
 
-<?php
-
 $data['completed'] = 123;
 $data['remaining'] = 456;
 $data['uploaded'] = 12;
