@@ -10,6 +10,7 @@ $data['missing'] = 0;
 
 $data['results'] = [];
 
+/*
 $batchSize = 1;
 $uploaded = 0;
 $downloaded = 0;
