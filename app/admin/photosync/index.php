@@ -113,12 +113,12 @@ echo "Remaining: $remaining<br>";
 
 if ($remaining > 0) {
 
-    echo "<br>Refreshing in 2 seconds...<br>";
+    echo "<br>Refreshing in 1 second...<br>";
 
     echo '<script>
         setTimeout(function () {
             window.location.reload();
-        }, 2000);
+        }, 1000);
     </script>';
 
 } else {
