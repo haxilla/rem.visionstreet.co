@@ -94,6 +94,11 @@
 
                             </div>
 
+                            <pre>
+                            {{ print_r($data, true) }}
+                            </pre>
+
+
                             <div class="overflow-y-auto max-h-[600px]">
 
                                 <table class="w-full text-sm">
