@@ -221,8 +221,10 @@ function runSync() {
 
             });
 
+            if (document.getElementById('syncLog').innerText.includes('Click "Start Sync"')) {
+                document.getElementById('syncLog').innerHTML = '';}
             document.getElementById('syncLog').insertAdjacentHTML('beforeend', rows);
-            
+
             if (data.remaining > 0) {
 
                 setTimeout(runSync, 100);
