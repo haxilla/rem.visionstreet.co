@@ -1,0 +1,3 @@
+<?php
+
+dd("PHOTOSYNC INDEX");
