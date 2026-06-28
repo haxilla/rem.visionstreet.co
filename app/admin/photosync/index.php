@@ -24,6 +24,7 @@ foreach ($photos as $photo) {
     $remoteFound = Http::head($remoteUrl)->successful();
 
     echo "Photo ID: {$photo->photoID}<br>";
+    echo "Photo Date: {$photo->photoDate}<br>";
     echo "Photo Name: {$photo->photoName}<br>";
     echo "Flyer ID: {$photo->propflyer_id}<br>";
     echo "Local: " . ($localFound ? 'Yes' : 'No') . "<br>";
