@@ -38,6 +38,7 @@
                                 </div>
 
                                 <button
+                                    id="startSync"
                                     type="button"
                                     onclick="runSync()"
                                     class="cursor-pointer rounded-full bg-[#214e9b] px-6 py-3 text-white font-semibold hover:bg-[#1a3f7f]">
@@ -195,6 +196,13 @@
 <script>
 function runSync() {
 
+    const button = document.getElementById('startSync');
+
+    button.disabled = true;
+    button.classList.add('opacity-50', 'cursor-not-allowed', 'animate-pulse');
+
+    button.innerHTML = '⟳ Synchronizing...';
+
     fetch('/admin/photosync/run')
 
         .then(response => response.json())
@@ -228,6 +236,14 @@ function runSync() {
             if (data.remaining > 0) {
 
                 setTimeout(runSync, 100);
+
+            } else {
+
+                const button = document.getElementById('startSync');
+
+                button.disabled = false;
+                button.classList.remove('opacity-50', 'cursor-not-allowed', 'animate-pulse');
+                button.innerHTML = 'Start Sync';
 
             }
 
