@@ -28,22 +28,24 @@ foreach($photos as $photo){
     $mlsDir = $photo->theMeta->mlsDir;
 
     $localPath = public_path(
-        "hqphotos/$zipDir/$mlsDir/$photo->photoName"
-    );
+        "hqphotos/$zipDir/$mlsDir/$photo->photoName");
 
     $remoteUrl =
         "https://realtyemails.com/hqphotos/$zipDir/$mlsDir/$photo->photoName";
 
     // Local check
-    $localFound = file_exists($localPath);
+    $localFound  = file_exists($localPath);
+    $remoteFound = true;
 
+    /*
     // Remote check
     $header = @get_headers($remoteUrl, 1);
     $remoteFound = false;
     if ($header && isset($header[0])) {
         if (strpos($header[0], "404") === false) {
             $remoteFound = true;}}
-
+    */
+            
     echo "{$photo->photoDate} - ";
     echo "{$photo->propflyer_id} - ";
     echo "{$photo->photoName} : ";
