@@ -11,7 +11,9 @@ try {
 
         // Make sure the destination folder exists
         File::ensureDirectoryExists(dirname($localPath));
-        echo "PHP User: " . exec('whoami') . "<br>";
+        echo "hqphotos writable: " . (is_writable(public_path('hqphotos')) ? "YES" : "NO") . "<br>";
+        echo "zipDir writable: " . (is_writable(public_path("hqphotos/{$photo->theMeta->zipDir}")) ? "YES" : "NO") . "<br>";
+        echo "mlsDir writable: " . (is_writable(dirname($localPath)) ? "YES" : "NO") . "<br>";
 
         echo "Writing to: $localPath<br>";
         echo "Directory: " . dirname($localPath) . "<br>";
