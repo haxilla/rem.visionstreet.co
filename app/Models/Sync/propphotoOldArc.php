@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class propphotoOldArc extends Model
 {
 
-	protected $connection = 'oldsite';
+	protected $connection = 'remote_realtyemails';
 	protected $table='remailphotosmaster';
 	protected $primaryKey = 'photoID';
 	public $timestamps = false;
