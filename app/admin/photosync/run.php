@@ -14,7 +14,7 @@ $photos = Propphoto::with([
         $query->select('propflyer_id','zipDir','mlsDir');
     }
 ])
-->whereDate('photoDate','>=','2026-05-01')
+->whereDate('photoDate','>=','2026-03-01')
 ->where(function($q){
     $q->whereNull('existCheck')
       ->orWhereDate('existCheck','<','2026-06-27');
@@ -99,11 +99,11 @@ foreach($photos as $photo){
 }
 
 
-$total = Propphoto::whereDate('photoDate','>=','2026-05-01')
+$total = Propphoto::whereDate('photoDate','>=','2026-03-01')
     ->where('resized','!=',1000)
     ->count();
 
-$remaining = Propphoto::whereDate('photoDate','>=','2026-05-01')
+$remaining = Propphoto::whereDate('photoDate','>=','2026-03-01')
     ->where(function($q){
         $q->whereNull('existCheck')
           ->orWhereDate('existCheck','<','2026-06-27');
