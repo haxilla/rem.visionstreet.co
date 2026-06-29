@@ -10,4 +10,6 @@ class propphotos extends Model
 	protected $table = 'propphotos';
 	protected $primaryKey = 'photoID';
 
+	protected $guarded = [];
+
 }
