@@ -12,4 +12,7 @@ class propphotoOldArc extends Model
 	protected $primaryKey = 'photoID';
 	public $timestamps = false;
 
+	protected $guarded = [];
+
+
 }
