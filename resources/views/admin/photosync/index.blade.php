@@ -231,6 +231,33 @@
 </main>
 
 <script>
+
+function appendLog(results) {
+
+    let rows = '';
+
+    results.forEach(function(result){
+
+        rows += `
+            <tr>
+                <td class="px-5 py-4">${result.photoDate}</td>
+                <td class="px-5 py-4">${result.propflyer_id}</td>
+                <td class="px-5 py-4">${result.photoName}</td>
+                <td class="px-5 py-4">${result.status}</td>
+            </tr>
+        `;
+
+    });
+
+    if (document.getElementById('syncLog').innerText.includes('Click "Start Sync"')) {
+        document.getElementById('syncLog').innerHTML = '';
+    }
+
+    document.getElementById('syncLog').insertAdjacentHTML('beforeend', rows);
+
+}
+
+
 function runSync() {
 
     const button = document.getElementById('startSync');
@@ -255,25 +282,7 @@ function runSync() {
             document.getElementById('downloaded').textContent =
                 Number(document.getElementById('downloaded').textContent) + data.downloaded;
 
-            let rows = '';
-
-            data.results.forEach(function(result){
-
-                rows += `
-                    <tr>
-                        <td class="px-5 py-4">${result.photoDate}</td>
-                        <td class="px-5 py-4">${result.propflyer_id}</td>
-                        <td class="px-5 py-4">${result.photoName}</td>
-                        <td class="px-5 py-4">${result.status}</td>
-                    </tr>
-                `;
-
-            });
-
-            if (document.getElementById('syncLog').innerText.includes('Click "Start Sync"')) {
-                document.getElementById('syncLog').innerHTML = '';}
-
-            document.getElementById('syncLog').insertAdjacentHTML('beforeend', rows);
+            appendLog(data.results);
 
             if (data.remaining > 0) {
 
@@ -307,6 +316,41 @@ function runResize() {
             document.getElementById('resizeProcessed').textContent = data.processed;
             document.getElementById('resizeRemaining').textContent = data.remaining;
 
+            let rows = '';
+
+            data.results.forEach(function(result){
+
+                rows += `
+                    <tr>
+                        <td class="px-5 py-4">${result.photoDate}</td>
+                        <td class="px-5 py-4">${result.propflyer_id}</td>
+                        <td class="px-5 py-4">${result.photoName}</td>
+                        <td class="px-5 py-4">${result.status}</td>
+                    </tr>
+                `;
+
+            });
+
+            if (document.getElementById('syncLog').innerText.includes('Click "Start Sync"')) {
+                document.getElementById('syncLog').innerHTML = '';}
+
+            document.getElementById('syncLog').insertAdjacentHTML('beforeend', rows);
+
+            if (data.remaining > 0) {
+
+                setTimeout(runResize, 100);
+
+            } else {
+
+                const button = document.getElementById('startSync');
+
+                button.disabled = false;
+                button.style.cursor = 'pointer';
+                button.classList.remove('opacity-50', 'cursor-not-allowed', 'animate-pulse');
+                button.innerHTML = 'Start Sync';
+
+            }
+
         })
 
         .catch(error => {
@@ -314,14 +358,6 @@ function runResize() {
             console.error(error);
 
         });
-    /*
-    const button = document.getElementById('startSync');
-
-    button.disabled = false;
-    button.style.cursor = 'pointer';
-    button.classList.remove('opacity-50', 'cursor-not-allowed', 'animate-pulse');
-    button.innerHTML = 'Start Sync';
-    */
 }
 
 </script>

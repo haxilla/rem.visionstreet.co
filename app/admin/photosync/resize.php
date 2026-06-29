@@ -3,6 +3,7 @@
 use App\Models\Core\Propphoto;
 
 $batchSize = 1;
+$data['results'] = [];
 
 if (!session()->has('resizeTotal')) {
 
@@ -47,6 +48,11 @@ foreach ($photos as $photo) {
         //include update only 
         include('updatePhoto.php');}
 
+    $data['results'][] = [
+        'photoDate'    => $photo->photoDate,
+        'propflyer_id' => $photo->propflyer_id,
+        'photoName'    => $photo->photoName,
+        'status'       => 'Resized',];
 
 }
 
@@ -64,6 +70,7 @@ echo json_encode([
     'total'     => $total,
     'processed' => $processed,
     'remaining' => $remaining,
+    'results'   => $data['results'];
 ]);
 
 exit;
