@@ -1,10 +1,10 @@
 <?php
 
 //model
-Use App\autosynch\models\propphoto\propphotos;
-Use App\autosynch\models\propphoto\propphotoOld;
-Use App\autosynch\models\propphoto\propphotoCurArc;
-Use App\autosynch\models\propphoto\propphotoOldArc;
+Use App\Models\Sync\propphotos;
+Use App\Models\Sync\propphotoOld;
+Use App\Models\Sync\propphotoCurArc;
+Use App\Models\Sync\propphotoOldArc;
 
 //update as resized=2 to mark as done but failed
 propphotos::where('photoID','=',"$photo->photoID")
