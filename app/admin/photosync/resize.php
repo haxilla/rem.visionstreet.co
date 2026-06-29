@@ -70,7 +70,6 @@ echo json_encode([
     'total'     => $total,
     'processed' => $processed,
     'remaining' => $remaining,
-    'results'   => $data['results'];
-]);
+    'results'   => $data['results'],]);
 
 exit;
