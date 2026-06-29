@@ -1,10 +1,10 @@
 <?php
 
 //get model
-use App\autosynch\models\propphoto\propphotos;
-use App\autosynch\models\propphoto\propphotoOld;
-use App\autosynch\models\propphoto\propphotoCurArc;
-use App\autosynch\models\propphoto\propphotoOldArc;
+use App\Models\Sync\propphotos;
+use App\Models\Sync\propphotoOld;
+use App\Models\Sync\propphotoCurArc;
+use App\Models\Sync\propphotoOldArc;
 
 //if tall resize to 300height otherwise 300wide
 if($orient=='tall'){
