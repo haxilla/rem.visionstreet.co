@@ -20,9 +20,10 @@ $photos = Propphoto::whereDate('photoDate','>=','2026-05-01')
     ->get();
 
 foreach ($photos as $photo) {
-
+    $zipDir=$photo->theMeta->zipDir;
+    $mlsDir=$photo->theMeta->mlsDir;
     $source = public_path(
-        "hqphotos/{$photo->theMeta->zipDir}/{$photo->theMeta->mlsDir}/{$photo->photoName}");
+        "hqphotos/{$zipDir}/{$mlsDir}/{$photo->photoName}");
 
     if (!file_exists($source)) {
         $data['results'][] = [
