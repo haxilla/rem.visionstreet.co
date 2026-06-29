@@ -50,7 +50,7 @@ $ratio=$width/$height;
 $ratio=round($ratio,4);
 
 //update original resized
-propphotos::where('photoID','=',"$the->photoID")
+propphotos::where('photoID','=',"$photo->photoID")
 ->update([
    'resized'     => 1,
    'existCheck'  => \Carbon\Carbon::now(),
