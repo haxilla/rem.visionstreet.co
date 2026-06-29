@@ -79,6 +79,12 @@ foreach($photos as $photo){
         if($result){
             include('exist_check.php');
             $downloaded++;
+            $data['results'][] = [
+                'photoDate'   => $photo->photoDate,
+                'propflyer_id'  => $photo->propflyer_id,
+                'photoName'  => $photo->photoName,
+                'status' => 'Downloaded',
+            ];
         } else {
             echo "Download failed for {$photo->photoName}<br>";
         }
