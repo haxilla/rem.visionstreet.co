@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Http\Request;
+header('Content-Type: application/json');
 
-return response()->json([
+echo json_encode([
     'success' => true,
     'message' => 'Upload endpoint reached'
 ]);
