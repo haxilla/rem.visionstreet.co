@@ -380,7 +380,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
         xhr.addEventListener('load', function () {
 
-            if (xhr.status >= 200 && xhr.status < 300) {
+            let response = {};
+
+            try {
+                response = JSON.parse(xhr.responseText);
+            } catch (e) {
+                response.success = false;
+            }
+
+            if (xhr.status >= 200 &&
+                xhr.status < 300 &&
+                response.success === true) {
 
                 progressBar.style.width = '100%';
 
@@ -396,7 +406,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 progressBar.classList.remove('bg-[#123f91]');
                 progressBar.classList.add('bg-red-500');
 
-                badge.textContent = 'Failed';
+                badge.textContent =
+                    response.message || 'Failed';
+
                 badge.classList.remove('text-slate-700');
                 badge.classList.add('text-red-700');
 
