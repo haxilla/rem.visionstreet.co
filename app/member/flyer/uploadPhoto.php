@@ -13,13 +13,31 @@ if (!isset($_FILES['photo'])) {
 
 }
 
+$uploadDir = storage_path('app/tempPhotos');
+
+if (!is_dir($uploadDir)) {
+    mkdir($uploadDir, 0755, true);
+}
+
+$fileName = uniqid() . '_' . basename($_FILES['photo']['name']);
+
+$destination = $uploadDir . DIRECTORY_SEPARATOR . $fileName;
+
+if (!move_uploaded_file($_FILES['photo']['tmp_name'], $destination)) {
+
+    echo json_encode([
+        'success' => false,
+        'message' => 'Unable to save file'
+    ]);
+
+    exit;
+
+}
+
 echo json_encode([
     'success' => true,
-    'message' => 'Photo received',
-    'name'    => $_FILES['photo']['name'],
-    'size'    => $_FILES['photo']['size'],
-    'type'    => $_FILES['photo']['type'],
-    'error'   => $_FILES['photo']['error']
+    'message' => 'Saved',
+    'filename' => $fileName
 ]);
 
 exit;
