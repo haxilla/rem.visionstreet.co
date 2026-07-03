@@ -88,11 +88,12 @@ if (!$imageInfo) {
 
 }
 
-die('2');
 
 $width = $imageInfo[0];
 $height = $imageInfo[1];
 $fileSize = filesize($destination);
+
+die('3');
 
 $photo = new Propphoto();
 
