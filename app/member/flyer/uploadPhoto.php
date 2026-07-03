@@ -99,9 +99,15 @@ $photo->propflyer_id = $flyer->id;
 $photo->photoName    = $fileName;
 $photo->photoDate    = now();
 
-die('5');
+try {
 
-$photo->save();
+    $photo->save();
+
+} catch (\Exception $e) {
+
+    die($e->getMessage());
+
+}
 
 echo json_encode([
     'success' => true,
