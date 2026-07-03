@@ -20,18 +20,33 @@ $flyer = Propflyer::with('theMeta')->find((int)$_POST['flyerId']);
 
 echo '<pre>';
 
-echo "auth()->id():\n";
+echo "Default auth()->id():\n";
 var_dump(auth()->id());
 
 echo "\n\n";
 
-echo "auth()->user():\n";
+echo "Member guard:\n";
+var_dump(auth('member')->id());
+
+echo "\n\n";
+
+echo "Admin guard:\n";
+var_dump(auth('admin')->id());
+
+echo "\n\n";
+
+echo "Default user:\n";
 var_dump(auth()->user());
 
 echo "\n\n";
 
-echo "Session:\n";
-print_r(session()->all());
+echo "Member user:\n";
+var_dump(auth('member')->user());
+
+echo "\n\n";
+
+echo "Admin user:\n";
+var_dump(auth('admin')->user());
 
 exit;
 
