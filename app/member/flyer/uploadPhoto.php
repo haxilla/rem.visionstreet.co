@@ -95,11 +95,11 @@ $fileSize = filesize($destination);
 
 $photo = new Propphoto();
 
-die('4');
-
 $photo->propflyer_id = $flyer->id;
 $photo->photoName    = $fileName;
 $photo->photoDate    = now();
+
+die('5');
 
 $photo->save();
 
