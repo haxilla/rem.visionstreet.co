@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Core\Propflyer;
+use App\Models\Core\Propphoto;
 
 header('Content-Type: application/json');
 
@@ -17,11 +18,16 @@ if (!isset($_FILES['photo'])) {
 
 $flyer = Propflyer::with('theMeta')->find((int)$_POST['flyerId']);
 
-if (!$flyer || !$flyer->theMeta) {
+if (
+    !$flyer ||
+    !$flyer->theMeta ||
+    empty($flyer->theMeta->zipDir) ||
+    empty($flyer->theMeta->mlsDir)
+) {
 
     echo json_encode([
         'success' => false,
-        'message' => 'Flyer not found'
+        'message' => 'Missing ZIP directory or MLS directory.'
     ]);
 
     exit;
@@ -69,10 +75,36 @@ if (!move_uploaded_file($_FILES['photo']['tmp_name'], $destination)) {
 
 }
 
+$imageInfo = getimagesize($destination);
+
+if (!$imageInfo) {
+
+    echo json_encode([
+        'success' => false,
+        'message' => 'Unable to read image size'
+    ]);
+
+    exit;
+
+}
+
+$width = $imageInfo[0];
+$height = $imageInfo[1];
+$fileSize = filesize($destination);
+
+$photo = new Propphoto();
+
+$photo->propflyer_id = $flyer->id;
+$photo->photoName    = $fileName;
+$photo->photoDate    = now();
+
+$photo->save();
+
 echo json_encode([
     'success' => true,
     'message' => 'Saved',
-    'filename' => $fileName
+    'filename' => $fileName,
+    'photoID'  => $photo->photoID
 ]);
 
 exit;
