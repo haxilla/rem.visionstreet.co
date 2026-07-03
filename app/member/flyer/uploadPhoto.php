@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Propflyer;
+use App\Models\Core\Propflyer;
 
 header('Content-Type: application/json');
 
