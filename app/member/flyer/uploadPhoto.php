@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Propflyer;
+
 header('Content-Type: application/json');
 
 if (!isset($_FILES['photo'])) {
@@ -13,13 +15,46 @@ if (!isset($_FILES['photo'])) {
 
 }
 
-$uploadDir = storage_path('app/tempPhotos');
+$flyer = Propflyer::with('theMeta')->find((int)$_POST['flyerId']);
+
+if (!$flyer || !$flyer->theMeta) {
+
+    echo json_encode([
+        'success' => false,
+        'message' => 'Flyer not found'
+    ]);
+
+    exit;
+
+}
+
+$uploadDir = public_path(
+    'hqphotos/' .
+    $flyer->theMeta->zipDir .
+    '/' .
+    $flyer->theMeta->mlsDir
+);
 
 if (!is_dir($uploadDir)) {
     mkdir($uploadDir, 0755, true);
 }
 
-$fileName = uniqid() . '_' . basename($_FILES['photo']['name']);
+if (!is_writable($uploadDir)) {
+
+    echo json_encode([
+        'success' => false,
+        'message' => 'Upload folder is not writable'
+    ]);
+
+    exit;
+
+}
+
+$extension = strtolower(
+    pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION)
+);
+
+$fileName = uniqid('', true) . '.' . $extension;
 
 $destination = $uploadDir . DIRECTORY_SEPARATOR . $fileName;
 
