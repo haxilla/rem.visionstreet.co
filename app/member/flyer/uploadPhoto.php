@@ -75,6 +75,7 @@ if (!move_uploaded_file($_FILES['photo']['tmp_name'], $destination)) {
 
 }
 
+die(1);
 $imageInfo = getimagesize($destination);
 
 if (!$imageInfo) {
