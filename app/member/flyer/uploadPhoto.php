@@ -18,6 +18,23 @@ if (!isset($_FILES['photo'])) {
 
 $flyer = Propflyer::with('theMeta')->find((int)$_POST['flyerId']);
 
+echo '<pre>';
+
+echo "auth()->id():\n";
+var_dump(auth()->id());
+
+echo "\n\n";
+
+echo "auth()->user():\n";
+var_dump(auth()->user());
+
+echo "\n\n";
+
+echo "Session:\n";
+print_r(session()->all());
+
+exit;
+
 if (
     !$flyer ||
     !$flyer->theMeta ||
@@ -96,6 +113,7 @@ $fileSize = filesize($destination);
 $photo = new Propphoto();
 
 $photo->propflyer_id = $flyer->id;
+$photo->propagent_id = auth()->id;
 $photo->photoName    = $fileName;
 $photo->photoDate    = now();
 
