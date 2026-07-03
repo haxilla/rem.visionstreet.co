@@ -93,9 +93,9 @@ $width = $imageInfo[0];
 $height = $imageInfo[1];
 $fileSize = filesize($destination);
 
-die('3');
-
 $photo = new Propphoto();
+
+die('4');
 
 $photo->propflyer_id = $flyer->id;
 $photo->photoName    = $fileName;
