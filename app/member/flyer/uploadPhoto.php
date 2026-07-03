@@ -18,40 +18,40 @@ if (!isset($_FILES['photo'])) {
 
 $flyer = Propflyer::with('theMeta')->find((int)$_POST['flyerId']);
 
-echo '<pre>';
+if (!$flyer) {
 
-echo "Default auth()->id():\n";
-var_dump(auth()->id());
+    echo json_encode([
+        'success' => false,
+        'message' => 'Flyer not found.'
+    ]);
 
-echo "\n\n";
+    exit;
 
-echo "Member guard:\n";
-var_dump(auth('member')->id());
+}
 
-echo "\n\n";
+if (!auth('member')->check()) {
 
-echo "Admin guard:\n";
-var_dump(auth('admin')->id());
+    echo json_encode([
+        'success' => false,
+        'message' => 'Member not logged in.'
+    ]);
 
-echo "\n\n";
+    exit;
 
-echo "Default user:\n";
-var_dump(auth()->user());
+}
 
-echo "\n\n";
+if ($flyer->propagent_id != auth('member')->id()) {
 
-echo "Member user:\n";
-var_dump(auth('member')->user());
+    echo json_encode([
+        'success' => false,
+        'message' => 'Unauthorized.'
+    ]);
 
-echo "\n\n";
+    exit;
 
-echo "Admin user:\n";
-var_dump(auth('admin')->user());
-
-exit;
+}
 
 if (
-    !$flyer ||
     !$flyer->theMeta ||
     empty($flyer->theMeta->zipDir) ||
     empty($flyer->theMeta->mlsDir)
@@ -128,7 +128,7 @@ $fileSize = filesize($destination);
 $photo = new Propphoto();
 
 $photo->propflyer_id = $flyer->id;
-$photo->propagent_id = auth()->id;
+$photo->propagent_id = auth('member')->id();
 $photo->photoName    = $fileName;
 $photo->photoDate    = now();
 
