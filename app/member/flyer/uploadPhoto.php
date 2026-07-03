@@ -6,3 +6,5 @@ return response()->json([
     'success' => true,
     'message' => 'Upload endpoint reached'
 ]);
+
+exit;
