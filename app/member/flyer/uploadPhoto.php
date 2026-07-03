@@ -120,10 +120,16 @@ if (!$imageInfo) {
 
 }
 
-
 $width = $imageInfo[0];
 $height = $imageInfo[1];
 $fileSize = filesize($destination);
+
+$nextOrd = Propphoto::where('propflyer_id', $flyer->id)
+    ->max('ord');
+
+$nextOrd = is_null($nextOrd)
+    ? 1
+    : $nextOrd + 1;
 
 $photo = new Propphoto();
 
@@ -131,6 +137,8 @@ $photo->propflyer_id = $flyer->id;
 $photo->propagent_id = auth('member')->id();
 $photo->photoName    = $fileName;
 $photo->photoDate    = now();
+$photo->ord          = $nextOrd;
+$photo->def          =($nextOrd == 1) ? 1 : 0;
 
 try {
 
