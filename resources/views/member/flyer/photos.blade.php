@@ -542,12 +542,26 @@ document.addEventListener('DOMContentLoaded', () => {
         uploadedPhotos.forEach(function(photo){
 
             grid.innerHTML += `
-                <div class="rounded-xl border border-slate-200 overflow-hidden bg-white shadow-sm">
+                <div
+                    class="photo-card rounded-xl border border-slate-200 overflow-hidden bg-white shadow-sm"
+                    data-photo-id="${photo.photoID}"
+                >
 
-                    <img
-                        src="/hqphotos/{{ $flyer->theMeta->zipDir }}/{{ $flyer->theMeta->mlsDir }}/${photo.photoName}"
-                        class="aspect-square w-full object-cover"
-                    >
+                    <div class="relative">
+
+                        <img
+                            src="/hqphotos/{{ $flyer->theMeta->zipDir }}/{{ $flyer->theMeta->mlsDir }}/${photo.photoName}"
+                            class="aspect-square w-full object-cover"
+                        >
+
+                        <button
+                            type="button"
+                            class="delete-photo absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-white text-lg font-black leading-none text-slate-700 shadow hover:bg-red-600 hover:text-white"
+                        >
+                            ×
+                        </button>
+
+                    </div>
 
                 </div>
             `;
