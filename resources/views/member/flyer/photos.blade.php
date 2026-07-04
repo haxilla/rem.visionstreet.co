@@ -162,6 +162,29 @@ $flyer = $data['flyer'] ?? null;
                         class="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
                     </div>
 
+                    <div id="uploadedPhotosFooter" class="mt-8 hidden text-center">
+
+                        <div id="uploadedPhotoMessage"
+                        class="text-xl font-black text-emerald-600">
+                        </div>
+
+                        <div class="mt-6 flex justify-center gap-4">
+
+                            <button id="uploadMoreButton"
+                            type="button"
+                            class="rounded-xl bg-white px-5 py-3 font-bold text-slate-700 shadow-sm ring-1 ring-black/5">
+                                Upload More Photos
+                            </button>
+
+                            <a href="/member/flyer/text?flyerId={{ $flyer->id }}"
+                                class="rounded-xl bg-[#123f91] px-6 py-3 font-bold text-white hover:bg-[#0f3274]">
+                                Continue →
+                            </a>
+
+                        </div>
+
+                    </div>
+
                 </div>
             </div>
 
