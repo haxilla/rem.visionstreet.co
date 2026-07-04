@@ -151,8 +151,8 @@ $flyer = $data['flyer'] ?? null;
                 </div>
 
                 {{-- UPLOAD STATUS --}}
-                <div id="uploadedPhotosSection"
-                    class="mt-10 hidden">
+                <div id="uploadedPhotosSection" 
+                class="mt-10 {{ $flyer->thePhotos->count() ? '' : 'hidden' }}">
 
                     <div id="uploadedPhotosFooter" class="mt-8 hidden text-center">
 
@@ -179,6 +179,20 @@ $flyer = $data['flyer'] ?? null;
 
                     <div id="uploadedPhotosGrid"
                         class="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+
+                        @foreach($flyer->thePhotos->sortByDesc('photoDate') as $photo)
+
+                            <div class="rounded-xl border border-slate-200 overflow-hidden bg-white shadow-sm">
+
+                                <img
+                                    src="/hqphotos/{{ $flyer->theMeta->zipDir }}/{{ $flyer->theMeta->mlsDir }}/{{ $photo->photoName }}"
+                                    class="aspect-square w-full object-cover"
+                                >
+
+                            </div>
+
+                        @endforeach
+
                     </div>
 
                 </div>

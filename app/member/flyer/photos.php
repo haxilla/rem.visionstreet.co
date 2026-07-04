@@ -8,7 +8,8 @@ if (!$flyerId) {
     dd("Error: Flyer ID is required to manage photos.");
 }
 
-$flyer = Propflyer::where('id', $flyerId)
+$flyer = Propflyer::with('thePhotos')
+    ->where('id', $flyerId)
     ->where('propagent_id', auth()->id())
     ->first();
 
