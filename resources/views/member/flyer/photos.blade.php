@@ -215,6 +215,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let totalPhotos = 0;
     let uploadsStarted = 0;
     let uploadsFinished = 0;
+    let uploadedPhotos = [];
 
     dropZone.addEventListener('click', () => {
         input.click();
@@ -405,6 +406,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 response.success = false;
             }
 
+            if (response.photos) {
+                uploadedPhotos = response.photos;
+            }
+
             if (xhr.status >= 200 &&
                 xhr.status < 300 &&
                 response.success === true) {
@@ -434,7 +439,7 @@ document.addEventListener('DOMContentLoaded', () => {
             uploadsFinished++;
 
             if (uploadsFinished === uploadsStarted) {
-                alert('All uploads complete');
+                showUploadComplete();
             }
 
         });
@@ -451,7 +456,7 @@ document.addEventListener('DOMContentLoaded', () => {
             uploadsFinished++;
 
             if (uploadsFinished === uploadsStarted) {
-                alert('All uploads complete');
+                showUploadComplete();
             }
 
         });
