@@ -151,7 +151,7 @@ try {
 }
 
 $photos = Propphoto::where('propflyer_id', $flyer->id)
-    ->orderBy('ord')
+    ->orderByDesc('photoDate')
     ->get([
         'photoID',
         'photoName',

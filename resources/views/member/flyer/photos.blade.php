@@ -154,10 +154,6 @@ $flyer = $data['flyer'] ?? null;
                 <div id="uploadedPhotosSection"
                     class="mt-10 hidden">
 
-                    <h2 class="text-center text-2xl font-black text-slate-900">
-                        Uploaded Photos
-                    </h2>
-
                     <div id="uploadedPhotosFooter" class="mt-8 hidden text-center">
 
                         <div id="uploadedPhotoMessage"
@@ -528,6 +524,11 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
 
         });
+
+        document.getElementById('uploadMoreButton')
+        .onclick = function () {
+            input.click();
+        };
 
     }
 
