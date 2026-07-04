@@ -289,11 +289,16 @@ document.addEventListener('DOMContentLoaded', () => {
     {
         photoCount.classList.remove('hidden');
 
-        photoCount.textContent =
-            totalPhotos +
-            (totalPhotos === 1
-                ? ' Photo Selected'
-                : ' Photos Selected');
+        if (uploadsFinished < uploadsStarted) {
+
+            photoCount.textContent =
+                totalPhotos +
+                (totalPhotos === 1
+                    ? ' Photo Uploading...'
+                    : ' Photos Uploading...');
+
+        }
+
     }
 
     function createPreviewAndUpload(file)
