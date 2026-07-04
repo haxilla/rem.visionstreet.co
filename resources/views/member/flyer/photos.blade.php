@@ -484,9 +484,26 @@ document.addEventListener('DOMContentLoaded', () => {
         // Clear the upload queue
         previewGrid.innerHTML = '';
 
+        // Hide the uploading message
+        photoCount.classList.add('hidden');
+
         // Show uploaded section
         document
             .getElementById('uploadedPhotosSection')
+            .classList.remove('hidden');
+
+        // Update uploaded message
+        document
+            .getElementById('uploadedPhotoMessage')
+            .textContent =
+                uploadedPhotos.length +
+                (uploadedPhotos.length === 1
+                    ? ' Photo Uploaded'
+                    : ' Photos Uploaded');
+
+        // Show footer
+        document
+            .getElementById('uploadedPhotosFooter')
             .classList.remove('hidden');
 
         const grid = document.getElementById('uploadedPhotosGrid');
