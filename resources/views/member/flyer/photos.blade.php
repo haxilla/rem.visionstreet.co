@@ -227,6 +227,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const previewGrid = document.getElementById('photoPreviewGrid');
     const photoCount = document.getElementById('photoCount');
 
+    document
+    .getElementById('uploadMoreButton')
+    .addEventListener('click', function () {
+        input.click();
+    });
+
     const flyerId = uploader.dataset.flyerId;
 
     const csrfMeta = document.querySelector('meta[name="csrf-token"]');
@@ -547,11 +553,6 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
 
         });
-
-        document.getElementById('uploadMoreButton')
-        .onclick = function () {
-            input.click();
-        };
 
     }
 
