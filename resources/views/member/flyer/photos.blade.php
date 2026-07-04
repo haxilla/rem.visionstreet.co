@@ -479,13 +479,30 @@ document.addEventListener('DOMContentLoaded', () => {
         // Clear the upload queue
         previewGrid.innerHTML = '';
 
-        // Show the uploaded photos section
+        // Show uploaded section
         document
             .getElementById('uploadedPhotosSection')
             .classList.remove('hidden');
 
-        // Verify we received the photos
-        console.log(uploadedPhotos);
+        const grid = document.getElementById('uploadedPhotosGrid');
+
+        grid.innerHTML = '';
+
+        uploadedPhotos.forEach(function(photo){
+
+            grid.innerHTML += `
+                <div class="rounded-xl border border-slate-200 overflow-hidden bg-white shadow-sm">
+
+                    <img
+                        src="/hqphotos/{{ $flyer->theMeta->zipDir }}/{{ $flyer->theMeta->mlsDir }}/${photo.photoName}"
+                        class="aspect-square w-full object-cover"
+                    >
+
+                </div>
+            `;
+
+        });
+
     }
 
 });
