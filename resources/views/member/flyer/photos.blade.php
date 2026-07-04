@@ -158,10 +158,6 @@ $flyer = $data['flyer'] ?? null;
                         Uploaded Photos
                     </h2>
 
-                    <div id="uploadedPhotosGrid"
-                        class="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-                    </div>
-
                     <div id="uploadedPhotosFooter" class="mt-8 hidden text-center">
 
                         <div id="uploadedPhotoMessage"
@@ -185,26 +181,11 @@ $flyer = $data['flyer'] ?? null;
 
                     </div>
 
+                    <div id="uploadedPhotosGrid"
+                        class="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+                    </div>
+
                 </div>
-            </div>
-
-            {{-- ACTIONS --}}
-            <div class="mt-8 flex items-center justify-between">
-
-                <a
-                    href="/member/flyer/details?flyerId={{ $flyer->id }}"
-                    class="rounded-xl bg-white px-5 py-3 font-bold text-slate-700 shadow-sm ring-1 ring-black/5"
-                >
-                    ← Back
-                </a>
-
-                <a
-                    href="/member/flyer/text?flyerId={{ $flyer->id }}"
-                    class="rounded-xl bg-[#123f91] px-6 py-3 font-bold text-white hover:bg-[#0f3274]"
-                >
-                    Continue →
-                </a>
-
             </div>
 
         </div>
