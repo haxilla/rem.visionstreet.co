@@ -154,10 +154,19 @@ $flyer = $data['flyer'] ?? null;
                 <div id="uploadedPhotosSection" 
                 class="mt-10 {{ $flyer->thePhotos->count() ? '' : 'hidden' }}">
 
-                    <div id="uploadedPhotosFooter" class="mt-8 hidden text-center">
+                    <div id="uploadedPhotosFooter" 
+                    class="mt-8 text-center {{ $flyer->thePhotos->count() ? '' : 'hidden' }}">
 
                         <div id="uploadedPhotoMessage"
-                        class="text-xl font-black text-emerald-600">
+                            class="text-xl font-black text-emerald-600">
+
+                            @if($flyer->thePhotos->count())
+
+                                {{ $flyer->thePhotos->count() }}
+                                {{ $flyer->thePhotos->count() == 1 ? 'Photo Uploaded' : 'Photos Uploaded' }}
+
+                            @endif
+
                         </div>
 
                         <div class="mt-6 flex justify-center gap-4">
