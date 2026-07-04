@@ -164,7 +164,7 @@ $flyer = $data['flyer'] ?? null;
 
                             <button id="uploadMoreButton"
                             type="button"
-                            class="curser-pointer rounded-xl bg-white px-5 py-3 font-bold text-slate-700 shadow-sm ring-1 ring-black/5">
+                            class="cursor-pointer rounded-xl bg-white px-5 py-3 font-bold text-slate-700 shadow-sm ring-1 ring-black/5">
                                 Upload More Photos
                             </button>
 
