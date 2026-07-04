@@ -154,7 +154,7 @@ $flyer = $data['flyer'] ?? null;
                 <div id="uploadedPhotosSection"
                     class="mt-10 hidden">
 
-                    <h2 class="text-2xl font-black text-slate-900">
+                    <h2 class="text-center text-2xl font-black text-slate-900">
                         Uploaded Photos
                     </h2>
 
