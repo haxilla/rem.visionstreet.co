@@ -478,6 +478,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
 });
 
+function showUploadComplete()
+{
+    // Clear the upload queue
+    previewGrid.innerHTML = '';
+
+    // Show the uploaded photos section
+    document
+        .getElementById('uploadedPhotosSection')
+        .classList.remove('hidden');
+
+    // Verify we received the photos
+    console.log(uploadedPhotos);
+}
+
 </script>
 
 </body>
