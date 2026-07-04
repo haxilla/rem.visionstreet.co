@@ -150,11 +150,21 @@ try {
 
 }
 
+$photos = Propphoto::where('propflyer_id', $flyer->id)
+    ->orderBy('ord')
+    ->get([
+        'photoID',
+        'photoName',
+        'ord',
+        'def'
+    ]);
+
 echo json_encode([
     'success' => true,
     'message' => 'Saved',
     'filename' => $fileName,
-    'photoID'  => $photo->photoID
+    'photoID'  => $photo->photoID,
+    'photos'   => $photos
 ]);
 
 exit;

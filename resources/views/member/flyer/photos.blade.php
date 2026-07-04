@@ -150,6 +150,19 @@ $flyer = $data['flyer'] ?? null;
                 >
                 </div>
 
+                {{-- UPLOAD STATUS --}}
+                <div id="uploadedPhotosSection"
+                    class="mt-10 hidden">
+
+                    <h2 class="text-2xl font-black text-slate-900">
+                        Uploaded Photos
+                    </h2>
+
+                    <div id="uploadedPhotosGrid"
+                        class="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+                    </div>
+
+                </div>
             </div>
 
             {{-- ACTIONS --}}
