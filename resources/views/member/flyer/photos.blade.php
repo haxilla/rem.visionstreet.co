@@ -582,6 +582,48 @@ document.addEventListener('DOMContentLoaded', () => {
 
     }
 
+    document.addEventListener('click', function(e){
+
+        if (!e.target.classList.contains('delete-photo')) {
+            return;
+        }
+
+        const card = e.target.closest('.photo-card');
+
+        const photoID = card.dataset.photoId;
+
+        if (!confirm('Delete this photo?')) {
+            return;
+        }
+
+        const formData = new FormData();
+
+        formData.append('photoID', photoID);
+
+        fetch('/member/flyer/deletePhoto', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+
+            if (!data.success) {
+
+                alert(data.message || 'Unable to delete photo.');
+
+                return;
+
+            }
+
+            card.remove();
+
+        });
+
+    });    
+
 });
 
 </script>
