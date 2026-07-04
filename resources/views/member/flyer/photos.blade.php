@@ -200,6 +200,8 @@ document.addEventListener('DOMContentLoaded', () => {
         : '{{ csrf_token() }}';
 
     let totalPhotos = 0;
+    let uploadsStarted = 0;
+    let uploadsFinished = 0;
 
     dropZone.addEventListener('click', () => {
         input.click();
@@ -252,6 +254,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function handleFiles(files)
     {
+
+        uploadsStarted += files.length;
         files.forEach((file) => {
 
             if (!file.type.startsWith('image/')) {
@@ -414,6 +418,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
             }
 
+            uploadsFinished++;
+
+            if (uploadsFinished === uploadsStarted) {
+                alert('All uploads complete');
+            }
+
         });
 
         xhr.addEventListener('error', function () {
@@ -424,6 +434,12 @@ document.addEventListener('DOMContentLoaded', () => {
             badge.textContent = 'Failed';
             badge.classList.remove('text-slate-700');
             badge.classList.add('text-red-700');
+
+            uploadsFinished++;
+
+            if (uploadsFinished === uploadsStarted) {
+                alert('All uploads complete');
+            }
 
         });
 
@@ -439,6 +455,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         xhr.send(formData);
     }
+
+
 
 });
 
