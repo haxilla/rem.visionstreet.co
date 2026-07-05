@@ -591,6 +591,25 @@ document.addEventListener('DOMContentLoaded', () => {
         const card = e.target.closest('.photo-card');
         card.style.opacity = '0.4';
         card.style.pointerEvents = 'none';
+        card.style.position = 'relative';
+
+        const overlay = document.createElement('div');
+
+        overlay.innerHTML = 'Deleting...';
+
+        overlay.style.position = 'absolute';
+        overlay.style.top = '50%';
+        overlay.style.left = '50%';
+        overlay.style.transform = 'translate(-50%, -50%)';
+        overlay.style.fontWeight = 'bold';
+        overlay.style.fontSize = '18px';
+        overlay.style.color = '#fff';
+        overlay.style.background = 'rgba(0,0,0,.65)';
+        overlay.style.padding = '10px 20px';
+        overlay.style.borderRadius = '6px';
+        overlay.style.zIndex = '1000';
+
+        card.appendChild(overlay);
 
         const photoID = card.dataset.photoId;
 
