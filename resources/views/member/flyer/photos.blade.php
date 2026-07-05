@@ -589,6 +589,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const card = e.target.closest('.photo-card');
+        card.style.opacity = '0.4';
+        card.style.pointerEvents = 'none';
 
         const photoID = card.dataset.photoId;
 
