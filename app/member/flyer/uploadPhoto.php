@@ -3,6 +3,8 @@
 use App\Models\Core\Propflyer;
 use App\Models\Core\Propphoto;
 
+require app_path('member/photo/resize.php');
+
 header('Content-Type: application/json');
 
 if (!isset($_FILES['photo'])) {
@@ -149,6 +151,18 @@ try {
     die($e->getMessage());
 
 }
+
+$resize500 = resizePhoto(
+    $photo,
+    $flyer,
+    500
+);
+
+$resize1000 = resizePhoto(
+    $photo,
+    $flyer,
+    1000
+);
 
 $photos = Propphoto::where('propflyer_id', $flyer->id)
     ->orderByDesc('photoDate')
