@@ -36,7 +36,7 @@ $flyer = $data['flyer'] ?? null;
 
             <div class="flex flex-wrap items-center gap-3 text-sm font-bold">
 
-                <a href="/member/flyer/property?flyerId={{ $flyer->id }}"
+                <a href="/member/flyer/create?flyerId={{ $flyer->id }}"
                     class="font-bold text-emerald-600 hover:text-[#123f91] hover:underline">
                     ✓ Property
                 </a>
