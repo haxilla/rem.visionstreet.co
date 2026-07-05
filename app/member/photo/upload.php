@@ -4,6 +4,7 @@ use App\Models\Core\Propflyer;
 use App\Models\Core\Propphoto;
 
 require app_path('member/photo/resize.php');
+require app_path('member/photo/resizeData.php');
 
 header('Content-Type: application/json');
 
@@ -138,31 +139,53 @@ $photo = new Propphoto();
 $photo->propflyer_id = $flyer->id;
 $photo->propagent_id = auth('member')->id();
 $photo->photoName    = $fileName;
+$photo->oldFileName  = $_FILES['photo']['name'];
 $photo->photoDate    = now();
 $photo->ord          = $nextOrd;
 $photo->def          =($nextOrd == 1) ? 1 : 0;
 
 try {
+    $photo->save();
+} catch (\Exception $e) {
+    throw $e;}
 
+try{
+    // create the 500 record
+    $resize500 = resizePhoto(
+        $photo,
+        $flyer,
+        500
+    );
+    //save to database
+    resizeData(
+        $photo,
+        $resize500
+    );
+
+    // create the 1000 record
+    $resize1000 = resizePhoto(
+        $photo,
+        $flyer,
+        1000
+    );
+    //save to database
+    resizeData(
+        $photo,
+        $resize1000
+    );
+
+    //mark orignal as successful.
+    $photo->resized = 1;
     $photo->save();
 
-} catch (\Exception $e) {
+//exception
+}catch(\Exception $e) {
+    //mark original as unsuccessful.
+    //throw error
+    $photo->resized = 2;
+    $photo->save();
 
-    die($e->getMessage());
-
-}
-
-$resize500 = resizePhoto(
-    $photo,
-    $flyer,
-    500
-);
-
-$resize1000 = resizePhoto(
-    $photo,
-    $flyer,
-    1000
-);
+    throw $e;}   
 
 $photos = Propphoto::where('propflyer_id', $flyer->id)
     ->orderByDesc('photoDate')

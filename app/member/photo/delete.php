@@ -31,6 +31,7 @@ if (!$photo) {
 
 }
 
+$oldFileName = $photo->oldFileName;
 $flyer = Propflyer::with('theMeta')->find($photo->propflyer_id);
 
 if (!$flyer) {
@@ -81,20 +82,26 @@ if (
 
 }
 
-$photoPath = public_path(
-    'hqphotos/' .
-    $flyer->theMeta->zipDir .
-    '/' .
-    $flyer->theMeta->mlsDir .
-    '/' .
-    $photo->photoName
-);
+$photos = Propphoto::where('oldFileName', $oldFileName)->get();
 
-if (file_exists($photoPath)) {
-    unlink($photoPath);
+foreach ($photos as $photo) {
+
+    $photoPath = public_path(
+        'hqphotos/' .
+        $flyer->theMeta->zipDir .
+        '/' .
+        $flyer->theMeta->mlsDir .
+        '/' .
+        $photo->photoName
+    );
+
+    if (file_exists($photoPath)) {
+        unlink($photoPath);
+    }
+
+    $photo->delete();
+
 }
-
-$photo->delete();
 
 echo json_encode([
     'success' => true
