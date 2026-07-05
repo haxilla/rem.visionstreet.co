@@ -198,6 +198,7 @@ try{
     throw $e;}   
 
 $photos = Propphoto::where('propflyer_id', $flyer->id)
+    ->where('resized', 500)
     ->orderByDesc('photoDate')
     ->get([
         'photoID',
