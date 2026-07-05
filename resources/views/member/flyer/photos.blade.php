@@ -620,6 +620,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
             card.remove();
 
+            uploadedPhotos = uploadedPhotos.filter(function(photo) {
+                return photo.photoID != photoID;
+            });
+
+            document.getElementById('uploadedPhotoMessage').textContent =
+                uploadedPhotos.length +
+                (uploadedPhotos.length === 1
+                    ? ' Photo Uploaded'
+                    : ' Photos Uploaded');
+
+            if (uploadedPhotos.length === 0) {
+                document
+                    .getElementById('uploadedPhotosSection')
+                    .classList.add('hidden');
+            }
+
         });
 
     });    
