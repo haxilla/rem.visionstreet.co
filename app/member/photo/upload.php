@@ -136,13 +136,23 @@ $nextOrd = is_null($nextOrd)
 
 $photo = new Propphoto();
 
-$photo->propflyer_id = $flyer->id;
-$photo->propagent_id = auth('member')->id();
-$photo->photoName    = $fileName;
-$photo->oldFileName  = $_FILES['photo']['name'];
-$photo->photoDate    = now();
-$photo->ord          = $nextOrd;
-$photo->def          =($nextOrd == 1) ? 1 : 0;
+$photo->propflyer_id    = $flyer->id;
+$photo->propagent_id    = auth('member')->id();
+$photo->photoName       = $fileName;
+$photo->oldFileName     = $_FILES['photo']['name'];
+$photo->width           = $width;
+$photo->height          = $height;
+$photo->ratio           = round($width / $height, 4);
+$photo->orient          = ($height > $width)
+    ? 'tall'
+    : 'wide';
+$photo->originalWidth   = $width;
+$photo->originalHeight  = $height;
+$photo->oldFileSize     = $fileSize;
+$photo->newFileSize     = $fileSize;
+$photo->photoDate       = now();
+$photo->ord             = $nextOrd;
+$photo->def             =($nextOrd == 1) ? 1 : 0;
 
 try {
     $photo->save();
