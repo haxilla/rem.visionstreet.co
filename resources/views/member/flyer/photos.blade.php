@@ -509,7 +509,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         xhr.open(
             'POST',
-            '/member/flyer/uploadPhoto'
+            '/member/photo/upload'
         );
 
         xhr.setRequestHeader(
@@ -600,7 +600,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         formData.append('photoID', photoID);
 
-        fetch('/member/flyer/deletePhoto', {
+        fetch('/member/photo/delete', {
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': csrfToken
