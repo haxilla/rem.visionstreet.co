@@ -620,17 +620,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
             card.remove();
 
-            uploadedPhotos = uploadedPhotos.filter(function(photo) {
-                return photo.photoID != photoID;
-            });
+            const remainingCards = document.querySelectorAll('#uploadedPhotosGrid .photo-card').length;
 
             document.getElementById('uploadedPhotoMessage').textContent =
-                uploadedPhotos.length +
-                (uploadedPhotos.length === 1
+                remainingCards +
+                (remainingCards === 1
                     ? ' Photo Uploaded'
                     : ' Photos Uploaded');
 
-            if (uploadedPhotos.length === 0) {
+            if (remainingCards === 0) {
                 document
                     .getElementById('uploadedPhotosSection')
                     .classList.add('hidden');
