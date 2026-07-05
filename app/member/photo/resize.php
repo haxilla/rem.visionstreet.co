@@ -142,13 +142,14 @@ function resizePhoto(
 
     $newRatio = round($newWidth / $newHeight, 4);
 
+    return [
+        'photoName' => $resizedName,
+        'width'     => $newWidth,
+        'height'    => $newHeight,
+        'ratio'     => $newRatio,
+        'fileSize'  => $newFileSize,
+        'resized'   => $resized,
+    ];
+
 }
 
-return [
-    'photoName' => $resizedName,
-    'width'     => $newWidth,
-    'height'    => $newHeight,
-    'ratio'     => $newRatio,
-    'fileSize'  => $newFileSize,
-    'resized'   => $resized,
-];
