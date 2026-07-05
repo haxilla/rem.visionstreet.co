@@ -36,10 +36,17 @@ $flyer = $data['flyer'] ?? null;
 
             <div class="flex flex-wrap items-center gap-3 text-sm font-bold">
 
-                <span class="text-emerald-600">✓ Property</span>
+                <a href="/member/flyer/property?flyerId={{ $flyer->id }}"
+                    class="font-bold text-emerald-600 hover:text-[#123f91] hover:underline">
+                    ✓ Property
+                </a>
                 <span class="text-slate-300">→</span>
 
-                <span class="text-emerald-600">✓ Details</span>
+                <a href="/member/flyer/details?flyerId={{ $flyer->id }}"
+                    class="font-bold text-emerald-600 hover:text-[#123f91] hover:underline">
+                    ✓ Details
+                </a>
+
                 <span class="text-slate-300">→</span>
 
                 <span class="text-[#123f91]">● Photos</span>
