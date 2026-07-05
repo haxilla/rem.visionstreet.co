@@ -3,6 +3,8 @@
 use App\Models\Core\Propflyer;
 use App\Models\Core\Propphoto;
 
+require app_path('member/photo/smart_resize_image.php');
+
 function resizePhoto(
     Propphoto $photo,
     Propflyer $flyer,
@@ -108,9 +110,6 @@ function resizePhoto(
     '/' .
     $resizedName
 );
-    
-    return['step'=>1];
-
     //resize or copy the image
     if ($needsResize) {
 
