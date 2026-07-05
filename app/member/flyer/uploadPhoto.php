@@ -152,6 +152,18 @@ try {
 
 }
 
+$resize500 = resizePhoto(
+    $photo,
+    $flyer,
+    500
+);
+
+$resize1000 = resizePhoto(
+    $photo,
+    $flyer,
+    1000
+);
+
 $photos = Propphoto::where('propflyer_id', $flyer->id)
     ->orderByDesc('photoDate')
     ->get([

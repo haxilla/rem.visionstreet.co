@@ -108,6 +108,8 @@ function resizePhoto(
     '/' .
     $resizedName
 );
+    
+    return['step'=>1];
 
     //resize or copy the image
     if ($needsResize) {
