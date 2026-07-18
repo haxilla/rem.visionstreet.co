@@ -98,7 +98,6 @@ foreach($photos as $photo){
 
 }
 
-
 $total = Propphoto::whereDate('photoDate','>=','2026-03-01')
     ->where('resized','!=',1000)
     ->count();
@@ -116,13 +115,15 @@ $completed = $total - $remaining;
 header('Content-Type: application/json');
 
 echo json_encode([
-    'completed'  => $completed,
-    'remaining'  => $remaining,
-    'ok'         => $ok,
-    'uploaded'   => $uploaded,
-    'downloaded' => $downloaded,
-    'missing'    => $missing,
-    'results'    => $data['results'],
+    'completed'     => $completed,
+    'remaining'     => $remaining,
+    'ok'            => $ok,
+    'uploaded'      => $uploaded,
+    'downloaded'    => $downloaded,
+    'missing'       => $missing,
+    'localPath'     => $localPath,
+    'remoteUrl'     => $remoteUrl,
+    'results'       => $data['results'],
 ]);
 
 exit;

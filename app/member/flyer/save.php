@@ -2,6 +2,7 @@
 
 use App\Models\Core\Propflyer;
 use App\Models\Core\Propmeta;
+use App\Models\Core\Propstyle;
 
 // Validate the request data
 $validatedData = $request->validate([
@@ -61,6 +62,20 @@ if ($isNewFlyer) {
         'mlsDir'       => !empty($validatedData['xMlsNum'])
             ? $validatedData['xMlsNum']
             : 'U' . $flyer->id,
+    ]);
+
+    Propstyle::create([
+        'propflyer_id' => $flyer->id,
+        'propagent_id' => auth()->id(),
+        'flyer_background' => 'cccccc',
+        'headline_bar_bg' => '333333',
+        'headline_bar_text' => 'ffffff',
+        'headline_text' => '333333',
+        'graphic_words' => 'greatbuy',
+        'graphic_textcolor' => 'ffffff',
+        'graphic_style' => 'ul',
+        'roundedtop' => 'roundedtop-600px_cccccc.gif',
+        'accentbars' => '333333',   
     ]);
 }
 
