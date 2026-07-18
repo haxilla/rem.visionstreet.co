@@ -27,6 +27,7 @@ foreach($photos as $photo){
 
     $zipDir = $photo->theMeta->zipDir;
     $mlsDir = $photo->theMeta->mlsDir;
+    $photoID = $photo->photoID;
 
     $localPath = public_path(
         "hqphotos/$zipDir/$mlsDir/$photo->photoName");
@@ -123,6 +124,7 @@ echo json_encode([
     'missing'       => $missing,
     'localPath'     => $localPath,
     'remoteUrl'     => $remoteUrl,
+    'photoID'       => $photoID,
     'results'       => $data['results'],
 ]);
 
