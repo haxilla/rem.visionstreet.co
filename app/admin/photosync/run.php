@@ -28,6 +28,7 @@ foreach($photos as $photo){
     $zipDir = $photo->theMeta->zipDir;
     $mlsDir = $photo->theMeta->mlsDir;
     $photoID = $photo->photoID;
+    $flyerID = $photo->propflyer_id;
 
     $localPath = public_path(
         "hqphotos/$zipDir/$mlsDir/$photo->photoName");
@@ -125,6 +126,7 @@ echo json_encode([
     'localPath'     => $localPath,
     'remoteUrl'     => $remoteUrl,
     'photoID'       => $photoID,
+    'flyerID'       => $flyerID,
     'results'       => $data['results'],
 ]);
 
