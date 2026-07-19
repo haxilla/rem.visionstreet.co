@@ -32,41 +32,9 @@ $flyer = $data['flyer'] ?? null;
         </div>
 
         {{-- PROGRESS --}}
-        <div class="mb-8 rounded-3xl bg-white p-6 shadow-sm ring-1 ring-black/5">
-
-            <div class="flex flex-wrap items-center gap-3 text-sm font-bold">
-
-                <span class="text-[#123f91]">
-                    ● Property
-                </span>
-
-                <span class="text-slate-300">→</span>
-
-                <span class="text-slate-400">
-                    Details
-                </span>
-
-                <span class="text-slate-300">→</span>
-
-                <span class="text-slate-400">
-                    Photos
-                </span>
-
-                <span class="text-slate-300">→</span>
-
-                <span class="text-slate-400">
-                    Text
-                </span>
-
-                <span class="text-slate-300">→</span>
-
-                <span class="text-slate-400">
-                    Design
-                </span>
-
-            </div>
-
-        </div>
+        @include('member.flyer.wizard', [
+            'flyer' => $data['flyer']
+        ])
 
         @if ($errors->any())
 
