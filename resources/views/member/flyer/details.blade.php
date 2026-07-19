@@ -1,3 +1,7 @@
+@php
+    $flyer = $data['flyer'];
+@endphp
+
 @include('member.layout.head')
 
 <body data-section="member" class="bg-slate-100">
