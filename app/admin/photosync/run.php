@@ -23,6 +23,9 @@ $photos = Propphoto::with([
 ->take($batchSize)
 ->get();
 
+$localPath = '';
+$remoteUrl = '';    
+
 foreach($photos as $photo){
 
     $zipDir = $photo->theMeta->zipDir;
