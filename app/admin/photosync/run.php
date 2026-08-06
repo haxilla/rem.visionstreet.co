@@ -25,6 +25,8 @@ $photos = Propphoto::with([
 
 $localPath = '';
 $remoteUrl = '';    
+$photoID = '';
+$flyerID = '';
 
 foreach($photos as $photo){
 
