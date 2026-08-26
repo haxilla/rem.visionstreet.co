@@ -22,3 +22,7 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+# Production photo archives - do not track
+/public/agentPhotos/
+/public/hqphotos/
+/public/officeLogos/
