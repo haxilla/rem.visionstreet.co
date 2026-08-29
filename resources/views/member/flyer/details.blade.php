@@ -97,7 +97,7 @@
     <form
         method="POST"
         action="/member/flyer/save_details"
-        class="mt-8">
+        class="mt-8 space-y-8">
 
         @csrf
 
@@ -106,38 +106,57 @@
             name="flyerId"
             value="{{ $flyer->id }}">
 
+        {{-- ========================================================= --}}
+        {{-- PROPERTY INFORMATION --}}
+        {{-- ========================================================= --}}
 
-        <div class="rounded-3xl bg-white shadow-sm overflow-hidden">
+        <div class="overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-black/5">
 
-            <div class="p-10">
+            <div class="bg-gradient-to-r from-[#1b2f63] to-[#2a4486] px-10 py-7">
 
-                <h2 class="text-2xl font-black text-slate-900">
+                <h2 class="text-2xl font-black text-white">
 
                     Property Information
 
                 </h2>
 
-                <div class="mt-8 grid gap-x-8 gap-y-6 lg:grid-cols-4">
+                <p class="mt-1 text-sm text-blue-100">
+
+                    Core facts shown on the flyer and used to help buyers find this listing.
+
+                </p>
+
+            </div>
+
+            <div class="p-10">
+
+                <div class="grid gap-x-8 gap-y-6 lg:grid-cols-4">
 
                     <div>
 
-                        <label class="block text-sm font-semibold text-slate-600 mb-2">
+                        <label class="mb-2 block text-sm font-semibold text-slate-600">
 
                             List Price
 
                         </label>
 
-                        <input
-                            type="text"
-                            name="xListPrice"
-                            value="{{ old('xListPrice',$flyer->xListPrice ?? '') }}"
-                            class="w-full rounded-xl border border-slate-300 px-4 py-3">
+                        <div class="relative">
+
+                            <span class="pointer-events-none absolute inset-y-0 left-4 flex items-center font-semibold text-slate-400">$</span>
+
+                            <input
+                                type="text"
+                                name="xListPrice"
+                                value="{{ old('xListPrice',$flyer->xListPrice ?? '') }}"
+                                class="w-full rounded-2xl border border-slate-300 py-3 pl-8 pr-4 transition focus:border-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-700/10">
+
+                        </div>
 
                     </div>
 
                     <div>
 
-                        <label class="block text-sm font-semibold text-slate-600 mb-2">
+                        <label class="mb-2 block text-sm font-semibold text-slate-600">
 
                             Property Type
 
@@ -145,7 +164,7 @@
 
                         <select
                             name="xPropType"
-                            class="w-full rounded-xl border border-slate-300 px-4 py-3">
+                            class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-700/10">
 
                             @php $propType = old('xPropType', $flyer->theMeta->xPropType ?? ''); @endphp
 
@@ -161,7 +180,7 @@
 
                     <div>
 
-                        <label class="block text-sm font-semibold text-slate-600 mb-2">
+                        <label class="mb-2 block text-sm font-semibold text-slate-600">
 
                             Sale or Rental
 
@@ -169,7 +188,7 @@
 
                         <select
                             name="xListingType"
-                            class="w-full rounded-xl border border-slate-300 px-4 py-3">
+                            class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-700/10">
 
                             @php $listingType = old('xListingType', $flyer->theMeta->xListingType ?? ''); @endphp
 
@@ -183,55 +202,7 @@
 
                     <div>
 
-                        <label class="block text-sm font-semibold text-slate-600 mb-2">
-
-                            Bedrooms
-
-                        </label>
-
-                        <input
-                            type="text"
-                            name="xBeds"
-                            value="{{ old('xBeds',$flyer->xBeds ?? '') }}"
-                            class="w-full rounded-xl border border-slate-300 px-4 py-3">
-
-                    </div>
-
-                    <div>
-
-                        <label class="block text-sm font-semibold text-slate-600 mb-2">
-
-                            Bathrooms
-
-                        </label>
-
-                        <input
-                            type="text"
-                            name="xBaths"
-                            value="{{ old('xBaths',$flyer->xBaths ?? '') }}"
-                            class="w-full rounded-xl border border-slate-300 px-4 py-3">
-
-                    </div>
-
-                    <div>
-
-                        <label class="block text-sm font-semibold text-slate-600 mb-2">
-
-                            Square Feet
-
-                        </label>
-
-                        <input
-                            type="text"
-                            name="xSqft"
-                            value="{{ old('xSqft',$flyer->xSqft ?? '') }}"
-                            class="w-full rounded-xl border border-slate-300 px-4 py-3">
-
-                    </div>
-
-                    <div>
-
-                        <label class="block text-sm font-semibold text-slate-600 mb-2">
+                        <label class="mb-2 block text-sm font-semibold text-slate-600">
 
                             Year Built
 
@@ -241,13 +212,77 @@
                             type="text"
                             name="xYrBuilt"
                             value="{{ old('xYrBuilt',$flyer->xYrBuilt ?? '') }}"
-                            class="w-full rounded-xl border border-slate-300 px-4 py-3">
+                            class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-700/10">
+
+                    </div>
+
+                </div>
+
+                <div class="mt-8 grid gap-x-8 gap-y-6 border-t border-slate-100 pt-8 sm:grid-cols-3 lg:grid-cols-4">
+
+                    <div>
+
+                        <label class="mb-2 flex items-center gap-2 text-sm font-semibold text-slate-600">
+
+                            <svg class="h-4 w-4 text-blue-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 12h18M5 12V7a2 2 0 012-2h10a2 2 0 012 2v5M4 18v-3a1 1 0 011-1h14a1 1 0 011 1v3M3 21h18" />
+                            </svg>
+
+                            Bedrooms
+
+                        </label>
+
+                        <input
+                            type="text"
+                            name="xBeds"
+                            value="{{ old('xBeds',$flyer->xBeds ?? '') }}"
+                            class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-700/10">
 
                     </div>
 
                     <div>
 
-                        <label class="block text-sm font-semibold text-slate-600 mb-2">
+                        <label class="mb-2 flex items-center gap-2 text-sm font-semibold text-slate-600">
+
+                            <svg class="h-4 w-4 text-blue-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 12h16M6 12V6a2 2 0 012-2h2v3M4 12v6a2 2 0 002 2h12a2 2 0 002-2v-6" />
+                            </svg>
+
+                            Bathrooms
+
+                        </label>
+
+                        <input
+                            type="text"
+                            name="xBaths"
+                            value="{{ old('xBaths',$flyer->xBaths ?? '') }}"
+                            class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-700/10">
+
+                    </div>
+
+                    <div>
+
+                        <label class="mb-2 flex items-center gap-2 text-sm font-semibold text-slate-600">
+
+                            <svg class="h-4 w-4 text-blue-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 8V4h4M20 8V4h-4M4 16v4h4M20 16v4h-4" />
+                            </svg>
+
+                            Square Feet
+
+                        </label>
+
+                        <input
+                            type="text"
+                            name="xSqft"
+                            value="{{ old('xSqft',$flyer->xSqft ?? '') }}"
+                            class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-700/10">
+
+                    </div>
+
+                    <div>
+
+                        <label class="mb-2 block text-sm font-semibold text-slate-600">
 
                             Parking
 
@@ -255,7 +290,7 @@
 
                         <select
                             name="xParking"
-                            class="w-full rounded-xl border border-slate-300 px-4 py-3">
+                            class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-700/10">
 
                             <option value="">Select</option>
                             <option>1 Car Garage</option>
@@ -270,7 +305,7 @@
 
                     <div>
 
-                        <label class="block text-sm font-semibold text-slate-600 mb-2">
+                        <label class="mb-2 block text-sm font-semibold text-slate-600">
 
                             Pool
 
@@ -278,7 +313,7 @@
 
                         <select
                             name="xPool"
-                            class="w-full rounded-xl border border-slate-300 px-4 py-3">
+                            class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-700/10">
 
                             <option value="">Select</option>
                             <option>Private Pool</option>
@@ -289,25 +324,35 @@
 
                     </div>
 
+                    <div class="sm:col-span-3 lg:col-span-2">
+
+                        <label class="mb-2 block text-sm font-semibold text-slate-600">
+
+                            Cross Streets
+
+                        </label>
+
+                        <input
+                            type="text"
+                            name="xIntersection"
+                            value="{{ old('xIntersection',$flyer->theMap?->xIntersection ?? '') }}"
+                            class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-700/10">
+
+                    </div>
+
                 </div>
 
-                <div class="mt-6">
+            </div>
 
-                    <label class="block text-sm font-semibold text-slate-600 mb-2">
+        </div>
 
-                        Cross Streets
+        {{-- ========================================================= --}}
+        {{-- PROPERTY HIGHLIGHTS --}}
+        {{-- ========================================================= --}}
 
-                    </label>
+        <div class="overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-black/5">
 
-                    <input
-                        type="text"
-                        name="xIntersection"
-                        value="{{ old('xIntersection',$flyer->theMap?->xIntersection ?? '') }}"
-                        class="w-full rounded-xl border border-slate-300 px-4 py-3">
-
-                </div>
-
-                <hr class="my-10">
+            <div class="border-b border-slate-100 px-10 py-7">
 
                 <h2 class="text-2xl font-black text-slate-900">
 
@@ -315,15 +360,23 @@
 
                 </h2>
 
-                <div class="mt-8 space-y-4">
-                    
+                <p class="mt-1 text-sm text-slate-500">
+
+                    Short feature highlights used in the flyer callout areas.
+
+                </p>
+
+            </div>
+
+            <div class="grid gap-4 p-10 sm:grid-cols-2">
+
                 @for($i = 1; $i <= 7; $i++)
 
-                    <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-3">
 
-                        <div class="text-2xl font-bold text-blue-700">
+                        <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-50 text-sm font-black text-blue-700">
 
-                            •
+                            {{ $i }}
 
                         </div>
 
@@ -331,13 +384,23 @@
                             type="text"
                             name="xb{{ $i }}"
                             value="{{ old('xb'.$i,$flyer->theRemarks?->{'xb'.$i} ?? '') }}"
-                            class="flex-1 rounded-xl border border-slate-300 px-4 py-3">
+                            class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-700/10">
 
                     </div>
 
                 @endfor
 
-                <hr class="my-10">
+            </div>
+
+        </div>
+
+        {{-- ========================================================= --}}
+        {{-- ADDITIONAL RESOURCES --}}
+        {{-- ========================================================= --}}
+
+        <div class="overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-black/5">
+
+            <div class="border-b border-slate-100 px-10 py-7">
 
                 <h2 class="text-2xl font-black text-slate-900">
 
@@ -345,45 +408,61 @@
 
                 </h2>
 
-                <div class="mt-8 grid gap-6 lg:grid-cols-2">
+                <p class="mt-1 text-sm text-slate-500">
 
-                    <div>
+                    Optional links shown in the flyer link bar.
 
-                        <label class="block text-sm font-semibold text-slate-600 mb-2">
+                </p>
 
-                            Virtual Tour
+            </div>
 
-                        </label>
+            <div class="grid gap-6 p-10 lg:grid-cols-2">
 
-                        <input
-                            type="text"
-                            name="xVirtualTour"
-                            value="{{ old('xVirtualTour',$flyer->xVirtualTour ?? '') }}"
-                            placeholder="https://"
-                            class="w-full rounded-xl border border-slate-300 px-4 py-3">
+                <div>
 
-                    </div>
+                    <label class="mb-2 block text-sm font-semibold text-slate-600">
 
-                    <div>
+                        Virtual Tour
 
-                        <label class="block text-sm font-semibold text-slate-600 mb-2">
+                    </label>
 
-                            MLS Listing Link
-
-                        </label>
-
-                        <input
-                            type="text"
-                            name="xMlsLink"
-                            value="{{ old('xMlsLink',$flyer->xMlsLink ?? '') }}"
-                            placeholder="https://"
-                            class="w-full rounded-xl border border-slate-300 px-4 py-3">
-
-                    </div>
+                    <input
+                        type="text"
+                        name="xVirtualTour"
+                        value="{{ old('xVirtualTour',$flyer->xVirtualTour ?? '') }}"
+                        placeholder="https://"
+                        class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-700/10">
 
                 </div>
 
-                <hr class="my-10">
+                <div>
+
+                    <label class="mb-2 block text-sm font-semibold text-slate-600">
+
+                        MLS Listing Link
+
+                    </label>
+
+                    <input
+                        type="text"
+                        name="xMlsLink"
+                        value="{{ old('xMlsLink',$flyer->xMlsLink ?? '') }}"
+                        placeholder="https://"
+                        class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-700/10">
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {{-- ========================================================= --}}
+        {{-- AGENT REMARKS --}}
+        {{-- ========================================================= --}}
+
+        <div class="overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-black/5">
+
+            <div class="border-b border-slate-100 px-10 py-7">
 
                 <h2 class="text-2xl font-black text-slate-900">
 
@@ -391,14 +470,24 @@
 
                 </h2>
 
-                <textarea
-                    name="xPubRemarks"
-                    rows="8"
-                    class="mt-6 w-full rounded-xl border border-slate-300 px-4 py-3">{{ old('xPubRemarks',$flyer->theRemarks?->xPubRemarks ?? '') }}</textarea>
+                <p class="mt-1 text-sm text-slate-500">
+
+                    The primary paragraph shown in the flyer body.
+
+                </p>
 
             </div>
 
-            <div class="border-t bg-slate-50 px-10 py-6">
+            <div class="p-10">
+
+                <textarea
+                    name="xPubRemarks"
+                    rows="8"
+                    class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-700/10">{{ old('xPubRemarks',$flyer->theRemarks?->xPubRemarks ?? '') }}</textarea>
+
+            </div>
+
+            <div class="border-t border-slate-100 bg-slate-50 px-10 py-6">
 
                 <div class="flex items-center justify-between">
 
