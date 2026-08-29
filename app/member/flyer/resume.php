@@ -28,15 +28,11 @@ switch ((int)$flyer->wizardStep) {
         break;
 
     case 3:
-        redirect('/member/flyer/text?flyerId='.$flyer->id)->send();
-        break;
-
-    case 4:
         redirect('/member/flyer/design?flyerId='.$flyer->id)->send();
         break;
 
     default:
-        redirect('/member/flyer/review?flyerId='.$flyer->id)->send();
+        redirect('/member/flyer/preview?flyerId='.$flyer->id)->send();
         break;
 }
 

@@ -159,7 +159,7 @@ $flyer = $data['flyer'] ?? null;
                                 Upload More Photos
                             </button>
 
-                            <a href="/member/flyer/text?flyerId={{ $flyer->id }}"
+                            <a href="/member/flyer/design?flyerId={{ $flyer->id }}"
                                 class="rounded-xl bg-[#123f91] px-6 py-3 font-bold text-white hover:bg-[#0f3274]">
                                 Continue →
                             </a>
