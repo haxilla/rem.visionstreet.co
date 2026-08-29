@@ -52,7 +52,18 @@
         5 => 'preview',
     ];
 
-    $returnSlug = $stepSlugs[$currentStep] ?? 'create';
+    /*
+     * If we already arrived here carrying a "return" (i.e. this is
+     * itself a stop along an edit detour), keep passing that same
+     * original value forward instead of recalculating it from this
+     * page - otherwise each extra hop overwrites it with wherever the
+     * member happens to be standing right now, and by the time they
+     * actually save, the original starting point has been lost.
+     */
+    $incomingReturn = request('return');
+    $returnSlug = in_array($incomingReturn, $stepSlugs, true)
+        ? $incomingReturn
+        : ($stepSlugs[$currentStep] ?? 'create');
 
     $steps = [
         1 => [

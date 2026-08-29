@@ -55,7 +55,7 @@
             <div class="mt-6">
 
                 <a
-                    href="/member/flyer/create?flyerId={{ $flyer->id }}&return=details"
+                    href="/member/flyer/create?flyerId={{ $flyer->id }}&return={{ request('return') ?: 'details' }}"
                     class="inline-flex items-center rounded-xl bg-slate-100 px-5 py-3 font-semibold text-slate-700 hover:bg-slate-200">
 
                     ← Edit Address
