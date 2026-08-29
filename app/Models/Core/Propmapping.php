@@ -9,4 +9,10 @@ class Propmapping extends Model
 
    protected $primaryKey   = 'propflyer_id';
 
+   protected $fillable = [
+    'propflyer_id',
+    'propagent_id',
+    'xIntersection',
+   ];
+
 }

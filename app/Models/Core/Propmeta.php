@@ -15,6 +15,8 @@ class Propmeta extends Model
     'propagent_id',
     'zipDir',
     'mlsDir',
+    'xPropType',
+    'xListingType',
    ];
 
 }

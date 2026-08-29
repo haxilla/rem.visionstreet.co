@@ -129,8 +129,8 @@
 
                         <input
                             type="text"
-                            name="xPrice"
-                            value="{{ old('xPrice',$flyer->xPrice ?? '') }}"
+                            name="xListPrice"
+                            value="{{ old('xListPrice',$flyer->xListPrice ?? '') }}"
                             class="w-full rounded-xl border border-slate-300 px-4 py-3">
 
                     </div>
@@ -143,11 +143,41 @@
 
                         </label>
 
-                        <input
-                            type="text"
-                            name="xPropertyType"
-                            value="{{ old('xPropertyType',$flyer->xPropertyType ?? '') }}"
+                        <select
+                            name="xPropType"
                             class="w-full rounded-xl border border-slate-300 px-4 py-3">
+
+                            @php $propType = old('xPropType', $flyer->theMeta->xPropType ?? ''); @endphp
+
+                            <option value="">Select</option>
+                            <option value="Residential" @selected($propType === 'Residential')>Residential</option>
+                            <option value="Commercial" @selected($propType === 'Commercial')>Commercial</option>
+                            <option value="Land" @selected($propType === 'Land')>Land</option>
+                            <option value="Multi-Family" @selected($propType === 'Multi-Family')>Multi-Family</option>
+
+                        </select>
+
+                    </div>
+
+                    <div>
+
+                        <label class="block text-sm font-semibold text-slate-600 mb-2">
+
+                            Sale or Rental
+
+                        </label>
+
+                        <select
+                            name="xListingType"
+                            class="w-full rounded-xl border border-slate-300 px-4 py-3">
+
+                            @php $listingType = old('xListingType', $flyer->theMeta->xListingType ?? ''); @endphp
+
+                            <option value="">Select</option>
+                            <option value="Sale" @selected($listingType === 'Sale')>Sale</option>
+                            <option value="Rental" @selected($listingType === 'Rental')>Rental</option>
+
+                        </select>
 
                     </div>
 
@@ -193,8 +223,8 @@
 
                         <input
                             type="text"
-                            name="xSqFt"
-                            value="{{ old('xSqFt',$flyer->xSqFt ?? '') }}"
+                            name="xSqft"
+                            value="{{ old('xSqft',$flyer->xSqft ?? '') }}"
                             class="w-full rounded-xl border border-slate-300 px-4 py-3">
 
                     </div>
@@ -209,8 +239,8 @@
 
                         <input
                             type="text"
-                            name="xYearBuilt"
-                            value="{{ old('xYearBuilt',$flyer->xYearBuilt ?? '') }}"
+                            name="xYrBuilt"
+                            value="{{ old('xYrBuilt',$flyer->xYrBuilt ?? '') }}"
                             class="w-full rounded-xl border border-slate-300 px-4 py-3">
 
                     </div>
@@ -271,8 +301,8 @@
 
                     <input
                         type="text"
-                        name="xCrossStreets"
-                        value="{{ old('xCrossStreets',$flyer->xCrossStreets ?? '') }}"
+                        name="xIntersection"
+                        value="{{ old('xIntersection',$flyer->theMap?->xIntersection ?? '') }}"
                         class="w-full rounded-xl border border-slate-300 px-4 py-3">
 
                 </div>
@@ -299,8 +329,8 @@
 
                         <input
                             type="text"
-                            name="xBullet{{ $i }}"
-                            value="{{ old('xBullet'.$i,$flyer->{'xBullet'.$i} ?? '') }}"
+                            name="xb{{ $i }}"
+                            value="{{ old('xb'.$i,$flyer->theRemarks?->{'xb'.$i} ?? '') }}"
                             class="flex-1 rounded-xl border border-slate-300 px-4 py-3">
 
                     </div>
@@ -344,8 +374,8 @@
 
                         <input
                             type="text"
-                            name="xMLSLink"
-                            value="{{ old('xMLSLink',$flyer->xMLSLink ?? '') }}"
+                            name="xMlsLink"
+                            value="{{ old('xMlsLink',$flyer->xMlsLink ?? '') }}"
                             placeholder="https://"
                             class="w-full rounded-xl border border-slate-300 px-4 py-3">
 
@@ -362,9 +392,9 @@
                 </h2>
 
                 <textarea
-                    name="xRemarks"
+                    name="xPubRemarks"
                     rows="8"
-                    class="mt-6 w-full rounded-xl border border-slate-300 px-4 py-3">{{ old('xRemarks',$flyer->xRemarks ?? '') }}</textarea>
+                    class="mt-6 w-full rounded-xl border border-slate-300 px-4 py-3">{{ old('xPubRemarks',$flyer->theRemarks?->xPubRemarks ?? '') }}</textarea>
 
             </div>
 
