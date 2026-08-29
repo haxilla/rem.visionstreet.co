@@ -1,6 +1,9 @@
 
 @php
-$agentImg = "{$fromURL}/agentPhotos/{$agentInfo->theAgentCleanup->newRemID}/{$agentInfo->agtPhoto}";
+$agentImg = null;
+if (!empty($agentInfo->agtPhoto) && !empty($agentInfo->theAgentCleanup?->newRemID)) {
+    $agentImg = "{$fromURL}/agentPhotos/{$agentInfo->theAgentCleanup->newRemID}/{$agentInfo->agtPhoto}";
+}
 $officeLogo="{$fromURL}/officeLogos/{$officeInfo->officeID}/{$agentInfo->agtLogo}";
 @endphp
 
@@ -17,12 +20,12 @@ font-family:arial;">
     </td>
   </tr>
   <tr>
-    @if($agentInfo->agtPhoto)
+    @if($agentImg)
     <td class="agentPhotoSection"
         style="vertical-align:bottom;
         width:20%;">
       <div style="width:100%;">
-        @if($agentInfo->agtPhoto)
+        @if($agentImg)
         <img
           src="{{ $agentImg }}"
           class="agentImage"
