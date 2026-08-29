@@ -8,8 +8,9 @@
      * 2 = Details
      * 3 = Photos
      * 4 = Design
+     * 5 = Preview
      */
-    $highestUnlockedStep = max(1, min(4, (int) ($flyer->wizardStep ?? 1)));
+    $highestUnlockedStep = max(1, min(5, (int) ($flyer->wizardStep ?? 1)));
 
     /*
      * Determine the page currently being displayed from the URL.
@@ -18,7 +19,6 @@
     $currentPath = trim(request()->path(), '/');
 
     if (
-        str_contains($currentPath, 'flyer/create') ||
         str_contains($currentPath, 'flyer/property')
     ) {
         $currentStep = 1;
@@ -28,6 +28,8 @@
         $currentStep = 3;
     } elseif (str_contains($currentPath, 'flyer/design')) {
         $currentStep = 4;
+    } elseif (str_contains($currentPath, 'flyer/preview')) {
+        $currentStep = 5;
     } else {
         $currentStep = 1;
     }
@@ -38,7 +40,7 @@
     $steps = [
         1 => [
             'title' => 'Property',
-            'url' => url('/member/flyer/create') . '?flyerId=' . $flyer->id,
+            'url' => url('/member/flyer/property') . '?flyerId=' . $flyer->id,
         ],
 
         2 => [
@@ -54,6 +56,11 @@
         4 => [
             'title' => 'Design',
             'url' => url('/member/flyer/design') . '?flyerId=' . $flyer->id,
+        ],
+
+        5 => [
+            'title' => 'Preview',
+            'url' => url('/member/flyer/preview') . '?flyerId=' . $flyer->id,
         ],
     ];
 @endphp

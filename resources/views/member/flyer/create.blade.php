@@ -4,205 +4,49 @@
 
 @include('member.layout.nav')
 
-@php
-$flyer = $data['flyer'] ?? null;
-@endphp
-
 <main class="min-h-screen bg-[#f0f2f7] pt-24">
 
-<div class="mx-auto w-full max-w-[900px] px-4 pb-16 sm:px-6 lg:px-8">
+<div class="mx-auto w-full max-w-[700px] px-4 pb-16 sm:px-6 lg:px-8">
 
     <section>
 
         {{-- HEADER --}}
-        <div class="mb-8">
+        <div class="mb-8 text-center">
 
-            <div class="text-sm font-bold uppercase tracking-wider text-[#123f91]">
-                Step 1 of 5
-            </div>
-
-            <h1 class="mt-2 text-4xl font-black text-slate-900">
-                {{ $flyer ? 'Edit Flyer' : 'Create New Flyer' }}
+            <h1 class="text-4xl font-black text-slate-900">
+                Let's Start Your Flyer
             </h1>
 
             <p class="mt-2 text-slate-500">
-                {{ $flyer ? 'Update the property information below.' : 'Start by entering the property address.' }}
+                Is this property already listed in the MLS?
             </p>
 
         </div>
 
-        {{-- PROGRESS --}}
-        @if ($flyer)
-            @include('member.flyer.wizard', [
-                'flyer' => $flyer
-            ])
-        @endif
+        <form action="/member/flyer/property" method="get"
+            class="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-black/5">
 
-        @if ($errors->any())
+            <label class="mb-2 block text-sm font-bold text-slate-700">
+                If your property is already listed in the MLS, enter the MLS# below to continue.
+            </label>
 
-            <div class="mb-6 rounded-xl border border-red-200 bg-red-50 p-4">
+            <input
+                type="text"
+                name="xMlsNum"
+                class="w-full rounded-2xl border border-slate-300 px-5 py-4 text-lg focus:border-[#123f91] focus:outline-none"
+                placeholder="MLS Number"
+            >
 
-                <div class="mb-2 font-bold text-red-700">
-                    Please correct the following:
-                </div>
+            <div class="mt-6 flex items-center justify-between gap-3">
 
-                <ul class="list-disc pl-5 text-red-600">
-
-                    @foreach ($errors->all() as $error)
-
-                        <li>{{ $error }}</li>
-
-                    @endforeach
-
-                </ul>
-
-            </div>
-
-        @endif
-
-        <form action="/member/flyer/save" method="post">
-
-            @csrf
-
-            @if($flyer)
-                <input
-                    type="hidden"
-                    name="flyerId"
-                    value="{{ $flyer->id }}"
-                >
-            @endif
-
-            {{-- MLS CARD --}}
-            <div class="mb-6 rounded-3xl bg-white p-8 shadow-sm ring-1 ring-black/5">
-
-                <div>
-
-                    <label class="mb-2 block text-sm font-bold text-slate-700">
-                        If your property is already listed in the MLS, enter the MLS# below to continue.
-                    </label>
-
-                    <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
-
-                        <input
-                            type="text"
-                            name="xMlsNum"
-                            value="{{ old('xMlsNum', $flyer->xMlsNum ?? '') }}"
-                            class="w-full rounded-2xl border border-slate-300 px-4 py-3"
-                        >
-
-                        <button
-                            type="button"
-                            onclick="document.getElementById('propertyInfoCard').scrollIntoView({behavior: 'smooth', block: 'center'})"
-                            class="shrink-0 rounded-2xl bg-white px-5 py-3 font-bold text-slate-600 shadow-sm ring-1 ring-black/5 hover:bg-slate-50"
-                        >
-                            Skip →
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            {{-- PROPERTY CARD --}}
-            <div id="propertyInfoCard" class="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-black/5">
-
-                <h2 class="text-2xl font-black text-slate-900">
-                    Property Information
-                </h2>
-
-                <p class="mt-1 text-sm text-slate-500">
-                    Enter the property address to begin.
-                </p>
-
-                <div class="mt-8 space-y-6">
-
-                    <div>
-
-                        <label class="mb-2 block text-sm font-bold text-slate-700">
-                            Property Address
-                        </label>
-
-                        <input
-                            type="text"
-                            name="xFullStreet"
-                            value="{{ old('xFullStreet', $flyer->xFullStreet ?? '') }}"
-                            class="w-full rounded-2xl border border-slate-300 px-5 py-4 text-lg focus:border-[#123f91] focus:outline-none"
-                            placeholder="123 Main Street"
-                            required
-                        >
-
-                    </div>
-
-                    <div class="grid gap-6 md:grid-cols-3">
-
-                        <div>
-
-                            <label class="mb-2 block text-sm font-bold text-slate-700">
-                                City
-                            </label>
-
-                            <input
-                                type="text"
-                                name="xCity"
-                                value="{{ old('xCity', $flyer->xCity ?? '') }}"
-                                class="w-full rounded-2xl border border-slate-300 px-4 py-3"
-                                required
-                            >
-
-                        </div>
-
-                        <div>
-
-                            <label class="mb-2 block text-sm font-bold text-slate-700">
-                                State <span class="text-slate-400">(2-letter abbreviation)</span>
-                            </label>
-
-                            <input
-                                type="text"
-                                name="xState"
-                                value="{{ old('xState', $flyer->xState ?? '') }}"
-                                maxlength="2"
-                                class="w-full rounded-2xl border border-slate-300 px-4 py-3 uppercase"
-                                required
-                            >
-
-                        </div>
-
-                        <div>
-
-                            <label class="mb-2 block text-sm font-bold text-slate-700">
-                                ZIP Code
-                            </label>
-
-                            <input
-                                type="text"
-                                name="xZip"
-                                value="{{ old('xZip', $flyer->xZip ?? '') }}"
-                                class="w-full rounded-2xl border border-slate-300 px-4 py-3"
-                                required
-                            >
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            {{-- ACTIONS --}}
-            <div class="mt-8 flex items-center justify-between">
-
-                <a href="/member/dashboard"
-                   class="rounded-xl bg-white px-5 py-3 font-bold text-slate-700 shadow-sm ring-1 ring-black/5">
-                    Cancel
+                <a href="/member/flyer/property"
+                   class="rounded-xl bg-white px-5 py-3 font-bold text-slate-600 shadow-sm ring-1 ring-black/5 hover:bg-slate-50">
+                    Skip →
                 </a>
 
-                <button
-                    type="submit"
+                <button type="submit"
                     class="rounded-xl bg-[#123f91] px-6 py-3 font-bold text-white hover:bg-[#0f3274]">
-                    Save & Continue →
+                    Continue →
                 </button>
 
             </div>
