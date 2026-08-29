@@ -82,6 +82,10 @@ if (
 
 }
 
+$wasDefault = Propphoto::where('oldFileName', $oldFileName)
+    ->where('def', 1)
+    ->exists();
+
 $photos = Propphoto::where('oldFileName', $oldFileName)->get();
 
 foreach ($photos as $photo) {
@@ -103,8 +107,34 @@ foreach ($photos as $photo) {
 
 }
 
+// If the deleted photo was the cover photo, promote the most recently
+// uploaded remaining photo so there's always a cover photo whenever
+// any photos exist.
+if ($wasDefault) {
+
+    $newest = Propphoto::where('propflyer_id', $flyer->id)
+        ->where('resized', 500)
+        ->orderByDesc('photoDate')
+        ->first();
+
+    if ($newest) {
+
+        Propphoto::where('propflyer_id', $flyer->id)
+            ->where('oldFileName', $newest->oldFileName)
+            ->update(['def' => 1]);
+
+    }
+
+}
+
+$remainingPhotos = Propphoto::where('propflyer_id', $flyer->id)
+    ->where('resized', 500)
+    ->orderByDesc('photoDate')
+    ->get(['photoID', 'photoName', 'ord', 'def']);
+
 echo json_encode([
-    'success' => true
+    'success' => true,
+    'photos'  => $remainingPhotos,
 ]);
 
 exit;

@@ -6,6 +6,15 @@
 
 @php
 $flyer = $data['flyer'] ?? null;
+
+$initialPhotos = $flyer->thePhotos->sortByDesc('photoDate')->map(function ($p) {
+    return [
+        'photoID'   => $p->photoID,
+        'photoName' => $p->photoName,
+        'ord'       => $p->ord,
+        'def'       => $p->def,
+    ];
+})->values();
 @endphp
 
 <main class="min-h-screen bg-[#f0f2f7] pt-24">
@@ -70,6 +79,8 @@ $flyer = $data['flyer'] ?? null;
         <div
             id="photoUploader"
             data-flyer-id="{{ $flyer->id }}"
+            data-zip-dir="{{ $flyer->theMeta->zipDir }}"
+            data-mls-dir="{{ $flyer->theMeta->mlsDir }}"
         >
 
             {{-- PHOTO SECTION --}}
@@ -133,25 +144,17 @@ $flyer = $data['flyer'] ?? null;
                 </div>
 
                 {{-- UPLOAD STATUS --}}
-                <div id="uploadedPhotosSection" 
-                class="mt-10 {{ $flyer->thePhotos->count() ? '' : 'hidden' }}">
+                <div id="uploadedPhotosSection"
+                class="mt-10 {{ $initialPhotos->count() ? '' : 'hidden' }}">
 
-                    <div id="uploadedPhotosFooter" 
-                    class="mt-8 text-center {{ $flyer->thePhotos->count() ? '' : 'hidden' }}">
+                    <div id="uploadedPhotosFooter"
+                    class="mb-8 flex flex-col items-center gap-4 text-center sm:flex-row sm:justify-between sm:text-left {{ $initialPhotos->count() ? '' : 'hidden' }}">
 
                         <div id="uploadedPhotoMessage"
                             class="text-xl font-black text-emerald-600">
-
-                            @if($flyer->thePhotos->count())
-
-                                {{ $flyer->thePhotos->count() }}
-                                {{ $flyer->thePhotos->count() == 1 ? 'Photo Uploaded' : 'Photos Uploaded' }}
-
-                            @endif
-
                         </div>
 
-                        <div class="mt-6 flex justify-center gap-4">
+                        <div class="flex justify-center gap-4">
 
                             <button id="uploadMoreButton"
                             type="button"
@@ -168,34 +171,16 @@ $flyer = $data['flyer'] ?? null;
 
                     </div>
 
+                    {{-- COVER PHOTO --}}
+                    <div id="heroPhotoWrap" class="mb-6"></div>
+
+                    {{-- OTHER PHOTOS --}}
+                    <p id="otherPhotosLabel" class="mb-3 text-sm font-bold text-slate-500 hidden">
+                        Other Photos <span class="font-normal text-slate-400">— click any photo to make it the cover</span>
+                    </p>
+
                     <div id="uploadedPhotosGrid"
-                        class="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-
-                        @foreach($flyer->thePhotos->sortByDesc('photoDate') as $photo)
-
-                            <div class="photo-card rounded-xl border border-slate-200 overflow-hidden bg-white shadow-sm"
-                            data-photo-id="{{ $photo->photoID }}">
-
-                                <div class="relative">
-
-                                    <img
-                                        src="/hqphotos/{{ $flyer->theMeta->zipDir }}/{{ $flyer->theMeta->mlsDir }}/{{ $photo->photoName }}"
-                                        class="aspect-square w-full object-cover"
-                                    >
-
-                                    <button
-                                        type="button"
-                                        class="delete-photo absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-white text-lg font-black leading-none text-slate-700 shadow hover:bg-red-600 hover:text-white"
-                                    >
-                                        ×
-                                    </button>
-
-                                </div>
-
-                            </div>
-
-                        @endforeach
-
+                        class="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6">
                     </div>
 
                 </div>
@@ -210,6 +195,8 @@ $flyer = $data['flyer'] ?? null;
 </main>
 
 @include('public.layout.footer')
+
+<script id="initialPhotosData" type="application/json">{!! $initialPhotos->toJson() !!}</script>
 
 <script>
 
@@ -228,6 +215,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     const flyerId = uploader.dataset.flyerId;
+    const zipDir = uploader.dataset.zipDir;
+    const mlsDir = uploader.dataset.mlsDir;
 
     const csrfMeta = document.querySelector('meta[name="csrf-token"]');
 
@@ -239,6 +228,101 @@ document.addEventListener('DOMContentLoaded', () => {
     let uploadsStarted = 0;
     let uploadsFinished = 0;
     let uploadedPhotos = [];
+
+    function photoUrl(photoName) {
+        return `/hqphotos/${zipDir}/${mlsDir}/${photoName}`;
+    }
+
+    // ------------------------------------------------------------
+    // Single source of truth for rendering the cover photo + the
+    // rest of the gallery, used on initial load and after every
+    // upload/delete/cover-photo change - so there's only ever one
+    // place that decides what "the cover photo" looks like.
+    // ------------------------------------------------------------
+
+    const starIcon = `<svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.958a1 1 0 00.95.69h4.162c.969 0 1.371 1.24.588 1.81l-3.367 2.446a1 1 0 00-.363 1.118l1.287 3.957c.3.922-.755 1.688-1.538 1.118l-3.367-2.446a1 1 0 00-1.176 0l-3.367 2.446c-.783.57-1.838-.196-1.538-1.118l1.287-3.957a1 1 0 00-.363-1.118L2.98 9.385c-.784-.57-.38-1.81.588-1.81h4.162a1 1 0 00.95-.69l1.286-3.958z"/></svg>`;
+
+    function renderPhotos(photos) {
+
+        uploadedPhotos = photos;
+
+        const section = document.getElementById('uploadedPhotosSection');
+        const footer = document.getElementById('uploadedPhotosFooter');
+        const heroWrap = document.getElementById('heroPhotoWrap');
+        const grid = document.getElementById('uploadedPhotosGrid');
+        const otherLabel = document.getElementById('otherPhotosLabel');
+        const message = document.getElementById('uploadedPhotoMessage');
+
+        if (!photos.length) {
+            section.classList.add('hidden');
+            heroWrap.innerHTML = '';
+            grid.innerHTML = '';
+            return;
+        }
+
+        section.classList.remove('hidden');
+        footer.classList.remove('hidden');
+
+        message.textContent = photos.length +
+            (photos.length === 1 ? ' Photo Uploaded' : ' Photos Uploaded');
+
+        let cover = photos.find(p => Number(p.def) === 1);
+        let rest = photos.filter(p => p !== cover);
+
+        if (!cover) {
+            cover = photos[0];
+            rest = photos.slice(1);
+        }
+
+        heroWrap.innerHTML = `
+            <div class="hero-photo-card relative overflow-hidden rounded-3xl shadow-lg ring-4 ring-emerald-500" data-photo-id="${cover.photoID}">
+                <img src="${photoUrl(cover.photoName)}" class="aspect-video w-full object-cover">
+                <div class="absolute left-4 top-4 flex items-center gap-1.5 rounded-full bg-emerald-600 px-4 py-2 text-sm font-black text-white shadow-lg">
+                    ${starIcon}
+                    Cover Photo
+                </div>
+                <button
+                    type="button"
+                    class="delete-photo absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-white text-xl font-black leading-none text-slate-700 shadow hover:bg-red-600 hover:text-white"
+                >×</button>
+            </div>
+        `;
+
+        otherLabel.classList.toggle('hidden', rest.length === 0);
+
+        grid.innerHTML = '';
+
+        rest.forEach((photo) => {
+
+            const card = document.createElement('div');
+
+            card.className = 'photo-thumb group relative cursor-pointer overflow-hidden rounded-xl ring-1 ring-slate-200 transition hover:ring-2 hover:ring-emerald-400';
+            card.dataset.photoId = photo.photoID;
+
+            card.innerHTML = `
+                <img src="${photoUrl(photo.photoName)}" class="aspect-square w-full object-cover">
+
+                <div class="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition group-hover:bg-black/40 group-hover:opacity-100">
+                    <span class="rounded-full bg-white/95 px-3 py-1.5 text-xs font-bold text-slate-800">Make Cover</span>
+                </div>
+
+                <div class="pointer-events-none absolute bottom-1.5 left-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-white/90 text-slate-400 shadow transition group-hover:bg-emerald-500 group-hover:text-white">
+                    ${starIcon}
+                </div>
+
+                <button
+                    type="button"
+                    class="delete-photo absolute right-1.5 top-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-white text-base font-black leading-none text-slate-700 shadow hover:bg-red-600 hover:text-white"
+                >×</button>
+            `;
+
+            grid.appendChild(card);
+
+        });
+
+    }
+
+    renderPhotos(JSON.parse(document.getElementById('initialPhotosData').textContent));
 
     dropZone.addEventListener('click', () => {
         input.click();
@@ -510,59 +594,57 @@ document.addEventListener('DOMContentLoaded', () => {
         // Hide the uploading message
         photoCount.classList.add('hidden');
 
-        // Show uploaded section
-        document
-            .getElementById('uploadedPhotosSection')
-            .classList.remove('hidden');
+        renderPhotos(uploadedPhotos);
+    }
 
-        // Update uploaded message
-        document
-            .getElementById('uploadedPhotoMessage')
-            .textContent =
-                uploadedPhotos.length +
-                (uploadedPhotos.length === 1
-                    ? ' Photo Uploaded'
-                    : ' Photos Uploaded');
+    // ------------------------------------------------------------
+    // Click a thumbnail (not its delete button) to make it the
+    // cover photo. Clicking the current cover photo does nothing
+    // special - it's already the cover.
+    // ------------------------------------------------------------
 
-        // Show footer
-        document
-            .getElementById('uploadedPhotosFooter')
-            .classList.remove('hidden');
+    document.addEventListener('click', function (e) {
 
-        const grid = document.getElementById('uploadedPhotosGrid');
+        const thumb = e.target.closest('.photo-thumb');
 
-        grid.innerHTML = '';
+        if (!thumb || e.target.closest('.delete-photo')) {
+            return;
+        }
 
-        uploadedPhotos.forEach(function(photo){
+        const photoID = thumb.dataset.photoId;
 
-            grid.innerHTML += `
-                <div
-                    class="photo-card rounded-xl border border-slate-200 overflow-hidden bg-white shadow-sm"
-                    data-photo-id="${photo.photoID}"
-                >
+        thumb.style.opacity = '0.5';
 
-                    <div class="relative">
+        const formData = new FormData();
+        formData.append('photoID', photoID);
 
-                        <img
-                            src="/hqphotos/{{ $flyer->theMeta->zipDir }}/{{ $flyer->theMeta->mlsDir }}/${photo.photoName}"
-                            class="aspect-square w-full object-cover"
-                        >
+        fetch('/member/photo/setdefault', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
 
-                        <button
-                            type="button"
-                            class="delete-photo absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-white text-lg font-black leading-none text-slate-700 shadow hover:bg-red-600 hover:text-white"
-                        >
-                            ×
-                        </button>
+            if (!data.success) {
+                thumb.style.opacity = '';
+                alert(data.message || 'Unable to set cover photo.');
+                return;
+            }
 
-                    </div>
-
-                </div>
-            `;
+            renderPhotos(data.photos);
 
         });
 
-    }
+    });
+
+    // ------------------------------------------------------------
+    // Delete a photo (cover or otherwise). If the cover photo was
+    // deleted, the server promotes a new one automatically - the
+    // returned photo list already reflects that.
+    // ------------------------------------------------------------
 
     document.addEventListener('click', function(e){
 
@@ -570,34 +652,16 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        const card = e.target.closest('.photo-card');
-        card.style.opacity = '0.4';
-        card.style.pointerEvents = 'none';
-        card.style.position = 'relative';
-
-        const overlay = document.createElement('div');
-
-        overlay.innerHTML = 'Deleting...';
-
-        overlay.style.position = 'absolute';
-        overlay.style.top = '50%';
-        overlay.style.left = '50%';
-        overlay.style.transform = 'translate(-50%, -50%)';
-        overlay.style.fontWeight = 'bold';
-        overlay.style.fontSize = '18px';
-        overlay.style.color = '#fff';
-        overlay.style.background = 'rgba(0,0,0,.65)';
-        overlay.style.padding = '10px 20px';
-        overlay.style.borderRadius = '6px';
-        overlay.style.zIndex = '1000';
-
-        card.appendChild(overlay);
-
-        const photoID = card.dataset.photoId;
+        const card = e.target.closest('.photo-thumb, .hero-photo-card');
 
         if (!confirm('Delete this photo?')) {
             return;
         }
+
+        card.style.opacity = '0.4';
+        card.style.pointerEvents = 'none';
+
+        const photoID = card.dataset.photoId;
 
         const formData = new FormData();
 
@@ -615,31 +679,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (!data.success) {
 
+                card.style.opacity = '';
+                card.style.pointerEvents = '';
                 alert(data.message || 'Unable to delete photo.');
 
                 return;
 
             }
 
-            card.remove();
-
-            const remainingCards = document.querySelectorAll('#uploadedPhotosGrid .photo-card').length;
-
-            document.getElementById('uploadedPhotoMessage').textContent =
-                remainingCards +
-                (remainingCards === 1
-                    ? ' Photo Uploaded'
-                    : ' Photos Uploaded');
-
-            if (remainingCards === 0) {
-                document
-                    .getElementById('uploadedPhotosSection')
-                    .classList.add('hidden');
-            }
+            renderPhotos(data.photos);
 
         });
 
-    });    
+    });
 
 });
 
