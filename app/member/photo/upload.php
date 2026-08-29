@@ -197,15 +197,8 @@ try{
 
     throw $e;}   
 
-$photos = Propphoto::where('propflyer_id', $flyer->id)
-    ->where('resized', 500)
-    ->orderByDesc('photoDate')
-    ->get([
-        'photoID',
-        'photoName',
-        'ord',
-        'def'
-    ]);
+require_once app_path('member/photo/photoList.php');
+$photos = getPhotoListForFlyer($flyer->id);
 
 echo json_encode([
     'success' => true,

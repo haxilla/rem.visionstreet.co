@@ -2,17 +2,15 @@
 
 use App\Models\Core\Propflyer;
 
+require_once app_path('member/photo/photoList.php');
+
 $flyerId = (int) request('flyerId');
 
 if (!$flyerId) {
     dd("Error: Flyer ID is required to manage photos.");
 }
 
-$flyer = Propflyer::with([
-'thePhotos' => function ($query) {
-    $query->where('resized', 500);}
-])
-->where('id', $flyerId)
+$flyer = Propflyer::where('id', $flyerId)
 ->where('propagent_id', auth()->id())
 ->first();
 
@@ -32,3 +30,4 @@ if (($flyer->wizardStep ?? 0) < 3) {
 }
 
 $data['flyer'] = $flyer;
+$data['initialPhotos'] = getPhotoListForFlyer($flyer->id);

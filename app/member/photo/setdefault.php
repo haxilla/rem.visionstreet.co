@@ -77,14 +77,11 @@ Propphoto::where('propflyer_id', $flyer->id)
     ->where('oldFileName', $photo->oldFileName)
     ->update(['def' => 1]);
 
-$photos = Propphoto::where('propflyer_id', $flyer->id)
-    ->where('resized', 500)
-    ->orderByDesc('photoDate')
-    ->get(['photoID', 'photoName', 'ord', 'def']);
+require_once app_path('member/photo/photoList.php');
 
 echo json_encode([
     'success' => true,
-    'photos'  => $photos,
+    'photos'  => getPhotoListForFlyer($flyer->id),
 ]);
 
 exit;

@@ -6,15 +6,7 @@
 
 @php
 $flyer = $data['flyer'] ?? null;
-
-$initialPhotos = $flyer->thePhotos->sortByDesc('photoDate')->map(function ($p) {
-    return [
-        'photoID'   => $p->photoID,
-        'photoName' => $p->photoName,
-        'ord'       => $p->ord,
-        'def'       => $p->def,
-    ];
-})->values();
+$initialPhotos = collect($data['initialPhotos'] ?? []);
 @endphp
 
 <main class="min-h-screen bg-[#f0f2f7] pt-24">
@@ -275,16 +267,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         heroWrap.innerHTML = `
-            <div class="hero-photo-card relative overflow-hidden rounded-3xl shadow-lg ring-4 ring-emerald-500" data-photo-id="${cover.photoID}">
-                <img src="${photoUrl(cover.photoName)}" class="aspect-video w-full object-cover">
-                <div class="absolute left-4 top-4 flex items-center gap-1.5 rounded-full bg-emerald-600 px-4 py-2 text-sm font-black text-white shadow-lg">
-                    ${starIcon}
-                    Cover Photo
+            <div class="mx-auto max-w-[1000px]">
+                <div class="hero-photo-card relative overflow-hidden rounded-3xl shadow-lg ring-4 ring-emerald-500" data-photo-id="${cover.photoID}">
+                    <img src="${photoUrl(cover.photoName1000 || cover.photoName)}" class="aspect-video w-full object-cover">
+                    <div class="absolute left-4 top-4 flex items-center gap-1.5 rounded-full bg-emerald-600 px-4 py-2 text-sm font-black text-white shadow-lg">
+                        ${starIcon}
+                        Cover Photo
+                    </div>
+                    <button
+                        type="button"
+                        class="delete-photo absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-white text-xl font-black leading-none text-slate-700 shadow hover:bg-red-600 hover:text-white"
+                    >×</button>
                 </div>
-                <button
-                    type="button"
-                    class="delete-photo absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-white text-xl font-black leading-none text-slate-700 shadow hover:bg-red-600 hover:text-white"
-                >×</button>
             </div>
         `;
 
