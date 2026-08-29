@@ -85,5 +85,35 @@ if ($isNewFlyer) {
 // etc.) before the member reaches the Details step. Not built yet -
 // this is currently a pass-through no-op.
 
-redirect('/member/flyer/details?flyerId='.$flyer->id)->send();
+// New flyers always move forward to Details. Editing Property on an
+// existing flyer should return to wherever the member already was,
+// not force them back through the whole wizard again.
+if ($isNewFlyer) {
+
+    redirect('/member/flyer/details?flyerId='.$flyer->id)->send();
+
+} else {
+
+    switch ((int) $flyer->wizardStep) {
+
+        case 0:
+        case 1:
+            redirect('/member/flyer/details?flyerId='.$flyer->id)->send();
+            break;
+
+        case 2:
+            redirect('/member/flyer/photos?flyerId='.$flyer->id)->send();
+            break;
+
+        case 3:
+            redirect('/member/flyer/design?flyerId='.$flyer->id)->send();
+            break;
+
+        default:
+            redirect('/member/flyer/preview?flyerId='.$flyer->id)->send();
+            break;
+    }
+
+}
+
 exit();
