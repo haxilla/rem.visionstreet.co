@@ -32,9 +32,11 @@ $flyer = $data['flyer'] ?? null;
         </div>
 
         {{-- PROGRESS --}}
-        @include('member.flyer.wizard', [
-            'flyer' => $data['flyer']
-        ])
+        @if ($flyer)
+            @include('member.flyer.wizard', [
+                'flyer' => $flyer
+            ])
+        @endif
 
         @if ($errors->any())
 
