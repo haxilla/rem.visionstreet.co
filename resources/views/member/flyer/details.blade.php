@@ -28,6 +28,14 @@
 
                 </div>
 
+            @else
+
+                <div class="inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-xs font-bold uppercase tracking-wider text-amber-700">
+
+                    Non-MLS Listing
+
+                </div>
+
             @endif
 
             <h1 class="mt-2 text-4xl font-black text-slate-900">
