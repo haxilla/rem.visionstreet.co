@@ -47,7 +47,7 @@
             <div class="mt-6">
 
                 <a
-                    href="/member/flyer/property?flyerId={{ $flyer->id }}"
+                    href="/member/flyer/create?flyerId={{ $flyer->id }}"
                     class="inline-flex items-center rounded-xl bg-slate-100 px-5 py-3 font-semibold text-slate-700 hover:bg-slate-200">
 
                     ← Edit Address

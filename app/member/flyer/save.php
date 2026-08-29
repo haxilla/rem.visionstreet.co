@@ -79,5 +79,11 @@ if ($isNewFlyer) {
     ]);
 }
 
+// FUTURE: auto-import. Once xMlsNum/address are saved, this is where a
+// future scraper will look up the listing on public MLS/agent sites and
+// pre-fill the remaining property details (beds, baths, sqft, remarks,
+// etc.) before the member reaches the Details step. Not built yet -
+// this is currently a pass-through no-op.
+
 redirect('/member/flyer/details?flyerId='.$flyer->id)->send();
 exit();

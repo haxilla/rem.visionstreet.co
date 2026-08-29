@@ -19,7 +19,7 @@
     $currentPath = trim(request()->path(), '/');
 
     if (
-        str_contains($currentPath, 'flyer/property')
+        str_contains($currentPath, 'flyer/create')
     ) {
         $currentStep = 1;
     } elseif (str_contains($currentPath, 'flyer/details')) {
@@ -40,7 +40,7 @@
     $steps = [
         1 => [
             'title' => 'Property',
-            'url' => url('/member/flyer/property') . '?flyerId=' . $flyer->id,
+            'url' => url('/member/flyer/create') . '?flyerId=' . $flyer->id,
         ],
 
         2 => [
