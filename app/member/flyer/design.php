@@ -62,11 +62,13 @@ if (!$flyer) {
     dd("Error: Flyer not found or access denied.");
 }
 
-// Reaching Design means Photos is done; the wizard nav can only unlock a
-// step once wizardStep reaches it, and Photos has no discrete save action
-// of its own to advance it (uploads happen ad hoc via AJAX).
-if (($flyer->wizardStep ?? 0) < 3) {
-    $flyer->wizardStep = 3;
+// Arriving at Design marks Design itself as reached (same pattern as
+// photos.php marking Photos as reached on arrival) - without this,
+// going back to Photos and returning to Design would show Design as
+// locked again, since only *saving* Design used to advance wizardStep
+// this far, not just visiting it.
+if (($flyer->wizardStep ?? 0) < 4) {
+    $flyer->wizardStep = 4;
     $flyer->save();
 }
 

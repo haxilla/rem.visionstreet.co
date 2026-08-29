@@ -1,5 +1,16 @@
 @include('member.layout.head')
 
+{{-- The flyer template partials (flyers.s1pc etc.) rely on these
+     legacy stylesheets for classes like .style1LeftBackground,
+     .agentImage, .flyerIcons - member.layout.head doesn't include
+     them, only public.layout.flyerhead does. --}}
+<link rel="stylesheet" type="text/css" href="/my/css/flyers/styles1pc.css">
+<link rel="stylesheet" type="text/css" href="/my/css/flyers/styles2pb.css">
+<link rel="stylesheet" type="text/css" href="/my/css/flyers/styles3pt.css">
+<link rel="stylesheet" type="text/css" href="/my/css/flyers/styles4sp.css">
+<link rel="stylesheet" type="text/css" href="/my/css/flyers/styles5pt.css">
+<link rel="stylesheet" type="text/css" href="/my/css/flyers/flyerPreviews.css">
+
 <body data-section="member" class="relative min-h-screen bg-[#f0f2f7] font-sans text-slate-800">
 
 @include('member.layout.nav')
