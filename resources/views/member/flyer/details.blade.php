@@ -97,7 +97,7 @@
     <form
         method="POST"
         action="/member/flyer/save_details"
-        class="mt-8 space-y-8">
+        class="mt-8">
 
         @csrf
 
@@ -110,7 +110,7 @@
         {{-- PROPERTY INFORMATION --}}
         {{-- ========================================================= --}}
 
-        <div class="overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-black/5">
+        <div class="mb-8 overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-black/5">
 
             <div class="bg-gradient-to-r from-[#1b2f63] to-[#2a4486] px-10 py-7">
 
@@ -350,7 +350,7 @@
         {{-- PROPERTY HIGHLIGHTS --}}
         {{-- ========================================================= --}}
 
-        <div class="overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-black/5">
+        <div class="mb-8 overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-black/5">
 
             <div class="border-b border-slate-100 px-10 py-7">
 
@@ -398,7 +398,7 @@
         {{-- ADDITIONAL RESOURCES --}}
         {{-- ========================================================= --}}
 
-        <div class="overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-black/5">
+        <div class="mb-8 overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-black/5">
 
             <div class="border-b border-slate-100 px-10 py-7">
 
@@ -460,7 +460,7 @@
         {{-- AGENT REMARKS --}}
         {{-- ========================================================= --}}
 
-        <div class="overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-black/5">
+        <div class="mb-8 overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-black/5">
 
             <div class="border-b border-slate-100 px-10 py-7">
 
