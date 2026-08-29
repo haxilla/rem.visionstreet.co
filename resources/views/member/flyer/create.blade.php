@@ -72,6 +72,8 @@ $flyer = $data['flyer'] ?? null;
                 >
             @endif
 
+            <input type="hidden" name="return" value="{{ request('return') }}">
+
             {{-- MLS CARD --}}
             <div class="mb-6 rounded-3xl bg-white p-8 shadow-sm ring-1 ring-black/5">
 

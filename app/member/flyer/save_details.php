@@ -89,5 +89,16 @@ $remarks->xb7 = $validatedData['xb7'] ?? null;
 $remarks->xb8 = $validatedData['xb8'] ?? null;
 $remarks->save();
 
-redirect('/member/flyer/photos?flyerId='.$flyer->id)->send();
+// Return to wherever the member came from (e.g. Design/Preview) if
+// they were editing Details after already progressing further -
+// otherwise move forward to Photos as normal.
+$allowedReturns = ['create', 'details', 'photos', 'design', 'preview'];
+$return = $request->input('return');
+
+if ($return && in_array($return, $allowedReturns, true)) {
+    redirect('/member/flyer/' . $return . '?flyerId=' . $flyer->id)->send();
+} else {
+    redirect('/member/flyer/photos?flyerId='.$flyer->id)->send();
+}
+
 exit();

@@ -87,8 +87,18 @@ if ($isNewFlyer) {
 
 // New flyers always move forward to Details. Editing Property on an
 // existing flyer should return to wherever the member already was,
-// not force them back through the whole wizard again.
-if ($isNewFlyer) {
+// not force them back through the whole wizard again - the wizard nav
+// passes that back via "return" (wizardStep alone only tracks the
+// furthest *saved* step, not the furthest *visited* one, e.g. Photos
+// has no save action of its own).
+$allowedReturns = ['create', 'details', 'photos', 'design', 'preview'];
+$return = $request->input('return');
+
+if (!$isNewFlyer && $return && in_array($return, $allowedReturns, true)) {
+
+    redirect('/member/flyer/' . $return . '?flyerId=' . $flyer->id)->send();
+
+} elseif ($isNewFlyer) {
 
     redirect('/member/flyer/details?flyerId='.$flyer->id)->send();
 

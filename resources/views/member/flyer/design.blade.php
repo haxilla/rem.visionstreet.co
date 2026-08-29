@@ -63,6 +63,7 @@
             @csrf
 
             <input type="hidden" name="flyerId" value="{{ $flyer->id }}">
+            <input type="hidden" name="return" value="{{ request('return') }}">
             <input type="hidden" id="field_template" name="template" value="{{ $initialTemplate }}">
             <input type="hidden" id="field_flyer_background" name="flyer_background" value="{{ $flyer->theStyle->flyer_background }}">
             <input type="hidden" id="field_accentbars" name="accentbars" value="{{ $flyer->theStyle->accentbars }}">

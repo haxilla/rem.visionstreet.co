@@ -37,15 +37,32 @@
     /*
      * Text has been removed as a separate wizard step.
      */
+
+    /*
+     * Route slug for each step. Also used to tell a step's save handler
+     * where the member actually came from (see "return" below), so
+     * editing an earlier step doesn't force them back through every
+     * step in between - it returns them to wherever they were.
+     */
+    $stepSlugs = [
+        1 => 'create',
+        2 => 'details',
+        3 => 'photos',
+        4 => 'design',
+        5 => 'preview',
+    ];
+
+    $returnSlug = $stepSlugs[$currentStep] ?? 'create';
+
     $steps = [
         1 => [
             'title' => 'Property',
-            'url' => url('/member/flyer/create') . '?flyerId=' . $flyer->id,
+            'url' => url('/member/flyer/create') . '?flyerId=' . $flyer->id . '&return=' . $returnSlug,
         ],
 
         2 => [
             'title' => 'Details',
-            'url' => url('/member/flyer/details') . '?flyerId=' . $flyer->id,
+            'url' => url('/member/flyer/details') . '?flyerId=' . $flyer->id . '&return=' . $returnSlug,
         ],
 
         3 => [
@@ -55,7 +72,7 @@
 
         4 => [
             'title' => 'Design',
-            'url' => url('/member/flyer/design') . '?flyerId=' . $flyer->id,
+            'url' => url('/member/flyer/design') . '?flyerId=' . $flyer->id . '&return=' . $returnSlug,
         ],
 
         5 => [
