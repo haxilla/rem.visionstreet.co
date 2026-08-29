@@ -88,7 +88,7 @@
                      * A step is visually complete when the user has advanced
                      * beyond it in the stored wizard progress.
                      */
-                    $isCompleted = $stepNumber < $highestUnlockedStep;
+                    $isCompleted = !$isCurrent && $stepNumber <= $highestUnlockedStep;
 
                     if ($isCurrent) {
                         $stepClasses = 'bg-[#123f91] text-white';
@@ -188,7 +188,7 @@
                     $isCurrent = $stepNumber === $currentStep;
                     $isUnlocked = $stepNumber <= $highestUnlockedStep;
                     $isClickable = $isUnlocked && !$isCurrent;
-                    $isCompleted = $stepNumber < $highestUnlockedStep;
+                    $isCompleted = !$isCurrent && $stepNumber <= $highestUnlockedStep;
 
                     if ($isCurrent) {
                         $mobileClasses = 'bg-[#123f91] text-white';
