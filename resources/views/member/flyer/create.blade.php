@@ -78,22 +78,34 @@ $flyer = $data['flyer'] ?? null;
                 <div>
 
                     <label class="mb-2 block text-sm font-bold text-slate-700">
-                        MLS Number (Optional)
+                        If your property is already listed in the MLS, enter the MLS# below to continue.
                     </label>
 
-                    <input
-                        type="text"
-                        name="xMlsNum"
-                        value="{{ old('xMlsNum', $flyer->xMlsNum ?? '') }}"
-                        class="w-full rounded-2xl border border-slate-300 px-4 py-3"
-                    >
+                    <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+
+                        <input
+                            type="text"
+                            name="xMlsNum"
+                            value="{{ old('xMlsNum', $flyer->xMlsNum ?? '') }}"
+                            class="w-full rounded-2xl border border-slate-300 px-4 py-3"
+                        >
+
+                        <button
+                            type="button"
+                            onclick="document.getElementById('propertyInfoCard').scrollIntoView({behavior: 'smooth', block: 'center'})"
+                            class="shrink-0 rounded-2xl bg-white px-5 py-3 font-bold text-slate-600 shadow-sm ring-1 ring-black/5 hover:bg-slate-50"
+                        >
+                            Skip →
+                        </button>
+
+                    </div>
 
                 </div>
 
             </div>
 
             {{-- PROPERTY CARD --}}
-            <div class="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-black/5">
+            <div id="propertyInfoCard" class="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-black/5">
 
                 <h2 class="text-2xl font-black text-slate-900">
                     Property Information
