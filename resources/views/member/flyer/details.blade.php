@@ -370,7 +370,7 @@
 
             <div class="grid gap-4 p-10 sm:grid-cols-2">
 
-                @for($i = 1; $i <= 7; $i++)
+                @for($i = 1; $i <= 8; $i++)
 
                     <div class="flex items-center gap-3">
 

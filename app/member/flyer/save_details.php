@@ -24,6 +24,7 @@ $validatedData = $request->validate([
     'xb5'          => 'nullable|string|max:255',
     'xb6'          => 'nullable|string|max:255',
     'xb7'          => 'nullable|string|max:255',
+    'xb8'          => 'nullable|string|max:255',
     'xVirtualTour' => 'nullable|string|max:255',
     'xMlsLink'     => 'nullable|string|max:255',
     'xPubRemarks'  => 'nullable|string',
@@ -85,6 +86,7 @@ $remarks->xb4 = $validatedData['xb4'] ?? null;
 $remarks->xb5 = $validatedData['xb5'] ?? null;
 $remarks->xb6 = $validatedData['xb6'] ?? null;
 $remarks->xb7 = $validatedData['xb7'] ?? null;
+$remarks->xb8 = $validatedData['xb8'] ?? null;
 $remarks->save();
 
 redirect('/member/flyer/photos?flyerId='.$flyer->id)->send();
