@@ -119,18 +119,13 @@ data-flyerbackground="{{$propInfo->theStyle
                   ->where('def','=','1')
                   ->first()->photoName}}"
                   id="largePhoto"
-                  style="@if($propInfo->thePhotos()
-                  ->where('def','=','1')
-                  ->first()->orient=='wide')
-                    width:100%;
-                  @else
-                    max-width:100%;
-                  @endif
+                  style="width:100%;
+                    height:265px;
+                    object-fit:cover;
                     display:block;
                     margin-left:auto;
                     margin-right:auto;
-                    border-radius:5px;
-                    height:265px;">
+                    border-radius:5px;">
                 </a>
             </div>
          </td>
