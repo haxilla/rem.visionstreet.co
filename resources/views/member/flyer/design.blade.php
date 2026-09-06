@@ -25,6 +25,15 @@
     include(app_path() . '/flyers/variables.php');
 
     $initialTemplate = strtolower($flyer->theStyle->template ?: '1pc');
+
+    $graphicWordsLabels = [
+        'acreage' => 'Acreage', 'agentbonus' => 'Agent Bonus', 'amazingviews' => 'Amazing Views',
+        'backonmarket' => 'Back On Market', 'bankowned' => 'Bank Owned', 'greatbuy' => 'Great Buy',
+        'horseproperty' => 'Horse Property', 'justlisted' => 'Just Listed',
+        'modelcloseout' => 'Model Closeout', 'mustsee' => 'Must See',
+        'openhouse' => 'Open House', 'reduced' => 'Reduced',
+    ];
+    $initialHeadlineLabel = $graphicWordsLabels[$flyer->theStyle->graphic_words] ?? 'Great Buy';
 @endphp
 
 <main class="min-h-screen bg-[#f0f2f7] pt-24">
@@ -85,48 +94,30 @@
             <input type="hidden" id="field_graphic_style" name="graphic_style" value="{{ $flyer->theStyle->graphic_style }}">
             <input type="hidden" id="field_graphic_textcolor" name="graphic_textcolor" value="{{ $flyer->theStyle->graphic_textcolor }}">
 
-            {{-- STYLE / COLOR / HEADLINE CONTROLS --}}
-            <div class="mb-8 overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-black/5">
+            {{-- STYLE / COLOR / HEADLINE CONTROLS - three progressive step
+                 cards instead of tabs, so all three are always visible and
+                 impossible to miss. Each locks until the one before it is
+                 chosen; once chosen a step collapses to a summary that can
+                 be reopened with "Edit". --}}
+            <div class="mb-3 text-xs uppercase tracking-wide text-slate-400 px-1">
+                Flyer Controls
+            </div>
 
-                <div class="px-6 pt-6">
+            <div class="mb-8 flex flex-col gap-3">
 
-                    <div class="mb-3 text-xs uppercase tracking-wide text-slate-400">
-                        Flyer Controls
-                    </div>
+                {{-- STEP: STYLE --}}
+                <div class="step-card" id="step-style" data-step="style">
 
-                    <div class="flex flex-wrap gap-1">
+                    <button type="button" class="step-header" data-step-toggle="style">
+                        <span class="step-badge" id="style-badge">1</span>
+                        <span class="step-text">
+                            <span class="step-title">Style</span>
+                            <span class="step-summary" id="style-summary">Style {{ substr($initialTemplate, 0, 1) }}</span>
+                        </span>
+                        <span class="step-edit">Edit</span>
+                    </button>
 
-                        <button type="button"
-                            class="control-tab active px-4 py-2 text-sm font-bold"
-                            data-panel="styles-panel">
-                            1. Style
-                        </button>
-
-                        <button type="button"
-                            id="colors-tab"
-                            class="control-tab px-4 py-2 text-sm font-bold"
-                            data-panel="colors-panel"
-                            @disabled(!$flyer->theStyle->template_chosen)>
-                            2. Colors
-                        </button>
-
-                        <button type="button"
-                            id="headline-tab"
-                            class="control-tab px-4 py-2 text-sm font-bold"
-                            data-panel="headline-panel"
-                            @disabled(!$flyer->theStyle->colors_chosen)>
-                            3. Headline
-                        </button>
-
-                    </div>
-
-                    <p id="tab-hint" class="mb-3 mt-2 text-xs font-semibold text-[#123f91]"></p>
-
-                </div>
-
-                <div class="p-6">
-
-                    <div id="styles-panel">
+                    <div class="step-body" id="style-body">
 
                         <p class="mb-3 text-xs text-slate-500">
                             Select a flyer layout
@@ -158,7 +149,21 @@
 
                     </div>
 
-                    <div id="colors-panel" class="hidden">
+                </div>
+
+                {{-- STEP: COLORS --}}
+                <div class="step-card" id="step-colors" data-step="colors">
+
+                    <button type="button" class="step-header" data-step-toggle="colors">
+                        <span class="step-badge" id="colors-badge">2</span>
+                        <span class="step-text">
+                            <span class="step-title">Colors</span>
+                            <span class="step-summary" id="colors-summary">Colors selected</span>
+                        </span>
+                        <span class="step-edit">Edit</span>
+                    </button>
+
+                    <div class="step-body" id="colors-body">
 
                         <div id="edit-colors">
 
@@ -237,7 +242,21 @@
 
                     </div>
 
-                    <div id="headline-panel" class="hidden">
+                </div>
+
+                {{-- STEP: HEADLINE --}}
+                <div class="step-card" id="step-headline" data-step="headline">
+
+                    <button type="button" class="step-header" data-step-toggle="headline">
+                        <span class="step-badge" id="headline-badge">3</span>
+                        <span class="step-text">
+                            <span class="step-title">Headline</span>
+                            <span class="step-summary" id="headline-summary">{{ $initialHeadlineLabel }}</span>
+                        </span>
+                        <span class="step-edit">Edit</span>
+                    </button>
+
+                    <div class="step-body" id="headline-body">
 
                         <p class="mb-3 text-xs text-slate-500">
                             Select a headline
@@ -343,25 +362,60 @@
         transform-origin: top left;
         margin: 0 auto;
     }
-    .control-tab {
-        color: #64748b;
-        border: 1px solid transparent;
-        border-bottom: none;
-        border-radius: 8px 8px 0 0;
-        font-weight: 700;
-        cursor: pointer;
-        background: none;
-    }
-    .control-tab.active {
+    .step-card {
         background: #ffffff;
-        color: #111827;
-        border: 1px solid #e2e8f0;
-        border-bottom: 1px solid #ffffff;
+        border-radius: 20px;
+        box-shadow: 0 1px 2px rgba(0,0,0,.06);
+        border: 1px solid rgba(0,0,0,.05);
+        overflow: hidden;
     }
-    .control-tab:disabled {
-        color: #cbd5e1;
-        cursor: not-allowed;
+    .step-card.locked { opacity: .5; }
+    .step-header {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 16px 20px;
+        background: none;
+        border: none;
+        text-align: left;
+        cursor: pointer;
     }
+    .step-card.locked .step-header { cursor: not-allowed; }
+    .step-card.active .step-header { cursor: default; }
+    .step-badge {
+        flex-shrink: 0;
+        width: 28px;
+        height: 28px;
+        border-radius: 9999px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 13px;
+        background: #e2e8f0;
+        color: #64748b;
+    }
+    .step-card.active .step-badge { background: #123f91; color: #ffffff; }
+    .step-card.complete .step-badge { background: #16a34a; color: #ffffff; }
+    .step-text { flex: 1; min-width: 0; }
+    .step-title { display: block; font-weight: 800; color: #0f172a; font-size: 15px; }
+    .step-summary { display: none; font-size: 13px; color: #64748b; }
+    .step-card.complete .step-summary { display: block; }
+    .step-edit {
+        display: none;
+        flex-shrink: 0;
+        font-size: 13px;
+        font-weight: 700;
+        color: #123f91;
+    }
+    .step-card.complete .step-edit { display: inline; }
+    .step-body {
+        padding: 0 20px 20px;
+        border-top: 1px solid #f1f5f9;
+        padding-top: 16px;
+    }
+    .step-body.hidden { display: none; }
 </style>
 
 <script src="/my/js/flyers/colorswatch.js"></script>
@@ -371,73 +425,106 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     // ------------------------------------------------------------
-    // Progressive unlock: Colors stays locked until a Style is
-    // chosen, Headline stays locked until Colors is chosen, and Save
-    // stays locked until Headline is chosen. Once all three have ever
-    // been chosen (tracked server-side via template_chosen/
-    // colors_chosen/headline_chosen), they stay unlocked for good and
-    // behave like free-toggle tabs.
+    // Progressive unlock, shown as three stacked step-cards instead
+    // of tabs so all three are always visible. The first not-yet-
+    // chosen step is expanded and active; everything after it is
+    // locked; everything before it collapses to a summary with an
+    // "Edit" link. Once all three have ever been chosen (tracked
+    // server-side via template_chosen/colors_chosen/headline_chosen),
+    // every card stays freely reopenable and Save unlocks.
     // ------------------------------------------------------------
 
-    let chosenTemplate = {{ $flyer->theStyle->template_chosen ? 'true' : 'false' }};
-    let chosenColors   = {{ $flyer->theStyle->colors_chosen ? 'true' : 'false' }};
-    let chosenHeadline = {{ $flyer->theStyle->headline_chosen ? 'true' : 'false' }};
+    const STEPS = ['style', 'colors', 'headline'];
 
-    const colorsTab   = document.getElementById('colors-tab');
-    const headlineTab = document.getElementById('headline-tab');
-    const saveBtn     = document.getElementById('saveDesignBtn');
-    const tabHint     = document.getElementById('tab-hint');
-    const saveHint    = document.getElementById('save-hint');
+    const chosen = {
+        style:    {{ $flyer->theStyle->template_chosen ? 'true' : 'false' }},
+        colors:   {{ $flyer->theStyle->colors_chosen ? 'true' : 'false' }},
+        headline: {{ $flyer->theStyle->headline_chosen ? 'true' : 'false' }},
+    };
 
-    function updateLocks() {
-        colorsTab.disabled   = !chosenTemplate;
-        headlineTab.disabled = !chosenColors;
-        saveBtn.disabled     = !chosenHeadline;
+    const saveBtn  = document.getElementById('saveDesignBtn');
+    const saveHint = document.getElementById('save-hint');
 
-        if (!chosenTemplate) {
-            tabHint.textContent = 'Choose a style to unlock Colors.';
-        } else if (!chosenColors) {
-            tabHint.textContent = 'Choose colors to unlock Headline.';
-        } else if (!chosenHeadline) {
-            tabHint.textContent = 'Choose a headline to unlock the other tabs for editing anytime.';
-        } else {
-            tabHint.textContent = '';
-        }
+    function renderSteps() {
+        let activeAssigned = false;
 
-        saveHint.textContent = chosenHeadline
-            ? ''
-            : 'Choose a style, colors, and a headline before saving.';
+        STEPS.forEach((step, i) => {
+            const card  = document.getElementById('step-' + step);
+            const body  = document.getElementById(step + '-body');
+            const badge = document.getElementById(step + '-badge');
+
+            card.classList.remove('locked', 'active', 'complete');
+
+            if (chosen[step]) {
+                card.classList.add('complete');
+                badge.textContent = '✓';
+            } else if (!activeAssigned) {
+                card.classList.add('active');
+                body.classList.remove('hidden');
+                badge.textContent = String(i + 1);
+                activeAssigned = true;
+                return;
+            } else {
+                card.classList.add('locked');
+                badge.textContent = String(i + 1);
+            }
+
+            body.classList.add('hidden');
+        });
+
+        saveBtn.disabled = !(chosen.style && chosen.colors && chosen.headline);
+        saveHint.textContent = saveBtn.disabled
+            ? 'Choose a style, colors, and a headline before saving.'
+            : '';
     }
 
-    updateLocks();
+    renderSteps();
+
+    function completeStep(step, summaryText) {
+        chosen[step] = true;
+        document.getElementById(step + '-summary').textContent = summaryText;
+        renderSteps();
+    }
+
+    document.querySelectorAll('.step-header').forEach(header => {
+        header.addEventListener('click', () => {
+            const card = header.closest('.step-card');
+            const step = card.dataset.step;
+
+            if (card.classList.contains('locked')) return;
+
+            if (card.classList.contains('complete')) {
+                document.getElementById(step + '-body').classList.toggle('hidden');
+            }
+        });
+    });
 
     document.querySelectorAll('.flyer-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-            chosenTemplate = true;
-            updateLocks();
+            completeStep('style', btn.textContent.trim());
         });
     });
 
     document.querySelectorAll('.colorswatch').forEach(swatch => {
         swatch.addEventListener('click', () => {
-            chosenColors = true;
-            updateLocks();
+            completeStep('colors', 'Colors selected');
         });
     });
 
     const headlineSelect = document.getElementById('headlineSelect');
     if (headlineSelect) {
         headlineSelect.addEventListener('change', () => {
-            chosenHeadline = true;
-            updateLocks();
+            completeStep('headline', headlineSelect.options[headlineSelect.selectedIndex].text);
         });
     }
 
     const headlineStyleSelect = document.getElementById('headlineStyle');
     if (headlineStyleSelect) {
         headlineStyleSelect.addEventListener('change', () => {
-            chosenHeadline = true;
-            updateLocks();
+            const label = headlineSelect
+                ? headlineSelect.options[headlineSelect.selectedIndex].text
+                : 'Headline set';
+            completeStep('headline', label);
         });
     }
 
@@ -456,19 +543,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     switchFlyer('s{{ $initialTemplate }}');
-
-    document.querySelectorAll('.control-tab').forEach(tab => {
-        tab.addEventListener('click', () => {
-            document.querySelectorAll('.control-tab').forEach(t => t.classList.remove('active'));
-            tab.classList.add('active');
-
-            document.getElementById('styles-panel').classList.add('hidden');
-            document.getElementById('colors-panel').classList.add('hidden');
-            document.getElementById('headline-panel').classList.add('hidden');
-
-            document.getElementById(tab.dataset.panel).classList.remove('hidden');
-        });
-    });
 
     function scaleFlyer() {
         const stage = document.querySelector('.flyer-stage');
