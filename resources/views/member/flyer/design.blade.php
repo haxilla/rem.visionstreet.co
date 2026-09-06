@@ -673,11 +673,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const headlineText = textHex('.headline_text', activeFlyer);
         if (headlineText) document.getElementById('field_headline_text').value = headlineText;
 
+        // graphic_words comes straight from the select's own value - it
+        // used to be parsed back out of the preview image's URL with a
+        // regex, which silently failed and kept resubmitting whatever
+        // was already on the hidden field (the untouched "greatbuy"
+        // default) no matter what was actually chosen.
+        const headlineSelectEl = document.getElementById('headlineSelect');
+        if (headlineSelectEl) {
+            document.getElementById('field_graphic_words').value = headlineSelectEl.value;
+        }
+
         const hlGraphic = activeFlyer ? activeFlyer.querySelector('.hlGraphic') : document.querySelector('.hlGraphic');
         if (hlGraphic) {
-            const wordsMatch = hlGraphic.src.match(/headline_graphics\/([^/]+)\//);
-            if (wordsMatch) document.getElementById('field_graphic_words').value = wordsMatch[1];
-
             const colorMatch = hlGraphic.src.match(/_([0-9a-fA-F]{6})_/);
             if (colorMatch) document.getElementById('field_graphic_textcolor').value = colorMatch[1];
         }
