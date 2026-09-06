@@ -33,7 +33,7 @@ $flyer = Propflyer::select(
     $query->select(
         'propflyer_id', 'graphic_words', 'graphic_textcolor',
         'graphic_style', 'colors_chosen', 'flyer_background',
-        'template', 'headline_text', 'headline_chosen',
+        'template', 'template_chosen', 'headline_text', 'headline_chosen',
         'headline_bar_bg', 'accentbars', 'headline_bar_text',
         'virtualTour_chosen', 'mlsLink_chosen'
     );

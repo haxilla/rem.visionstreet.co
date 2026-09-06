@@ -39,6 +39,14 @@ $flyer->theStyle->headline_text      = $validatedData['headline_text'];
 $flyer->theStyle->graphic_words      = $validatedData['graphic_words'];
 $flyer->theStyle->graphic_style      = $validatedData['graphic_style'];
 $flyer->theStyle->graphic_textcolor  = $validatedData['graphic_textcolor'];
+
+// Reaching a successful save means the member made it through all
+// three gated tabs (Style -> Colors -> Headline), since Save itself
+// stays disabled client-side until headline_chosen would be true.
+$flyer->theStyle->template_chosen  = true;
+$flyer->theStyle->colors_chosen    = true;
+$flyer->theStyle->headline_chosen  = true;
+
 $flyer->theStyle->save();
 
 // Step 4 completed

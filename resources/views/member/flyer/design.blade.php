@@ -94,27 +94,33 @@
                         Flyer Controls
                     </div>
 
-                    <div class="flex gap-1">
+                    <div class="flex flex-wrap gap-1">
 
                         <button type="button"
                             class="control-tab active px-4 py-2 text-sm font-bold"
                             data-panel="styles-panel">
-                            Style
+                            1. Style
                         </button>
 
                         <button type="button"
+                            id="colors-tab"
                             class="control-tab px-4 py-2 text-sm font-bold"
-                            data-panel="colors-panel">
-                            Colors
+                            data-panel="colors-panel"
+                            @disabled(!$flyer->theStyle->template_chosen)>
+                            2. Colors
                         </button>
 
                         <button type="button"
+                            id="headline-tab"
                             class="control-tab px-4 py-2 text-sm font-bold"
-                            data-panel="headline-panel">
-                            Headline
+                            data-panel="headline-panel"
+                            @disabled(!$flyer->theStyle->colors_chosen)>
+                            3. Headline
                         </button>
 
                     </div>
+
+                    <p id="tab-hint" class="mb-3 mt-2 text-xs font-semibold text-[#123f91]"></p>
 
                 </div>
 
@@ -301,11 +307,14 @@
 
             </div>
 
-            <div class="mb-8 flex justify-end">
+            <div class="mb-8 flex flex-col items-end gap-2">
                 <button type="submit"
-                    class="rounded-xl bg-[#123f91] px-6 py-3 font-bold text-white hover:bg-[#0f3274]">
+                    id="saveDesignBtn"
+                    @disabled(!$flyer->theStyle->headline_chosen)
+                    class="rounded-xl bg-[#123f91] px-6 py-3 font-bold text-white transition hover:bg-[#0f3274] disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-slate-500 disabled:hover:bg-slate-300">
                     Save & Continue →
                 </button>
+                <p id="save-hint" class="text-xs font-semibold text-slate-500"></p>
             </div>
 
         </form>
@@ -349,6 +358,10 @@
         border: 1px solid #e2e8f0;
         border-bottom: 1px solid #ffffff;
     }
+    .control-tab:disabled {
+        color: #cbd5e1;
+        cursor: not-allowed;
+    }
 </style>
 
 <script src="/my/js/flyers/colorswatch.js"></script>
@@ -356,6 +369,77 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+
+    // ------------------------------------------------------------
+    // Progressive unlock: Colors stays locked until a Style is
+    // chosen, Headline stays locked until Colors is chosen, and Save
+    // stays locked until Headline is chosen. Once all three have ever
+    // been chosen (tracked server-side via template_chosen/
+    // colors_chosen/headline_chosen), they stay unlocked for good and
+    // behave like free-toggle tabs.
+    // ------------------------------------------------------------
+
+    let chosenTemplate = {{ $flyer->theStyle->template_chosen ? 'true' : 'false' }};
+    let chosenColors   = {{ $flyer->theStyle->colors_chosen ? 'true' : 'false' }};
+    let chosenHeadline = {{ $flyer->theStyle->headline_chosen ? 'true' : 'false' }};
+
+    const colorsTab   = document.getElementById('colors-tab');
+    const headlineTab = document.getElementById('headline-tab');
+    const saveBtn     = document.getElementById('saveDesignBtn');
+    const tabHint     = document.getElementById('tab-hint');
+    const saveHint    = document.getElementById('save-hint');
+
+    function updateLocks() {
+        colorsTab.disabled   = !chosenTemplate;
+        headlineTab.disabled = !chosenColors;
+        saveBtn.disabled     = !chosenHeadline;
+
+        if (!chosenTemplate) {
+            tabHint.textContent = 'Choose a style to unlock Colors.';
+        } else if (!chosenColors) {
+            tabHint.textContent = 'Choose colors to unlock Headline.';
+        } else if (!chosenHeadline) {
+            tabHint.textContent = 'Choose a headline to unlock the other tabs for editing anytime.';
+        } else {
+            tabHint.textContent = '';
+        }
+
+        saveHint.textContent = chosenHeadline
+            ? ''
+            : 'Choose a style, colors, and a headline before saving.';
+    }
+
+    updateLocks();
+
+    document.querySelectorAll('.flyer-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            chosenTemplate = true;
+            updateLocks();
+        });
+    });
+
+    document.querySelectorAll('.colorswatch').forEach(swatch => {
+        swatch.addEventListener('click', () => {
+            chosenColors = true;
+            updateLocks();
+        });
+    });
+
+    const headlineSelect = document.getElementById('headlineSelect');
+    if (headlineSelect) {
+        headlineSelect.addEventListener('change', () => {
+            chosenHeadline = true;
+            updateLocks();
+        });
+    }
+
+    const headlineStyleSelect = document.getElementById('headlineStyle');
+    if (headlineStyleSelect) {
+        headlineStyleSelect.addEventListener('change', () => {
+            chosenHeadline = true;
+            updateLocks();
+        });
+    }
 
     function switchFlyer(target) {
         document.querySelectorAll('.flyer-panel').forEach(p => p.classList.remove('active'));
