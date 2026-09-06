@@ -355,6 +355,40 @@
         </div>
 
         {{-- ========================================================= --}}
+        {{-- PROPERTY HEADLINE --}}
+        {{-- ========================================================= --}}
+
+        <div class="mb-8 overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-black/5">
+
+            <div class="border-b border-slate-100 px-10 py-7">
+
+                <h2 class="text-2xl font-black text-slate-900">
+
+                    Property Headline
+
+                </h2>
+
+                <p class="mt-1 text-sm text-slate-500">
+
+                    The main headline shown at the top of the flyer.
+
+                </p>
+
+            </div>
+
+            <div class="p-10">
+
+                <input
+                    type="text"
+                    name="xHeadline"
+                    value="{{ old('xHeadline',$flyer->xHeadline ?? '') }}"
+                    class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-700/10">
+
+            </div>
+
+        </div>
+
+        {{-- ========================================================= --}}
         {{-- PROPERTY HIGHLIGHTS --}}
         {{-- ========================================================= --}}
 
@@ -397,6 +431,39 @@
                     </div>
 
                 @endfor
+
+            </div>
+
+        </div>
+
+        {{-- ========================================================= --}}
+        {{-- AGENT REMARKS --}}
+        {{-- ========================================================= --}}
+
+        <div class="mb-8 overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-black/5">
+
+            <div class="border-b border-slate-100 px-10 py-7">
+
+                <h2 class="text-2xl font-black text-slate-900">
+
+                    Agent Remarks
+
+                </h2>
+
+                <p class="mt-1 text-sm text-slate-500">
+
+                    The primary paragraph shown in the flyer body.
+
+                </p>
+
+            </div>
+
+            <div class="p-10">
+
+                <textarea
+                    name="xPubRemarks"
+                    rows="8"
+                    class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-700/10">{{ old('xPubRemarks',$flyer->theRemarks?->xPubRemarks ?? '') }}</textarea>
 
             </div>
 
@@ -459,39 +526,6 @@
                         class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-700/10">
 
                 </div>
-
-            </div>
-
-        </div>
-
-        {{-- ========================================================= --}}
-        {{-- AGENT REMARKS --}}
-        {{-- ========================================================= --}}
-
-        <div class="mb-8 overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-black/5">
-
-            <div class="border-b border-slate-100 px-10 py-7">
-
-                <h2 class="text-2xl font-black text-slate-900">
-
-                    Agent Remarks
-
-                </h2>
-
-                <p class="mt-1 text-sm text-slate-500">
-
-                    The primary paragraph shown in the flyer body.
-
-                </p>
-
-            </div>
-
-            <div class="p-10">
-
-                <textarea
-                    name="xPubRemarks"
-                    rows="8"
-                    class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-700/10">{{ old('xPubRemarks',$flyer->theRemarks?->xPubRemarks ?? '') }}</textarea>
 
             </div>
 

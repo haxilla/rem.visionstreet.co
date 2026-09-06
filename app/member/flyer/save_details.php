@@ -7,6 +7,7 @@ use App\Models\Core\Propremark;
 $validatedData = $request->validate([
 
     'flyerId'      => 'required|integer',
+    'xHeadline'    => 'nullable|string|max:255',
     'xListPrice'   => 'nullable|integer',
     'xPropType'    => 'nullable|string|max:50',
     'xListingType' => 'nullable|in:Sale,Rental',
@@ -39,6 +40,8 @@ if (!$flyer) {
     dd("Error: Flyer not found or you don't have permission to edit it.");
 }
 
+$flyer->xHeadline   = $validatedData['xHeadline'] ?? null;
+$flyer->xxHeadline  = $validatedData['xHeadline'] ?? null;
 $flyer->xListPrice  = $validatedData['xListPrice'] ?? null;
 $flyer->xYrBuilt    = $validatedData['xYrBuilt'] ?? null;
 $flyer->xxYrBuilt   = $validatedData['xYrBuilt'] ?? null;
