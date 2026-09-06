@@ -554,18 +554,29 @@ document.addEventListener('DOMContentLoaded', () => {
             const body = document.getElementById(step + '-body');
             const wasHidden = body.classList.contains('hidden');
 
-            // Switching away from a step that's open but hasn't been
-            // confirmed yet (the confirm button was never clicked)
-            // saves it now, using whatever's currently showing in the
-            // preview - flipping between steps should never silently
-            // discard a choice just because "Choose this..." wasn't
-            // clicked first.
-            STEPS.forEach(s => {
-                const sBody = document.getElementById(s + '-body');
-                if (s !== step && !sBody.classList.contains('hidden') && !chosen[s]) {
-                    confirmStep(s);
-                }
+            // Switching away from whichever step is currently open
+            // saves it now, using whatever's showing in the preview -
+            // flipping between steps should never silently discard a
+            // choice just because "Choose this..." wasn't clicked
+            // first. This applies even to a step that was already
+            // confirmed once before, if it's been reopened and changed
+            // since - hence no "!chosen[s]" check here, just whether
+            // it's the one currently visible.
+            //
+            // The open step is snapshotted BEFORE calling confirmStep,
+            // since confirmStep -> completeStep -> renderSteps() can
+            // itself change which body is hidden/visible - checking
+            // visibility live inside this loop would let that
+            // side-effect cascade into auto-confirming steps the user
+            // never touched.
+            const openOtherStep = STEPS.find(s => {
+                if (s === step) return false;
+                return !document.getElementById(s + '-body').classList.contains('hidden');
             });
+
+            if (openOtherStep) {
+                confirmStep(openOtherStep);
+            }
 
             // confirmStep() above triggers renderSteps(), which may
             // have expanded a different step than the one actually
