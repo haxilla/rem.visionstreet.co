@@ -111,6 +111,8 @@
 
 </main>
 
+@include('member.flyer.flyerEditModals', ['flyer' => $flyer])
+
 @include('public.layout.footer')
 
 <style>

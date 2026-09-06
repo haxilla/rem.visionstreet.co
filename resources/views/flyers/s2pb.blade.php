@@ -24,7 +24,8 @@ data-flyerbackground="{{$propInfo->theStyle
          <tr style="margin:0;padding:0;width:100%;">
             <td style="width:40%;margin:0;padding:0;">
                <div style="margin-left:20px;"
-               class="hlGraphicDiv">
+               class="hlGraphicDiv @if($display=='screen') clickable @endif"
+               @if($display=='screen') data-modal-trigger="headline" @endif>
                   <img src="{{$fromURL}}/images/headline_graphics/{{$propInfo
                     ->theStyle->graphic_words}}/{{$propInfo
                     ->theStyle->graphic_style}}/{{$hlGraphic}}"
@@ -42,22 +43,23 @@ data-flyerbackground="{{$propInfo->theStyle
             padding-right:25px;
             padding-left:0;">
                <div class="headline_text
-               xFullStreet clickable"
+               xFullStreet @if($display=='screen') clickable @endif"
+               @if($display=='screen') data-modal-trigger="address" @endif
                style="font-size:12pt;font-weight:bold;">
                   {{$propInfo->xFullStreet}}
                </div>
-               @include('flyers.ajaxEdits.xFullStreet')
                <div class="headline_text"
                style="font-size:10pt;">
-                  <span class="xCity clickable">
+                  <span class="xCity @if($display=='screen') clickable @endif"
+                  @if($display=='screen') data-modal-trigger="address" @endif>
                      {{$propInfo->xCity}},
                   </span>
-                  @include('flyers.ajaxEdits.xCity')
-                  <span class="xState clickable">
+                  <span class="xState @if($display=='screen') clickable @endif"
+                  @if($display=='screen') data-modal-trigger="address" @endif>
                      {{$propInfo->xState}}
                   </span>
-                  @include('flyers.ajaxEdits.xState')
-                  <span class="xZip clickable">
+                  <span class="xZip @if($display=='screen') clickable @endif"
+                  @if($display=='screen') data-modal-trigger="address" @endif>
                     @if($propInfo->xZip)
                      {{$propInfo->xZip}}
                     @elseif($propInfo->xxZip)
@@ -103,7 +105,6 @@ data-flyerbackground="{{$propInfo->theStyle
            </td>
          </tr>
       </table>
-      @include('flyers.ajaxEdits.headlineGraphic')
       <!-- bottom frame table -->
       <table style="width:100%;border:1px solid #ebebeb;
       border-top:none;padding:0;border-spacing:0;border-collapse:collapse;">
