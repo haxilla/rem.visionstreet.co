@@ -120,11 +120,18 @@ $remarks->save();
 // If the member tried to navigate away (wizard nav, "Edit Address")
 // without saving, the page auto-submits this form first and tells us
 // where they were actually headed, so their changes aren't lost.
+// Wizard-nav links are built with url(), which returns a full absolute
+// URL, not a relative path - validate the path portion so those still
+// pass, not just plain "/member/..." links like Edit Address.
 $redirectAfterSave = $request->input('redirectAfterSave');
 
-if ($redirectAfterSave && str_starts_with($redirectAfterSave, '/member/')) {
-    redirect($redirectAfterSave)->send();
-    exit();
+if ($redirectAfterSave) {
+    $redirectPath = parse_url($redirectAfterSave, PHP_URL_PATH) ?? '';
+
+    if (str_starts_with($redirectPath, '/member/')) {
+        redirect($redirectAfterSave)->send();
+        exit();
+    }
 }
 
 // Return to wherever the member came from (e.g. Design/Preview) if
