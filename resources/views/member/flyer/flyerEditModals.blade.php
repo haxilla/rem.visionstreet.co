@@ -106,7 +106,8 @@
             <input type="hidden" name="flyerId" value="{{ $flyer->id }}">
 
             <label>MLS Link URL</label>
-            <input type="text" name="xMlsLink" value="{{ $flyer->xMlsLink }}" placeholder="https://">
+            <input type="text" name="xMlsLink" value="{{ $flyer->xMlsLink }}" placeholder="https://" data-link-preview>
+            <a href="{{ $flyer->xMlsLink }}" target="_blank" rel="noopener" class="flyer-modal-view-link" data-link-preview-target>View this link ↗</a>
 
             <button type="submit" class="flyer-modal-save">Save</button>
         </form>
@@ -123,7 +124,8 @@
             <input type="hidden" name="flyerId" value="{{ $flyer->id }}">
 
             <label>Virtual Tour URL</label>
-            <input type="text" name="xVirtualTour" value="{{ $flyer->xVirtualTour }}" placeholder="https://">
+            <input type="text" name="xVirtualTour" value="{{ $flyer->xVirtualTour }}" placeholder="https://" data-link-preview>
+            <a href="{{ $flyer->xVirtualTour }}" target="_blank" rel="noopener" class="flyer-modal-view-link" data-link-preview-target>View this link ↗</a>
 
             <button type="submit" class="flyer-modal-save">Save</button>
         </form>
@@ -240,6 +242,17 @@
         font-size: 14px;
         box-sizing: border-box;
     }
+    .flyer-modal-view-link {
+        font-size: 13px;
+        font-weight: 700;
+        color: #123f91;
+        text-decoration: none;
+        margin-top: -6px;
+    }
+    .flyer-modal-view-link[href=""],
+    .flyer-modal-view-link:not([href]) {
+        display: none;
+    }
     .flyer-modal-row {
         display: flex;
         gap: 10px;
@@ -299,6 +312,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.querySelectorAll('[data-modal-close]').forEach(function (btn) {
         btn.addEventListener('click', closeModal);
+    });
+
+    // Keeps "View this link" pointed at whatever URL is currently
+    // typed, not just the saved value, so someone can test-drive an
+    // edit before saving it.
+    document.querySelectorAll('[data-link-preview]').forEach(function (input) {
+        var viewLink = input.parentElement.querySelector('[data-link-preview-target]');
+        if (!viewLink) return;
+
+        input.addEventListener('input', function () {
+            viewLink.setAttribute('href', input.value.trim());
+        });
     });
 
     overlay.addEventListener('click', function (e) {
