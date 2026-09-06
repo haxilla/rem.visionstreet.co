@@ -66,7 +66,7 @@
 
             <a href="/member/flyer/sendsetup?flyerId={{ $flyer->id }}"
                 class="shrink-0 rounded-xl bg-emerald-600 px-8 py-4 text-lg font-black text-white hover:bg-emerald-700">
-                Send Now →
+                Finalize →
             </a>
 
         </div>
