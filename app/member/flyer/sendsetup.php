@@ -10,7 +10,9 @@ if (!$flyerId) {
 }
 
 $flyer = Propflyer::select(
-    'id', 'propagent_id', 'xFullStreet', 'xCity', 'xState', 'xZip'
+    'id', 'propagent_id', 'xFullStreet', 'xCity', 'xState', 'xZip',
+    'openHouseDate1', 'openHouseTime1', 'openHouseDate2', 'openHouseTime2',
+    'agentBonusAmount', 'agentBonusComment', 'reducedAmount', 'reducedDate'
 )
 ->where('id', $flyerId)
 ->where('propagent_id', auth()->id())

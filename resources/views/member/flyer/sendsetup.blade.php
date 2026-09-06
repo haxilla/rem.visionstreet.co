@@ -48,6 +48,90 @@
         go out until that's finished.
     </div>
 
+    {{-- MARKETING HIGHLIGHTS --}}
+    <form method="POST" action="/member/flyer/save_sendsetup_highlights" class="flex flex-col gap-8">
+
+        @csrf
+
+        <input type="hidden" name="flyerId" value="{{ $flyer->id }}">
+
+        <div class="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-black/5">
+
+            <label class="mb-1 block text-sm font-black text-slate-900">
+                Open Houses
+            </label>
+
+            <p class="mb-4 text-sm text-slate-500">
+                Up to two open house sessions for this listing.
+            </p>
+
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+
+                <div class="grid grid-cols-2 gap-3">
+                    <input type="date" name="openHouseDate1"
+                        value="{{ old('openHouseDate1', $flyer->openHouseDate1) }}"
+                        class="rounded-xl border border-slate-300 px-3 py-2 text-sm focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
+                    <input type="time" name="openHouseTime1"
+                        value="{{ old('openHouseTime1', $flyer->openHouseTime1) }}"
+                        class="rounded-xl border border-slate-300 px-3 py-2 text-sm focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <input type="date" name="openHouseDate2"
+                        value="{{ old('openHouseDate2', $flyer->openHouseDate2) }}"
+                        class="rounded-xl border border-slate-300 px-3 py-2 text-sm focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
+                    <input type="time" name="openHouseTime2"
+                        value="{{ old('openHouseTime2', $flyer->openHouseTime2) }}"
+                        class="rounded-xl border border-slate-300 px-3 py-2 text-sm focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-black/5">
+
+            <label class="mb-1 block text-sm font-black text-slate-900">
+                Agent Bonus
+            </label>
+
+            <p class="mb-4 text-sm text-slate-500">
+                Optional incentive to the buyer's agent.
+            </p>
+
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+
+                <input type="text" name="agentBonusAmount"
+                    value="{{ old('agentBonusAmount', $flyer->agentBonusAmount) }}"
+                    placeholder="e.g. $1,000 or 0.5%"
+                    class="rounded-xl border border-slate-300 px-4 py-3 text-sm shadow-inner focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
+
+                <input type="text" name="agentBonusComment"
+                    value="{{ old('agentBonusComment', $flyer->agentBonusComment) }}"
+                    placeholder="Optional note shown with the bonus"
+                    class="rounded-xl border border-slate-300 px-4 py-3 text-sm shadow-inner focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
+
+            </div>
+
+            @if($flyer->reducedAmount)
+
+                <div class="mt-4 rounded-xl bg-emerald-50 px-4 py-3 text-sm font-bold text-emerald-800">
+                    Price reduced by ${{ number_format($flyer->reducedAmount) }}{{ $flyer->reducedDate ? ' on '.\Carbon\Carbon::parse($flyer->reducedDate)->format('m/d/Y') : '' }} — calculated automatically from the original list price.
+                </div>
+
+            @endif
+
+        </div>
+
+        <div class="flex justify-end">
+            <button type="submit"
+                class="rounded-xl bg-[#123f91] px-8 py-4 text-lg font-black text-white hover:bg-[#0d2f6e]">
+                Save Highlights
+            </button>
+        </div>
+
+    </form>
+
     <form onsubmit="return false;" class="flex flex-col gap-8">
 
         {{-- SUBJECT --}}
@@ -86,38 +170,6 @@
                         {{ $label }}
                     </label>
                 @endforeach
-
-            </div>
-
-        </div>
-
-        {{-- FLAGS --}}
-        <div class="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-black/5">
-
-            <label class="mb-1 block text-sm font-black text-slate-900">
-                Highlight
-            </label>
-
-            <p class="mb-4 text-sm text-slate-500">
-                Optional callouts for this send.
-            </p>
-
-            <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
-
-                <label class="flex items-center gap-3 rounded-xl border border-slate-200 px-4 py-3 font-bold text-slate-700 hover:bg-slate-50">
-                    <input type="checkbox" name="priceReduced" value="1" class="h-5 w-5 rounded border-slate-300 text-[#123f91] focus:ring-[#123f91]">
-                    Price Reduced
-                </label>
-
-                <label class="flex items-center gap-3 rounded-xl border border-slate-200 px-4 py-3 font-bold text-slate-700 hover:bg-slate-50">
-                    <input type="checkbox" name="openHouse" value="1" class="h-5 w-5 rounded border-slate-300 text-[#123f91] focus:ring-[#123f91]">
-                    Open House
-                </label>
-
-                <label class="flex items-center gap-3 rounded-xl border border-slate-200 px-4 py-3 font-bold text-slate-700 hover:bg-slate-50">
-                    <input type="checkbox" name="agentBonus" value="1" class="h-5 w-5 rounded border-slate-300 text-[#123f91] focus:ring-[#123f91]">
-                    Commission to Buyer's Agent
-                </label>
 
             </div>
 
