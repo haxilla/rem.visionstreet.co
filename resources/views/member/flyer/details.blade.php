@@ -22,7 +22,7 @@
 
             @if($flyer->xMlsNum)
 
-                <div class="text-sm font-bold uppercase tracking-[.25em] text-blue-700">
+                <div class="text-sm font-bold uppercase tracking-[.25em] text-[#123f91]">
 
                     MLS #{{ $flyer->xMlsNum }}
 
@@ -120,7 +120,7 @@
 
         <div class="mb-8 overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-black/5">
 
-            <div class="bg-gradient-to-r from-[#1b2f63] to-[#2a4486] px-10 py-7">
+            <div class="bg-[#123f91] px-10 py-7">
 
                 <h2 class="text-2xl font-black text-white">
 
@@ -128,7 +128,7 @@
 
                 </h2>
 
-                <p class="mt-1 text-sm text-blue-100">
+                <p class="mt-1 text-sm text-white/70">
 
                     Core facts shown on the flyer and used to help buyers find this listing.
 
@@ -156,7 +156,7 @@
                                 type="text"
                                 name="xListPrice"
                                 value="{{ old('xListPrice',$flyer->xListPrice ?? '') }}"
-                                class="w-full rounded-2xl border border-slate-300 py-3 pl-8 pr-4 transition focus:border-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-700/10">
+                                class="w-full rounded-2xl border border-slate-300 py-3 pl-8 pr-4 transition focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
 
                         </div>
 
@@ -172,7 +172,7 @@
 
                         <select
                             name="xPropType"
-                            class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-700/10">
+                            class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
 
                             @php $propType = old('xPropType', $flyer->theMeta->xPropType ?? ''); @endphp
 
@@ -196,7 +196,7 @@
 
                         <select
                             name="xListingType"
-                            class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-700/10">
+                            class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
 
                             @php $listingType = old('xListingType', $flyer->theMeta->xListingType ?? ''); @endphp
 
@@ -220,7 +220,7 @@
                             type="text"
                             name="xYrBuilt"
                             value="{{ old('xYrBuilt',$flyer->xYrBuilt ?? '') }}"
-                            class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-700/10">
+                            class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
 
                     </div>
 
@@ -232,7 +232,7 @@
 
                         <label class="mb-2 flex items-center gap-2 text-sm font-semibold text-slate-600">
 
-                            <svg class="h-4 w-4 text-blue-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <svg class="h-4 w-4 text-[#123f91]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 12h18M5 12V7a2 2 0 012-2h10a2 2 0 012 2v5M4 18v-3a1 1 0 011-1h14a1 1 0 011 1v3M3 21h18" />
                             </svg>
 
@@ -244,7 +244,7 @@
                             type="text"
                             name="xBeds"
                             value="{{ old('xBeds',$flyer->xBeds ?? '') }}"
-                            class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-700/10">
+                            class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
 
                     </div>
 
@@ -252,7 +252,7 @@
 
                         <label class="mb-2 flex items-center gap-2 text-sm font-semibold text-slate-600">
 
-                            <svg class="h-4 w-4 text-blue-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <svg class="h-4 w-4 text-[#123f91]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M4 12h16M6 12V6a2 2 0 012-2h2v3M4 12v6a2 2 0 002 2h12a2 2 0 002-2v-6" />
                             </svg>
 
@@ -264,7 +264,7 @@
                             type="text"
                             name="xBaths"
                             value="{{ old('xBaths',$flyer->xBaths ?? '') }}"
-                            class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-700/10">
+                            class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
 
                     </div>
 
@@ -272,7 +272,7 @@
 
                         <label class="mb-2 flex items-center gap-2 text-sm font-semibold text-slate-600">
 
-                            <svg class="h-4 w-4 text-blue-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <svg class="h-4 w-4 text-[#123f91]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M4 8V4h4M20 8V4h-4M4 16v4h4M20 16v4h-4" />
                             </svg>
 
@@ -284,7 +284,7 @@
                             type="text"
                             name="xSqft"
                             value="{{ old('xSqft',$flyer->xSqft ?? '') }}"
-                            class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-700/10">
+                            class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
 
                     </div>
 
@@ -298,7 +298,7 @@
 
                         <select
                             name="xParking"
-                            class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-700/10">
+                            class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
 
                             <option value="">Select</option>
                             <option>1 Car Garage</option>
@@ -321,7 +321,7 @@
 
                         <select
                             name="xPool"
-                            class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-700/10">
+                            class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
 
                             <option value="">Select</option>
                             <option>Private Pool</option>
@@ -344,7 +344,7 @@
                             type="text"
                             name="xIntersection"
                             value="{{ old('xIntersection',$flyer->theMap?->xIntersection ?? '') }}"
-                            class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-700/10">
+                            class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
 
                     </div>
 
@@ -382,7 +382,7 @@
                     type="text"
                     name="xHeadline"
                     value="{{ old('xHeadline',$flyer->xHeadline ?? '') }}"
-                    class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-700/10">
+                    class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
 
             </div>
 
@@ -416,7 +416,7 @@
 
                     <div class="flex items-center gap-3">
 
-                        <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-50 text-sm font-black text-blue-700">
+                        <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#123f91]/10 text-sm font-black text-[#123f91]">
 
                             {{ $i }}
 
@@ -426,7 +426,7 @@
                             type="text"
                             name="xb{{ $i }}"
                             value="{{ old('xb'.$i,$flyer->theRemarks?->{'xb'.$i} ?? '') }}"
-                            class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-700/10">
+                            class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
 
                     </div>
 
@@ -463,7 +463,7 @@
                 <textarea
                     name="xPubRemarks"
                     rows="8"
-                    class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-700/10">{{ old('xPubRemarks',$flyer->theRemarks?->xPubRemarks ?? '') }}</textarea>
+                    class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">{{ old('xPubRemarks',$flyer->theRemarks?->xPubRemarks ?? '') }}</textarea>
 
             </div>
 
@@ -506,7 +506,7 @@
                         name="xVirtualTour"
                         value="{{ old('xVirtualTour',$flyer->xVirtualTour ?? '') }}"
                         placeholder="https://"
-                        class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-700/10">
+                        class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
 
                 </div>
 
@@ -523,7 +523,7 @@
                         name="xMlsLink"
                         value="{{ old('xMlsLink',$flyer->xMlsLink ?? '') }}"
                         placeholder="https://"
-                        class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-700/10">
+                        class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
 
                 </div>
 
@@ -559,7 +559,7 @@
 
                     <button
                         type="submit"
-                        class="rounded-xl bg-blue-600 px-8 py-3 font-bold text-white hover:bg-blue-500">
+                        class="rounded-xl bg-[#123f91] px-8 py-3 font-bold text-white hover:bg-[#0d2f6e]">
 
                         Save &amp; Continue →
 
