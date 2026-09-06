@@ -11,8 +11,8 @@
          border-radius:.5em;padding:3px;text-align:center;
          color:#333;width:100px;"
          value="{{$propInfo->xMlsNum}}">
-         <input type="hidden" name="flyerId"
-         value="{{$propInfo->id}}">
+         <input type="hidden" name="theID"
+         value="{{$propInfo->theMeta->sk1}}">
       </form>
    </span>
 @endif

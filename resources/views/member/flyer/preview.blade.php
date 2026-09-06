@@ -130,7 +130,6 @@
 </style>
 
 <script src="/my/js/flyers/photoSwap.js"></script>
-<script src="/my/js/flyers/inlineEdit.js"></script>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {

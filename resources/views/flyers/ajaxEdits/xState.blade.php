@@ -11,8 +11,8 @@
          border-radius:.5em;padding:3px;text-align:center;width:50px;
          color:#{{$propInfo->theStyle->headline_text}}"
          value="{{$propInfo->xState}}">
-         <input type="hidden" name="flyerId"
-         value="{{$propInfo->id}}">
+         <input type="hidden" name="theID"
+         value="{{$propInfo->theMeta->sk1}}">
       </form>
    </span>
 @endif

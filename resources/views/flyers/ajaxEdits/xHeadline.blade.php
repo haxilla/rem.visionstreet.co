@@ -20,9 +20,9 @@
          style="background:rgba(255,255,255,.3);border:none;
          border-radius:.5em;padding:3px;text-align:center;width:100%;
          color:#{{$propInfo->theStyle->headline_bar_text}}"
-         value="{{$propInfo->xHeadline ?: $propInfo->xxHeadline}}">
-         <input type="hidden" name="flyerId"
-         value="{{$propInfo->id}}">
+         value="{{$propInfo->theStyle->headline}}">
+         <input type="hidden" name="theID"
+         value="{{$propInfo->theMeta->sk1}}">
       </form>
    </div>
 @endif
