@@ -56,6 +56,7 @@
 
                 <a
                     href="/member/flyer/create?flyerId={{ $flyer->id }}&return={{ request('return') ?: 'details' }}"
+                    data-wizard-leave
                     class="inline-flex items-center rounded-xl bg-slate-100 px-5 py-3 font-semibold text-slate-700 hover:bg-slate-200">
 
                     ← Edit Address
@@ -68,7 +69,9 @@
 
     </div>
 
-    @include('member.flyer.wizard',['flyer'=>$flyer])
+    <div id="wizard-nav">
+        @include('member.flyer.wizard',['flyer'=>$flyer])
+    </div>
 
     @if($errors->any())
 
@@ -95,6 +98,7 @@
     @endif
 
     <form
+        id="detailsForm"
         method="POST"
         action="/member/flyer/save_details"
         class="mt-8">
@@ -107,6 +111,8 @@
             value="{{ $flyer->id }}">
 
         <input type="hidden" name="return" value="{{ request('return') }}">
+
+        <input type="hidden" name="redirectAfterSave" value="">
 
         {{-- ========================================================= --}}
         {{-- PROPERTY INFORMATION --}}
@@ -520,6 +526,22 @@
 </div>
 
 </main>
+
+<script>
+(function () {
+    var form = document.getElementById('detailsForm');
+    var redirectInput = form.querySelector('input[name="redirectAfterSave"]');
+    var leaveLinks = document.querySelectorAll('#wizard-nav a[href], [data-wizard-leave]');
+
+    leaveLinks.forEach(function (link) {
+        link.addEventListener('click', function (e) {
+            e.preventDefault();
+            redirectInput.value = link.getAttribute('href');
+            form.requestSubmit();
+        });
+    });
+})();
+</script>
 
 @include('member.layout.footer')
 

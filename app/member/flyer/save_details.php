@@ -114,6 +114,16 @@ $remarks->xb7 = $validatedData['xb7'] ?? null;
 $remarks->xb8 = $validatedData['xb8'] ?? null;
 $remarks->save();
 
+// If the member tried to navigate away (wizard nav, "Edit Address")
+// without saving, the page auto-submits this form first and tells us
+// where they were actually headed, so their changes aren't lost.
+$redirectAfterSave = $request->input('redirectAfterSave');
+
+if ($redirectAfterSave && str_starts_with($redirectAfterSave, '/member/')) {
+    redirect($redirectAfterSave)->send();
+    exit();
+}
+
 // Return to wherever the member came from (e.g. Design/Preview) if
 // they were editing Details after already progressing further -
 // otherwise move forward to Photos as normal.
