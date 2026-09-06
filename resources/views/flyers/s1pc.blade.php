@@ -132,8 +132,9 @@ box-sizing:content-box;" class="flyer_background">
                 @endif
               @endif
               @if($display=='email')
-                style="max-width:100%;
+                style="width:100%;
                 height:215px;
+                object-fit:cover;
                 display:block;
                 margin-left:auto;
                 margin-right:auto;"
@@ -232,6 +233,7 @@ box-sizing:content-box;" class="flyer_background">
           @foreach($propInfo->thePhotos
             ->where('def','!=','1')
             ->where('resized','=','500')
+            ->where('orient','=','wide')
             ->sortBy('ord')
             ->take(7) as $the)
             <div class="style1PhotoFrame"
@@ -246,25 +248,13 @@ box-sizing:content-box;" class="flyer_background">
                   ->theMeta->zipDir}}/{{$propInfo
                   ->theMeta->mlsDir}}/{{$the->photoName}}"
                 @if($display=='screen')
-                  @if($the->orient=='wide')
-                    class="style1Photos"
-                  @else
-                    class="stylePhotosTall"
-                  @endif
+                  class="style1Photos"
                 @endif
                 @if($display=='email')
-                  @if($the->orient=="wide")
-                    style="display:block;
-                    height:167px;
-                    width:100%;"
-                  @else
-                    style="display:block;
-                    height:167px;
-                    margin-left:auto;
-                    margin-right:auto;
-                    max-width:100%;"
-                  @endif
-
+                  style="display:block;
+                  height:167px;
+                  width:100%;
+                  object-fit:cover;"
                 @endif>
               </a>
             </div>
