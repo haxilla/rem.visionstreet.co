@@ -36,13 +36,6 @@
             Send This Flyer
         </h1>
 
-        <p class="mt-2 text-slate-500">
-            {{ $flyer->xFullStreet }},
-            {{ $flyer->xCity }},
-            {{ $flyer->xState }}
-            {{ $flyer->xZip }}
-        </p>
-
     </div>
 
     {{-- PROPERTY SNAPSHOT --}}
@@ -130,92 +123,106 @@
 
         </div>
 
-        {{-- OPEN HOUSES --}}
-        <div class="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-black/5">
+        {{-- MARKETING HIGHLIGHTS --}}
+        <div class="overflow-hidden rounded-3xl bg-slate-100 ring-1 ring-black/5">
 
-            <label class="mb-1 block text-sm font-black text-slate-900">
-                Open Houses
-            </label>
-
-            <p class="mb-4 text-sm text-slate-500">
-                Up to two open house sessions for this listing.
-            </p>
-
-            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-
-                <div class="grid grid-cols-2 gap-3">
-                    <input type="date" name="openHouseDate1"
-                        value="{{ old('openHouseDate1', $flyer->openHouseDate1) }}"
-                        class="rounded-xl border border-slate-300 px-3 py-2 text-sm focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
-                    <input type="time" name="openHouseTime1"
-                        value="{{ old('openHouseTime1', $flyer->openHouseTime1) }}"
-                        class="rounded-xl border border-slate-300 px-3 py-2 text-sm focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
-                </div>
-
-                <div class="grid grid-cols-2 gap-3">
-                    <input type="date" name="openHouseDate2"
-                        value="{{ old('openHouseDate2', $flyer->openHouseDate2) }}"
-                        class="rounded-xl border border-slate-300 px-3 py-2 text-sm focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
-                    <input type="time" name="openHouseTime2"
-                        value="{{ old('openHouseTime2', $flyer->openHouseTime2) }}"
-                        class="rounded-xl border border-slate-300 px-3 py-2 text-sm focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
-                </div>
-
+            <div class="border-b border-slate-200 px-6 py-5">
+                <h2 class="text-base font-black text-slate-900">Marketing Highlights</h2>
+                <p class="mt-1 text-sm text-slate-500">Optional extras for this listing.</p>
             </div>
 
-        </div>
+            <div class="divide-y divide-slate-200">
 
-        {{-- AGENT BONUS --}}
-        <div class="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-black/5">
+                {{-- OPEN HOUSES --}}
+                <div class="p-6">
 
-            <label class="mb-1 block text-sm font-black text-slate-900">
-                Agent Bonus
-            </label>
+                    <label class="mb-1 block text-sm font-black text-slate-900">
+                        Open Houses
+                    </label>
 
-            <p class="mb-4 text-sm text-slate-500">
-                Optional incentive to the buyer's agent.
-            </p>
+                    <p class="mb-4 text-sm text-slate-500">
+                        Up to two open house sessions for this listing.
+                    </p>
 
-            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
 
-                <input type="text" name="agentBonusAmount"
-                    value="{{ old('agentBonusAmount', $flyer->agentBonusAmount) }}"
-                    placeholder="e.g. $1,000 or 0.5%"
-                    class="rounded-xl border border-slate-300 px-4 py-3 text-sm shadow-inner focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
+                        <div class="grid grid-cols-2 gap-3">
+                            <input type="date" name="openHouseDate1"
+                                value="{{ old('openHouseDate1', $flyer->openHouseDate1) }}"
+                                class="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
+                            <input type="time" name="openHouseTime1"
+                                value="{{ old('openHouseTime1', $flyer->openHouseTime1) }}"
+                                class="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
+                        </div>
 
-                <input type="text" name="agentBonusComment"
-                    value="{{ old('agentBonusComment', $flyer->agentBonusComment) }}"
-                    placeholder="Optional note shown with the bonus"
-                    class="rounded-xl border border-slate-300 px-4 py-3 text-sm shadow-inner focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
+                        <div class="grid grid-cols-2 gap-3">
+                            <input type="date" name="openHouseDate2"
+                                value="{{ old('openHouseDate2', $flyer->openHouseDate2) }}"
+                                class="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
+                            <input type="time" name="openHouseTime2"
+                                value="{{ old('openHouseTime2', $flyer->openHouseTime2) }}"
+                                class="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
+                        </div>
 
-            </div>
+                    </div>
 
-        </div>
-
-        {{-- PRICE REDUCTION --}}
-        <div class="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-black/5">
-
-            <label class="mb-1 block text-sm font-black text-slate-900">
-                Price Reduction
-            </label>
-
-            <p class="mb-4 text-sm text-slate-500">
-                Filled in automatically when the list price is lowered on Details. Edit it directly if this flyer was created after the reduction already happened.
-            </p>
-
-            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-
-                <div class="relative">
-                    <span class="pointer-events-none absolute inset-y-0 left-4 flex items-center font-semibold text-slate-400">$</span>
-                    <input type="text" name="reducedAmount"
-                        value="{{ old('reducedAmount', $flyer->reducedAmount) }}"
-                        placeholder="e.g. 10000"
-                        class="w-full rounded-xl border border-slate-300 py-3 pl-8 pr-4 text-sm shadow-inner focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
                 </div>
 
-                <input type="date" name="reducedDate"
-                    value="{{ old('reducedDate', $flyer->reducedDate) }}"
-                    class="rounded-xl border border-slate-300 px-4 py-3 text-sm shadow-inner focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
+                {{-- AGENT BONUS --}}
+                <div class="p-6">
+
+                    <label class="mb-1 block text-sm font-black text-slate-900">
+                        Agent Bonus
+                    </label>
+
+                    <p class="mb-4 text-sm text-slate-500">
+                        Optional incentive to the buyer's agent.
+                    </p>
+
+                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+
+                        <input type="text" name="agentBonusAmount"
+                            value="{{ old('agentBonusAmount', $flyer->agentBonusAmount) }}"
+                            placeholder="e.g. $1,000 or 0.5%"
+                            class="rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm shadow-inner focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
+
+                        <input type="text" name="agentBonusComment"
+                            value="{{ old('agentBonusComment', $flyer->agentBonusComment) }}"
+                            placeholder="Optional note shown with the bonus"
+                            class="rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm shadow-inner focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
+
+                    </div>
+
+                </div>
+
+                {{-- PRICE REDUCTION --}}
+                <div class="p-6">
+
+                    <label class="mb-1 block text-sm font-black text-slate-900">
+                        Price Reduction
+                    </label>
+
+                    <p class="mb-4 text-sm text-slate-500">
+                        Enter the amount and date of a price reduction, if any. It will be auto-filled if one already exists, but you can override it here.
+                    </p>
+
+                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+
+                        <div class="relative">
+                            <span class="pointer-events-none absolute inset-y-0 left-4 flex items-center font-semibold text-slate-400">$</span>
+                            <input type="text" name="reducedAmount"
+                                value="{{ old('reducedAmount', $flyer->reducedAmount) }}"
+                                placeholder="e.g. 10000"
+                                class="w-full rounded-xl border border-slate-300 bg-white py-3 pl-8 pr-4 text-sm shadow-inner focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
+                        </div>
+
+                        <input type="date" name="reducedDate"
+                            value="{{ old('reducedDate', $flyer->reducedDate) }}"
+                            class="rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm shadow-inner focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
+
+                    </div>
+
+                </div>
 
             </div>
 
