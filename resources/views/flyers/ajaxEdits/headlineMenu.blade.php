@@ -19,7 +19,7 @@ $graphic_words=$propInfo->theStyle->graphic_words;
 style="border:1px solid #eee;">
   <div class="col-8 noPad">
     <div style="height:100%;padding:5px;padding-left:10px;">
-      <select id="headlineCaption" name="graphic_words"
+      <select id="headlineCaption" name="ajaxEdit_graphic_words"
       style="padding:15px;font-size:12pt;width:100%;
       height:100%;">
         <option
