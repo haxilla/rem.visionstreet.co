@@ -132,7 +132,9 @@
                             <span class="step-title">Style</span>
                             <span class="step-summary" id="style-summary">Style {{ substr($initialTemplate, 0, 1) }}</span>
                         </span>
-                        <span class="step-edit">Edit</span>
+                        <svg class="step-edit" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
                     </button>
 
                     <div class="step-body" id="style-body">
@@ -184,7 +186,9 @@
                             <span class="step-title">Colors</span>
                             <span class="step-summary" id="colors-summary">Colors selected</span>
                         </span>
-                        <span class="step-edit">Edit</span>
+                        <svg class="step-edit" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
                     </button>
 
                     <div class="step-body" id="colors-body">
@@ -283,7 +287,9 @@
                             <span class="step-title">Headline</span>
                             <span class="step-summary" id="headline-summary">{{ $initialHeadlineLabel }}</span>
                         </span>
-                        <span class="step-edit">Edit</span>
+                        <svg class="step-edit" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
                     </button>
 
                     <div class="step-body" id="headline-body">
@@ -441,11 +447,9 @@
     .step-edit {
         display: none;
         flex-shrink: 0;
-        font-size: 13px;
-        font-weight: 700;
         color: #123f91;
     }
-    .step-card.complete .step-edit { display: inline; }
+    .step-card.complete .step-edit { display: inline-flex; }
     .step-body {
         padding: 0 20px 20px;
         border-top: 1px solid #f1f5f9;
@@ -550,6 +554,22 @@ document.addEventListener('DOMContentLoaded', () => {
             const body = document.getElementById(step + '-body');
             const wasHidden = body.classList.contains('hidden');
 
+            // Switching away from a step that's open but hasn't been
+            // confirmed yet (the confirm button was never clicked)
+            // saves it now, using whatever's currently showing in the
+            // preview - flipping between steps should never silently
+            // discard a choice just because "Choose this..." wasn't
+            // clicked first.
+            STEPS.forEach(s => {
+                const sBody = document.getElementById(s + '-body');
+                if (s !== step && !sBody.classList.contains('hidden') && !chosen[s]) {
+                    confirmStep(s);
+                }
+            });
+
+            // confirmStep() above triggers renderSteps(), which may
+            // have expanded a different step than the one actually
+            // clicked - enforce the real accordion target explicitly.
             STEPS.forEach(s => {
                 document.getElementById(s + '-body').classList.add('hidden');
             });
@@ -566,25 +586,28 @@ document.addEventListener('DOMContentLoaded', () => {
     // is fine; a step only becomes chosen when its confirm button is
     // clicked, using whatever's currently showing in the preview.
 
+    function confirmStep(step) {
+        let summary = 'Chosen';
+
+        if (step === 'style') {
+            const activeBtn = document.querySelector('.flyer-btn.active');
+            summary = activeBtn ? activeBtn.textContent.trim() : 'Style chosen';
+        } else if (step === 'colors') {
+            summary = 'Colors selected';
+        } else if (step === 'headline') {
+            const headlineSelect = document.getElementById('headlineSelect');
+            summary = headlineSelect
+                ? headlineSelect.options[headlineSelect.selectedIndex].text
+                : 'Headline chosen';
+        }
+
+        completeStep(step, summary);
+        saveStepInBackground(step);
+    }
+
     document.querySelectorAll('[data-confirm]').forEach(confirmBtn => {
         confirmBtn.addEventListener('click', () => {
-            const step = confirmBtn.dataset.confirm;
-            let summary = 'Chosen';
-
-            if (step === 'style') {
-                const activeBtn = document.querySelector('.flyer-btn.active');
-                summary = activeBtn ? activeBtn.textContent.trim() : 'Style chosen';
-            } else if (step === 'colors') {
-                summary = 'Colors selected';
-            } else if (step === 'headline') {
-                const headlineSelect = document.getElementById('headlineSelect');
-                summary = headlineSelect
-                    ? headlineSelect.options[headlineSelect.selectedIndex].text
-                    : 'Headline chosen';
-            }
-
-            completeStep(step, summary);
-            saveStepInBackground(step);
+            confirmStep(confirmBtn.dataset.confirm);
         });
     });
 
