@@ -717,11 +717,25 @@ document.addEventListener('DOMContentLoaded', () => {
         const data = new FormData(form);
         data.set('confirmedStep', step);
 
-        saveQueue = saveQueue.then(() => fetch(form.action, {
-            method: 'POST',
-            body: data,
-            headers: { 'Accept': 'application/json' },
-        })).catch(err => console.error('Failed to save ' + step + ':', err));
+        // fetch() only rejects on a real network failure - a 4xx/5xx
+        // HTTP response resolves normally, so without checking
+        // response.ok a failed save (validation error, server error)
+        // fails completely silently with no console output at all.
+        saveQueue = saveQueue
+            .then(() => fetch(form.action, {
+                method: 'POST',
+                body: data,
+                headers: { 'Accept': 'application/json' },
+            }))
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(text => {
+                        console.error('Save failed for "' + step + '" (' + response.status + '):', text);
+                    });
+                }
+                console.log('Saved "' + step + '" successfully.');
+            })
+            .catch(err => console.error('Failed to save ' + step + ':', err));
     }
 
     document.getElementById('designForm').addEventListener('submit', syncHiddenFields);
