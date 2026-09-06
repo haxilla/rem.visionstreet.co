@@ -20,8 +20,11 @@
     $oldAreas = old('areas', []);
 
     $timeOptions = [];
-    for ($h = 0; $h < 24; $h++) {
+    for ($h = 6; $h <= 21; $h++) {
         foreach ([0, 30] as $m) {
+            if ($h === 21 && $m === 30) {
+                continue;
+            }
             $value = sprintf('%02d:%02d', $h, $m);
             $timeOptions[$value] = \Carbon\Carbon::createFromTime($h, $m)->format('g:i A');
         }
