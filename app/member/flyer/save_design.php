@@ -23,6 +23,16 @@ $fieldRulesByStep = [
         'headline_bar_bg'   => 'required|string|max:6',
         'headline_bar_text' => 'required|string|max:6',
         'headline_text'     => 'required|string|max:6',
+        // graphic_textcolor is included here too, not just under
+        // "headline" - it's the headline graphic's embedded color,
+        // but the only thing that ever actually changes it is
+        // clicking an accent swatch here in Colors (headline.js
+        // preserves whatever color is already there when just the
+        // headline word/style change). Without this, confirming
+        // Colors after picking a new accent never persisted the
+        // color change unless Headline also happened to get
+        // re-confirmed afterward.
+        'graphic_textcolor' => 'required|string|max:6',
     ],
 
     'headline' => [
@@ -75,6 +85,7 @@ if ($confirmedStep === 'style') {
     $flyer->theStyle->headline_bar_bg    = $validatedData['headline_bar_bg'];
     $flyer->theStyle->headline_bar_text  = $validatedData['headline_bar_text'];
     $flyer->theStyle->headline_text      = $validatedData['headline_text'];
+    $flyer->theStyle->graphic_textcolor  = $validatedData['graphic_textcolor'];
     $flyer->theStyle->colors_chosen      = true;
 
 } elseif ($confirmedStep === 'headline') {
