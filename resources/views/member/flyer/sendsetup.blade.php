@@ -16,6 +16,8 @@
         'northern_az'      => 'Northern AZ',
         'southern_az'      => 'Southern AZ',
     ];
+
+    $oldAreas = old('areas', []);
 @endphp
 
 <main class="min-h-screen bg-[#f0f2f7] pt-24">
@@ -44,17 +46,61 @@
     </div>
 
     <div class="rounded-xl border border-amber-200 bg-amber-50 px-5 py-4 text-sm font-bold text-amber-800">
-        Sending isn't wired up yet — you can fill this out, but nothing will
-        go out until that's finished.
+        Sending isn't wired up yet — saving below stores your open house,
+        bonus, subject, and area choices, but nothing will go out until
+        that's finished.
     </div>
 
-    {{-- MARKETING HIGHLIGHTS --}}
-    <form method="POST" action="/member/flyer/save_sendsetup_highlights" class="flex flex-col gap-8">
+    <form method="POST" action="/member/flyer/save_sendsetup" class="flex flex-col gap-8">
 
         @csrf
 
         <input type="hidden" name="flyerId" value="{{ $flyer->id }}">
 
+        {{-- SUBJECT --}}
+        <div class="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-black/5">
+
+            <label class="mb-2 block text-sm font-black text-slate-900">
+                Email Subject
+            </label>
+
+            <input
+                type="text"
+                name="emSubject"
+                value="{{ old('emSubject', $lastSubject) }}"
+                placeholder="e.g. Just Listed - {{ $flyer->xFullStreet }}"
+                class="w-full rounded-xl border border-slate-300 px-4 py-3 text-base shadow-inner focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10"
+            >
+
+        </div>
+
+        {{-- AREAS --}}
+        <div class="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-black/5">
+
+            <label class="mb-1 block text-sm font-black text-slate-900">
+                Areas
+            </label>
+
+            <p class="mb-4 text-sm text-slate-500">
+                Choose up to 2 areas to send this flyer to.
+            </p>
+
+            <div id="area-badges" class="flex flex-wrap gap-2">
+
+                @foreach($areas as $value => $label)
+                    <label class="area-badge cursor-pointer select-none rounded-full border-2 border-slate-200 px-4 py-2 text-sm font-bold text-slate-600 transition has-[:checked]:border-[#123f91] has-[:checked]:bg-[#123f91] has-[:checked]:text-white has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-40">
+                        <input type="checkbox" name="areas[]" value="{{ $value }}"
+                            class="hidden"
+                            @checked(in_array($value, $oldAreas))>
+                        {{ $label }}
+                    </label>
+                @endforeach
+
+            </div>
+
+        </div>
+
+        {{-- OPEN HOUSES --}}
         <div class="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-black/5">
 
             <label class="mb-1 block text-sm font-black text-slate-900">
@@ -89,6 +135,7 @@
 
         </div>
 
+        {{-- AGENT BONUS --}}
         <div class="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-black/5">
 
             <label class="mb-1 block text-sm font-black text-slate-900">
@@ -126,63 +173,8 @@
         <div class="flex justify-end">
             <button type="submit"
                 class="rounded-xl bg-[#123f91] px-8 py-4 text-lg font-black text-white hover:bg-[#0d2f6e]">
-                Save Highlights
+                Save
             </button>
-        </div>
-
-    </form>
-
-    <form onsubmit="return false;" class="flex flex-col gap-8">
-
-        {{-- SUBJECT --}}
-        <div class="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-black/5">
-
-            <label class="mb-2 block text-sm font-black text-slate-900">
-                Email Subject
-            </label>
-
-            <input
-                type="text"
-                name="emSubject"
-                value="{{ old('emSubject', $lastSubject) }}"
-                placeholder="e.g. Just Listed - {{ $flyer->xFullStreet }}"
-                class="w-full rounded-xl border border-slate-300 px-4 py-3 text-base shadow-inner focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10"
-            >
-
-        </div>
-
-        {{-- AREAS --}}
-        <div class="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-black/5">
-
-            <label class="mb-1 block text-sm font-black text-slate-900">
-                Areas
-            </label>
-
-            <p class="mb-4 text-sm text-slate-500">
-                Choose one or more areas to send this flyer to.
-            </p>
-
-            <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-
-                @foreach($areas as $value => $label)
-                    <label class="flex items-center gap-3 rounded-xl border border-slate-200 px-4 py-3 font-bold text-slate-700 hover:bg-slate-50">
-                        <input type="checkbox" name="areas[]" value="{{ $value }}" class="h-5 w-5 rounded border-slate-300 text-[#123f91] focus:ring-[#123f91]">
-                        {{ $label }}
-                    </label>
-                @endforeach
-
-            </div>
-
-        </div>
-
-        <div class="flex justify-end">
-
-            <button type="submit" disabled
-                title="Sending isn't wired up yet"
-                class="cursor-not-allowed rounded-xl bg-slate-300 px-8 py-4 text-lg font-black text-slate-500">
-                Send Flyer (Coming Soon)
-            </button>
-
         </div>
 
     </form>
@@ -192,6 +184,22 @@
 </main>
 
 @include('public.layout.footer')
+
+<script>
+(function () {
+    var boxes = document.querySelectorAll('#area-badges input[type="checkbox"]');
+
+    function syncMax() {
+        var checkedCount = Array.prototype.filter.call(boxes, function (b) { return b.checked; }).length;
+        boxes.forEach(function (b) {
+            b.disabled = !b.checked && checkedCount >= 2;
+        });
+    }
+
+    boxes.forEach(function (b) { b.addEventListener('change', syncMax); });
+    syncMax();
+})();
+</script>
 
 </body>
 </html>
