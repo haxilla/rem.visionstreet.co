@@ -12,7 +12,8 @@ if (!$flyerId) {
 $flyer = Propflyer::select(
     'id', 'propagent_id', 'xFullStreet', 'xCity', 'xState', 'xZip',
     'xListPrice', 'xBeds', 'xBaths', 'xSqft',
-    'openHouseDate1', 'openHouseTime1', 'openHouseDate2', 'openHouseTime2',
+    'openHouseDate1', 'openHouseTime1', 'openHouseEndTime1',
+    'openHouseDate2', 'openHouseTime2', 'openHouseEndTime2',
     'agentBonusAmount', 'agentBonusComment', 'reducedAmount', 'reducedDate'
 )
 ->where('id', $flyerId)
@@ -29,6 +30,33 @@ $flyer = Propflyer::select(
 
 if (!$flyer) {
     dd("Error: Flyer not found or access denied.");
+}
+
+// Clear out any open house that's already happened so it stops showing
+// here (and never gets re-sent in a campaign). Uses the end time when
+// set, falling back to the start time, then end of day.
+$openHouseChanged = false;
+
+foreach ([1, 2] as $n) {
+    $date = $flyer->{"openHouseDate$n"};
+
+    if (!$date) {
+        continue;
+    }
+
+    $endTime = $flyer->{"openHouseEndTime$n"} ?? $flyer->{"openHouseTime$n"} ?? '23:59:59';
+    $endsAt  = \Carbon\Carbon::parse($date . ' ' . $endTime);
+
+    if ($endsAt->isPast()) {
+        $flyer->{"openHouseDate$n"}    = null;
+        $flyer->{"openHouseTime$n"}    = null;
+        $flyer->{"openHouseEndTime$n"} = null;
+        $openHouseChanged = true;
+    }
+}
+
+if ($openHouseChanged) {
+    $flyer->save();
 }
 
 // Prefill the subject with the most recent campaign subject for this

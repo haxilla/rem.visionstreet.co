@@ -18,6 +18,14 @@
     ];
 
     $oldAreas = old('areas', []);
+
+    $timeOptions = [];
+    for ($h = 0; $h < 24; $h++) {
+        foreach ([0, 30] as $m) {
+            $value = sprintf('%02d:%02d', $h, $m);
+            $timeOptions[$value] = \Carbon\Carbon::createFromTime($h, $m)->format('g:i A');
+        }
+    }
 @endphp
 
 <main class="min-h-screen bg-[#f0f2f7] pt-24">
@@ -144,25 +152,41 @@
                         Up to two open house sessions for this listing.
                     </p>
 
-                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
 
-                        <div class="grid grid-cols-2 gap-3">
-                            <input type="date" name="openHouseDate1"
-                                value="{{ old('openHouseDate1', $flyer->openHouseDate1) }}"
-                                class="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
-                            <input type="time" name="openHouseTime1"
-                                value="{{ old('openHouseTime1', $flyer->openHouseTime1) }}"
-                                class="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
-                        </div>
+                        @foreach([1, 2] as $n)
 
-                        <div class="grid grid-cols-2 gap-3">
-                            <input type="date" name="openHouseDate2"
-                                value="{{ old('openHouseDate2', $flyer->openHouseDate2) }}"
-                                class="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
-                            <input type="time" name="openHouseTime2"
-                                value="{{ old('openHouseTime2', $flyer->openHouseTime2) }}"
-                                class="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
-                        </div>
+                            <div class="flex flex-col gap-2">
+
+                                <input type="date" name="openHouseDate{{ $n }}"
+                                    value="{{ old('openHouseDate'.$n, $flyer->{'openHouseDate'.$n}) }}"
+                                    class="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
+
+                                <div class="grid grid-cols-2 gap-2">
+
+                                    @php $selStart = old('openHouseTime'.$n, $flyer->{'openHouseTime'.$n}); @endphp
+                                    <select name="openHouseTime{{ $n }}"
+                                        class="rounded-xl border border-slate-300 bg-white px-2 py-2 text-sm focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
+                                        <option value="">Start</option>
+                                        @foreach($timeOptions as $value => $label)
+                                            <option value="{{ $value }}" @selected($selStart && substr($selStart,0,5) === $value)>{{ $label }}</option>
+                                        @endforeach
+                                    </select>
+
+                                    @php $selEnd = old('openHouseEndTime'.$n, $flyer->{'openHouseEndTime'.$n}); @endphp
+                                    <select name="openHouseEndTime{{ $n }}"
+                                        class="rounded-xl border border-slate-300 bg-white px-2 py-2 text-sm focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
+                                        <option value="">End</option>
+                                        @foreach($timeOptions as $value => $label)
+                                            <option value="{{ $value }}" @selected($selEnd && substr($selEnd,0,5) === $value)>{{ $label }}</option>
+                                        @endforeach
+                                    </select>
+
+                                </div>
+
+                            </div>
+
+                        @endforeach
 
                     </div>
 
@@ -203,7 +227,7 @@
                     </label>
 
                     <p class="mb-4 text-sm text-slate-500">
-                        Enter the amount and date of a price reduction, if any. It will be auto-filled if one already exists, but you can override it here.
+                        Enter the amount and date of a price reduction, if any.
                     </p>
 
                     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
