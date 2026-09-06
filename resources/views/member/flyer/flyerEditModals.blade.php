@@ -43,23 +43,53 @@
         </form>
     </div>
 
-    {{-- MLS# + HIGHLIGHTS --}}
-    <div class="flyer-modal" id="modal-mlsHighlights" style="display:none;">
+    {{-- MLS# --}}
+    <div class="flyer-modal" id="modal-mls" style="display:none;">
         <div class="flyer-modal-header">
-            <span>Edit MLS# &amp; Highlights</span>
+            <span>Edit MLS#</span>
             <button type="button" class="flyer-modal-close" data-modal-close>&times;</button>
         </div>
-        <form data-modal-form action="/member/flyer/save_modal_mls_highlights">
+        <form data-modal-form action="/member/flyer/save_modal_mls">
             @csrf
             <input type="hidden" name="flyerId" value="{{ $flyer->id }}">
 
             <label>MLS#</label>
             <input type="text" name="xMlsNum" value="{{ $flyer->xMlsNum }}" placeholder="Leave blank if not in MLS">
 
-            <label>Highlights</label>
+            <button type="submit" class="flyer-modal-save">Save</button>
+        </form>
+    </div>
+
+    {{-- HIGHLIGHTS --}}
+    <div class="flyer-modal" id="modal-highlights" style="display:none;">
+        <div class="flyer-modal-header">
+            <span>Edit Highlights</span>
+            <button type="button" class="flyer-modal-close" data-modal-close>&times;</button>
+        </div>
+        <form data-modal-form action="/member/flyer/save_modal_highlights">
+            @csrf
+            <input type="hidden" name="flyerId" value="{{ $flyer->id }}">
+
             @for ($i = 1; $i <= 8; $i++)
                 <input type="text" name="xb{{ $i }}" value="{{ $flyer->theRemarks->{'xb'.$i} ?? '' }}" placeholder="Highlight {{ $i }}">
             @endfor
+
+            <button type="submit" class="flyer-modal-save">Save</button>
+        </form>
+    </div>
+
+    {{-- CROSS STREETS --}}
+    <div class="flyer-modal" id="modal-crossstreets" style="display:none;">
+        <div class="flyer-modal-header">
+            <span>Edit Major Cross Streets</span>
+            <button type="button" class="flyer-modal-close" data-modal-close>&times;</button>
+        </div>
+        <form data-modal-form action="/member/flyer/save_modal_crossstreets">
+            @csrf
+            <input type="hidden" name="flyerId" value="{{ $flyer->id }}">
+
+            <label>Major Cross Streets</label>
+            <input type="text" name="xIntersection" value="{{ $flyer->theMap->xIntersection ?? '' }}">
 
             <button type="submit" class="flyer-modal-save">Save</button>
         </form>

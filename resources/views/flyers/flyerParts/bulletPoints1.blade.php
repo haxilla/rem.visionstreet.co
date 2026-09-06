@@ -6,7 +6,7 @@ $propInfo->theRemarks->xb8)
    <div style="line-height:{{$bullets_LH}};font-size:11pt;padding-left:10px;
    font-style:italic;text-align:left;font-size:.9rem"
    class="@if($display=='screen') clickable @endif"
-   @if($display=='screen') data-modal-trigger="mlsHighlights" @endif>
+   @if($display=='screen') data-modal-trigger="highlights" @endif>
       @if($propInfo->theRemarks->xb1)
          <div>
             &bull;&nbsp; {{$propInfo->theRemarks->xb1}}

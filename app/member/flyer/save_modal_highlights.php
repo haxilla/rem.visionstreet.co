@@ -5,7 +5,6 @@ use App\Models\Core\Propremark;
 
 $validatedData = $request->validate([
     'flyerId' => 'required|integer',
-    'xMlsNum' => 'nullable|integer|digits_between:1,15',
     'xb1'     => 'nullable|string|max:255',
     'xb2'     => 'nullable|string|max:255',
     'xb3'     => 'nullable|string|max:255',
@@ -23,9 +22,6 @@ $flyer = Propflyer::where('id', $validatedData['flyerId'])
 if (!$flyer) {
     dd("Error: Flyer not found or you don't have permission to edit it.");
 }
-
-$flyer->xMlsNum = $validatedData['xMlsNum'] ?? null;
-$flyer->save();
 
 // theRemarks isn't guaranteed to exist yet - create on first save,
 // same as save_details.php does for this same model.

@@ -5,7 +5,7 @@
 @endif>
    <div style="padding-left:13px;margin-top:15px;"
    class="@if($display=='screen') clickable @endif"
-   @if($display=='screen') data-modal-trigger="mlsHighlights" @endif>
+   @if($display=='screen') data-modal-trigger="mls" @endif>
       @if($propInfo->xMlsNum)
          <span class="accent_text"
          style="font-weight:bold;
@@ -28,7 +28,9 @@
    <div style="padding-top:10px;">
       @include('flyers.flyerParts.bulletPoints1')
    </div>
-   <div class="dontScalePubRemark"
+   <div class="dontScalePubRemark
+   @if($display=='screen') clickable @endif"
+   @if($display=='screen') data-modal-trigger="crossstreets" @endif
    style="padding-left:13px;padding-top:20px;">
       <span class="accent_text"
       style="font-weight:bold;color:#{{$propInfo->theStyle->accentbars}}">
