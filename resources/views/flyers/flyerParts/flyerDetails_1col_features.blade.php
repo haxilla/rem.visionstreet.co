@@ -3,27 +3,24 @@
    style="margin:10px;
    margin-top:15px;"
 @endif>
-   <div style="padding-left:13px;margin-top:15px;">
+   <div style="padding-left:13px;margin-top:15px;"
+   class="@if($display=='screen') clickable @endif"
+   @if($display=='screen') data-modal-trigger="mlsHighlights" @endif>
       @if($propInfo->xMlsNum)
          <span class="accent_text"
          style="font-weight:bold;
          color:#{{$propInfo->theStyle->accentbars}}">
             MLS#:
          </span>
-         <span class="xMlsNum clickable">
+         <span class="xMlsNum">
             {{$propInfo->xMlsNum}}
          </span>
-         @include('flyers.ajaxEdits.xMlsNum')
       @else
          <span class="accent_text"
          style="font-weight:bold;
          color:#{{$propInfo->theStyle->accentbars}}">
-            MLS#:
+            Not in MLS
          </span>
-         <span class="xMlsNum clickable">
-            {{$propInfo->xxMlsNum}}
-         </span>
-         @include('flyers.ajaxEdits.xMlsNum')
       @endif
    </div>
    <hr style="margin:5px;margin-left:13px;margin-right:13px;height:1px;

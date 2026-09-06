@@ -43,6 +43,28 @@
         </form>
     </div>
 
+    {{-- MLS# + HIGHLIGHTS --}}
+    <div class="flyer-modal" id="modal-mlsHighlights" style="display:none;">
+        <div class="flyer-modal-header">
+            <span>Edit MLS# &amp; Highlights</span>
+            <button type="button" class="flyer-modal-close" data-modal-close>&times;</button>
+        </div>
+        <form data-modal-form action="/member/flyer/save_modal_mls_highlights">
+            @csrf
+            <input type="hidden" name="flyerId" value="{{ $flyer->id }}">
+
+            <label>MLS#</label>
+            <input type="text" name="xMlsNum" value="{{ $flyer->xMlsNum }}" placeholder="Leave blank if not in MLS">
+
+            <label>Highlights</label>
+            @for ($i = 1; $i <= 8; $i++)
+                <input type="text" name="xb{{ $i }}" value="{{ $flyer->theRemarks->{'xb'.$i} ?? '' }}" placeholder="Highlight {{ $i }}">
+            @endfor
+
+            <button type="submit" class="flyer-modal-save">Save</button>
+        </form>
+    </div>
+
     {{-- REMARKS --}}
     <div class="flyer-modal" id="modal-remarks" style="display:none;">
         <div class="flyer-modal-header">
