@@ -14,6 +14,8 @@ $validatedData = $request->validate([
     'openHouseTime2'    => 'nullable|date_format:H:i',
     'agentBonusAmount'  => 'nullable|string|max:255',
     'agentBonusComment' => 'nullable|string|max:255',
+    'reducedAmount'     => 'nullable|integer|min:0',
+    'reducedDate'       => 'nullable|date',
 
 ]);
 
@@ -33,6 +35,12 @@ $flyer->openHouseDate2    = $validatedData['openHouseDate2'] ?? null;
 $flyer->openHouseTime2    = $validatedData['openHouseTime2'] ?? null;
 $flyer->agentBonusAmount  = $validatedData['agentBonusAmount'] ?? null;
 $flyer->agentBonusComment = $validatedData['agentBonusComment'] ?? null;
+
+// Manual override - lets an agent set this directly when the flyer was
+// created after the reduction already happened, so there's no earlier
+// price on record for save_details.php's auto-calc to compare against.
+$flyer->reducedAmount = $validatedData['reducedAmount'] ?? null;
+$flyer->reducedDate   = $validatedData['reducedDate'] ?? null;
 
 $flyer->save();
 

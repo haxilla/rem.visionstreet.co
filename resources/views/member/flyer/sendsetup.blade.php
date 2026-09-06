@@ -45,10 +45,40 @@
 
     </div>
 
-    <div class="rounded-xl border border-amber-200 bg-amber-50 px-5 py-4 text-sm font-bold text-amber-800">
-        Sending isn't wired up yet — saving below stores your open house,
-        bonus, subject, and area choices, but nothing will go out until
-        that's finished.
+    {{-- PROPERTY SNAPSHOT --}}
+    @php $coverPhoto = $flyer->thePhotos->first(); @endphp
+    <div class="flex items-center gap-4 rounded-3xl bg-white p-4 shadow-sm ring-1 ring-black/5">
+
+        @if($coverPhoto)
+            <img src="/hqphotos/{{ $flyer->theMeta->zipDir }}/{{ $flyer->theMeta->mlsDir }}/{{ $coverPhoto->photoName }}"
+                class="h-20 w-20 shrink-0 rounded-2xl object-cover">
+        @else
+            <div class="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-slate-100 text-slate-300">
+                <svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 9.75L12 3l9 6.75V21a.75.75 0 01-.75.75H3.75A.75.75 0 013 21V9.75z" />
+                </svg>
+            </div>
+        @endif
+
+        <div class="min-w-0">
+
+            <div class="truncate text-lg font-black text-slate-900">
+                {{ $flyer->xFullStreet }}
+            </div>
+
+            <div class="text-sm text-slate-500">
+                {{ $flyer->xCity }}, {{ $flyer->xState }} {{ $flyer->xZip }}
+            </div>
+
+            <div class="mt-1 flex flex-wrap gap-x-3 text-sm font-semibold text-slate-600">
+                @if($flyer->xListPrice)<span>${{ number_format($flyer->xListPrice) }}</span>@endif
+                @if($flyer->xBeds)<span>{{ $flyer->xBeds }} bd</span>@endif
+                @if($flyer->xBaths)<span>{{ $flyer->xBaths }} ba</span>@endif
+                @if($flyer->xSqft)<span>{{ number_format($flyer->xSqft) }} sqft</span>@endif
+            </div>
+
+        </div>
+
     </div>
 
     <form method="POST" action="/member/flyer/save_sendsetup" class="flex flex-col gap-8">
@@ -160,13 +190,34 @@
 
             </div>
 
-            @if($flyer->reducedAmount)
+        </div>
 
-                <div class="mt-4 rounded-xl bg-emerald-50 px-4 py-3 text-sm font-bold text-emerald-800">
-                    Price reduced by ${{ number_format($flyer->reducedAmount) }}{{ $flyer->reducedDate ? ' on '.\Carbon\Carbon::parse($flyer->reducedDate)->format('m/d/Y') : '' }} — calculated automatically from the original list price.
+        {{-- PRICE REDUCTION --}}
+        <div class="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-black/5">
+
+            <label class="mb-1 block text-sm font-black text-slate-900">
+                Price Reduction
+            </label>
+
+            <p class="mb-4 text-sm text-slate-500">
+                Filled in automatically when the list price is lowered on Details. Edit it directly if this flyer was created after the reduction already happened.
+            </p>
+
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+
+                <div class="relative">
+                    <span class="pointer-events-none absolute inset-y-0 left-4 flex items-center font-semibold text-slate-400">$</span>
+                    <input type="text" name="reducedAmount"
+                        value="{{ old('reducedAmount', $flyer->reducedAmount) }}"
+                        placeholder="e.g. 10000"
+                        class="w-full rounded-xl border border-slate-300 py-3 pl-8 pr-4 text-sm shadow-inner focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
                 </div>
 
-            @endif
+                <input type="date" name="reducedDate"
+                    value="{{ old('reducedDate', $flyer->reducedDate) }}"
+                    class="rounded-xl border border-slate-300 px-4 py-3 text-sm shadow-inner focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
+
+            </div>
 
         </div>
 
