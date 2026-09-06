@@ -541,8 +541,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (card.classList.contains('locked')) return;
 
-            if (card.classList.contains('complete')) {
-                document.getElementById(step + '-body').classList.toggle('hidden');
+            // Accordion behavior: only one step body is ever open at a
+            // time. This applies to the in-progress "active" step too,
+            // not just completed ones - otherwise reopening an earlier
+            // completed step to edit it would collapse the active step
+            // with no way to get back to it, since only its own header
+            // click can reopen it.
+            const body = document.getElementById(step + '-body');
+            const wasHidden = body.classList.contains('hidden');
+
+            STEPS.forEach(s => {
+                document.getElementById(s + '-body').classList.add('hidden');
+            });
+
+            if (wasHidden) {
+                body.classList.remove('hidden');
             }
         });
     });
