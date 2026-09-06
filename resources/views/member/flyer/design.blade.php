@@ -34,6 +34,14 @@
         'openhouse' => 'Open House', 'reduced' => 'Reduced',
     ];
     $initialHeadlineLabel = $graphicWordsLabels[$flyer->theStyle->graphic_words] ?? 'Great Buy';
+
+    // Mirrors colorswatch.js's own background-color branches: only
+    // these 4 dark backgrounds pair with the light accent colors, so
+    // the accent swatches shown before any click ever happens should
+    // already match whichever group is actually valid for the current
+    // background, instead of showing every accent color as if all of
+    // them were combinable with it.
+    $isDarkBackground = in_array($flyer->theStyle->flyer_background, ['996600', '990000', '000066', '000000'], true);
 @endphp
 
 <main class="min-h-screen bg-[#f0f2f7] pt-24">
@@ -224,9 +232,9 @@
 
                             <p class="mb-2 text-xs font-bold text-slate-500">Accents</p>
 
-                            <p class="light-accents mb-1 text-xs text-slate-400">Light</p>
+                            <p class="light-accents mb-1 text-xs text-slate-400" @style(['display:none' => !$isDarkBackground])>Light</p>
 
-                            <div class="light-accents mb-3 flex flex-wrap gap-1">
+                            <div class="light-accents mb-3 flex flex-wrap gap-1" @style(['display:none' => !$isDarkBackground])>
 
                                 <a href="#" class="colorswatch block h-6 w-6 rounded border border-slate-300 transition-transform hover:scale-110"
                                 style="background:#ffffff;" data-style="accent" data-scheme="light" data-color="ffffff"></a>
@@ -239,9 +247,9 @@
 
                             </div>
 
-                            <p class="dark-accents mb-1 text-xs text-slate-400">Dark</p>
+                            <p class="dark-accents mb-1 text-xs text-slate-400" @style(['display:none' => $isDarkBackground])>Dark</p>
 
-                            <div class="dark-accents flex flex-wrap gap-1">
+                            <div class="dark-accents flex flex-wrap gap-1" @style(['display:none' => $isDarkBackground])>
 
                                 <a href="#" class="colorswatch block h-6 w-6 rounded border border-slate-300 transition-transform hover:scale-110"
                                 style="background:#ffc60b;" data-style="accent" data-scheme="dark" data-color="ffc60b"></a>
@@ -691,34 +699,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function syncHiddenFields() {
 
-        // Read from the currently-selected style's own panel, not just
-        // "the first element in the document with this class" - with 5
-        // template partials in the DOM at once, that was silently
-        // reading whichever template happened to render first (and one
-        // of them, s1pc, doesn't even have .accent_bars/.headline_bar_bg/
-        // .headline_bar_text at all), regardless of which style was
-        // actually chosen.
-        const activeFlyer = document.querySelector('.flyer-panel.active');
-
+        // colorswatch.js/headline.js always apply a color/background/
+        // headline change to EVERY matching element across all 5 style
+        // panels at once (document.querySelectorAll, never scoped to
+        // just the active one), so these values are identical no
+        // matter which panel they're read from. Reading unscoped is
+        // not just safe here, it's required: Style 1 (s1pc) doesn't
+        // even have .accent_bars/.headline_bar_bg/.headline_bar_text
+        // elements at all, so scoping this lookup to the active panel
+        // silently failed to save colors whenever Style 1 was chosen.
         const activeBtn = document.querySelector('.flyer-btn.active');
         if (activeBtn) {
             document.getElementById('field_template').value =
                 activeBtn.dataset.target.replace(/^s/, '');
         }
 
-        const background = bgHex('.flyer_background', activeFlyer);
+        const background = bgHex('.flyer_background');
         if (background) document.getElementById('field_flyer_background').value = background;
 
-        const accent = bgHex('.accent_bars', activeFlyer);
+        const accent = bgHex('.accent_bars');
         if (accent) document.getElementById('field_accentbars').value = accent;
 
-        const headlineBarBg = bgHex('.headline_bar_bg', activeFlyer);
+        const headlineBarBg = bgHex('.headline_bar_bg');
         if (headlineBarBg) document.getElementById('field_headline_bar_bg').value = headlineBarBg;
 
-        const headlineBarText = textHex('.headline_bar_text', activeFlyer);
+        const headlineBarText = textHex('.headline_bar_text');
         if (headlineBarText) document.getElementById('field_headline_bar_text').value = headlineBarText;
 
-        const headlineText = textHex('.headline_text', activeFlyer);
+        const headlineText = textHex('.headline_text');
         if (headlineText) document.getElementById('field_headline_text').value = headlineText;
 
         // graphic_words comes straight from the select's own value - it
@@ -731,7 +739,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('field_graphic_words').value = headlineSelectEl.value;
         }
 
-        const hlGraphic = activeFlyer ? activeFlyer.querySelector('.hlGraphic') : document.querySelector('.hlGraphic');
+        const hlGraphic = document.querySelector('.hlGraphic');
         if (hlGraphic) {
             const colorMatch = hlGraphic.src.match(/_([0-9a-fA-F]{6})_/);
             if (colorMatch) document.getElementById('field_graphic_textcolor').value = colorMatch[1];
