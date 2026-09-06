@@ -700,6 +700,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // whole current design state (every field already has a valid
     // value, whether just chosen or still a default) plus which step
     // was confirmed, so the backend flips only that one _chosen flag.
+    //
+    // Each call is chained onto saveQueue so requests run strictly in
+    // click order. Without this, confirming Style then Colors then
+    // Headline fires 3 overlapping fetches, each snapshotting the
+    // WHOLE form at click time - if the Style request (snapshotted
+    // before Headline was ever touched) happens to finish after the
+    // Headline request over the network, its stale "greatbuy"/white
+    // values win and silently overwrite what was just chosen.
+    let saveQueue = Promise.resolve();
+
     function saveStepInBackground(step) {
         syncHiddenFields();
 
@@ -707,11 +717,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const data = new FormData(form);
         data.set('confirmedStep', step);
 
-        fetch(form.action, {
+        saveQueue = saveQueue.then(() => fetch(form.action, {
             method: 'POST',
             body: data,
             headers: { 'Accept': 'application/json' },
-        }).catch(err => console.error('Failed to save ' + step + ':', err));
+        })).catch(err => console.error('Failed to save ' + step + ':', err));
     }
 
     document.getElementById('designForm').addEventListener('submit', syncHiddenFields);
