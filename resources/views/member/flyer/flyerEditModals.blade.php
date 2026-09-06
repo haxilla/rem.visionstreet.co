@@ -95,6 +95,40 @@
         </form>
     </div>
 
+    {{-- MLS LINK --}}
+    <div class="flyer-modal" id="modal-mlslink" style="display:none;">
+        <div class="flyer-modal-header">
+            <span>Edit MLS Link</span>
+            <button type="button" class="flyer-modal-close" data-modal-close>&times;</button>
+        </div>
+        <form data-modal-form action="/member/flyer/save_modal_mlslink">
+            @csrf
+            <input type="hidden" name="flyerId" value="{{ $flyer->id }}">
+
+            <label>MLS Link URL</label>
+            <input type="text" name="xMlsLink" value="{{ $flyer->xMlsLink }}" placeholder="https://">
+
+            <button type="submit" class="flyer-modal-save">Save</button>
+        </form>
+    </div>
+
+    {{-- VIRTUAL TOUR --}}
+    <div class="flyer-modal" id="modal-virtualtour" style="display:none;">
+        <div class="flyer-modal-header">
+            <span>Edit Virtual Tour</span>
+            <button type="button" class="flyer-modal-close" data-modal-close>&times;</button>
+        </div>
+        <form data-modal-form action="/member/flyer/save_modal_virtualtour">
+            @csrf
+            <input type="hidden" name="flyerId" value="{{ $flyer->id }}">
+
+            <label>Virtual Tour URL</label>
+            <input type="text" name="xVirtualTour" value="{{ $flyer->xVirtualTour }}" placeholder="https://">
+
+            <button type="submit" class="flyer-modal-save">Save</button>
+        </form>
+    </div>
+
     {{-- REMARKS --}}
     <div class="flyer-modal" id="modal-remarks" style="display:none;">
         <div class="flyer-modal-header">
@@ -254,7 +288,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.querySelectorAll('[data-modal-trigger]').forEach(function (trigger) {
         trigger.style.cursor = 'pointer';
-        trigger.addEventListener('click', function () {
+        trigger.addEventListener('click', function (e) {
+            // Some triggers (MLS Link, Virtual Tour) are real <a href="#">
+            // tags so they still work as real links in email - stop the
+            // href="#" jump-to-top navigation here in screen mode.
+            e.preventDefault();
             openModal(trigger.dataset.modalTrigger);
         });
     });

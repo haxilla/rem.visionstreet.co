@@ -20,10 +20,12 @@ background-color:#f9f9f9;">
       @if($propInfo['xMlsLink'])
          <td>
             <div style="padding:7px;">
-               <a href="#"
+               <a href="@if($display=='email'){{$propInfo->xMlsLink}}@else#@endif"
                style="color:#{{$propInfo->theStyle->accentbars}};
                font-weight:bold;text-decoration:none;"
-               class="accent_text" target="_blank">
+               class="accent_text @if($display=='screen') clickable @endif"
+               @if($display=='screen') data-modal-trigger="mlslink" @endif
+               target="_blank">
                   MLS Link
                </a>
             </div>
@@ -32,10 +34,12 @@ background-color:#f9f9f9;">
       @if($propInfo['xVirtualTour'])
          <td>
             <div style="padding:7px;">
-               <a href="#"
+               <a href="@if($display=='email'){{$propInfo->xVirtualTour}}@else#@endif"
                style="color:#{{$propInfo->theStyle->accentbars}};
                font-weight:bold;text-decoration:none;"
-               class="accent_text" target="_blank">
+               class="accent_text @if($display=='screen') clickable @endif"
+               @if($display=='screen') data-modal-trigger="virtualtour" @endif
+               target="_blank">
                   Virtual Tour
                </a>
             </div>
