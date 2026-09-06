@@ -13,7 +13,7 @@ $flyer = Propflyer::select(
     'xListPrice', 'xCity', 'xState', 'xZip', 'xxZip', 'xHeadline',
     'xMlsNum', 'xBeds', 'xxBeds', 'xBaths', 'xxBaths',
     'xSqft', 'xxSqft', 'xYrBuilt', 'xxYrBuilt', 'xVirtualTour',
-    'xMlsLink', 'xxHeadline', 'wizardStep'
+    'xMlsLink', 'xxHeadline', 'wizardStep', 'url_slug'
 )
 ->where('id', $flyerId)
 ->where('propagent_id', auth()->id())

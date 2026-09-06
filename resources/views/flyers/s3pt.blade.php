@@ -100,7 +100,7 @@ data-flyerbackground="{{$propInfo->theStyle
                         <td style="width:70%;padding:0;margin:0;
                         vertical-align:top;">
                            <div style="padding:7px;padding-right:0;">
-                             <a href="#" target="_blank">
+                             <a href="@if($display=='email'){{$fromURL}}/homedetails/{{$propInfo->url_slug}}@else#@endif" target="_blank">
                                 <img src="{{$fromURL}}/hqphotos/{{$propInfo
                                 ->theMeta->zipDir}}/{{$propInfo
                                 ->theMeta->mlsDir}}/{{$propInfo
@@ -145,10 +145,11 @@ data-flyerbackground="{{$propInfo->theStyle
                                    <div style="padding-right:1.5px;
                                    box-sizing:content-box;
                                    display:inline-block;">
-                                      <a href="#" target="_blank">
+                                      <a href="@if($display=='email'){{$fromURL}}/homedetails/{{$propInfo->url_slug}}@else#@endif" target="_blank">
                                          <img src="{{$fromURL}}/hqphotos/{{$propInfo
                                           ->theMeta->zipDir}}/{{$propInfo
                                           ->theMeta->mlsDir}}/{{$the->photoName}}"
+                                         class="style3ThumbImg"
                                          style="max-width:78px;
                                          height:52px;
                                          display:block;

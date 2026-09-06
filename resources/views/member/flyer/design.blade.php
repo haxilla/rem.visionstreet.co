@@ -467,6 +467,7 @@
 
 <script src="/my/js/flyers/colorswatch.js"></script>
 <script src="/my/js/flyers/headline.js"></script>
+<script src="/my/js/flyers/photoSwap.js"></script>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {

@@ -108,7 +108,7 @@ data-flyerbackground="{{$propInfo->theStyle
                   vertical-align:top;">
                      <div style="padding:7px;
                      padding-right:10px;">
-                        <a href="#" target="_blank">
+                        <a href="@if($display=='email'){{$fromURL}}/homedetails/{{$propInfo->url_slug}}@else#@endif" target="_blank">
                            <img
                            src="{{$fromURL}}/hqphotos/{{$propInfo
                             ->theMeta->zipDir}}/{{$propInfo
@@ -152,7 +152,7 @@ data-flyerbackground="{{$propInfo->theStyle
                                     <div style="padding:2.5px;">
                                        @if($propInfo->thePhotos->sortBy('ord')->take(1)->first())
                                           @if($display==='email')
-                                             <a href="#" target="_blank">
+                                             <a href="{{$fromURL}}/homedetails/{{$propInfo->url_slug}}" target="_blank">
                                                 <img
                                                 src="{{$fromURL1}}/hqphotos/{{$propInfo
                                                   ->theMeta->zipDir}}/{{$propInfo
@@ -187,7 +187,7 @@ data-flyerbackground="{{$propInfo->theStyle
                                     ->slice(1)->take(1))
                                        <div style="padding:2.5px;">
                                           @if($display==='email')
-                                             <a href="#">
+                                             <a href="{{$fromURL}}/homedetails/{{$propInfo->url_slug}}">
                                                   <img
                                                   src="{{$fromURL}}/hqphotos/{{$propInfo
                                                   ->theMeta->zipDir}}/{{$propInfo
@@ -225,7 +225,7 @@ data-flyerbackground="{{$propInfo->theStyle
                                     ->take(1)->first())
                                        <div style="padding:2.5px;">
                                           @if($display==='email')
-                                             <a href="#" target="_blank">
+                                             <a href="{{$fromURL}}/homedetails/{{$propInfo->url_slug}}" target="_blank">
                                                 <img
                                                 src="{{$fromURL}}/hqphotos/{{$propInfo
                                                   ->theMeta->zipDir}}/{{$propInfo
@@ -261,7 +261,7 @@ data-flyerbackground="{{$propInfo->theStyle
                                     ->slice(3)->take(1)->first())
                                        <div style="padding:2.5px;">
                                           @if($display==='email')
-                                             <a href="#" target="_blank">
+                                             <a href="{{$fromURL}}/homedetails/{{$propInfo->url_slug}}" target="_blank">
                                                 <img
                                                 src="{{$fromURL}}/hqphotos/{{$propInfo
                                                   ->theMeta->zipDir}}/{{$propInfo
@@ -299,7 +299,7 @@ data-flyerbackground="{{$propInfo->theStyle
                                     ->take(1)->first())
                                        <div style="padding:2.5px;">
                                           @if($display==='email')
-                                             <a href="#" target="_blank">
+                                             <a href="{{$fromURL}}/homedetails/{{$propInfo->url_slug}}" target="_blank">
                                                 <img
                                                 src="{{$fromURL}}/hqphotos/{{$propInfo
                                                   ->theMeta->zipDir}}/{{$propInfo
@@ -335,7 +335,7 @@ data-flyerbackground="{{$propInfo->theStyle
                                     ->take(1)->first())
                                        <div style="padding:2.5px;">
                                           @if($display==='email')
-                                             <a href="#" target="_blank">
+                                             <a href="{{$fromURL}}/homedetails/{{$propInfo->url_slug}}" target="_blank">
                                                 <img
                                                 src="{{$fromURL}}/hqphotos/{{$propInfo
                                                 ->theMeta->zipDir}}/{{$propInfo
@@ -371,7 +371,7 @@ data-flyerbackground="{{$propInfo->theStyle
                                     ->take(1)->first())
                                        <div style="padding:2.5px;">
                                           @if($display==='email')
-                                             <a href="#" target="_blank">
+                                             <a href="{{$fromURL}}/homedetails/{{$propInfo->url_slug}}" target="_blank">
                                                 <img
                                                 src="{{$fromURL}}/hqphotos/{{$propInfo
                                                   ->theMeta->zipDir}}/{{$propInfo
@@ -406,7 +406,7 @@ data-flyerbackground="{{$propInfo->theStyle
                                     ->first())
                                        <div style="padding:2.5px;">
                                           @if($display==='email')
-                                             <a href="#" target="_blank">
+                                             <a href="{{$fromURL}}/homedetails/{{$propInfo->url_slug}}" target="_blank">
                                                 <img
                                                 src="{{$fromURL}}/hqphotos/{{$propInfo
                                                   ->theMeta->zipDir}}/{{$propInfo
@@ -443,7 +443,7 @@ data-flyerbackground="{{$propInfo->theStyle
                                     ->take(1)->first())
                                        <div style="padding:2.5px;">
                                           @if($display==='email')
-                                             <a href="#" target="_blank">
+                                             <a href="{{$fromURL}}/homedetails/{{$propInfo->url_slug}}" target="_blank">
                                                 <img
                                                 src="{{$fromURL}}/hqphotos/{{$propInfo
                                                   ->theMeta->zipDir}}/{{$propInfo
@@ -477,7 +477,7 @@ data-flyerbackground="{{$propInfo->theStyle
                                     ->take(1)->first())
                                        <div style="padding:2.5px;">
                                           @if($display==='email')
-                                             <a href="#" target="_blank">
+                                             <a href="{{$fromURL}}/homedetails/{{$propInfo->url_slug}}" target="_blank">
                                                 <img
                                                 src="{{$fromURL}}/hqphotos/{{$zipDir}}/{{$mlsDir}}/{{$propInfo->thePhotos
                                                   ->where('resized','=','500')
