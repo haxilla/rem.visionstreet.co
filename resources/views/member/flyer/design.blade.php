@@ -79,6 +79,24 @@
 
         </div>
 
+        @if($errors->any())
+
+            <div class="mb-8 rounded-2xl border border-red-200 bg-red-50 p-5">
+
+                <div class="font-bold text-red-700">
+                    Please correct the following:
+                </div>
+
+                <ul class="mt-3 list-disc pl-5 text-red-600">
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+
+            </div>
+
+        @endif
+
         <form id="designForm" method="POST" action="/member/flyer/save_design">
             @csrf
 
@@ -606,19 +624,28 @@ document.addEventListener('DOMContentLoaded', () => {
             .join('');
     }
 
-    function bgHex(selector) {
-        const el = document.querySelector(selector);
+    function bgHex(selector, root) {
+        const el = (root || document).querySelector(selector);
         if (!el) return null;
         return rgbToHex(getComputedStyle(el).backgroundColor);
     }
 
-    function textHex(selector) {
-        const el = document.querySelector(selector);
+    function textHex(selector, root) {
+        const el = (root || document).querySelector(selector);
         if (!el) return null;
         return rgbToHex(getComputedStyle(el).color);
     }
 
     document.getElementById('designForm').addEventListener('submit', () => {
+
+        // Read from the currently-selected style's own panel, not just
+        // "the first element in the document with this class" - with 5
+        // template partials in the DOM at once, that was silently
+        // reading whichever template happened to render first (and one
+        // of them, s1pc, doesn't even have .accent_bars/.headline_bar_bg/
+        // .headline_bar_text at all), regardless of which style was
+        // actually chosen.
+        const activeFlyer = document.querySelector('.flyer-panel.active');
 
         const activeBtn = document.querySelector('.flyer-btn.active');
         if (activeBtn) {
@@ -626,22 +653,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 activeBtn.dataset.target.replace(/^s/, '');
         }
 
-        const background = bgHex('.flyer_background');
+        const background = bgHex('.flyer_background', activeFlyer);
         if (background) document.getElementById('field_flyer_background').value = background;
 
-        const accent = bgHex('.accent_bars');
+        const accent = bgHex('.accent_bars', activeFlyer);
         if (accent) document.getElementById('field_accentbars').value = accent;
 
-        const headlineBarBg = bgHex('.headline_bar_bg');
+        const headlineBarBg = bgHex('.headline_bar_bg', activeFlyer);
         if (headlineBarBg) document.getElementById('field_headline_bar_bg').value = headlineBarBg;
 
-        const headlineBarText = textHex('.headline_bar_text');
+        const headlineBarText = textHex('.headline_bar_text', activeFlyer);
         if (headlineBarText) document.getElementById('field_headline_bar_text').value = headlineBarText;
 
-        const headlineText = textHex('.headline_text');
+        const headlineText = textHex('.headline_text', activeFlyer);
         if (headlineText) document.getElementById('field_headline_text').value = headlineText;
 
-        const hlGraphic = document.querySelector('.hlGraphic');
+        const hlGraphic = activeFlyer ? activeFlyer.querySelector('.hlGraphic') : document.querySelector('.hlGraphic');
         if (hlGraphic) {
             const wordsMatch = hlGraphic.src.match(/headline_graphics\/([^/]+)\//);
             if (wordsMatch) document.getElementById('field_graphic_words').value = wordsMatch[1];
