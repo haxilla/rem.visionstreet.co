@@ -29,6 +29,13 @@ $validatedData = $request->validate([
     'xMlsLink'     => 'nullable|string|max:255',
     'xPubRemarks'  => 'nullable|string',
 
+    'openHouseDate1'    => 'nullable|date',
+    'openHouseTime1'    => 'nullable|date_format:H:i',
+    'openHouseDate2'    => 'nullable|date',
+    'openHouseTime2'    => 'nullable|date_format:H:i',
+    'agentBonusAmount'  => 'nullable|string|max:255',
+    'agentBonusComment' => 'nullable|string|max:255',
+
 ]);
 
 $flyer = Propflyer::where('id', $validatedData['flyerId'])
@@ -53,6 +60,38 @@ $flyer->xxPoolPvt   = $validatedData['xPool'] ?? null;
 $flyer->xParking    = $validatedData['xParking'] ?? null;
 $flyer->xVirtualTour = $validatedData['xVirtualTour'] ?? null;
 $flyer->xMlsLink    = $validatedData['xMlsLink'] ?? null;
+
+$flyer->openHouseDate1    = $validatedData['openHouseDate1'] ?? null;
+$flyer->openHouseTime1    = $validatedData['openHouseTime1'] ?? null;
+$flyer->openHouseDate2    = $validatedData['openHouseDate2'] ?? null;
+$flyer->openHouseTime2    = $validatedData['openHouseTime2'] ?? null;
+$flyer->agentBonusAmount  = $validatedData['agentBonusAmount'] ?? null;
+$flyer->agentBonusComment = $validatedData['agentBonusComment'] ?? null;
+
+// Price reduction is derived, not entered directly: track the first
+// price this flyer was ever saved with, then measure every later save
+// against that baseline. reducedDate only moves forward when the
+// reduction actually grows, and clears if the price recovers back to
+// (or above) the original.
+$newPrice = $validatedData['xListPrice'] ?? null;
+
+if ($newPrice !== null) {
+    if ($flyer->xInitialListPrice === null) {
+        $flyer->xInitialListPrice = $newPrice;
+    } else {
+        $newReducedAmount = max(0, $flyer->xInitialListPrice - $newPrice);
+
+        if ($newReducedAmount > ($flyer->reducedAmount ?? 0)) {
+            $flyer->reducedDate = now()->toDateString();
+        }
+
+        $flyer->reducedAmount = $newReducedAmount > 0 ? $newReducedAmount : null;
+
+        if ($newReducedAmount <= 0) {
+            $flyer->reducedDate = null;
+        }
+    }
+}
 
 // Step 2 completed
 if (($flyer->wizardStep ?? 0) < 2) {

@@ -397,6 +397,150 @@
         </div>
 
         {{-- ========================================================= --}}
+        {{-- MARKETING HIGHLIGHTS --}}
+        {{-- ========================================================= --}}
+
+        <div class="mb-8 overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-black/5">
+
+            <div class="border-b border-slate-100 px-10 py-7">
+
+                <h2 class="text-2xl font-black text-slate-900">
+
+                    Marketing Highlights
+
+                </h2>
+
+                <p class="mt-1 text-sm text-slate-500">
+
+                    Open house times and a buyer-agent bonus, if either applies to this listing.
+
+                </p>
+
+            </div>
+
+            <div class="p-10">
+
+                <div class="grid gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-4">
+
+                    <div>
+
+                        <label class="mb-2 block text-sm font-semibold text-slate-600">
+
+                            Open House 1 &mdash; Date
+
+                        </label>
+
+                        <input
+                            type="date"
+                            name="openHouseDate1"
+                            value="{{ old('openHouseDate1',$flyer->openHouseDate1 ?? '') }}"
+                            class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-700/10">
+
+                    </div>
+
+                    <div>
+
+                        <label class="mb-2 block text-sm font-semibold text-slate-600">
+
+                            Open House 1 &mdash; Time
+
+                        </label>
+
+                        <input
+                            type="time"
+                            name="openHouseTime1"
+                            value="{{ old('openHouseTime1',$flyer->openHouseTime1 ?? '') }}"
+                            class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-700/10">
+
+                    </div>
+
+                    <div>
+
+                        <label class="mb-2 block text-sm font-semibold text-slate-600">
+
+                            Open House 2 &mdash; Date
+
+                        </label>
+
+                        <input
+                            type="date"
+                            name="openHouseDate2"
+                            value="{{ old('openHouseDate2',$flyer->openHouseDate2 ?? '') }}"
+                            class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-700/10">
+
+                    </div>
+
+                    <div>
+
+                        <label class="mb-2 block text-sm font-semibold text-slate-600">
+
+                            Open House 2 &mdash; Time
+
+                        </label>
+
+                        <input
+                            type="time"
+                            name="openHouseTime2"
+                            value="{{ old('openHouseTime2',$flyer->openHouseTime2 ?? '') }}"
+                            class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-700/10">
+
+                    </div>
+
+                </div>
+
+                <div class="mt-8 grid gap-x-8 gap-y-6 border-t border-slate-100 pt-8 sm:grid-cols-2">
+
+                    <div>
+
+                        <label class="mb-2 block text-sm font-semibold text-slate-600">
+
+                            Agent Bonus Amount
+
+                        </label>
+
+                        <input
+                            type="text"
+                            name="agentBonusAmount"
+                            value="{{ old('agentBonusAmount',$flyer->agentBonusAmount ?? '') }}"
+                            placeholder="e.g. $1,000 or 0.5%"
+                            class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-700/10">
+
+                    </div>
+
+                    <div>
+
+                        <label class="mb-2 block text-sm font-semibold text-slate-600">
+
+                            Agent Bonus Comment
+
+                        </label>
+
+                        <input
+                            type="text"
+                            name="agentBonusComment"
+                            value="{{ old('agentBonusComment',$flyer->agentBonusComment ?? '') }}"
+                            placeholder="Optional note shown with the bonus"
+                            class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-700/10">
+
+                    </div>
+
+                </div>
+
+                @if($flyer->reducedAmount)
+
+                    <div class="mt-8 rounded-2xl bg-emerald-50 px-5 py-4 text-sm font-bold text-emerald-800">
+
+                        Price reduced by ${{ number_format($flyer->reducedAmount) }}{{ $flyer->reducedDate ? ' on '.\Carbon\Carbon::parse($flyer->reducedDate)->format('m/d/Y') : '' }} &mdash; calculated automatically from the original list price.
+
+                    </div>
+
+                @endif
+
+            </div>
+
+        </div>
+
+        {{-- ========================================================= --}}
         {{-- ADDITIONAL RESOURCES --}}
         {{-- ========================================================= --}}
 
