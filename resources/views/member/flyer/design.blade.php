@@ -555,18 +555,22 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('[data-confirm]').forEach(confirmBtn => {
         confirmBtn.addEventListener('click', () => {
             const step = confirmBtn.dataset.confirm;
+            let summary = 'Chosen';
 
             if (step === 'style') {
                 const activeBtn = document.querySelector('.flyer-btn.active');
-                completeStep('style', activeBtn ? activeBtn.textContent.trim() : 'Style chosen');
+                summary = activeBtn ? activeBtn.textContent.trim() : 'Style chosen';
             } else if (step === 'colors') {
-                completeStep('colors', 'Colors selected');
+                summary = 'Colors selected';
             } else if (step === 'headline') {
                 const headlineSelect = document.getElementById('headlineSelect');
-                completeStep('headline', headlineSelect
+                summary = headlineSelect
                     ? headlineSelect.options[headlineSelect.selectedIndex].text
-                    : 'Headline chosen');
+                    : 'Headline chosen';
             }
+
+            completeStep(step, summary);
+            saveStepInBackground(step);
         });
     });
 
@@ -607,11 +611,12 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('resize', scaleFlyer);
 
     // ------------------------------------------------------------
-    // On submit, read the live-previewed choices back out of the DOM
-    // (colorswatch.js / headline.js already keep it correct) into the
-    // hidden fields that actually get saved. Anything that can't be
-    // read falls back to the value already on the hidden input, so a
-    // missing element never blanks out an existing saved value.
+    // Read the live-previewed choices back out of the DOM (colorswatch.js
+    // / headline.js already keep it correct) into the hidden fields that
+    // actually get saved. Anything that can't be read falls back to the
+    // value already on the hidden input, so a missing element never
+    // blanks out an existing saved value. Called both right before a
+    // per-step background save and on the final form submit.
     // ------------------------------------------------------------
 
     function rgbToHex(rgbString) {
@@ -636,7 +641,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return rgbToHex(getComputedStyle(el).color);
     }
 
-    document.getElementById('designForm').addEventListener('submit', () => {
+    function syncHiddenFields() {
 
         // Read from the currently-selected style's own panel, not just
         // "the first element in the document with this class" - with 5
@@ -681,8 +686,28 @@ document.addEventListener('DOMContentLoaded', () => {
         if (headlineStyleSelect) {
             document.getElementById('field_graphic_style').value = headlineStyleSelect.value;
         }
+    }
 
-    });
+    // Persists a single confirmed step right away, in the background,
+    // rather than waiting for the final "Save & Continue". Sends the
+    // whole current design state (every field already has a valid
+    // value, whether just chosen or still a default) plus which step
+    // was confirmed, so the backend flips only that one _chosen flag.
+    function saveStepInBackground(step) {
+        syncHiddenFields();
+
+        const form = document.getElementById('designForm');
+        const data = new FormData(form);
+        data.set('confirmedStep', step);
+
+        fetch(form.action, {
+            method: 'POST',
+            body: data,
+            headers: { 'Accept': 'application/json' },
+        }).catch(err => console.error('Failed to save ' + step + ':', err));
+    }
+
+    document.getElementById('designForm').addEventListener('submit', syncHiddenFields);
 
 });
 </script>

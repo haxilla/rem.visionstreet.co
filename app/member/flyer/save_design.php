@@ -14,6 +14,7 @@ $validatedData = $request->validate([
     'graphic_words'      => 'required|string|max:50',
     'graphic_style'      => 'required|string|max:20',
     'graphic_textcolor'  => 'required|string|max:6',
+    'confirmedStep'      => 'nullable|in:style,colors,headline',
 
 ]);
 
@@ -40,14 +41,36 @@ $flyer->theStyle->graphic_words      = $validatedData['graphic_words'];
 $flyer->theStyle->graphic_style      = $validatedData['graphic_style'];
 $flyer->theStyle->graphic_textcolor  = $validatedData['graphic_textcolor'];
 
-// Reaching a successful save means the member made it through all
-// three gated tabs (Style -> Colors -> Headline), since Save itself
-// stays disabled client-side until headline_chosen would be true.
-$flyer->theStyle->template_chosen  = true;
-$flyer->theStyle->colors_chosen    = true;
-$flyer->theStyle->headline_chosen  = true;
+// Each step-card's "Choose this..." button saves immediately via a
+// background request, passing which single step was just confirmed -
+// only that one flag flips here, so confirming Style doesn't also
+// mark Colors/Headline as chosen before the member has touched them.
+// The final "Save & Continue" submit (a normal navigation, no
+// confirmedStep) sets all three true as a safety fallback - by the
+// time that button is even clickable, all three should already be
+// true from the per-step saves anyway.
+$confirmedStep = $validatedData['confirmedStep'] ?? null;
+
+if ($confirmedStep === 'style') {
+    $flyer->theStyle->template_chosen = true;
+} elseif ($confirmedStep === 'colors') {
+    $flyer->theStyle->colors_chosen = true;
+} elseif ($confirmedStep === 'headline') {
+    $flyer->theStyle->headline_chosen = true;
+} else {
+    $flyer->theStyle->template_chosen = true;
+    $flyer->theStyle->colors_chosen   = true;
+    $flyer->theStyle->headline_chosen = true;
+}
 
 $flyer->theStyle->save();
+
+// A per-step confirm just needs to persist - it isn't leaving the
+// page, so there's nothing to redirect.
+if ($confirmedStep) {
+    response('OK')->send();
+    exit();
+}
 
 // Step 4 completed
 if (($flyer->wizardStep ?? 0) < 4) {
