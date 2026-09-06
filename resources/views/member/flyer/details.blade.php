@@ -355,7 +355,7 @@
         </div>
 
         {{-- ========================================================= --}}
-        {{-- PROPERTY HEADLINE --}}
+        {{-- FLYER HEADLINE --}}
         {{-- ========================================================= --}}
 
         <div class="mb-8 overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-black/5">
@@ -364,7 +364,7 @@
 
                 <h2 class="text-2xl font-black text-slate-900">
 
-                    Property Headline
+                    Flyer Headline
 
                 </h2>
 
@@ -529,13 +529,29 @@
 
             </div>
 
-            <div class="border-t border-slate-100 bg-slate-50 px-10 py-6">
+        </div>
 
-                <div class="flex items-center justify-between">
+        {{-- ========================================================= --}}
+        {{-- FORM ACTIONS - applies to every section above, not just --}}
+        {{-- Additional Resources, so it's a standalone bar rather --}}
+        {{-- than nested inside the last card. --}}
+        {{-- ========================================================= --}}
+
+        <div class="mt-2 overflow-hidden rounded-3xl bg-slate-800">
+
+            <div class="flex items-center justify-between px-10 py-6">
+
+                <p class="text-sm font-semibold text-slate-300">
+
+                    Saves everything on this page.
+
+                </p>
+
+                <div class="flex items-center gap-4">
 
                     <a
                         href="/member/dashboard"
-                        class="rounded-xl border border-slate-300 bg-white px-6 py-3 font-semibold text-slate-700 hover:bg-slate-100">
+                        class="rounded-xl border border-slate-500 px-6 py-3 font-semibold text-slate-200 hover:bg-slate-700">
 
                         Cancel
 
@@ -543,7 +559,7 @@
 
                     <button
                         type="submit"
-                        class="rounded-xl bg-blue-700 px-8 py-3 font-bold text-white hover:bg-blue-800">
+                        class="rounded-xl bg-blue-600 px-8 py-3 font-bold text-white hover:bg-blue-500">
 
                         Save &amp; Continue →
 
