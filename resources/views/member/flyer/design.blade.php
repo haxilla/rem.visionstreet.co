@@ -147,6 +147,12 @@
 
                         </div>
 
+                        <div class="mt-4">
+                            <button type="button" class="step-confirm" data-confirm="style">
+                                Choose this style
+                            </button>
+                        </div>
+
                     </div>
 
                 </div>
@@ -240,6 +246,12 @@
 
                         </div>
 
+                        <div class="mt-4">
+                            <button type="button" class="step-confirm" data-confirm="colors">
+                                Choose these colors
+                            </button>
+                        </div>
+
                     </div>
 
                 </div>
@@ -299,6 +311,12 @@
                                 </select>
                             </div>
 
+                        </div>
+
+                        <div class="mt-4">
+                            <button type="button" class="step-confirm" data-confirm="headline">
+                                Choose this headline
+                            </button>
                         </div>
 
                     </div>
@@ -416,6 +434,17 @@
         padding-top: 16px;
     }
     .step-body.hidden { display: none; }
+    .step-confirm {
+        border: none;
+        border-radius: 10px;
+        padding: 10px 18px;
+        font-size: 13px;
+        font-weight: 700;
+        color: #ffffff;
+        background: #123f91;
+        cursor: pointer;
+    }
+    .step-confirm:hover { background: #0f3274; }
 </style>
 
 <script src="/my/js/flyers/colorswatch.js"></script>
@@ -499,34 +528,29 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    document.querySelectorAll('.flyer-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            completeStep('style', btn.textContent.trim());
+    // Clicking a style/color/headline option only updates the live
+    // preview (via switchFlyer / colorswatch.js / headline.js below) -
+    // it does NOT lock the step in. Browsing through several options
+    // is fine; a step only becomes chosen when its confirm button is
+    // clicked, using whatever's currently showing in the preview.
+
+    document.querySelectorAll('[data-confirm]').forEach(confirmBtn => {
+        confirmBtn.addEventListener('click', () => {
+            const step = confirmBtn.dataset.confirm;
+
+            if (step === 'style') {
+                const activeBtn = document.querySelector('.flyer-btn.active');
+                completeStep('style', activeBtn ? activeBtn.textContent.trim() : 'Style chosen');
+            } else if (step === 'colors') {
+                completeStep('colors', 'Colors selected');
+            } else if (step === 'headline') {
+                const headlineSelect = document.getElementById('headlineSelect');
+                completeStep('headline', headlineSelect
+                    ? headlineSelect.options[headlineSelect.selectedIndex].text
+                    : 'Headline chosen');
+            }
         });
     });
-
-    document.querySelectorAll('.colorswatch').forEach(swatch => {
-        swatch.addEventListener('click', () => {
-            completeStep('colors', 'Colors selected');
-        });
-    });
-
-    const headlineSelect = document.getElementById('headlineSelect');
-    if (headlineSelect) {
-        headlineSelect.addEventListener('change', () => {
-            completeStep('headline', headlineSelect.options[headlineSelect.selectedIndex].text);
-        });
-    }
-
-    const headlineStyleSelect = document.getElementById('headlineStyle');
-    if (headlineStyleSelect) {
-        headlineStyleSelect.addEventListener('change', () => {
-            const label = headlineSelect
-                ? headlineSelect.options[headlineSelect.selectedIndex].text
-                : 'Headline set';
-            completeStep('headline', label);
-        });
-    }
 
     function switchFlyer(target) {
         document.querySelectorAll('.flyer-panel').forEach(p => p.classList.remove('active'));
