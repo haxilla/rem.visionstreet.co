@@ -68,11 +68,11 @@ data-flyerbackground="{{$propInfo->theStyle
                   </span>
                </div>
                <div class="headline_text
-               xListPrice clickable"
+               xListPrice @if($display=='screen') clickable @endif"
+               @if($display=='screen') data-modal-trigger="address" @endif
                style="font-weight:bold;font-size:12pt;">
                   ${{number_format($propInfo->xListPrice)}}
                </div>
-               @include('flyers.ajaxEdits.xListPrice')
             </td>
          </tr>
          <tr>

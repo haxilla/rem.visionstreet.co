@@ -8,10 +8,10 @@
 
 <div id="modal-overlay" class="flyer-modal-overlay" style="display:none;">
 
-    {{-- ADDRESS --}}
+    {{-- ADDRESS + PRICE (same visual block on the flyer) --}}
     <div class="flyer-modal" id="modal-address" style="display:none;">
         <div class="flyer-modal-header">
-            <span>Edit Address</span>
+            <span>Edit Address &amp; Price</span>
             <button type="button" class="flyer-modal-close" data-modal-close>&times;</button>
         </div>
         <form data-modal-form action="/member/flyer/save_modal_address">
@@ -35,6 +35,9 @@
                     <input type="text" name="xZip" value="{{ $flyer->xZip ?: $flyer->xxZip }}" maxlength="5">
                 </div>
             </div>
+
+            <label>List Price</label>
+            <input type="text" name="xListPrice" value="{{ $flyer->xListPrice }}">
 
             <button type="submit" class="flyer-modal-save">Save</button>
         </form>

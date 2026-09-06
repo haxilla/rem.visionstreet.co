@@ -8,6 +8,7 @@ $validatedData = $request->validate([
     'xCity'       => 'required|string|max:100',
     'xState'      => 'required|string|max:2',
     'xZip'        => 'required|digits:5',
+    'xListPrice'  => 'nullable|integer',
 ]);
 
 $flyer = Propflyer::where('id', $validatedData['flyerId'])
@@ -23,6 +24,31 @@ $flyer->xCity       = $validatedData['xCity'];
 $flyer->xState      = $validatedData['xState'];
 $flyer->xZip        = $validatedData['xZip'];
 $flyer->xxZip       = $validatedData['xZip'];
+$flyer->xListPrice  = $validatedData['xListPrice'] ?? null;
+
+// Same price-reduction tracking as save_details.php, since this is
+// another place xListPrice can change - without this, editing price
+// here would silently skip updating reducedAmount/reducedDate.
+$newPrice = $validatedData['xListPrice'] ?? null;
+
+if ($newPrice !== null) {
+    if ($flyer->xInitialListPrice === null) {
+        $flyer->xInitialListPrice = $newPrice;
+    } else {
+        $newReducedAmount = max(0, $flyer->xInitialListPrice - $newPrice);
+
+        if ($newReducedAmount > ($flyer->reducedAmount ?? 0)) {
+            $flyer->reducedDate = now()->toDateString();
+        }
+
+        $flyer->reducedAmount = $newReducedAmount > 0 ? $newReducedAmount : null;
+
+        if ($newReducedAmount <= 0) {
+            $flyer->reducedDate = null;
+        }
+    }
+}
+
 $flyer->save();
 
 response('OK')->send();
