@@ -10,7 +10,6 @@ $validatedData = $request->validate([
     'agtMainPhone'  => 'nullable|string|max:30',
     'officeName'     => 'nullable|string|max:150',
     'officeAddress1' => 'nullable|string|max:150',
-    'officeAddress2' => 'nullable|string|max:150',
     'officeCity'     => 'nullable|string|max:100',
     'officeState'   => 'nullable|string|in:' . implode(',', array_keys(config('usstates'))),
     'officeZip'     => 'nullable|string|max:10',
@@ -44,7 +43,6 @@ $office = $agent->theAgtOffice;
 if ($office) {
     $office->officeName     = $validatedData['officeName'] ?? null;
     $office->officeAddress1 = $validatedData['officeAddress1'] ?? null;
-    $office->officeAddress2 = $validatedData['officeAddress2'] ?? null;
     $office->officeCity     = $validatedData['officeCity'] ?? null;
     $office->officeState    = $validatedData['officeState'] ?? null;
     $office->officeZip      = $validatedData['officeZip'] ?? null;

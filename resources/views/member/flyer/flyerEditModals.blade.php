@@ -247,7 +247,6 @@
 
             <label>Office Address</label>
             <input type="text" name="officeAddress1" value="{{ $bannerOffice->officeAddress1 ?? '' }}" placeholder="Street address">
-            <input type="text" name="officeAddress2" value="{{ $bannerOffice->officeAddress2 ?? '' }}" placeholder="Suite / unit (optional)">
 
             <div class="flyer-modal-row">
                 <div>
