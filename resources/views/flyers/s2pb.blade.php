@@ -96,12 +96,12 @@ data-flyerbackground="{{$propInfo->theStyle
              class="xHeadline clickable
              headline_bar_bg headline_bar_text"
              data-headlinebarbg="{{$propInfo->theStyle->headline_bar_bg}}"
-             data-headlinebartext="{{$propInfo->theStyle->headline_bar_text}}">
+             data-headlinebartext="{{$propInfo->theStyle->headline_bar_text}}"
+             @if($display=='screen') data-modal-trigger="headlinetext" @endif>
                 <div>
                    {!! $theHeadline!!}
                 </div>
              </div>
-             @include('flyers.ajaxEdits.xHeadline')
            </td>
          </tr>
       </table>

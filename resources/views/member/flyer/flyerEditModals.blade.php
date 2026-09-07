@@ -48,6 +48,23 @@
         </form>
     </div>
 
+    {{-- HEADLINE TEXT (the wording under the headline graphic bar) --}}
+    <div class="flyer-modal" id="modal-headlinetext" style="display:none;">
+        <div class="flyer-modal-header">
+            <span>Edit Headline Wording</span>
+            <button type="button" class="flyer-modal-close" data-modal-close>&times;</button>
+        </div>
+        <form data-modal-form action="/member/flyer/save_modal_headlinetext">
+            @csrf
+            <input type="hidden" name="flyerId" value="{{ $flyer->id }}">
+
+            <label>Headline</label>
+            <input type="text" name="xHeadline" value="{{ $flyer->xHeadline ?: $flyer->xxHeadline }}" maxlength="255">
+
+            <button type="submit" class="flyer-modal-save">Save</button>
+        </form>
+    </div>
+
     {{-- MLS# --}}
     <div class="flyer-modal" id="modal-mls" style="display:none;">
         <div class="flyer-modal-header">
