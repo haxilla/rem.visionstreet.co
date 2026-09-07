@@ -90,7 +90,7 @@
             return null;
         }
 
-        return 'https://realtyrepublic.com/hqphotos/'
+        return '/hqphotos/'
             . $flyer->theMeta->zipDir . '/'
             . $flyer->theMeta->mlsDir . '/'
             . $photo->photoName;
@@ -125,49 +125,16 @@
 
 <main class="min-h-screen bg-[#f0f2f7] pt-24">
 
-    <div class="mx-auto flex w-full max-w-[1400px] gap-8 px-4 pb-16 sm:px-6 lg:px-8">
+    <div class="mx-auto w-full max-w-[1400px] px-4 pb-16 sm:px-6 lg:px-8">
 
-        {{-- DESKTOP SIDEBAR --}}
-        <aside class="sticky top-28 hidden h-fit w-[240px] shrink-0 rounded-3xl bg-white p-5 shadow-sm ring-1 ring-black/5 lg:block">
-            <nav class="space-y-2 text-sm font-bold">
-                <a href="/member/flyer/create" class="block rounded-xl px-4 py-3 text-slate-700 hover:bg-slate-100">Create New Flyer</a>
-                <a href="/member/resend-flyer" class="block rounded-xl px-4 py-3 text-slate-700 hover:bg-slate-100">Resend Flyer</a>
-                <a href="/member/campaigns" class="block rounded-xl px-4 py-3 text-slate-700 hover:bg-slate-100">Campaigns</a>
-                <a href="/member/agent-info" class="block rounded-xl px-4 py-3 text-slate-700 hover:bg-slate-100">Agent Info</a>
-                <a href="/member/account" class="block rounded-xl px-4 py-3 text-slate-700 hover:bg-slate-100">Account Info</a>
-                <a href="/logout" class="block rounded-xl px-4 py-3 text-red-600 hover:bg-red-50">Log Out</a>
-            </nav>
-        </aside>
+        <section class="min-w-0">
 
-        <section class="min-w-0 flex-1">
-
-            {{-- WELCOME / MOBILE MENU ROW --}}
-            <div class="sticky top-[72px] z-30 -mx-4 mb-6 flex items-center gap-3 bg-[#f0f2f7]/95 px-4 py-3 backdrop-blur sm:-mx-6 sm:px-6 lg:static lg:mx-0 lg:bg-transparent lg:px-0 lg:py-0 lg:backdrop-blur-0">
-                {{-- MOBILE HAMBURGER ONLY --}}
-                <details class="relative block lg:!hidden">
-                    <summary class="flex h-11 w-11 cursor-pointer list-none items-center justify-center rounded-xl bg-white text-slate-700 shadow-sm ring-1 ring-black/5">
-                        <span class="text-xl font-black leading-none">☰</span>
-                    </summary>
-
-                    <div class="absolute left-0 top-13 z-40 w-[320px] max-w-[calc(100vw-32px)] rounded-2xl bg-white p-3 shadow-xl ring-1 ring-black/10">
-                        <nav class="space-y-2 text-sm font-bold">
-                            <a href="/member/flyer/create" class="whitespace-nowrap block rounded-xl bg-slate-50 px-4 py-3 text-slate-700 hover:bg-slate-100">Create New Flyer</a>
-                            <a href="/member/resend-flyer" class="whitespace-nowrap block rounded-xl bg-slate-50 px-4 py-3 text-slate-700 hover:bg-slate-100">Resend Flyer</a>
-                            <a href="/member/campaigns" class="whitespace-nowrap block rounded-xl bg-slate-50 px-4 py-3 text-slate-700 hover:bg-slate-100">Campaigns</a>
-                            <a href="/member/agent-info" class="whitespace-nowrap block rounded-xl bg-slate-50 px-4 py-3 text-slate-700 hover:bg-slate-100">Agent Info</a>
-                            <a href="/member/account" class="whitespace-nowrap block rounded-xl bg-slate-50 px-4 py-3 text-slate-700 hover:bg-slate-100">Account Info</a>
-                            <a href="/logout" class="whitespace-nowrap block rounded-xl bg-red-50 px-4 py-3 text-red-600 hover:bg-red-100">Log Out</a>
-                        </nav>
-                    </div>
-                </details>
-
-                <div>
-                    <h1 class="text-3xl font-black text-slate-900 sm:text-4xl">Welcome Back</h1>
-                    <p class="mt-1 text-sm text-slate-500">
-                        {{ $agent->agtFullName ?? 'Member' }}
-                    </p>
-                </div>
-
+            {{-- WELCOME ROW --}}
+            <div class="mb-6">
+                <h1 class="text-3xl font-black text-slate-900 sm:text-4xl">Welcome Back</h1>
+                <p class="mt-1 text-sm text-slate-500">
+                    {{ $agent->agtFullName ?? 'Member' }}
+                </p>
             </div>
 
             {{-- UNSENT FLYERS --}}
