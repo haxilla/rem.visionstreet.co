@@ -8,6 +8,7 @@ class Propmapping extends Model
 {
 
    protected $primaryKey   = 'propflyer_id';
+   public $incrementing    = false;
 
    protected $fillable = [
     'propflyer_id',

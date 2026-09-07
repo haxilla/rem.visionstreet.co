@@ -8,6 +8,7 @@ class Propagentcleanup extends Model
 {
    protected $primaryKey   = 'propagent_id';
    protected $table        = 'propagentcleanup';
+   public $incrementing    = false;
    protected $dates        = ['agtPhotoCheck','agtLogoCheck','eidxCheck',
                               'agtUnameCheck','LicNumberCheck',
                               'EmployerLicNumberCheck'];

@@ -8,5 +8,6 @@ class Propagentmeta extends Model
 {
    protected $primaryKey   = 'propagent_id';
    protected $table        = 'remuserdb.propagentmetas';
+   public $incrementing    = false;
 
 }

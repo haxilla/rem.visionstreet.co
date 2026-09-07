@@ -8,5 +8,6 @@ class Agtoffice extends Model
 {
    protected $primaryKey   = 'propagent_id';
    protected $table        = 'remuserdb.agtoffices';
+   public $incrementing    = false;
 
 }
