@@ -4,11 +4,7 @@ padding-bottom:10px;text-decoration:underline;">
   <a href="#"
   style="text-decoration:underline;
   font-weight:bold;
-  @if($propInfo->theStyle->accentbars=='ffc60b')
-    color:#333333;
-  @else
-    color:#{{$propInfo->theStyle->accentbars}};
-  @endif" class="accent_text moreInfoLink" target="_blank" 
+  color:#{{$accentTextColor}};" class="accent_text moreInfoLink" target="_blank"
   data-accenttext="{{$propInfo->theStyle->accentbars}}">
     ...More Online
   </a>

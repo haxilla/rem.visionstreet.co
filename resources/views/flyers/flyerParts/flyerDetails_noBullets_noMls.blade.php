@@ -4,7 +4,7 @@
 @endif>
    <div class="dontScalePubRemarks" style="padding-left:13px;">
       <span class="accent_text"
-      style="font-weight:bold;color:#{{$propInfo->theStyle->accentbars}};">
+      style="font-weight:bold;color:#{{$accentTextColor}};">
          Major Cross Streets:
       </span>{{$propInfo->theMap->xIntersection}}
    </div>
@@ -19,7 +19,7 @@
       <div class="dontScalePubRemarks accent_text" style="text-align:right;
       padding:20px;padding-right:25px;">
          <a href="#"
-         style="font-weight:bold;color:#{{$propInfo->theStyle->accentbars}};
+         style="font-weight:bold;color:#{{$accentTextColor}};
          font-size:10pt;"
          class="accent_text" target="_blank">
             ...Read More Online

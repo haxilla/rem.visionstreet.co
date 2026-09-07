@@ -9,7 +9,7 @@ background-color:#f9f9f9;">
          <td>
             <div style="padding:7px;">
                <a href="#"
-               style="color:#{{$propInfo->theStyle->accentbars}};
+               style="color:#{{$accentTextColor}};
                font-weight:bold;text-decoration:none;"
                class="accent_text" target="_blank">
                   See All {{$totalPhotos}} Photos
@@ -21,7 +21,7 @@ background-color:#f9f9f9;">
          <td>
             <div style="padding:7px;">
                <a href="@if($display=='email'){{$propInfo->xMlsLink}}@else#@endif"
-               style="color:#{{$propInfo->theStyle->accentbars}};
+               style="color:#{{$accentTextColor}};
                font-weight:bold;text-decoration:none;"
                class="accent_text @if($display=='screen') clickable @endif"
                @if($display=='screen') data-modal-trigger="mlslink" @endif
@@ -35,7 +35,7 @@ background-color:#f9f9f9;">
          <td>
             <div style="padding:7px;">
                <a href="@if($display=='email'){{$propInfo->xVirtualTour}}@else#@endif"
-               style="color:#{{$propInfo->theStyle->accentbars}};
+               style="color:#{{$accentTextColor}};
                font-weight:bold;text-decoration:none;"
                class="accent_text @if($display=='screen') clickable @endif"
                @if($display=='screen') data-modal-trigger="virtualtour" @endif

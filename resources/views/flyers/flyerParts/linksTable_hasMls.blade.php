@@ -9,7 +9,7 @@ margin-top:0;margin-bottom:0;">
          <div style="float:left;font-size:12pt;">
             <div style="padding:7px;display:inline-block">
                <div>
-                  <span style="color:#{{$propInfo->theStyle->accentbars}};
+                  <span style="color:#{{$accentTextColor}};
                   font-weight:bold;text-decoration:none;"
                   class="accent_text">
                      MLS#:
@@ -23,7 +23,7 @@ margin-top:0;margin-bottom:0;">
             @if($propInfo['xVirtualTour'])
                <div style="padding:7px;display:inline-block;">
                   <a href="#"
-                  style="color:#{{$propInfo->theStyle->accentbars}};
+                  style="color:#{{$accentTextColor}};
                   font-weight:bold;text-decoration:none;
                   font-size:10pt;"
                   class="accent_text" target="_blank">
@@ -34,7 +34,7 @@ margin-top:0;margin-bottom:0;">
             @if($propInfo['xMlsLink'])
                <div style="padding:7px;display:inline-block;">
                   <a href="#"
-                  style="color:#{{$propInfo->theStyle->accentbars}};
+                  style="color:#{{$accentTextColor}};
                   font-weight:bold;text-decoration:none;font-size:10pt;"
                   class="accent_text" target="_blank">
                      <u>MLS Link</u>

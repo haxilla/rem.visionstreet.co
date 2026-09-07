@@ -8,7 +8,7 @@ padding-right:10px;">
     border-radius:5px;" class="accent_border">
       <a href="#"
       style="font-weight:bold;text-decoration:none;
-      color:#{{$propInfo->theStyle->accentbars}};
+      color:#{{$accentTextColor}};
       font-size:12pt;"
       class="accent_text"
       target="_blank">

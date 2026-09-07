@@ -2,17 +2,17 @@
    <div style="padding-left:13px;">
       @if($propInfo->xMlsNum)
          <span class="accent_text"
-         style="color:#{{$propInfo->theStyle->accentbars}};
+         style="color:#{{$accentTextColor}};
          font-weight:bold;">MLS#:</span> {{$propInfo->xMlsNum}}
       @else
          <span class="accent_text"
-         style="color:#{{$propInfo->theStyle->accentbars}};
+         style="color:#{{$accentTextColor}};
          font-weight:bold;">MLS#:</span> {{$propInfo->xxMlsNum}}
       @endif
    </div>
    <div style="padding-left:13px;padding-top:20px;">
       <span class="accent_text"
-      style="font-weight:bold;color:#{{$propInfo->theStyle->accentbars}};">
+      style="font-weight:bold;color:#{{$accentTextColor}};">
          Major Cross Streets:
       </span>{{$propInfo->theMap->xIntersection}}
    </div>
@@ -26,7 +26,7 @@
       <div class="dontScalePubRemarks accent_text" style="text-align:right;
       padding:20px;padding-right:25px;">
          <a href="#"
-         style="font-weight:bold;color:#{{$propInfo->theStyle->accentbars}}"
+         style="font-weight:bold;color:#{{$accentTextColor}}"
          class="accent_text" target="_blank">
             <u>...Read More Online</u>
          </a>

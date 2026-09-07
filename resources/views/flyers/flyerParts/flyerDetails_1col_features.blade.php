@@ -9,7 +9,7 @@
       @if($propInfo->xMlsNum)
          <span class="accent_text"
          style="font-weight:bold;
-         color:#{{$propInfo->theStyle->accentbars}}">
+         color:#{{$accentTextColor}}">
             MLS#:
          </span>
          <span class="xMlsNum">
@@ -18,7 +18,7 @@
       @else
          <span class="accent_text"
          style="font-weight:bold;
-         color:#{{$propInfo->theStyle->accentbars}}">
+         color:#{{$accentTextColor}}">
             Not in MLS
          </span>
       @endif
@@ -33,7 +33,7 @@
    @if($display=='screen') data-modal-trigger="crossstreets" @endif
    style="padding-left:13px;padding-top:20px;">
       <span class="accent_text"
-      style="font-weight:bold;color:#{{$propInfo->theStyle->accentbars}}">
+      style="font-weight:bold;color:#{{$accentTextColor}}">
          Major Cross Streets:
       </span> {{$propInfo->theMap->xIntersection}}
    </div>
@@ -50,7 +50,7 @@
       <div style="text-align:right;padding:20px;
       padding-right:25px;">
          <a href="#"
-            style="color:#{{$propInfo->theStyle->accentbars}};font-weight:bold;
+            style="color:#{{$accentTextColor}};font-weight:bold;
             font-size:10pt;" target="_blank"
             class="accent_text"
             data-accenttext="{{$propInfo->theStyle->accentbars}}">

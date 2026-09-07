@@ -11,7 +11,7 @@ border-bottom:1px solid #eeeeee;"
       <td>
          <div style="padding:7px;">
             <div style="">
-               <span style="color:#{{$propInfo->theStyle->accentbars}};
+               <span style="color:#{{$accentTextColor}};
                font-weight:bold;text-decoration:none;"
                class="accent_text">
                   MLS#:
@@ -24,7 +24,7 @@ border-bottom:1px solid #eeeeee;"
          <td>
             <div style="padding:7px;">
                <a href="{{URL::route('public.pubMlsLink',['enc'=>$enc,])}}"
-               style="color:#{{$propInfo->theStyle->accentbars}};
+               style="color:#{{$accentTextColor}};
                font-weight:bold;text-decoration:none;"
                class="accent_text" target="_blank">
                   <u>MLS Link</u>
@@ -36,7 +36,7 @@ border-bottom:1px solid #eeeeee;"
          <td>
             <div style="padding:7px;">
                <a href="{{URL::route('public.pubVtour',['enc'=>$enc,])}}"
-               style="color:#{{$propInfo->theStyle->accentbars}};
+               style="color:#{{$accentTextColor}};
                font-weight:bold;text-decoration:none;"
                class="accent_text" target="_blank">
                   <u>Virtual Tour</u>

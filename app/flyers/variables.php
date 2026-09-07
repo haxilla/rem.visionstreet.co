@@ -25,3 +25,16 @@ if(!$theHeadline){
 $agentInfo=$propInfo->theAgent;
 $officeInfo=$propInfo->theOffice;
 
+// The accent color is used directly as a TEXT color in several places
+// (photo/MLS/virtual-tour links, bullet separators, etc.) whose own
+// background is always light regardless of the flyer's overall
+// background theme - a pale accent (near-white, light yellow) reads
+// as invisible there. Fall back to a dark neutral for those specific
+// colors instead of the raw accent hex, matching the same set
+// colorswatch.js already treats as "too pale for text" on click.
+$accentbars = $propInfo->theStyle->accentbars;
+$paleAccents = ['ffffff', 'eeeeee', 'ffffcc', 'ffc60b'];
+$accentTextColor = in_array(strtolower((string) $accentbars), $paleAccents, true)
+    ? '333333'
+    : $accentbars;
+
