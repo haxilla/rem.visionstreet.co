@@ -418,6 +418,15 @@
     .flyer-modal-narrow {
         flex: 0 0 70px !important;
     }
+    .flyer-modal-error {
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        color: #b91c1c;
+        border-radius: 8px;
+        padding: 8px 10px;
+        font-size: 13px;
+        font-weight: 600;
+    }
     .flyer-modal-save {
         margin-top: 4px;
         border: none;
@@ -504,6 +513,16 @@ document.addEventListener('DOMContentLoaded', function () {
         if (e.target === overlay) closeModal();
     });
 
+    function showModalError(form, message) {
+        var box = form.querySelector('.flyer-modal-error');
+        if (!box) {
+            box = document.createElement('div');
+            box.className = 'flyer-modal-error';
+            form.insertBefore(box, form.querySelector('.flyer-modal-save'));
+        }
+        box.textContent = message;
+    }
+
     document.querySelectorAll('[data-modal-form]').forEach(function (form) {
         form.addEventListener('submit', function (e) {
             e.preventDefault();
@@ -511,21 +530,38 @@ document.addEventListener('DOMContentLoaded', function () {
             var saveBtn = form.querySelector('.flyer-modal-save');
             if (saveBtn) saveBtn.disabled = true;
 
+            var existingError = form.querySelector('.flyer-modal-error');
+            if (existingError) existingError.remove();
+
             fetch(form.getAttribute('action'), {
                 method: 'POST',
                 body: new FormData(form),
                 headers: { 'Accept': 'application/json' },
             })
                 .then(function (response) {
-                    if (!response.ok) throw new Error('Save failed: ' + response.status);
-                    // Reload so the flyer preview reflects the change -
-                    // simplest way to stay correct across all 5
-                    // differently-structured templates without needing
-                    // to know how to patch each one's DOM by hand.
-                    window.location.reload();
+                    if (response.ok) {
+                        // Reload so the flyer preview reflects the change -
+                        // simplest way to stay correct across all 5
+                        // differently-structured templates without needing
+                        // to know how to patch each one's DOM by hand.
+                        window.location.reload();
+                        return;
+                    }
+
+                    return response.json().catch(function () {
+                        return {};
+                    }).then(function (data) {
+                        var messages = data.errors
+                            ? Object.values(data.errors).flat()
+                            : [data.message || ('Save failed: ' + response.status)];
+
+                        showModalError(form, messages.join(' '));
+                        if (saveBtn) saveBtn.disabled = false;
+                    });
                 })
                 .catch(function (err) {
                     console.error('Modal save failed:', err);
+                    showModalError(form, 'Save failed. Please try again.');
                     if (saveBtn) saveBtn.disabled = false;
                 });
         });
