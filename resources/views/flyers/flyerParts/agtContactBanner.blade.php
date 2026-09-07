@@ -57,7 +57,7 @@ font-family:arial;@if($display=='screen') cursor:pointer;@endif"
             {{ $agentInfo->agtDesigs}}
           </div>
         </div>
-        <div style="font-weight:bold;font-size:9pt;" id="bannerOfficeName">
+        <div style="font-weight:bold;font-size:10pt;" id="bannerOfficeName">
           {{ $officeInfo->officeName }}
         </div>
         <div id="bannerOfficeAddress">
@@ -106,18 +106,12 @@ font-family:arial;@if($display=='screen') cursor:pointer;@endif"
         <div style="padding-bottom:10px;">
           <img
             src="{{ $fromURL }}/images/flyerimages/realtorlogo.gif"
-            class="flyerIcons"
-            @if($display=='email')
-              style="max-height:30px;"
-            @endif>
+            style="max-height:30px;">
         </div>
         <div>
           <img
             src="{{ $fromURL }}/images/flyerimages/fairhousing.gif"
-            class="flyerIcons"
-            @if($display=='email')
-              style="max-height:30px;"
-            @endif>
+            style="max-height:30px;">
         </div>
       </div>
     </td>
