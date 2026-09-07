@@ -50,14 +50,14 @@ font-family:arial;@if($display=='screen') cursor:pointer;@endif"
         font-size:10pt;">
       <div>
         <div>
-          <div style="display:inline-block;font-weight:bold;" id="bannerAgtFullName">
+          <div style="display:inline-block;font-weight:bold;font-size:13pt;" id="bannerAgtFullName">
             {{ $agentInfo->agtFullName }}
           </div>
           <div style="display:inline-block;font-size:8pt;padding-left:5px;" id="bannerAgtDesigs">
             {{ $agentInfo->agtDesigs}}
           </div>
         </div>
-        <div style="font-weight:bold;" id="bannerOfficeName">
+        <div style="font-weight:bold;font-size:9pt;" id="bannerOfficeName">
           {{ $officeInfo->officeName }}
         </div>
         <div id="bannerOfficeAddress">
