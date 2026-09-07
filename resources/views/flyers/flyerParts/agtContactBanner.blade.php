@@ -61,7 +61,10 @@ font-family:arial;@if($display=='screen') cursor:pointer;@endif"
           {{ $officeInfo->officeName }}
         </div>
         <div id="bannerOfficeAddress">
-          {{ $officeInfo->officeAddress }}
+          {{ $officeInfo->officeAddress1 }}
+          @if($officeInfo->officeAddress2)
+            {{ $officeInfo->officeAddress2 }}
+          @endif
         </div>
         <div>
           <div style="display:inline-block;"

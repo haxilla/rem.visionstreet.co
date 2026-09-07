@@ -8,9 +8,10 @@ $validatedData = $request->validate([
     'agtFullName'   => 'nullable|string|max:100',
     'agtDesigs'     => 'nullable|string|max:100',
     'agtMainPhone'  => 'nullable|string|max:30',
-    'officeName'    => 'nullable|string|max:150',
-    'officeAddress' => 'nullable|string|max:150',
-    'officeCity'    => 'nullable|string|max:100',
+    'officeName'     => 'nullable|string|max:150',
+    'officeAddress1' => 'nullable|string|max:150',
+    'officeAddress2' => 'nullable|string|max:150',
+    'officeCity'     => 'nullable|string|max:100',
     'officeState'   => 'nullable|string|in:' . implode(',', array_keys(config('usstates'))),
     'officeZip'     => 'nullable|string|max:10',
     'agtPhotoFile'  => 'nullable|image|max:5120',
@@ -41,11 +42,12 @@ if ($request->hasFile('agtPhotoFile')) {
 $office = $agent->theAgtOffice;
 
 if ($office) {
-    $office->officeName    = $validatedData['officeName'] ?? null;
-    $office->officeAddress = $validatedData['officeAddress'] ?? null;
-    $office->officeCity    = $validatedData['officeCity'] ?? null;
-    $office->officeState   = $validatedData['officeState'] ?? null;
-    $office->officeZip     = $validatedData['officeZip'] ?? null;
+    $office->officeName     = $validatedData['officeName'] ?? null;
+    $office->officeAddress1 = $validatedData['officeAddress1'] ?? null;
+    $office->officeAddress2 = $validatedData['officeAddress2'] ?? null;
+    $office->officeCity     = $validatedData['officeCity'] ?? null;
+    $office->officeState    = $validatedData['officeState'] ?? null;
+    $office->officeZip      = $validatedData['officeZip'] ?? null;
 }
 
 if ($office && $request->hasFile('agtLogoFile')) {
