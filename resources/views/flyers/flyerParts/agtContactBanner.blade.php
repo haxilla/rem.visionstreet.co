@@ -1,8 +1,11 @@
 
 @php
 $agentImg = null;
-if (!empty($agentInfo->agtPhoto) && !empty($agentInfo->theAgentCleanup?->newRemID)) {
-    $agentImg = "{$fromURL}/agentPhotos/{$agentInfo->theAgentCleanup->newRemID}/{$agentInfo->agtPhoto}";
+if (!empty($agentInfo->agtPhoto)) {
+    $agentPhotoPath = public_path("agentPhotos/{$agentInfo->photoToken()}/{$agentInfo->agtPhoto}");
+    if (file_exists($agentPhotoPath)) {
+        $agentImg = "{$fromURL}/agentPhotos/{$agentInfo->photoToken()}/{$agentInfo->agtPhoto}";
+    }
 }
 $officeLogo="{$fromURL}/officeLogos/{$officeInfo->officeID}/{$agentInfo->agtLogo}";
 @endphp
