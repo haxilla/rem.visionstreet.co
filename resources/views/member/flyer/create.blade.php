@@ -149,17 +149,20 @@ $flyer = $data['flyer'] ?? null;
                         <div>
 
                             <label class="mb-2 block text-sm font-bold text-slate-700">
-                                State <span class="text-slate-400">(2-letter abbreviation)</span>
+                                State
                             </label>
 
-                            <input
-                                type="text"
+                            <select
                                 name="xState"
-                                value="{{ old('xState', $flyer->xState ?? '') }}"
-                                maxlength="2"
-                                class="w-full rounded-2xl border border-slate-300 px-4 py-3 uppercase"
+                                class="w-full rounded-2xl border border-slate-300 px-4 py-3"
                                 required
                             >
+                                <option value="">Select state</option>
+                                @php $selectedState = old('xState', $flyer->xState ?? ''); @endphp
+                                @foreach(config('usstates') as $abbr => $name)
+                                    <option value="{{ $abbr }}" @selected($selectedState === $abbr)>{{ $name }}</option>
+                                @endforeach
+                            </select>
 
                         </div>
 
