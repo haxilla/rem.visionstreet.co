@@ -59,7 +59,7 @@
             <input type="hidden" name="flyerId" value="{{ $flyer->id }}">
 
             <label>Headline</label>
-            <input type="text" name="xHeadline" value="{{ $flyer->xHeadline ?: $flyer->xxHeadline }}" maxlength="255">
+            <textarea name="xHeadline" rows="3" maxlength="255">{{ $flyer->xHeadline ?: $flyer->xxHeadline }}</textarea>
 
             <button type="submit" class="flyer-modal-save">Save</button>
         </form>
