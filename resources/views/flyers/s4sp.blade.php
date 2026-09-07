@@ -160,7 +160,7 @@ data-flyerbackground="{{$propInfo->theStyle
                margin:0;">
                <tr>
                   <td style="width:33%;margin:0;padding:0;">
-                     <div style="padding:5px;">
+                     <div style="padding:5px;background-color:#ffffff;">
                         @foreach($propInfo->thePhotos
                         ->where('resized','=','500')
                         ->sortByDesc('def')
@@ -170,19 +170,16 @@ data-flyerbackground="{{$propInfo->theStyle
                               <img src="{{$fromURL}}/hqphotos/{{$propInfo
                                 ->theMeta->zipDir}}/{{$propInfo
                                 ->theMeta->mlsDir}}/{{$ps->photoName}}"
-                              style="@if($ps->orient=='wide')
-                                width:100%;
-                              @else
-                                max-width:100%;
-                              @endif
-                                display:block;
-                                height:130px;">
+                              style="width:100%;
+                                height:130px;
+                                object-fit:cover;
+                                display:block;">
                            </a>
                         @endforeach
                      </div>
                   </td>
                   <td style="width:33%;margin:0;padding:0;">
-                     <div style="padding:5px;">
+                     <div style="padding:5px;background-color:#ffffff;">
                         @foreach($propInfo->thePhotos
                         ->where('resized','=','500')
                         ->sortByDesc('def')
@@ -192,19 +189,16 @@ data-flyerbackground="{{$propInfo->theStyle
                               <img src="{{$fromURL}}/hqphotos/{{$propInfo
                               ->theMeta->zipDir}}/{{$propInfo
                               ->theMeta->mlsDir}}/{{$ps->photoName}}"
-                              style="@if($ps->orient=='wide')
-                                width:100%;
-                              @else
-                                max-width:100%;
-                              @endif
-                                display:block;
-                                height:130px;">
+                              style="width:100%;
+                                height:130px;
+                                object-fit:cover;
+                                display:block;">
                            </a>
                         @endforeach
                      </div>
                   </td>
                   <td style="width:33%;padding:0;">
-                     <div style="padding:5px;">
+                     <div style="padding:5px;background-color:#ffffff;">
                         @foreach($propInfo->thePhotos
                         ->where('resized','=','500')
                         ->sortByDesc('def')
@@ -214,13 +208,10 @@ data-flyerbackground="{{$propInfo->theStyle
                               <img src="{{$fromURL}}/hqphotos/{{$propInfo
                               ->theMeta->zipDir}}/{{$propInfo
                               ->theMeta->mlsDir}}/{{$ps->photoName}}"
-                              style="@if($ps->orient=='wide')
-                                width:100%;
-                              @else
-                                max-width:100%;
-                              @endif
-                                display:block;
-                                height:130px;">
+                              style="width:100%;
+                                height:130px;
+                                object-fit:cover;
+                                display:block;">
                            </a>
                         @endforeach
                      </div>
