@@ -6,7 +6,40 @@
      rendered directly from $flyer server-side, so no JS is needed to
      populate them. --}}
 
+@php
+    $photoPickerZipDir = $flyer->theMeta->zipDir ?? null;
+    $photoPickerMlsDir = $flyer->theMeta->mlsDir ?? null;
+
+    require_once app_path('member/photo/photoList.php');
+
+    $photoPickerPhotos = collect(getPhotoListForFlyer($flyer->id))
+        ->map(function ($p) use ($photoPickerZipDir, $photoPickerMlsDir) {
+            $p['url'] = ($photoPickerZipDir && $photoPickerMlsDir)
+                ? "/hqphotos/{$photoPickerZipDir}/{$photoPickerMlsDir}/{$p['photoName']}"
+                : null;
+            return $p;
+        })
+        ->values();
+@endphp
+
 <div id="modal-overlay" class="flyer-modal-overlay" style="display:none;">
+
+    {{-- PHOTO PICKER (used by every clickable photo slot across all 5
+         styles - clicking a photo already on the flyer opens this to
+         choose a replacement from every photo uploaded for this
+         flyer. Picking a photo already assigned to another slot swaps
+         the two, which doubles as reordering - no separate drag/drop
+         mechanism needed. Never appears in email; the underlying
+         photo order this changes is the same order email uses too. --}}
+    <div class="flyer-modal" id="modal-photopicker" style="display:none;">
+        <div class="flyer-modal-header">
+            <span>Choose a Photo</span>
+            <button type="button" class="flyer-modal-close" data-modal-close>&times;</button>
+        </div>
+        <div style="padding:20px;">
+            <div id="photoPickerGrid" class="photo-picker-grid"></div>
+        </div>
+    </div>
 
     {{-- ADDRESS + PRICE (same visual block on the flyer) --}}
     <div class="flyer-modal" id="modal-address" style="display:none;">
@@ -308,7 +341,50 @@
 
 </div>
 
+<script id="photoPickerData" type="application/json">{!! $photoPickerPhotos->toJson() !!}</script>
+
 <style>
+    #modal-photopicker {
+        max-width: 640px;
+    }
+    .photo-picker-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+        gap: 10px;
+    }
+    .photo-picker-thumb {
+        position: relative;
+        cursor: pointer;
+        border-radius: 10px;
+        overflow: hidden;
+        border: 3px solid transparent;
+        aspect-ratio: 1 / 1;
+    }
+    .photo-picker-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+    .photo-picker-thumb:hover {
+        border-color: #123f91;
+    }
+    .photo-picker-thumb.current {
+        border-color: #16a34a;
+    }
+    .photo-picker-thumb.current::after {
+        content: "Current";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: #16a34a;
+        color: #fff;
+        font-size: 11px;
+        font-weight: 700;
+        text-align: center;
+        padding: 2px 0;
+    }
     .flyer-modal-overlay {
         position: fixed;
         inset: 0;
@@ -493,6 +569,70 @@ document.addEventListener('DOMContentLoaded', function () {
         overlay.style.display = 'none';
     }
 
+    // ------------------------------------------------------------
+    // Photo picker: clicking any photo already on the flyer opens
+    // this with every photo uploaded for the flyer. Picking a
+    // different one swaps places with whatever's currently in that
+    // slot (by ord, grouped across resize variants server-side) -
+    // picking a photo that's already showing in another slot swaps
+    // the two, which doubles as reordering without a separate
+    // drag/drop mechanism.
+    // ------------------------------------------------------------
+
+    const flyerPhotosData = document.getElementById('photoPickerData');
+    const flyerPhotos = flyerPhotosData ? JSON.parse(flyerPhotosData.textContent) : [];
+    const photoCsrfMeta = document.querySelector('meta[name="csrf-token"]');
+    const photoCsrfToken = photoCsrfMeta ? photoCsrfMeta.content : '';
+
+    let pickerSlotPhotoID = null;
+
+    function renderPhotoPicker() {
+        const grid = document.getElementById('photoPickerGrid');
+        if (!grid) return;
+
+        grid.innerHTML = '';
+
+        flyerPhotos.forEach(function (photo) {
+            const thumb = document.createElement('div');
+            const isCurrent = String(photo.photoID) === String(pickerSlotPhotoID);
+
+            thumb.className = 'photo-picker-thumb' + (isCurrent ? ' current' : '');
+            thumb.innerHTML = '<img src="' + photo.url + '" alt="">';
+
+            thumb.addEventListener('click', function () {
+                if (isCurrent) {
+                    closeModal();
+                    return;
+                }
+
+                fetch('/member/photo/swap', {
+                    method: 'POST',
+                    headers: { 'X-CSRF-TOKEN': photoCsrfToken },
+                    body: (function () {
+                        const data = new FormData();
+                        data.append('flyerId', '{{ $flyer->id }}');
+                        data.append('slotPhotoID', pickerSlotPhotoID);
+                        data.append('newPhotoID', photo.photoID);
+                        return data;
+                    })(),
+                })
+                    .then(function (response) { return response.json(); })
+                    .then(function (data) {
+                        if (!data.success) {
+                            alert(data.message || 'Unable to swap photo.');
+                            return;
+                        }
+                        window.location.reload();
+                    })
+                    .catch(function () {
+                        alert('Unable to swap photo.');
+                    });
+            });
+
+            grid.appendChild(thumb);
+        });
+    }
+
     document.querySelectorAll('[data-modal-trigger]').forEach(function (trigger) {
         trigger.style.cursor = 'pointer';
         trigger.addEventListener('click', function (e) {
@@ -500,6 +640,12 @@ document.addEventListener('DOMContentLoaded', function () {
             // tags so they still work as real links in email - stop the
             // href="#" jump-to-top navigation here in screen mode.
             e.preventDefault();
+
+            if (trigger.dataset.modalTrigger === 'photopicker') {
+                pickerSlotPhotoID = trigger.dataset.slotPhotoId;
+                renderPhotoPicker();
+            }
+
             openModal(trigger.dataset.modalTrigger);
         });
     });

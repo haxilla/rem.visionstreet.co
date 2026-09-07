@@ -164,7 +164,7 @@ data-flyerbackground="{{$propInfo->theStyle
                                                 height:45px;display:block;">
                                              </a>
                                           @else
-                                             <a href="#">
+                                             <a href="#" data-modal-trigger="photopicker" data-slot-photo-id="{{$propInfo->thePhotos->where('resized','=','500')->sortBy('ord')->take(1)->first()->photoID}}">
                                                 <img
                                                 src="{{$fromURL}}/hqphotos/{{$propInfo
                                                   ->theMeta->zipDir}}/{{$propInfo
@@ -200,7 +200,7 @@ data-flyerbackground="{{$propInfo->theStyle
                                                   display:block;">
                                              </a>
                                           @else
-                                             <a href="#">
+                                             <a href="#" data-modal-trigger="photopicker" data-slot-photo-id="{{$propInfo->thePhotos->where('resized','=','500')->sortBy('ord')->slice(1)->take(1)->first()->photoID}}">
                                                 <img
                                                 src="{{$fromURL}}/hqphotos/{{$propInfo
                                                   ->theMeta->zipDir}}/{{$propInfo
@@ -238,7 +238,7 @@ data-flyerbackground="{{$propInfo->theStyle
                                                 display:block;">
                                              </a>
                                           @else
-                                             <a href="#">
+                                             <a href="#" data-modal-trigger="photopicker" data-slot-photo-id="{{$propInfo->thePhotos->where('resized','=','500')->sortBy('ord')->slice(2)->take(1)->first()->photoID}}">
                                                 <img
                                                 src="{{$fromURL}}/hqphotos/{{$propInfo
                                                   ->theMeta->zipDir}}/{{$propInfo
@@ -274,7 +274,7 @@ data-flyerbackground="{{$propInfo->theStyle
                                                 display:block;">
                                              </a>
                                           @else
-                                             <a href="#">
+                                             <a href="#" data-modal-trigger="photopicker" data-slot-photo-id="{{$propInfo->thePhotos->where('resized','=','500')->sortBy('ord')->slice(3)->take(1)->first()->photoID}}">
                                                 <img
                                                 src="{{$fromURL}}/hqphotos/{{$propInfo
                                                   ->theMeta->zipDir}}/{{$propInfo
@@ -312,7 +312,7 @@ data-flyerbackground="{{$propInfo->theStyle
                                                 display:block;">
                                              </a>
                                           @else
-                                             <a href="#">
+                                             <a href="#" data-modal-trigger="photopicker" data-slot-photo-id="{{$propInfo->thePhotos->where('resized','=','500')->sortBy('ord')->slice(4)->take(1)->first()->photoID}}">
                                                 <img
                                                 src="{{$fromURL}}/hqphotos/{{$propInfo
                                                   ->theMeta->zipDir}}/{{$propInfo
@@ -347,7 +347,7 @@ data-flyerbackground="{{$propInfo->theStyle
                                                 display:block;">
                                              </a>
                                           @else
-                                             <a href="#">
+                                             <a href="#" data-modal-trigger="photopicker" data-slot-photo-id="{{$propInfo->thePhotos->where('resized','=','500')->sortBy('ord')->slice(5)->take(1)->first()->photoID}}">
                                                 <img
                                                 src="{{$fromURL}}/hqphotos/{{$propInfo
                                                 ->theMeta->zipDir}}/{{$propInfo
@@ -384,7 +384,7 @@ data-flyerbackground="{{$propInfo->theStyle
                                                 display:block;">
                                              </a>
                                           @else
-                                             <a href="#">
+                                             <a href="#" data-modal-trigger="photopicker" data-slot-photo-id="{{$propInfo->thePhotos->where('resized','=','500')->sortBy('ord')->slice(6)->take(1)->first()->photoID}}">
                                                 <img
                                                 src="{{$fromURL}}/hqphotos/{{$propInfo
                                                   ->theMeta->zipDir}}/{{$propInfo
@@ -418,7 +418,7 @@ data-flyerbackground="{{$propInfo->theStyle
                                                 display:block;">
                                              </a>
                                           @else
-                                             <a href="#">
+                                             <a href="#" data-modal-trigger="photopicker" data-slot-photo-id="{{$propInfo->thePhotos->where('resized','=','500')->sortBy('ord')->slice(7)->take(1)->first()->photoID}}">
                                                 <img
                                                 src="{{$fromURL}}/hqphotos/{{$propInfo
                                                   ->theMeta->zipDir}}/{{$propInfo
@@ -447,7 +447,7 @@ data-flyerbackground="{{$propInfo->theStyle
                                                   ->theMeta->zipDir}}/{{$propInfo
                                                   ->theMeta->mlsDir}}/{{$propInfo->thePhotos
                                                     ->where('resized','=','500')
-                                                   ->sortby('ord')
+                                                   ->sortBy('ord')
                                                    ->slice(8)->take(1)
                                                    ->first()->photoName}}"
                                                 class="style5ThumbImg"
@@ -455,13 +455,13 @@ data-flyerbackground="{{$propInfo->theStyle
                                                 display:block;">
                                              </a>
                                           @else
-                                             <a href="#">
+                                             <a href="#" data-modal-trigger="photopicker" data-slot-photo-id="{{$propInfo->thePhotos->where('resized','=','500')->sortBy('ord')->slice(8)->take(1)->first()->photoID}}">
                                                 <img
                                                 src="{{$fromURL}}/hqphotos/{{$propInfo
                                                   ->theMeta->zipDir}}/{{$propInfo
                                                   ->theMeta->mlsDir}}/{{$propInfo->thePhotos
                                                     ->where('resized','=','500')
-                                                   ->sortby('ord')
+                                                   ->sortBy('ord')
                                                    ->slice(8)->take(1)
                                                    ->first()->photoName}}"
                                                 class="style5ThumbImg">
@@ -477,7 +477,9 @@ data-flyerbackground="{{$propInfo->theStyle
                                           @if($display==='email')
                                              <a href="{{$fromURL}}/homedetails/{{$propInfo->url_slug}}" target="_blank">
                                                 <img
-                                                src="{{$fromURL}}/hqphotos/{{$zipDir}}/{{$mlsDir}}/{{$propInfo->thePhotos
+                                                src="{{$fromURL}}/hqphotos/{{$propInfo
+                                                  ->theMeta->zipDir}}/{{$propInfo
+                                                  ->theMeta->mlsDir}}/{{$propInfo->thePhotos
                                                   ->where('resized','=','500')
                                                    ->sortBy('ord')
                                                    ->slice(9)->take(1)
@@ -487,7 +489,7 @@ data-flyerbackground="{{$propInfo->theStyle
                                                 display:block;">
                                              </a>
                                           @else
-                                             <a href="#">
+                                             <a href="#" data-modal-trigger="photopicker" data-slot-photo-id="{{$propInfo->thePhotos->where('resized','=','500')->sortBy('ord')->slice(9)->take(1)->first()->photoID}}">
                                                 <img
                                                 src="{{$fromURL}}/hqphotos/{{$propInfo
                                                   ->theMeta->zipDir}}/{{$propInfo

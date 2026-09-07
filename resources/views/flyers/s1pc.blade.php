@@ -246,7 +246,8 @@ box-sizing:content-box;" class="flyer_background">
                 background-color:#fff;
                 margin-bottom:5px;"
               @endif>
-              <a href="#" target="_blank">
+              <a href="@if($display=='email'){{$fromURL}}/homedetails/{{$propInfo->url_slug}}@else#@endif" target="_blank"
+                @if($display=='screen') data-modal-trigger="photopicker" data-slot-photo-id="{{$the->photoID}}" @endif>
                 <img
                 src="{{$fromURL}}/hqphotos/{{$propInfo
                   ->theMeta->zipDir}}/{{$propInfo

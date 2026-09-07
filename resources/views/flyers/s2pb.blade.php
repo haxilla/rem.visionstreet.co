@@ -150,18 +150,13 @@ data-flyerbackground="{{$propInfo->theStyle
                               <td width="50%" style="padding:0;margin:0;">
                                  <div style="padding:3.5px;padding-left:7px;padding-top:7px;
                                  text-align:center;" class="overlayContainer">
-                                    <a href="#" target="_blank">
+                                    <a href="@if($display=='email'){{$fromURL}}/homedetails/{{$propInfo->url_slug}}@else#@endif" target="_blank"
+                                       @if($display=='screen') data-modal-trigger="photopicker" data-slot-photo-id="{{$propInfo->thePhotos->where('resized','=','500')->sortBy('ord')->first()->photoID}}" @endif>
                                        <img
-                                       style="@if($propInfo->thePhotos
-                                          ->where('resized','=','500')
-                                          ->sortBy('ord')
-                                          ->first()->orient=='wide')
-                                            width:100%;
-                                          @else
-                                            max-width:100%;
-                                          @endif
+                                       style="width:100%;
                                           /* rest of style */
                                           height:200px;display:block;
+                                          object-fit:cover;
                                           margin-left:auto;margin-right:auto;"
                                        src="{{$fromURL}}/hqphotos/{{$propInfo
                                         ->theMeta->zipDir}}/{{$propInfo
@@ -181,14 +176,12 @@ data-flyerbackground="{{$propInfo->theStyle
                                        ->sortBy('ord')
                                        ->slice(1)
                                        ->take(1) as $ps)
-                                       <a href="#" target="_blank">
+                                       <a href="@if($display=='email'){{$fromURL}}/homedetails/{{$propInfo->url_slug}}@else#@endif" target="_blank"
+                                          @if($display=='screen') data-modal-trigger="photopicker" data-slot-photo-id="{{$ps->photoID}}" @endif>
                                           <img
-                                          style="@if($ps->orient=='wide')
-                                            width:100%;
-                                          @else
-                                            max-width:100%;
-                                          @endif
+                                          style="width:100%;
                                             height:200px;display:block;
+                                            object-fit:cover;
                                             margin-left:auto;margin-right:auto;"
                                           src="{{$fromURL}}/hqphotos/{{$propInfo
                                             ->theMeta->zipDir}}/{{$propInfo
@@ -210,15 +203,13 @@ data-flyerbackground="{{$propInfo->theStyle
                                     ->where('resized','=','500')
                                     ->sortBy('ord')
                                     ->slice(2)->take(1) as $ps)
-                                       <a href="#" target="_blank">
+                                       <a href="@if($display=='email'){{$fromURL}}/homedetails/{{$propInfo->url_slug}}@else#@endif" target="_blank"
+                                          @if($display=='screen') data-modal-trigger="photopicker" data-slot-photo-id="{{$ps->photoID}}" @endif>
                                           <img
-                                          style="@if($ps->orient=='wide')
-                                            width:100%;
-                                          @else
-                                            max-width:100%;
-                                          @endif
+                                          style="width:100%;
                                             height:200px;
                                             display:block;
+                                            object-fit:cover;
                                             margin-left:auto;
                                             margin-right:auto;"
                                           src="{{$fromURL}}/hqphotos/{{$propInfo
@@ -234,15 +225,13 @@ data-flyerbackground="{{$propInfo->theStyle
                                     ->where('resized','=','500')
                                     ->sortBy('ord')
                                     ->slice(3)->take(1) as $ps)
-                                       <a href="#" target="_blank">
+                                       <a href="@if($display=='email'){{$fromURL}}/homedetails/{{$propInfo->url_slug}}@else#@endif" target="_blank"
+                                          @if($display=='screen') data-modal-trigger="photopicker" data-slot-photo-id="{{$ps->photoID}}" @endif>
                                           <img
-                                          style="@if($ps->orient=='wide')
-                                            width:100%;
-                                          @else
-                                            max-width:100%;
-                                          @endif
+                                          style="width:100%;
                                             height:200px;
                                             display:block;
+                                            object-fit:cover;
                                             margin-left:auto;
                                             margin-right:auto;"
                                           src="{{$fromURL}}/hqphotos/{{$propInfo
@@ -276,17 +265,15 @@ data-flyerbackground="{{$propInfo->theStyle
                                     ->where('resized','=','500')
                                     ->sortBy('ord')
                                     ->slice(4)->take(1) as $ps)
-                                       <a href="#" target="_blank">
+                                       <a href="@if($display=='email'){{$fromURL}}/homedetails/{{$propInfo->url_slug}}@else#@endif" target="_blank"
+                                          @if($display=='screen') data-modal-trigger="photopicker" data-slot-photo-id="{{$ps->photoID}}" @endif>
                                           <img src="{{$fromURL}}/hqphotos/{{$propInfo
                                             ->theMeta->zipDir}}/{{$propInfo
                                             ->theMeta->mlsDir}}/{{$ps->photoName}}"
-                                          style="@if($ps->orient == 'wide')
-                                            width:100%;
-                                          @else
-                                            max-width:100%;
-                                          @endif
+                                          style="width:100%;
                                             height:200px;
                                             display:block;
+                                            object-fit:cover;
                                             margin-left:auto;
                                             margin-right:auto;">
                                        </a>
@@ -299,17 +286,15 @@ data-flyerbackground="{{$propInfo->theStyle
                                     ->where('resized','=','500')
                                     ->sortBy('ord')
                                     ->slice(5)->take(1) as $ps)
-                                       <a href="#" target="_blank">
+                                       <a href="@if($display=='email'){{$fromURL}}/homedetails/{{$propInfo->url_slug}}@else#@endif" target="_blank"
+                                          @if($display=='screen') data-modal-trigger="photopicker" data-slot-photo-id="{{$ps->photoID}}" @endif>
                                           <img src="{{$fromURL}}/hqphotos/{{$propInfo
                                             ->theMeta->zipDir}}/{{$propInfo
                                             ->theMeta->mlsDir}}/{{$ps->photoName}}"
-                                          style="@if($ps->orient == 'wide')
-                                            width:100%;
-                                          @else
-                                            max-width:100%;
-                                          @endif
+                                          style="width:100%;
                                             height:200px;
                                             display:block;
+                                            object-fit:cover;
                                             margin-left:auto;
                                             margin-right:auto;">
                                        </a>
@@ -329,17 +314,15 @@ data-flyerbackground="{{$propInfo->theStyle
                                     ->where('resized','=','500')
                                     ->sortBy('ord')
                                     ->slice(6)->take(1) as $ps)
-                                       <a href="#" target="_blank">
+                                       <a href="@if($display=='email'){{$fromURL}}/homedetails/{{$propInfo->url_slug}}@else#@endif" target="_blank"
+                                          @if($display=='screen') data-modal-trigger="photopicker" data-slot-photo-id="{{$ps->photoID}}" @endif>
                                           <img src="{{$fromURL}}/hqphotos/{{$propInfo
                                             ->theMeta->zipDir}}/{{$propInfo
                                             ->theMeta->mlsDir}}/{{$ps->photoName}}"
-                                          style="@if($ps->orient == 'wide')
-                                            width:100%;
-                                          @else
-                                            max-width:100%;
-                                          @endif
+                                          style="width:100%;
                                             height:200px;
                                             display:block;
+                                            object-fit:cover;
                                             margin-left:auto;
                                             margin-right:auto;">
                                        </a>
@@ -352,17 +335,15 @@ data-flyerbackground="{{$propInfo->theStyle
                                     ->where('resized','=','500')
                                     ->sortBy('ord')
                                     ->slice(7)->take(1) as $ps)
-                                       <a href="#" target="_blank">
+                                       <a href="@if($display=='email'){{$fromURL}}/homedetails/{{$propInfo->url_slug}}@else#@endif" target="_blank"
+                                          @if($display=='screen') data-modal-trigger="photopicker" data-slot-photo-id="{{$ps->photoID}}" @endif>
                                           <img src="{{$fromURL}}/hqphotos/{{$propInfo
                                             ->theMeta->zipDir}}/{{$propInfo
                                             ->theMeta->mlsDir}}/{{$ps->photoName}}"
-                                          style="@if($ps->orient == 'wide')
-                                            width:100%;
-                                          @else
-                                            max-width:100%;
-                                          @endif
+                                          style="width:100%;
                                             height:200px;
                                             display:block;
+                                            object-fit:cover;
                                             margin-left:auto;
                                             margin-right:auto;">
                                        </a>

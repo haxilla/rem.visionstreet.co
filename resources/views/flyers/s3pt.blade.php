@@ -143,7 +143,8 @@ data-flyerbackground="{{$propInfo->theStyle
                                    <div style="padding-right:1.5px;
                                    box-sizing:content-box;
                                    display:inline-block;">
-                                      <a href="@if($display=='email'){{$fromURL}}/homedetails/{{$propInfo->url_slug}}@else#@endif" target="_blank">
+                                      <a href="@if($display=='email'){{$fromURL}}/homedetails/{{$propInfo->url_slug}}@else#@endif" target="_blank"
+                                         @if($display=='screen') data-modal-trigger="photopicker" data-slot-photo-id="{{$the->photoID}}" @endif>
                                          <img src="{{$fromURL}}/hqphotos/{{$propInfo
                                           ->theMeta->zipDir}}/{{$propInfo
                                           ->theMeta->mlsDir}}/{{$the->photoName}}"

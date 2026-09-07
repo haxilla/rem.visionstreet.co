@@ -166,7 +166,8 @@ data-flyerbackground="{{$propInfo->theStyle
                         ->sortByDesc('def')
                         ->sortBy('ord')
                         ->slice(1)->take(1) as $ps)
-                           <a href="#" target="_blank">
+                           <a href="@if($display=='email'){{$fromURL}}/homedetails/{{$propInfo->url_slug}}@else#@endif" target="_blank"
+                           @if($display=='screen') data-modal-trigger="photopicker" data-slot-photo-id="{{$ps->photoID}}" @endif>
                               <img src="{{$fromURL}}/hqphotos/{{$propInfo
                                 ->theMeta->zipDir}}/{{$propInfo
                                 ->theMeta->mlsDir}}/{{$ps->photoName}}"
@@ -185,7 +186,8 @@ data-flyerbackground="{{$propInfo->theStyle
                         ->sortByDesc('def')
                         ->sortBy('ord')
                         ->slice(2)->take(1) as $ps)
-                           <a href="#" target="_blank">
+                           <a href="@if($display=='email'){{$fromURL}}/homedetails/{{$propInfo->url_slug}}@else#@endif" target="_blank"
+                           @if($display=='screen') data-modal-trigger="photopicker" data-slot-photo-id="{{$ps->photoID}}" @endif>
                               <img src="{{$fromURL}}/hqphotos/{{$propInfo
                               ->theMeta->zipDir}}/{{$propInfo
                               ->theMeta->mlsDir}}/{{$ps->photoName}}"
@@ -204,7 +206,8 @@ data-flyerbackground="{{$propInfo->theStyle
                         ->sortByDesc('def')
                         ->sortBy('ord')
                         ->slice(3)->take(1) as $ps)
-                           <a href="#" target="_blank">
+                           <a href="@if($display=='email'){{$fromURL}}/homedetails/{{$propInfo->url_slug}}@else#@endif" target="_blank"
+                           @if($display=='screen') data-modal-trigger="photopicker" data-slot-photo-id="{{$ps->photoID}}" @endif>
                               <img src="{{$fromURL}}/hqphotos/{{$propInfo
                               ->theMeta->zipDir}}/{{$propInfo
                               ->theMeta->mlsDir}}/{{$ps->photoName}}"
