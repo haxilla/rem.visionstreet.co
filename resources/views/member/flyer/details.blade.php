@@ -426,6 +426,7 @@
                             type="text"
                             name="xb{{ $i }}"
                             value="{{ old('xb'.$i,$flyer->theRemarks?->{'xb'.$i} ?? '') }}"
+                            maxlength="42"
                             class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
 
                     </div>

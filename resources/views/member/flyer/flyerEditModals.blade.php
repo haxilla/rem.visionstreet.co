@@ -76,7 +76,7 @@
             <input type="hidden" name="flyerId" value="{{ $flyer->id }}">
 
             @for ($i = 1; $i <= 8; $i++)
-                <input type="text" name="xb{{ $i }}" value="{{ $flyer->theRemarks->{'xb'.$i} ?? '' }}" placeholder="Highlight {{ $i }}">
+                <input type="text" name="xb{{ $i }}" value="{{ $flyer->theRemarks->{'xb'.$i} ?? '' }}" placeholder="Highlight {{ $i }}" maxlength="42">
             @endfor
 
             <button type="submit" class="flyer-modal-save">Save</button>

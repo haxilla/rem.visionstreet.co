@@ -5,14 +5,14 @@ use App\Models\Core\Propremark;
 
 $validatedData = $request->validate([
     'flyerId' => 'required|integer',
-    'xb1'     => 'nullable|string|max:255',
-    'xb2'     => 'nullable|string|max:255',
-    'xb3'     => 'nullable|string|max:255',
-    'xb4'     => 'nullable|string|max:255',
-    'xb5'     => 'nullable|string|max:255',
-    'xb6'     => 'nullable|string|max:255',
-    'xb7'     => 'nullable|string|max:255',
-    'xb8'     => 'nullable|string|max:255',
+    'xb1'     => 'nullable|string|max:42',
+    'xb2'     => 'nullable|string|max:42',
+    'xb3'     => 'nullable|string|max:42',
+    'xb4'     => 'nullable|string|max:42',
+    'xb5'     => 'nullable|string|max:42',
+    'xb6'     => 'nullable|string|max:42',
+    'xb7'     => 'nullable|string|max:42',
+    'xb8'     => 'nullable|string|max:42',
 ]);
 
 $flyer = Propflyer::where('id', $validatedData['flyerId'])
