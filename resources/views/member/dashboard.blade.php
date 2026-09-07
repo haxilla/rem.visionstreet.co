@@ -8,21 +8,28 @@
     .flyer-card {
         display: flex;
         align-items: center;
-        gap: 20px;
+        gap: 24px;
         background: #ffffff;
-        padding: 16px;
-        border-radius: 16px;
-        box-shadow: 0 1px 2px rgba(0,0,0,.05);
-        border: 1px solid rgba(0,0,0,.05);
+        padding: 20px;
+        border-radius: 20px;
+        box-shadow: 0 1px 2px rgba(15,23,42,.04), 0 1px 3px rgba(15,23,42,.03);
+        border: 1px solid rgba(15,23,42,.05);
+        transition: box-shadow .15s ease, transform .15s ease, border-color .15s ease;
+    }
+
+    .flyer-card:hover {
+        box-shadow: 0 8px 20px rgba(15,23,42,.08), 0 2px 6px rgba(15,23,42,.04);
+        border-color: rgba(15,23,42,.08);
+        transform: translateY(-2px);
     }
 
     .flyer-thumb {
-        width: 120px;
-        height: 82px;
-        flex: 0 0 120px;
+        width: 140px;
+        height: 96px;
+        flex: 0 0 140px;
         overflow: hidden;
-        border-radius: 12px;
-        background: #e2e8f0;
+        border-radius: 14px;
+        background: #eef1f6;
     }
 
     .flyer-thumb img {
@@ -48,11 +55,16 @@
         display: inline-block;
         white-space: nowrap;
         text-align: center;
+        transition: background-color .15s ease, box-shadow .15s ease;
     }
 
     @media (max-width: 700px) {
         .flyer-card {
             display: block;
+        }
+
+        .flyer-card:hover {
+            transform: none;
         }
 
         .flyer-thumb {
@@ -125,12 +137,12 @@
 
 <main class="min-h-screen bg-[#f0f2f7] pt-24">
 
-    <div class="mx-auto w-full max-w-[1400px] px-4 pb-16 sm:px-6 lg:px-8">
+    <div class="mx-auto w-full max-w-5xl px-4 pb-16 sm:px-6 lg:px-8">
 
         <section class="min-w-0">
 
             {{-- WELCOME ROW --}}
-            <div class="mb-6">
+            <div class="mb-8">
                 <h1 class="text-3xl font-black text-slate-900 sm:text-4xl">Welcome Back</h1>
                 <p class="mt-1 text-sm text-slate-500">
                     {{ $agent->agtFullName ?? 'Member' }}
@@ -139,9 +151,14 @@
 
             {{-- UNSENT FLYERS --}}
             @if($unsentFlyers->isNotEmpty())
-                <div class="mb-5">
-                    <h2 class="text-2xl font-black text-slate-900">Unsent Flyers</h2>
-                    <p class="text-sm text-slate-500">Flyers that have not been delivered yet.</p>
+                <div class="mb-5 flex items-center gap-3">
+                    <div>
+                        <h2 class="text-2xl font-black text-slate-900">Unsent Flyers</h2>
+                        <p class="text-sm text-slate-500">Flyers that have not been delivered yet.</p>
+                    </div>
+                    <span class="rounded-full bg-amber-100 px-3 py-1 text-xs font-black text-amber-700">
+                        {{ $unsentFlyers->count() }}
+                    </span>
                 </div>
 
                 <div class="mb-10 space-y-4">
@@ -190,13 +207,13 @@
 
                             <div class="flyer-actions">
                                 <a href="/member/flyer/resume?flyerId={{ $flyer->id }}"
-                                   class="flyer-btn rounded-lg bg-amber-50 px-4 py-2 text-xs font-bold text-amber-700 ring-1 ring-amber-200 hover:bg-amber-100">
+                                   class="flyer-btn rounded-xl bg-amber-50 px-4 py-2.5 text-xs font-bold text-amber-700 ring-1 ring-amber-200 hover:bg-amber-100">
                                     Resume
                                 </a>
 
                                 <a href="/member/flyer/delete?flyerId={{ $flyer->id }}"
                                    onclick="return confirm('Delete this flyer?')"
-                                   class="flyer-btn rounded-lg bg-red-50 px-4 py-2 text-xs font-bold text-red-700 ring-1 ring-red-200 hover:bg-red-100">
+                                   class="flyer-btn rounded-xl bg-red-50 px-4 py-2.5 text-xs font-bold text-red-700 ring-1 ring-red-200 hover:bg-red-100">
                                     Delete
                                 </a>
                             </div>
@@ -207,13 +224,23 @@
             @endif
 
             {{-- SENT FLYERS --}}
-            <div class="mb-5">
-                <h2 class="text-2xl font-black text-slate-900">Most Recent Sent Flyers</h2>
-                <p class="text-sm text-slate-500">Recent flyer activity, delivery stats, and quick actions.</p>
+            <div class="mb-5 flex items-center gap-3">
+                <div>
+                    <h2 class="text-2xl font-black text-slate-900">Most Recent Sent Flyers</h2>
+                    <p class="text-sm text-slate-500">Recent flyer activity, delivery stats, and quick actions.</p>
+                </div>
+                @if($recentFlyers->isNotEmpty())
+                    <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-black text-slate-600">
+                        {{ $recentFlyers->count() }}
+                    </span>
+                @endif
             </div>
 
             @if($recentFlyers->isEmpty())
-                <div class="rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center text-slate-500">
+                <div class="rounded-3xl border border-dashed border-slate-300 bg-white p-12 text-center text-slate-500">
+                    <div class="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-100 text-xl">
+                        📭
+                    </div>
                     No sent flyers found.
                 </div>
             @else
@@ -282,13 +309,13 @@
                             <div class="flyer-actions">
                                 @if($flyer->url_slug)
                                     <a href="/member/flyerEdit/{{ $flyer->id }}"
-                                       class="flyer-btn rounded-lg bg-[#123f91] px-4 py-2 text-xs font-bold text-white hover:bg-[#0f3274]">
+                                       class="flyer-btn rounded-xl bg-[#123f91] px-4 py-2.5 text-xs font-bold text-white hover:bg-[#0f3274]">
                                         View / Edit
                                     </a>
                                 @endif
 
                                 <a href="/member/campaigns/{{ $flyer->id }}"
-                                   class="flyer-btn rounded-lg border border-slate-200 px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50">
+                                   class="flyer-btn rounded-xl border border-slate-200 px-4 py-2.5 text-xs font-bold text-slate-700 hover:bg-slate-50">
                                     Campaigns
                                 </a>
 
