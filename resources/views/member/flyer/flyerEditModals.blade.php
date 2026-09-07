@@ -26,9 +26,14 @@
                     <label>City</label>
                     <input type="text" name="xCity" value="{{ $flyer->xCity }}">
                 </div>
-                <div class="flyer-modal-narrow">
+                <div class="flyer-modal-medium">
                     <label>State</label>
-                    <input type="text" name="xState" value="{{ $flyer->xState }}" maxlength="2">
+                    <select name="xState">
+                        <option value="">Select state</option>
+                        @foreach(config('usstates') as $abbr => $name)
+                            <option value="{{ $abbr }}" @selected($flyer->xState === $abbr)>{{ $name }}</option>
+                        @endforeach
+                    </select>
                 </div>
                 <div class="flyer-modal-narrow">
                     <label>Zip</label>
@@ -231,9 +236,14 @@
                     <label>City</label>
                     <input type="text" name="officeCity" value="{{ $bannerOffice->officeCity ?? '' }}">
                 </div>
-                <div class="flyer-modal-narrow">
+                <div class="flyer-modal-medium">
                     <label>State</label>
-                    <input type="text" name="officeState" value="{{ $bannerOffice->officeState ?? '' }}" maxlength="2">
+                    <select name="officeState">
+                        <option value="">Select state</option>
+                        @foreach(config('usstates') as $abbr => $name)
+                            <option value="{{ $abbr }}" @selected(($bannerOffice->officeState ?? null) === $abbr)>{{ $name }}</option>
+                        @endforeach
+                    </select>
                 </div>
                 <div class="flyer-modal-narrow">
                     <label>Zip</label>
@@ -417,6 +427,9 @@
     }
     .flyer-modal-narrow {
         flex: 0 0 70px !important;
+    }
+    .flyer-modal-medium {
+        flex: 0 0 150px !important;
     }
     .flyer-modal-error {
         background: #fef2f2;

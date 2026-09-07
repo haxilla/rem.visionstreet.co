@@ -6,7 +6,7 @@ $validatedData = $request->validate([
     'flyerId'     => 'required|integer',
     'xFullStreet' => 'required|string|max:255',
     'xCity'       => 'required|string|max:100',
-    'xState'      => 'required|string|max:2',
+    'xState'      => 'required|string|in:' . implode(',', array_keys(config('usstates'))),
     'xZip'        => 'required|digits:5',
     'xListPrice'  => 'nullable|integer',
 ]);
