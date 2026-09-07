@@ -380,13 +380,17 @@
                  of the preview - height matches the bar's own height. --}}
             <div class="h-24"></div>
 
-            <div class="fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 bg-white/95 py-4 shadow-[0_-4px_16px_rgba(15,23,42,.08)] backdrop-blur">
+            <div class="fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 bg-white/95 pb-6 pt-4 shadow-[0_-4px_16px_rgba(15,23,42,.08)] backdrop-blur">
                 <div class="mx-auto flex max-w-[1400px] flex-col items-end gap-1 px-4 sm:flex-row sm:items-center sm:justify-end sm:gap-4 sm:px-6 lg:px-8">
                     <p id="save-hint" class="text-xs font-semibold text-slate-500 sm:mr-auto"></p>
                     <button type="submit"
                         id="saveDesignBtn"
                         @disabled(!$flyer->theStyle->headline_chosen)
-                        class="rounded-xl bg-[#123f91] px-6 py-3 font-bold text-white shadow-sm transition hover:bg-[#0f3274] disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-slate-500 disabled:shadow-none disabled:hover:bg-slate-300">
+                        class="flex items-center gap-2 rounded-xl bg-[#16a34a] px-6 py-3 font-bold text-white shadow-sm transition hover:bg-[#15803d] disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-slate-500 disabled:shadow-none disabled:hover:bg-slate-300">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M8 12.5l2.5 2.5L16 9.5"></path>
+                        </svg>
                         Save & Continue →
                     </button>
                 </div>
