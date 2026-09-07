@@ -22,7 +22,8 @@ padding-right:10px;">
   </div>
   <div style="border:1px solid #eee;background-color:#f9f9f9;
   border-radius:5px;line-height:2.00;height:202px;
-  margin-top:7px;overflow:hidden;max-width:195px;">
+  margin-top:7px;overflow:hidden;max-width:195px;"
+  @if($display=='screen') class="clickable" data-modal-trigger="highlights" @endif>
     <div style="padding:10px;padding-left:5px;padding-top:5px;color:#000;
     font-size:9pt;">
        @if($propInfo->theRemarks->xb1)

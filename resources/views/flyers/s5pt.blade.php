@@ -30,7 +30,8 @@ data-flyerbackground="{{$propInfo->theStyle
   <table style="width:100%;">
     <tr>
       <td style="margin:0;padding:0;width:40%;">
-        <div style="margin-left:20px;">
+        <div style="margin-left:20px;"
+        @if($display=='screen') class="clickable" data-modal-trigger="headline" @endif>
            <img
            src="{{$fromURL}}/images/headline_graphics/{{$propInfo
             ->theStyle->graphic_words}}/{{$propInfo
@@ -47,7 +48,9 @@ data-flyerbackground="{{$propInfo->theStyle
       padding-right:25px;padding-left:0;
       color:#{{$propInfo->theStyle->headline_text}};
       padding-left:0;
-      width:40%;" class="headline_text">
+      width:40%;" class="headline_text
+      @if($display=='screen') clickable @endif"
+      @if($display=='screen') data-modal-trigger="address" @endif>
         <div style="font-size:12pt;font-weight:bold;">
            {{ $propInfo->xFullStreet}}
         </div>
@@ -76,9 +79,11 @@ data-flyerbackground="{{$propInfo->theStyle
         font-size:13pt;
         max-height:65px;
         overflow:hidden;"
-        class="mdbxHeadline headline_bar_bg headline_bar_text"
+        class="mdbxHeadline headline_bar_bg headline_bar_text
+        @if($display=='screen') clickable @endif"
         data-headlinebarbg="{{$propInfo->theStyle->headline_bar_bg}}"
-        data-headlinebartext="{{$propInfo->theStyle->headline_bar_text}}">
+        data-headlinebartext="{{$propInfo->theStyle->headline_bar_text}}"
+        @if($display=='screen') data-modal-trigger="headlinetext" @endif>
             {!! $theHeadline !!}
         </div>
       </td>

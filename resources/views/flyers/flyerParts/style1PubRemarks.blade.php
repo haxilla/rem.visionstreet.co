@@ -1,6 +1,7 @@
 <div
+@if($display=='screen') data-modal-trigger="remarks" @endif
 @if($display=='screen' && $totalPhotos>7)
-  class="style1RemarksBackground"
+  class="style1RemarksBackground clickable"
 @elseif($display=='screen' && $totalPhotos==7)
   class="style1RemarksBackground7photo"
 @elseif($display=='screen' && $totalPhotos==6)

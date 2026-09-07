@@ -1,6 +1,7 @@
 <div
+  @if($display=='screen') data-modal-trigger="address" @endif
   @if($display=='screen' && $totalPhotos>7)
-    class="style1AddressFrame"
+    class="style1AddressFrame clickable"
   @elseif($display=='screen' && $totalPhotos==7)
     class="style1AddressFrame7photo"
   @elseif($display=='screen' && $totalPhotos==6)

@@ -23,7 +23,8 @@ box-sizing:content-box;" class="flyer_background">
   box-sizing:content-box;border-collapse:collapse;">
     <tr>
       <td style="width:40%;padding-right:25px;">
-        <div style="width:100%;margin:20px;margin-bottom:10px;">
+        <div style="width:100%;margin:20px;margin-bottom:10px;"
+        @if($display=='screen') class="clickable" data-modal-trigger="headline" @endif>
             <img src="{{$fromURL}}/images/headline_graphics/{{$propInfo
               ->theStyle->graphic_words}}/{{$propInfo
               ->theStyle->graphic_style}}/{{$hlGraphic}}"
@@ -38,10 +39,12 @@ box-sizing:content-box;" class="flyer_background">
         font-weight:bold;
         color:#{{$propInfo->theStyle->headline_text}};
         padding-top:15px;padding-bottom:15px;">
-            <div class="headline_text"
+            <div class="headline_text
+            @if($display=='screen') clickable @endif"
             style="padding-left:25px;
             max-height:70px;
-            overflow:hidden;">
+            overflow:hidden;"
+            @if($display=='screen') data-modal-trigger="headlinetext" @endif>
               {!! $theHeadline !!}
             </div>
         </div>
@@ -208,7 +211,8 @@ box-sizing:content-box;" class="flyer_background">
                 @include('flyers.flyerParts.style1FlyerLinks')
                 @if($totalPhotos>5)
                   <div style="font-size:11pt;margin-top:15px;margin-bottom:10px;
-                  padding-left:10px;text-align:left;">
+                  padding-left:10px;text-align:left;"
+                  @if($display=='screen') class="clickable" data-modal-trigger="crossstreets" @endif>
                     <div style="font-weight:bold;">
                       <u>Major Cross Streets</u>
                     </div>

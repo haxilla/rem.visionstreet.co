@@ -1,6 +1,7 @@
 <div
+  @if($display=='screen') data-modal-trigger="mls" @endif
   @if($display=='screen' && $totalPhotos>7)
-    class="style1MlsNum"
+    class="style1MlsNum clickable"
   @elseif($display=='screen' && $totalPhotos==7)
     style="display:none;"
   @elseif($display=='screen' && $totalPhotos==6)

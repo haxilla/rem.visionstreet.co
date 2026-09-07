@@ -31,12 +31,13 @@
         |
       </div>
       <div style="display:inline-block;">
-        <a href="#"
+        <a href="@if($display=='email'){{$propInfo->xMlsLink}}@else#@endif"
         style="color:#{{$propInfo->theStyle->headline_bar_text}};
         font-size:9pt;font-weight:bold;
         color:#{{$propInfo->theStyle->headline_bar_text}};
         text-decoration:none;" target="_blank"
-        class="accent_link">
+        class="accent_link @if($display=='screen') clickable @endif"
+        @if($display=='screen') data-modal-trigger="mlslink" @endif>
             MLS Link
         </a>
       </div>
@@ -51,11 +52,13 @@
         |
       </div>
       <div style="display:inline-block;">
-        <a href="#"
-        style="  
+        <a href="@if($display=='email'){{$propInfo->xVirtualTour}}@else#@endif"
+        style="
         font-size:10pt;
         color:#{{$propInfo->theStyle->headline_bar_text}};
-        text-decoration:none;" target="_blank">
+        text-decoration:none;" target="_blank"
+        class="@if($display=='screen') clickable @endif"
+        @if($display=='screen') data-modal-trigger="virtualtour" @endif>
             Virtual Tour
         </a>
       </div>
