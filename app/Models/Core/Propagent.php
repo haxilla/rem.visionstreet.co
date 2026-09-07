@@ -29,4 +29,13 @@ class Propagent extends Authenticatable
       return $this->hasOne('App\Models\Core\Agtoffice','propagent_id','id');
     }
 
+    // Stable, non-sequential folder name for this agent's uploaded files
+    // (e.g. agentPhotos/{photoToken()}/...). Derived from the app secret
+    // so it can't be guessed/enumerated from the agent's numeric id.
+    public function photoToken(){
+      $hash  = hash_hmac('sha256', (string) $this->id, config('app.key'), true);
+      $token = preg_replace('/[^A-Za-z0-9]/', '', base64_encode($hash));
+      return substr($token, 0, 10);
+    }
+
 }
