@@ -523,8 +523,20 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
+    // Only close on a genuine click on the backdrop - tracking mousedown
+    // separately stops a text-selection drag that starts inside the
+    // modal (e.g. selecting text in a field) from closing it just
+    // because the mouse happened to drift past the modal's edge before
+    // release.
+    var mouseDownOnOverlay = false;
+
+    overlay.addEventListener('mousedown', function (e) {
+        mouseDownOnOverlay = (e.target === overlay);
+    });
+
     overlay.addEventListener('click', function (e) {
-        if (e.target === overlay) closeModal();
+        if (mouseDownOnOverlay && e.target === overlay) closeModal();
+        mouseDownOnOverlay = false;
     });
 
     function showModalError(form, message) {
