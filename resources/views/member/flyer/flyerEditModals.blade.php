@@ -152,6 +152,22 @@
     @php
         $bannerAgent  = $flyer->theAgent;
         $bannerOffice = $flyer->theOffice;
+
+        $bannerAgentImg = null;
+        if (!empty($bannerAgent->agtPhoto)) {
+            $p = public_path("agentPhotos/{$bannerAgent->photoToken()}/{$bannerAgent->agtPhoto}");
+            if (file_exists($p)) {
+                $bannerAgentImg = asset("agentPhotos/{$bannerAgent->photoToken()}/{$bannerAgent->agtPhoto}");
+            }
+        }
+
+        $bannerLogoImg = null;
+        if (!empty($bannerAgent->agtLogo) && $bannerOffice) {
+            $p = public_path("officeLogos/{$bannerOffice->officeID}/{$bannerAgent->agtLogo}");
+            if (file_exists($p)) {
+                $bannerLogoImg = asset("officeLogos/{$bannerOffice->officeID}/{$bannerAgent->agtLogo}");
+            }
+        }
     @endphp
     <div class="flyer-modal" id="modal-agentcontact" style="display:none;">
         <div class="flyer-modal-header">
@@ -161,11 +177,22 @@
         <form data-modal-form action="/member/flyer/save_modal_agentcontact" enctype="multipart/form-data">
             @csrf
 
-            <label>Agent Photo</label>
-            @if($bannerAgent->agtPhoto)
-                <div class="flyer-modal-current-file">Current: {{ $bannerAgent->agtPhoto }}</div>
-            @endif
-            <input type="file" name="agtPhotoFile" accept="image/*">
+            <div class="flyer-modal-upload">
+                <div class="flyer-modal-upload-preview" data-upload-preview>
+                    @if($bannerAgentImg)
+                        <img src="{{ $bannerAgentImg }}" alt="">
+                    @else
+                        <span>No Photo</span>
+                    @endif
+                </div>
+                <div class="flyer-modal-upload-controls">
+                    <label class="flyer-modal-upload-label">Agent Photo</label>
+                    <label class="flyer-modal-upload-btn">
+                        {{ $bannerAgentImg ? 'Change Photo' : 'Upload Photo' }}
+                        <input type="file" name="agtPhotoFile" accept="image/*" data-upload-input hidden>
+                    </label>
+                </div>
+            </div>
 
             <label>Full Name</label>
             <input type="text" name="agtFullName" value="{{ $bannerAgent->agtFullName }}">
@@ -176,11 +203,22 @@
             <label>Phone</label>
             <input type="text" name="agtMainPhone" value="{{ $bannerAgent->agtMainPhone }}">
 
-            <label>Office Logo</label>
-            @if($bannerAgent->agtLogo)
-                <div class="flyer-modal-current-file">Current: {{ $bannerAgent->agtLogo }}</div>
-            @endif
-            <input type="file" name="agtLogoFile" accept="image/*">
+            <div class="flyer-modal-upload">
+                <div class="flyer-modal-upload-preview" data-upload-preview>
+                    @if($bannerLogoImg)
+                        <img src="{{ $bannerLogoImg }}" alt="">
+                    @else
+                        <span>No Logo</span>
+                    @endif
+                </div>
+                <div class="flyer-modal-upload-controls">
+                    <label class="flyer-modal-upload-label">Office Logo</label>
+                    <label class="flyer-modal-upload-btn">
+                        {{ $bannerLogoImg ? 'Change Logo' : 'Upload Logo' }}
+                        <input type="file" name="agtLogoFile" accept="image/*" data-upload-input hidden>
+                    </label>
+                </div>
+            </div>
 
             <label>Office Name</label>
             <input type="text" name="officeName" value="{{ $bannerOffice->officeName ?? '' }}">
@@ -301,10 +339,63 @@
         font-size: 14px;
         box-sizing: border-box;
     }
-    .flyer-modal-current-file {
+    .flyer-modal-upload {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 12px;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        background: #f8fafc;
+    }
+    .flyer-modal-upload-preview {
+        flex: 0 0 64px;
+        width: 64px;
+        height: 64px;
+        border-radius: 8px;
+        background: #fff;
+        border: 1px solid #cbd5e1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+    .flyer-modal-upload-preview img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .flyer-modal-upload-preview span {
+        font-size: 10px;
+        font-weight: 700;
+        color: #94a3b8;
+        text-align: center;
+    }
+    .flyer-modal-upload-controls {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        flex: 1;
+    }
+    .flyer-modal-upload-label {
         font-size: 12px;
+        font-weight: 700;
         color: #64748b;
-        margin-top: -6px;
+    }
+    .flyer-modal-upload-btn {
+        display: inline-block;
+        width: fit-content;
+        border: 1px solid #123f91;
+        border-radius: 8px;
+        padding: 6px 12px;
+        font-size: 13px;
+        font-weight: 700;
+        color: #123f91;
+        background: #fff;
+        cursor: pointer;
+    }
+    .flyer-modal-upload-btn:hover {
+        background: #eef2ff;
     }
     .flyer-modal-view-link {
         font-size: 13px;
@@ -387,6 +478,25 @@ document.addEventListener('DOMContentLoaded', function () {
 
         input.addEventListener('input', function () {
             viewLink.setAttribute('href', input.value.trim());
+        });
+    });
+
+    // Shows the newly picked file in the preview box immediately, so
+    // someone can see what they're about to save before submitting.
+    document.querySelectorAll('[data-upload-input]').forEach(function (input) {
+        input.addEventListener('change', function () {
+            var file = input.files && input.files[0];
+            if (!file) return;
+
+            var wrapper = input.closest('.flyer-modal-upload');
+            var preview = wrapper ? wrapper.querySelector('[data-upload-preview]') : null;
+            if (!preview) return;
+
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                preview.innerHTML = '<img src="' + e.target.result + '" alt="">';
+            };
+            reader.readAsDataURL(file);
         });
     });
 
