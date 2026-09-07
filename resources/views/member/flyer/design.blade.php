@@ -376,14 +376,20 @@
 
             </div>
 
-            <div class="mb-8 flex flex-col items-end gap-2">
-                <button type="submit"
-                    id="saveDesignBtn"
-                    @disabled(!$flyer->theStyle->headline_chosen)
-                    class="rounded-xl bg-[#123f91] px-6 py-3 font-bold text-white transition hover:bg-[#0f3274] disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-slate-500 disabled:hover:bg-slate-300">
-                    Save & Continue →
-                </button>
-                <p id="save-hint" class="text-xs font-semibold text-slate-500"></p>
+            {{-- Spacer so the fixed save bar below never overlaps the end
+                 of the preview - height matches the bar's own height. --}}
+            <div class="h-24"></div>
+
+            <div class="fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 bg-white/95 py-4 shadow-[0_-4px_16px_rgba(15,23,42,.08)] backdrop-blur">
+                <div class="mx-auto flex max-w-[1400px] flex-col items-end gap-1 px-4 sm:flex-row sm:items-center sm:justify-end sm:gap-4 sm:px-6 lg:px-8">
+                    <p id="save-hint" class="text-xs font-semibold text-slate-500 sm:mr-auto"></p>
+                    <button type="submit"
+                        id="saveDesignBtn"
+                        @disabled(!$flyer->theStyle->headline_chosen)
+                        class="rounded-xl bg-[#123f91] px-6 py-3 font-bold text-white shadow-sm transition hover:bg-[#0f3274] disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-slate-500 disabled:shadow-none disabled:hover:bg-slate-300">
+                        Save & Continue →
+                    </button>
+                </div>
             </div>
 
         </form>
