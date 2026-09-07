@@ -148,6 +148,65 @@
         </form>
     </div>
 
+    {{-- AGENT CONTACT BANNER --}}
+    @php
+        $bannerAgent  = $flyer->theAgent;
+        $bannerOffice = $flyer->theOffice;
+    @endphp
+    <div class="flyer-modal" id="modal-agentcontact" style="display:none;">
+        <div class="flyer-modal-header">
+            <span>Edit Agent &amp; Office Info</span>
+            <button type="button" class="flyer-modal-close" data-modal-close>&times;</button>
+        </div>
+        <form data-modal-form action="/member/flyer/save_modal_agentcontact" enctype="multipart/form-data">
+            @csrf
+
+            <label>Agent Photo</label>
+            @if($bannerAgent->agtPhoto)
+                <div class="flyer-modal-current-file">Current: {{ $bannerAgent->agtPhoto }}</div>
+            @endif
+            <input type="file" name="agtPhotoFile" accept="image/*">
+
+            <label>Full Name</label>
+            <input type="text" name="agtFullName" value="{{ $bannerAgent->agtFullName }}">
+
+            <label>Designations</label>
+            <input type="text" name="agtDesigs" value="{{ $bannerAgent->agtDesigs }}">
+
+            <label>Phone</label>
+            <input type="text" name="agtMainPhone" value="{{ $bannerAgent->agtMainPhone }}">
+
+            <label>Office Logo</label>
+            @if($bannerAgent->agtLogo)
+                <div class="flyer-modal-current-file">Current: {{ $bannerAgent->agtLogo }}</div>
+            @endif
+            <input type="file" name="agtLogoFile" accept="image/*">
+
+            <label>Office Name</label>
+            <input type="text" name="officeName" value="{{ $bannerOffice->officeName ?? '' }}">
+
+            <label>Office Address</label>
+            <input type="text" name="officeAddress" value="{{ $bannerOffice->officeAddress ?? '' }}">
+
+            <div class="flyer-modal-row">
+                <div>
+                    <label>City</label>
+                    <input type="text" name="officeCity" value="{{ $bannerOffice->officeCity ?? '' }}">
+                </div>
+                <div class="flyer-modal-narrow">
+                    <label>State</label>
+                    <input type="text" name="officeState" value="{{ $bannerOffice->officeState ?? '' }}" maxlength="2">
+                </div>
+                <div class="flyer-modal-narrow">
+                    <label>Zip</label>
+                    <input type="text" name="officeZip" value="{{ $bannerOffice->officeZip ?? '' }}" maxlength="10">
+                </div>
+            </div>
+
+            <button type="submit" class="flyer-modal-save">Save</button>
+        </form>
+    </div>
+
     {{-- HEADLINE GRAPHIC --}}
     <div class="flyer-modal" id="modal-headline" style="display:none;">
         <div class="flyer-modal-header">
@@ -241,6 +300,11 @@
         padding: 8px 10px;
         font-size: 14px;
         box-sizing: border-box;
+    }
+    .flyer-modal-current-file {
+        font-size: 12px;
+        color: #64748b;
+        margin-top: -6px;
     }
     .flyer-modal-view-link {
         font-size: 13px;

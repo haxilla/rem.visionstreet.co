@@ -11,7 +11,8 @@ $officeLogo="{$fromURL}/officeLogos/{$officeInfo->officeID}/{$agentInfo->agtLogo
 @endphp
 
 <div style="background-color:#f9f9f9;line-height:1.45;color:#333;
-font-family:arial;">
+font-family:arial;@if($display=='screen') cursor:pointer;@endif"
+@if($display=='screen') data-modal-trigger="agentcontact" @endif>
 <table style="text-align:left;width:100%;">
   <tr>
     <td colspan="4">
