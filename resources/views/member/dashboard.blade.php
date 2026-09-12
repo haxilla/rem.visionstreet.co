@@ -95,6 +95,22 @@
     $agent = optional($flyers->first())->theAgent;
     $campaignsByFlyer = $campaigns->groupBy('propflyer_id');
 
+    // created_at is only reliably populated for flyers created through
+    // this app - anything imported from the legacy pre-Laravel system
+    // has it null, with the real date only in the legacy creationDate
+    // column instead.
+    $createdDate = function ($flyer) {
+        if ($flyer->created_at) {
+            return $flyer->created_at->format('M j, Y');
+        }
+
+        if ($flyer->creationDate) {
+            return Carbon::parse($flyer->creationDate)->format('M j, Y');
+        }
+
+        return '—';
+    };
+
     $photoUrl = function ($flyer) {
         $photo = optional($flyer->thePhotos)->first();
 
@@ -204,7 +220,7 @@
                                     </span>
 
                                     <span class="rounded-full bg-slate-100 px-3 py-1 text-slate-600">
-                                        Created {{ $flyer->created_at?->format('M j, Y') ?? '—' }}
+                                        Created {{ $createdDate($flyer) }}
                                     </span>
                                 </div>
                             </div>
@@ -309,7 +325,7 @@
                                     </span>
 
                                     <span class="rounded-full bg-slate-100 px-3 py-1 text-slate-600">
-                                        Created {{ $flyer->created_at?->format('M j, Y') ?? '—' }}
+                                        Created {{ $createdDate($flyer) }}
                                     </span>
                                 </div>
                             </div>
