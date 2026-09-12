@@ -7,7 +7,7 @@
 <style>
     .flyer-card {
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         gap: 24px;
         background: #ffffff;
         padding: 20px;
@@ -15,13 +15,6 @@
         box-shadow: 0 1px 2px rgba(15,23,42,.04), 0 1px 3px rgba(15,23,42,.03);
         border: 1px solid rgba(15,23,42,.05);
         transition: box-shadow .15s ease, transform .15s ease, border-color .15s ease;
-    }
-
-    /* Photo and address already link to the flyer - this button is
-       only useful as an obvious tap target on the smallest screens,
-       where the stacked card layout makes those links less discoverable. */
-    .view-edit-btn {
-        display: none;
     }
 
     .flyer-card:hover {
@@ -73,10 +66,6 @@
 
         .flyer-card:hover {
             transform: none;
-        }
-
-        .view-edit-btn {
-            display: inline-block;
         }
 
         .flyer-thumb {
@@ -281,11 +270,7 @@
                         @php
                             $img = $photoUrl($flyer);
                             $stats = $flyer->theStats;
-                            $flyerCampaigns = $campaignsByFlyer->get($flyer->id, collect());
-                            $completedForFlyer = $flyerCampaigns->filter(fn($c) => !empty($c->emComplete));
-
-                            $emailCount = $completedForFlyer->sum('totalEmails');
-                            $viewCount  = optional($stats)->xWebViews ?? 0;
+                            $viewCount = optional($stats)->xWebViews ?? 0;
 
                             $lastSent = $flyer->dashboard_last_sent_raw
                                 ? Carbon::parse($flyer->dashboard_last_sent_raw)->format('M j, Y')
@@ -333,21 +318,12 @@
                                     </span>
 
                                     <span class="rounded-full bg-slate-100 px-3 py-1 text-slate-600">
-                                        {{ number_format($emailCount) }} Sent
-                                    </span>
-
-                                    <span class="rounded-full bg-slate-100 px-3 py-1 text-slate-600">
                                         {{ number_format($viewCount) }} Views
                                     </span>
                                 </div>
                             </div>
 
                             <div class="flyer-actions">
-                                <a href="/member/flyer/preview?flyerId={{ $flyer->id }}"
-                                   class="flyer-btn view-edit-btn rounded-xl bg-[#123f91] px-4 py-2.5 text-xs font-bold text-white hover:bg-[#0f3274]">
-                                    View / Edit
-                                </a>
-
                                 <a href="/member/campaigns/{{ $flyer->id }}"
                                    class="flyer-btn rounded-xl border border-slate-200 px-4 py-2.5 text-xs font-bold text-slate-700 hover:bg-slate-50">
                                     Campaigns
