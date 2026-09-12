@@ -127,3 +127,16 @@
     </div>
   </div>
 </header>
+
+@if(session('impersonator_admin_id'))
+  {{-- IMPERSONATION BANNER: fixed to the bottom so it never needs the
+       top header's height to be recalculated on every page --}}
+  <div class="fixed bottom-0 left-0 w-full z-50 bg-amber-500 text-amber-950">
+    <div class="mx-auto max-w-screen-2xl px-6 lg:px-10 flex h-11 items-center justify-center gap-3 text-sm font-bold" style="max-width:1600px;">
+      <span>Viewing as {{ $navAgent->agtFullName ?? 'this agent' }} &mdash; impersonating</span>
+      <a href="{{ route('admin.returnToAdmin') }}" class="rounded-full bg-amber-950 px-4 py-1.5 text-xs font-black uppercase tracking-wide text-amber-50 hover:bg-amber-900 transition">
+        Return to Admin
+      </a>
+    </div>
+  </div>
+@endif

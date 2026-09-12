@@ -67,6 +67,13 @@ class adminController extends Controller
         return redirect('/member/dashboard');
     }
 
+    public function returnToAdmin()
+    {
+
+        include(app_path().'/admin/agent/returnToAdmin.php');
+        return redirect('/admin/dashboard');
+    }
+
     public function flyerCamps($flyerId)
     {
 
