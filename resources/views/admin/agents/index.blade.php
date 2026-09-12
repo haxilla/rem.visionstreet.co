@@ -112,7 +112,7 @@
                     </div>
 
                     {{-- ACTIVE AGENTS: MOBILE CARDS --}}
-                    <div class="space-y-3 md:hidden">
+                    <div class="space-y-3 xl:hidden">
 
                         @forelse($activeAgents as $agent)
 
@@ -189,7 +189,7 @@
                     </div>
 
                     {{-- ACTIVE AGENTS: TABLE (md and up) --}}
-                    <div class="hidden overflow-x-auto rounded-2xl border border-slate-200 md:block">
+                    <div class="hidden overflow-x-auto rounded-2xl border border-slate-200 xl:block">
 
                         <table class="min-w-full divide-y divide-slate-200">
                             <thead class="bg-slate-50">
@@ -334,7 +334,7 @@
                     </div>
 
                     {{-- NO START DATE: MOBILE CARDS --}}
-                    <div class="space-y-3 md:hidden">
+                    <div class="space-y-3 xl:hidden">
 
                         @forelse($noStartAgents as $agent)
 
@@ -392,7 +392,7 @@
                     </div>
 
                     {{-- NO START DATE: TABLE (md and up) --}}
-                    <div class="hidden overflow-x-auto rounded-2xl border border-slate-200 md:block">
+                    <div class="hidden overflow-x-auto rounded-2xl border border-slate-200 xl:block">
 
                         <table class="min-w-full divide-y divide-slate-200">
                             <thead class="bg-slate-50">
