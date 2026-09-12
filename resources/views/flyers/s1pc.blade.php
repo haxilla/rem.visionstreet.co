@@ -37,7 +37,7 @@ box-sizing:content-box;" class="flyer_background">
         text-align:center;
         font-size:12pt;
         font-weight:bold;
-        color:#{{$safeHeadlineText}};
+        color:#{{$propInfo->theStyle->headline_text}};
         padding-top:15px;padding-bottom:15px;">
             <div class="headline_text
             @if($display=='screen') clickable @endif"

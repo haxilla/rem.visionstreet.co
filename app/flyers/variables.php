@@ -38,25 +38,6 @@ $accentTextColor = in_array(strtolower((string) $accentbars), $paleAccents, true
     ? '333333'
     : $accentbars;
 
-// General body text (remarks, address, MLS#, bullets, etc.) has always
-// been hardcoded to a dark grey regardless of the chosen background -
-// invisible against a dark one. Same dark-background list already used
-// by colorswatch.js and the Design page's accent-swatch visibility.
-$darkFlyerBackgrounds = ['996600', '990000', '000066', '000000'];
-$isDarkFlyerBackground = in_array(strtolower((string) $propInfo->theStyle->flyer_background), $darkFlyerBackgrounds, true);
-$bodyTextColor = $isDarkFlyerBackground ? 'ffffff' : '333333';
-
-// headline_text sits directly on the outer flyer background (no white
-// panel behind it, unlike the remarks/address area) - it's normally
-// kept in sync with the background by colorswatch.js when someone
-// clicks through the Design page, but that JS only ever runs on a
-// live click, not on the initial page load - so a flyer whose
-// headline_text was set before a later background change (or any
-// legacy flyer that never went through that JS at all) can still end
-// up dark-on-dark. Force it safe for the same known dark backgrounds
-// rather than trusting whatever's stored.
-$safeHeadlineText = $isDarkFlyerBackground ? 'ffffff' : ($propInfo->theStyle->headline_text ?: '333333');
-
 // Style 1's photo-count links bar (style1FlyerLinks.blade.php) uses
 // accentbars as its OWN background, but its text was borrowing
 // headline_bar_text - a color tuned for a completely different

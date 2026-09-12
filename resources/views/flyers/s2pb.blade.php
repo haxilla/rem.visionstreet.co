@@ -15,7 +15,7 @@
 <div style="border-top-left-radius:10px;font-family:arial;
 border-top-right-radius:10px;width:100%;line-height:1.52;
 background-color:#{{$propInfo->theStyle->flyer_background}};
-box-sizing:content-box;color:#{{$bodyTextColor}};" class="flyer_background"
+box-sizing:content-box;color:#333;" class="flyer_background"
 data-template="{{$propInfo->theStyle->template}}"
 data-flyerbackground="{{$propInfo->theStyle
 ->flyer_background}}">
@@ -37,7 +37,7 @@ data-flyerbackground="{{$propInfo->theStyle
                </div>
             </td>
             <td align="right"
-            style="color:#{{$safeHeadlineText}};
+            style="color:#{{$propInfo->theStyle->headline_text}};
             width:60%;
             padding:20px;
             padding-right:25px;
