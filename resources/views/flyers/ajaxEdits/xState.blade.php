@@ -10,7 +10,7 @@
          style="background:rgba(255,255,255,.15);border:none;
          border-radius:.5em;padding:3px;text-align:center;width:50px;
          color:#{{$propInfo->theStyle->headline_text}}"
-         value="{{$propInfo->xState}}">
+         value="{{$propInfo->state}}">
          <input type="hidden" name="theID"
          value="{{$propInfo->theMeta->sk1}}">
       </form>

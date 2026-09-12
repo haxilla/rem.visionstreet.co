@@ -64,7 +64,7 @@
                     <select name="xState">
                         <option value="">Select state</option>
                         @foreach(config('usstates') as $abbr => $name)
-                            <option value="{{ $abbr }}" @selected($flyer->xState === $abbr)>{{ $name }}</option>
+                            <option value="{{ $abbr }}" @selected($flyer->state === $abbr)>{{ $name }}</option>
                         @endforeach
                     </select>
                 </div>

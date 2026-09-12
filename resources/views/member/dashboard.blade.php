@@ -186,7 +186,7 @@
 
                             $location = trim(
                                 ($flyer->xCity ?? '') . ' ' .
-                                ($flyer->state ?? $flyer->xState ?? '') . ' ' .
+                                ($flyer->state ?? '') . ' ' .
                                 ($flyer->xxZip ?? $flyer->xZip ?? '')
                             );
                         @endphp
@@ -279,7 +279,7 @@
 
                             $location = trim(
                                 ($flyer->xCity ?? '') . ' ' .
-                                ($flyer->state ?? $flyer->xState ?? '') . ' ' .
+                                ($flyer->state ?? '') . ' ' .
                                 ($flyer->xxZip ?? $flyer->xZip ?? '')
                             );
                         @endphp

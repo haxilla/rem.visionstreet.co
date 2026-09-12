@@ -45,7 +45,7 @@ $priceLabel = function($item) {
         $fPrice  = $priceLabel($featured);
         $fURL    = "/homedetails/{$featured->url_slug}";
         $fStreet = $featured->xFullStreet;
-        $fCity   = trim("{$featured->xCity} {$featured->xState} {$featured->xxZip}");
+        $fCity   = trim("{$featured->xCity} {$featured->state} {$featured->xxZip}");
     @endphp
 
     <section class="rounded-2xl overflow-hidden shadow-md flex flex-col lg:flex-row mb-4" style="min-height: 520px;">
@@ -140,7 +140,7 @@ $priceLabel = function($item) {
                 $price  = $priceLabel($the);
                 $url    = "/homedetails/{$the->url_slug}";
                 $street = $the->xFullStreet;
-                $city   = trim("{$the->xCity} {$the->xState} {$the->xxZip}");
+                $city   = trim("{$the->xCity} {$the->state} {$the->xxZip}");
             @endphp
 
             <a href="{{ $url }}" target="_blank"

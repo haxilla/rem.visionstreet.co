@@ -3,7 +3,7 @@
 // query
 $propInfo=propflyer::select(
    'id','propagent_id','officeID','xFullStreet',
-   'xListPrice','xCity','xState','xZip','xxZip','xHeadline',
+   'xListPrice','xCity','xState','state','xZip','xxZip','xHeadline',
    'xMlsNum','xBeds','xxBeds','xBaths','xxBaths',
    'xSqft','xxSqft','xYrBuilt','xxYrBuilt','xVirtualTour',
    'xMlsLink','xxHeadline')

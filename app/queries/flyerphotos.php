@@ -11,6 +11,7 @@ $propInfo = Propflyer::select(
     'xFullStreet',
     'xCity',
     'xState',
+    'state',
     'xZip',
     'xxZip',
     'xMlsNum'

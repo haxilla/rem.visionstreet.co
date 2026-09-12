@@ -47,7 +47,7 @@
             <div class="mt-1 text-lg text-slate-500">
 
                 {{ $flyer->xCity }},
-                {{ $flyer->xState }}
+                {{ $flyer->state }}
                 {{ $flyer->xZip }}
 
             </div>

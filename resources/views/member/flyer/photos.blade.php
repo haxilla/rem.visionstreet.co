@@ -50,7 +50,7 @@ $initialPhotos = collect($data['initialPhotos'] ?? []);
 
                     <div class="text-slate-600">
                         {{ $flyer->xCity }},
-                        {{ $flyer->xState }}
+                        {{ $flyer->state }}
                         {{ $flyer->xZip }}
                     </div>
 

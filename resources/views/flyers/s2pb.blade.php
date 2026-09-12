@@ -56,7 +56,7 @@ data-flyerbackground="{{$propInfo->theStyle
                   </span>
                   <span class="xState @if($display=='screen') clickable @endif"
                   @if($display=='screen') data-modal-trigger="address" @endif>
-                     {{$propInfo->xState}}
+                     {{$propInfo->state}}
                   </span>
                   <span class="xZip @if($display=='screen') clickable @endif"
                   @if($display=='screen') data-modal-trigger="address" @endif>

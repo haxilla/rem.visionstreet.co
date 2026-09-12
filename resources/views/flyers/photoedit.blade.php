@@ -71,7 +71,7 @@
                 </h1>
 
                 <div class="mt-1 text-sm text-slate-600 sm:text-base">
-                    {{ $propInfo->xCity }}, {{ $propInfo->xState }} {{ $zipValue }}
+                    {{ $propInfo->xCity }}, {{ $propInfo->state }} {{ $zipValue }}
                 </div>
 
             </div>

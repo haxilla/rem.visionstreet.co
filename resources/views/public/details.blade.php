@@ -48,7 +48,7 @@
     $mapAddress = urlencode(
         $details->xFullStreet . ', ' .
         $details->xCity . ', ' .
-        $details->xState . ' ' .
+        $details->state . ' ' .
         $details->xZip
     );
 
@@ -157,7 +157,7 @@
                     </h1>
 
                     <div class="text-xl mt-1">
-                        {{ $details->xFullStreet }}, {{ $details->xCity }}, {{ $details->xState }} {{ $details->xZip }}
+                        {{ $details->xFullStreet }}, {{ $details->xCity }}, {{ $details->state }} {{ $details->xZip }}
                     </div>
                 </div>
 

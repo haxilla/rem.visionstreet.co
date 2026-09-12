@@ -52,7 +52,7 @@ data-flyerbackground="{{$propInfo->theStyle
           </div>
           <div class="headline_text"
           style="font-size:10pt;font-weight:normal;">
-           {{ $propInfo->xCity}}, {{ $propInfo->xState }}
+           {{ $propInfo->xCity}}, {{ $propInfo->state }}
            @if($propInfo->xZip)
             {{$propInfo->xZip}}
            @elseif($propInfo->xxZip)

@@ -158,7 +158,7 @@ $flyer = $data['flyer'] ?? null;
                                 required
                             >
                                 <option value="">Select state</option>
-                                @php $selectedState = old('xState', $flyer->xState ?? ''); @endphp
+                                @php $selectedState = old('xState', $flyer->state ?? ''); @endphp
                                 @foreach(config('usstates') as $abbr => $name)
                                     <option value="{{ $abbr }}" @selected($selectedState === $abbr)>{{ $name }}</option>
                                 @endforeach

@@ -35,7 +35,7 @@
 
                             $listingURL= "/homedetails/{$the->url_slug}";
                             $street   = $the->xFullStreet;
-                            $cityLine = "{$the->xCity}, {$the->xState} {$the->xxZip}";
+                            $cityLine = "{$the->xCity}, {$the->state} {$the->xxZip}";
                             $agentName  = $the->theAgent->agtFullName;
                             $officeName = $the->theOffice->officeName;
                             $agentPhone = $the->theAgent->agtMainPhone;

@@ -71,7 +71,7 @@
             </div>
 
             <div class="text-sm text-slate-500">
-                {{ $flyer->xCity }}, {{ $flyer->xState }} {{ $flyer->xZip }}
+                {{ $flyer->xCity }}, {{ $flyer->state }} {{ $flyer->xZip }}
             </div>
 
             <div class="mt-1 flex flex-wrap gap-x-3 text-sm font-semibold text-slate-600">

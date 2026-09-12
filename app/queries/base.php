@@ -7,7 +7,7 @@ $theDate=\Carbon\Carbon::today()->subDays(30);
 //query
 $base=propflyer::select(
   'id','propflyers.propagent_id','propflyers.created_at','creationDate',
-  'xFullStreet','xCity','xState','xZip','xxZip','xBeds','xBaths','officeID',
+  'xFullStreet','xCity','xState','state','xZip','xxZip','xBeds','xBaths','officeID',
   'xSqft','xxBeds','xxBaths','xxSqft','xYrBuilt','xxYrBuilt','xListPrice',
   'xWebViews','url_slug','flyer_code')
 ->where(function($q)use($theDate){

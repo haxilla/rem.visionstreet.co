@@ -56,7 +56,7 @@
                         }
 
                         $street     = $the->xFullStreet ?? '';
-                        $cityLine   = trim(($the->xCity ?? '') . ' ' . ($the->xState ?? '') . ' ' . ($the->xxZip ?? ''));
+                        $cityLine   = trim(($the->xCity ?? '') . ' ' . ($the->state ?? '') . ' ' . ($the->xxZip ?? ''));
                         $agentName  = $the->theAgent->agtFullName ?? '';
                         $officeName = $the->theOffice->officeName ?? '';
                         $beds       = $the->xBeds ?? null;

@@ -86,7 +86,7 @@
                 </h1>
 
                 <div class="mt-1 text-sm text-slate-600 sm:text-base">
-                    {{ $propInfo->xCity }}, {{ $propInfo->xState }} {{ $zipValue }}
+                    {{ $propInfo->xCity }}, {{ $propInfo->state }} {{ $zipValue }}
                 </div>
             </div>
         </div>
@@ -149,7 +149,7 @@
                 <div>
                     <label class="mb-2 block text-sm font-extrabold text-blue-950">State</label>
                     <input name="xState"
-                           value="{{ old('xState', $propInfo->xState) }}"
+                           value="{{ old('xState', $propInfo->state) }}"
                            class="block w-full rounded-md border border-slate-400 bg-white px-4 py-3 text-base text-slate-950 shadow-inner outline-none focus:border-[#1b2f63] focus:ring-4 focus:ring-blue-900/10">
                 </div>
 

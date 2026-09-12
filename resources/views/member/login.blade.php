@@ -34,7 +34,7 @@
                 'name'   => $the->theAgent->agtFullName ?? '',
                 'office' => $the->theOffice->officeName ?? '',
                 'street' => $the->xFullStreet ?? '',
-                'city'   => trim(($the->xCity ?? '') . ', ' . ($the->xState ?? '')),
+                'city'   => trim(($the->xCity ?? '') . ', ' . ($the->state ?? '')),
             ];
         }
     }

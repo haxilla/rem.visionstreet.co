@@ -10,7 +10,7 @@ if (!$flyerId) {
 }
 
 $flyer = Propflyer::select(
-    'id', 'propagent_id', 'xFullStreet', 'xCity', 'xState', 'xZip',
+    'id', 'propagent_id', 'xFullStreet', 'xCity', 'xState', 'state', 'xZip',
     'xListPrice', 'xBeds', 'xBaths', 'xSqft',
     'openHouseDate1', 'openHouseTime1', 'openHouseEndTime1',
     'openHouseDate2', 'openHouseTime2', 'openHouseEndTime2',

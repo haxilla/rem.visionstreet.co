@@ -41,7 +41,7 @@
     @else
       style="font-size:10pt;"
     @endif>
-      {{ $propInfo->xCity}}, {{ $propInfo->xState}}
+      {{ $propInfo->xCity}}, {{ $propInfo->state}}
       @if($propInfo->xZip)
         {{ $propInfo->xZip}}
       @else
