@@ -101,11 +101,11 @@
     // column instead.
     $createdDate = function ($flyer) {
         if ($flyer->created_at) {
-            return $flyer->created_at->format('M j, Y');
+            return $flyer->created_at->format('n/j/Y');
         }
 
         if ($flyer->creationDate) {
-            return Carbon::parse($flyer->creationDate)->format('M j, Y');
+            return Carbon::parse($flyer->creationDate)->format('n/j/Y');
         }
 
         return '—';
@@ -202,6 +202,10 @@
                             </div>
 
                             <div class="flyer-info">
+                                <div class="text-xs text-slate-400">
+                                    Created: {{ $createdDate($flyer) }}
+                                </div>
+
                                 <div class="truncate text-lg font-black text-[#123f91]">
                                     {{ $flyer->xFullStreet ?: 'Untitled Flyer' }}
                                 </div>
@@ -217,10 +221,6 @@
 
                                     <span class="rounded-full bg-amber-100 px-3 py-1 text-amber-700">
                                         Draft
-                                    </span>
-
-                                    <span class="rounded-full bg-slate-100 px-3 py-1 text-slate-600">
-                                        Created {{ $createdDate($flyer) }}
                                     </span>
                                 </div>
                             </div>
@@ -299,6 +299,10 @@
                             </div>
 
                             <div class="flyer-info">
+                                <div class="text-xs text-slate-400">
+                                    Created: {{ $createdDate($flyer) }}
+                                </div>
+
                                 <div class="truncate text-lg font-black text-[#123f91]">
                                     {{ $flyer->xFullStreet ?: 'Untitled Flyer' }}
                                 </div>
@@ -322,10 +326,6 @@
 
                                     <span class="rounded-full bg-slate-100 px-3 py-1 text-slate-600">
                                         {{ number_format($viewCount) }} Views
-                                    </span>
-
-                                    <span class="rounded-full bg-slate-100 px-3 py-1 text-slate-600">
-                                        Created {{ $createdDate($flyer) }}
                                     </span>
                                 </div>
                             </div>
