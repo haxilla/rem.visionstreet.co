@@ -219,7 +219,7 @@
                         <input
                             type="text"
                             name="xYrBuilt"
-                            value="{{ old('xYrBuilt',$flyer->xYrBuilt ?? '') }}"
+                            value="{{ old('xYrBuilt', $flyer->xxYrBuilt ?: $flyer->xYrBuilt ?: '') }}"
                             class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
 
                     </div>
@@ -243,7 +243,7 @@
                         <input
                             type="text"
                             name="xBeds"
-                            value="{{ old('xBeds',$flyer->xBeds ?? '') }}"
+                            value="{{ old('xBeds', $flyer->xxBeds ?: $flyer->xBeds ?: '') }}"
                             class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
 
                     </div>
@@ -263,7 +263,7 @@
                         <input
                             type="text"
                             name="xBaths"
-                            value="{{ old('xBaths',$flyer->xBaths ?? '') }}"
+                            value="{{ old('xBaths', $flyer->xxBaths ?: $flyer->xBaths ?: '') }}"
                             class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
 
                     </div>
@@ -283,7 +283,7 @@
                         <input
                             type="text"
                             name="xSqft"
-                            value="{{ old('xSqft',$flyer->xSqft ?? '') }}"
+                            value="{{ old('xSqft', $flyer->xxSqft ?: $flyer->xSqft ?: '') }}"
                             class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
 
                     </div>
