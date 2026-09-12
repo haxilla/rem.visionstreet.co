@@ -70,7 +70,8 @@
 
         .flyer-thumb {
             width: 100%;
-            height: 160px;
+            height: auto;
+            aspect-ratio: 3 / 2;
             margin-bottom: 14px;
         }
 
