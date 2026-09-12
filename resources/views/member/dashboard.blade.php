@@ -202,6 +202,10 @@
                                     <span class="rounded-full bg-amber-100 px-3 py-1 text-amber-700">
                                         Draft
                                     </span>
+
+                                    <span class="rounded-full bg-slate-100 px-3 py-1 text-slate-600">
+                                        Created {{ $flyer->created_at?->format('M j, Y') ?? '—' }}
+                                    </span>
                                 </div>
                             </div>
 
@@ -302,6 +306,10 @@
 
                                     <span class="rounded-full bg-slate-100 px-3 py-1 text-slate-600">
                                         {{ number_format($viewCount) }} Views
+                                    </span>
+
+                                    <span class="rounded-full bg-slate-100 px-3 py-1 text-slate-600">
+                                        Created {{ $flyer->created_at?->format('M j, Y') ?? '—' }}
                                     </span>
                                 </div>
                             </div>
