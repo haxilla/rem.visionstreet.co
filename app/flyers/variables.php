@@ -57,3 +57,22 @@ $bodyTextColor = $isDarkFlyerBackground ? 'ffffff' : '333333';
 // rather than trusting whatever's stored.
 $safeHeadlineText = $isDarkFlyerBackground ? 'ffffff' : ($propInfo->theStyle->headline_text ?: '333333');
 
+// Style 1's photo-count links bar (style1FlyerLinks.blade.php) uses
+// accentbars as its OWN background, but its text was borrowing
+// headline_bar_text - a color tuned for a completely different
+// element's background (headline_bar_bg). The two fields are
+// unrelated and can easily land on the same dark shade. Compute real
+// contrast from accentbars itself (perceived-luminance formula, so
+// it works for any accent color, not just an enumerated list).
+$safeAccentBarTextColor = (function ($hex) {
+    $hex = ltrim((string) $hex, '#');
+    if (strlen($hex) !== 6 || !ctype_xdigit($hex)) {
+        return '333333';
+    }
+    $r = hexdec(substr($hex, 0, 2));
+    $g = hexdec(substr($hex, 2, 2));
+    $b = hexdec(substr($hex, 4, 2));
+    $luminance = (0.299 * $r + 0.587 * $g + 0.114 * $b) / 255;
+    return $luminance > 0.6 ? '333333' : 'ffffff';
+})($propInfo->theStyle->accentbars);
+

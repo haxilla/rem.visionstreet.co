@@ -1,6 +1,6 @@
 <div class="accent_bars"
   style="background-color:#{{$propInfo->theStyle->accentbars}};
-  color:#{{$propInfo->theStyle->headline_bar_text}};
+  color:#{{$safeAccentBarTextColor}};
   @if($totalPhotos >= 7)
     border-radius:10px;padding:5px;padding-left:10px;
     text-align:center;
@@ -15,7 +15,7 @@
   @endif">
     <div style="display:inline-block;">
       <a href="#"
-      style="color:#{{$propInfo->theStyle->headline_bar_text}};
+      style="color:#{{$safeAccentBarTextColor}};
       font-size:9pt;font-weight:bold;
       text-decoration:none;" target="_blank"
       class="accent_link">
@@ -23,7 +23,7 @@
       </a>
     </div>
     @if($propInfo['xMlsLink'])
-      <div style="color:#{{$propInfo->theStyle->headline_bar_text}};
+      <div style="color:#{{$safeAccentBarTextColor}};
       display:inline-block;
       padding:5px;
       padding-top:0;
@@ -32,9 +32,9 @@
       </div>
       <div style="display:inline-block;">
         <a href="@if($display=='email'){{$propInfo->xMlsLink}}@else#@endif"
-        style="color:#{{$propInfo->theStyle->headline_bar_text}};
+        style="color:#{{$safeAccentBarTextColor}};
         font-size:9pt;font-weight:bold;
-        color:#{{$propInfo->theStyle->headline_bar_text}};
+        color:#{{$safeAccentBarTextColor}};
         text-decoration:none;" target="_blank"
         class="accent_link @if($display=='screen') clickable @endif"
         @if($display=='screen') data-modal-trigger="mlslink" @endif>
@@ -44,7 +44,7 @@
     @endif
     @if($propInfo['xVirtualTour'])
       <div class="style1LinkDivider"
-      style="color:#{{$propInfo->theStyle->headline_bar_text}};
+      style="color:#{{$safeAccentBarTextColor}};
       display:inline-block;
       padding:5px;
       padding-top:0;
@@ -55,7 +55,7 @@
         <a href="@if($display=='email'){{$propInfo->xVirtualTour}}@else#@endif"
         style="
         font-size:10pt;
-        color:#{{$propInfo->theStyle->headline_bar_text}};
+        color:#{{$safeAccentBarTextColor}};
         text-decoration:none;" target="_blank"
         class="@if($display=='screen') clickable @endif"
         @if($display=='screen') data-modal-trigger="virtualtour" @endif>
