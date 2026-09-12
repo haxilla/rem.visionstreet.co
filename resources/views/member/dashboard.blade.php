@@ -332,12 +332,10 @@
                             </div>
 
                             <div class="flyer-actions">
-                                @if($flyer->url_slug)
-                                    <a href="/member/flyer/preview?flyerId={{ $flyer->id }}"
-                                       class="flyer-btn rounded-xl bg-[#123f91] px-4 py-2.5 text-xs font-bold text-white hover:bg-[#0f3274]">
-                                        View / Edit
-                                    </a>
-                                @endif
+                                <a href="/member/flyer/preview?flyerId={{ $flyer->id }}"
+                                   class="flyer-btn rounded-xl bg-[#123f91] px-4 py-2.5 text-xs font-bold text-white hover:bg-[#0f3274]">
+                                    View / Edit
+                                </a>
 
                                 <a href="/member/campaigns/{{ $flyer->id }}"
                                    class="flyer-btn rounded-xl border border-slate-200 px-4 py-2.5 text-xs font-bold text-slate-700 hover:bg-slate-50">
