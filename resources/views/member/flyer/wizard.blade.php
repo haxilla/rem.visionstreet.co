@@ -12,6 +12,12 @@
      */
     $highestUnlockedStep = max(1, min(5, (int) ($flyer->wizardStep ?? 1)));
 
+    // No point sending someone "back to my flyers" if this is the only
+    // flyer they have - the list would just show this same one.
+    $hasOtherFlyers = \App\Models\Core\Propflyer::where('propagent_id', $flyer->propagent_id)
+        ->where('id', '!=', $flyer->id)
+        ->exists();
+
     /*
      * Determine the page currently being displayed from the URL.
      * No named routes are required.
@@ -93,14 +99,16 @@
     ];
 @endphp
 
-<div class="mb-3">
-    <a href="/member/dashboard" class="inline-flex items-center gap-1 text-sm font-bold text-slate-500 hover:text-[#123f91]">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="15 18 9 12 15 6"></polyline>
-        </svg>
-        Back to My Flyers
-    </a>
-</div>
+@if($hasOtherFlyers)
+    <div class="mb-4">
+        <a href="/member/dashboard" class="inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-black text-[#123f91] shadow-sm ring-1 ring-black/5 hover:bg-slate-50">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+            Back to My Flyers
+        </a>
+    </div>
+@endif
 
 <div class="mb-8">
     <div class="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-black/5">
