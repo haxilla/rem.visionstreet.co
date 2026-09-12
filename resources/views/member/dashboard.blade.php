@@ -24,6 +24,7 @@
     }
 
     .flyer-thumb {
+        display: block;
         width: 140px;
         height: 96px;
         flex: 0 0 140px;
@@ -169,7 +170,7 @@
             @if($unsentFlyers->isNotEmpty())
                 <div class="mb-5">
                     <div class="flex items-center gap-3">
-                        <span class="flex h-9 min-w-9 items-center justify-center rounded-full bg-amber-100 px-2 text-xl font-black text-amber-700">
+                        <span class="flex h-9 min-w-9 items-center justify-center rounded-full bg-amber-500 px-2 text-xl font-black text-white shadow-sm">
                             {{ $unsentFlyers->count() }}
                         </span>
                         <h2 class="text-2xl font-black text-slate-900">Unsent Flyers</h2>
@@ -191,7 +192,7 @@
 
                         <article class="flyer-card">
 
-                            <div class="flyer-thumb">
+                            <a href="/member/flyer/preview?flyerId={{ $flyer->id }}" class="flyer-thumb">
                                 @if($img)
                                     <img src="{{ $img }}" alt="{{ $flyer->xFullStreet }}">
                                 @else
@@ -199,16 +200,16 @@
                                         No Photo
                                     </div>
                                 @endif
-                            </div>
+                            </a>
 
                             <div class="flyer-info">
                                 <div class="text-xs text-slate-400">
                                     Created: {{ $createdDate($flyer) }}
                                 </div>
 
-                                <div class="truncate text-lg font-black text-[#123f91]">
+                                <a href="/member/flyer/preview?flyerId={{ $flyer->id }}" class="block truncate text-lg font-black text-[#123f91] hover:underline">
                                     {{ $flyer->xFullStreet ?: 'Untitled Flyer' }}
-                                </div>
+                                </a>
 
                                 <div class="mt-1 text-sm text-slate-500">
                                     {{ $location ?: 'Location unavailable' }}
@@ -247,7 +248,7 @@
             <div class="mb-5">
                 <div class="flex items-center gap-3">
                     @if($recentFlyers->isNotEmpty())
-                        <span class="flex h-9 min-w-9 items-center justify-center rounded-full bg-slate-100 px-2 text-xl font-black text-slate-600">
+                        <span class="flex h-9 min-w-9 items-center justify-center rounded-full bg-[#123f91] px-2 text-xl font-black text-white shadow-sm">
                             {{ $recentFlyers->count() }}
                         </span>
                     @endif
@@ -288,7 +289,7 @@
 
                         <article class="flyer-card">
 
-                            <div class="flyer-thumb">
+                            <a href="/member/flyer/preview?flyerId={{ $flyer->id }}" class="flyer-thumb">
                                 @if($img)
                                     <img src="{{ $img }}" alt="{{ $flyer->xFullStreet }}">
                                 @else
@@ -296,16 +297,16 @@
                                         No Photo
                                     </div>
                                 @endif
-                            </div>
+                            </a>
 
                             <div class="flyer-info">
                                 <div class="text-xs text-slate-400">
                                     Created: {{ $createdDate($flyer) }}
                                 </div>
 
-                                <div class="truncate text-lg font-black text-[#123f91]">
+                                <a href="/member/flyer/preview?flyerId={{ $flyer->id }}" class="block truncate text-lg font-black text-[#123f91] hover:underline">
                                     {{ $flyer->xFullStreet ?: 'Untitled Flyer' }}
-                                </div>
+                                </a>
 
                                 <div class="mt-1 text-sm text-slate-500">
                                     {{ $location ?: 'Location unavailable' }}
@@ -332,7 +333,7 @@
 
                             <div class="flyer-actions">
                                 @if($flyer->url_slug)
-                                    <a href="/member/flyerEdit/{{ $flyer->id }}"
+                                    <a href="/member/flyer/preview?flyerId={{ $flyer->id }}"
                                        class="flyer-btn rounded-xl bg-[#123f91] px-4 py-2.5 text-xs font-bold text-white hover:bg-[#0f3274]">
                                         View / Edit
                                     </a>
