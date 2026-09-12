@@ -93,6 +93,15 @@
     ];
 @endphp
 
+<div class="mb-3">
+    <a href="/member/dashboard" class="inline-flex items-center gap-1 text-sm font-bold text-slate-500 hover:text-[#123f91]">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        Back to My Flyers
+    </a>
+</div>
+
 <div class="mb-8">
     <div class="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-black/5">
 
