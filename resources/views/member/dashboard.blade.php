@@ -167,14 +167,14 @@
 
             {{-- UNSENT FLYERS --}}
             @if($unsentFlyers->isNotEmpty())
-                <div class="mb-5 flex items-center gap-3">
-                    <div>
+                <div class="mb-5">
+                    <div class="flex items-center gap-3">
+                        <span class="flex h-9 min-w-9 items-center justify-center rounded-full bg-amber-100 px-2 text-xl font-black text-amber-700">
+                            {{ $unsentFlyers->count() }}
+                        </span>
                         <h2 class="text-2xl font-black text-slate-900">Unsent Flyers</h2>
-                        <p class="text-sm text-slate-500">Flyers that have not been delivered yet.</p>
                     </div>
-                    <span class="rounded-full bg-amber-100 px-3 py-1 text-xs font-black text-amber-700">
-                        {{ $unsentFlyers->count() }}
-                    </span>
+                    <p class="mt-1 text-sm text-slate-500">Flyers that have not been delivered yet.</p>
                 </div>
 
                 <div class="mb-10 space-y-4">
@@ -244,16 +244,16 @@
             @endif
 
             {{-- SENT FLYERS --}}
-            <div class="mb-5 flex items-center gap-3">
-                <div>
+            <div class="mb-5">
+                <div class="flex items-center gap-3">
+                    @if($recentFlyers->isNotEmpty())
+                        <span class="flex h-9 min-w-9 items-center justify-center rounded-full bg-slate-100 px-2 text-xl font-black text-slate-600">
+                            {{ $recentFlyers->count() }}
+                        </span>
+                    @endif
                     <h2 class="text-2xl font-black text-slate-900">Most Recent Sent Flyers</h2>
-                    <p class="text-sm text-slate-500">Recent flyer activity, delivery stats, and quick actions.</p>
                 </div>
-                @if($recentFlyers->isNotEmpty())
-                    <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-black text-slate-600">
-                        {{ $recentFlyers->count() }}
-                    </span>
-                @endif
+                <p class="mt-1 text-sm text-slate-500">Recent flyer activity, delivery stats, and quick actions.</p>
             </div>
 
             @if($recentFlyers->isEmpty())
