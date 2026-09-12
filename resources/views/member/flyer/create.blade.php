@@ -175,7 +175,7 @@ $flyer = $data['flyer'] ?? null;
                             <input
                                 type="text"
                                 name="xZip"
-                                value="{{ old('xZip', $flyer->xZip ?? '') }}"
+                                value="{{ old('xZip', $flyer->xZip ?: $flyer->xxZip ?: '') }}"
                                 class="w-full rounded-2xl border border-slate-300 px-4 py-3"
                                 required
                             >
