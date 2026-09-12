@@ -37,7 +37,7 @@ box-sizing:content-box;" class="flyer_background">
         text-align:center;
         font-size:12pt;
         font-weight:bold;
-        color:#{{$propInfo->theStyle->headline_text}};
+        color:#{{$safeHeadlineText}};
         padding-top:15px;padding-bottom:15px;">
             <div class="headline_text
             @if($display=='screen') clickable @endif"
@@ -209,7 +209,7 @@ box-sizing:content-box;" class="flyer_background">
                   @include('flyers.flyerParts.style1moreInfo')
                 </div>
                 @include('flyers.flyerParts.style1FlyerLinks')
-                @if($totalPhotos>5)
+                @if($propInfo->theMap->xIntersection)
                   <div style="font-size:11pt;margin-top:15px;margin-bottom:10px;
                   padding-left:10px;text-align:left;"
                   @if($display=='screen') class="clickable" data-modal-trigger="crossstreets" @endif>
@@ -220,8 +220,8 @@ box-sizing:content-box;" class="flyer_background">
                       {{$propInfo->theMap->xIntersection}}
                     </div>
                   </div>
-                  @include('flyers.flyerParts.bulletPoints1')
                 @endif
+                @include('flyers.flyerParts.bulletPoints1')
               </div>
           </div>
         </td>

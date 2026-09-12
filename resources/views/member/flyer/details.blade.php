@@ -219,7 +219,7 @@
                         <input
                             type="text"
                             name="xYrBuilt"
-                            value="{{ old('xYrBuilt',$flyer->xYrBuilt ?? '') }}"
+                            value="{{ old('xYrBuilt', $flyer->xYrBuilt ?: $flyer->xxYrBuilt ?: '') }}"
                             class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
 
                     </div>
@@ -243,7 +243,7 @@
                         <input
                             type="text"
                             name="xBeds"
-                            value="{{ old('xBeds',$flyer->xBeds ?? '') }}"
+                            value="{{ old('xBeds', $flyer->xBeds ?: $flyer->xxBeds ?: '') }}"
                             class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
 
                     </div>
@@ -263,7 +263,7 @@
                         <input
                             type="text"
                             name="xBaths"
-                            value="{{ old('xBaths',$flyer->xBaths ?? '') }}"
+                            value="{{ old('xBaths', $flyer->xBaths ?: $flyer->xxBaths ?: '') }}"
                             class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
 
                     </div>
@@ -283,7 +283,7 @@
                         <input
                             type="text"
                             name="xSqft"
-                            value="{{ old('xSqft',$flyer->xSqft ?? '') }}"
+                            value="{{ old('xSqft', $flyer->xSqft ?: $flyer->xxSqft ?: '') }}"
                             class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
 
                     </div>
@@ -296,16 +296,17 @@
 
                         </label>
 
+                        @php $currentParking = old('xParking', $flyer->xParking ?? ''); @endphp
                         <select
                             name="xParking"
                             class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
 
                             <option value="">Select</option>
-                            <option>1 Car Garage</option>
-                            <option>2 Car Garage</option>
-                            <option>3 Car Garage</option>
-                            <option>4 Car Garage</option>
-                            <option>RV Parking</option>
+                            <option @selected($currentParking === '1 Car Garage')>1 Car Garage</option>
+                            <option @selected($currentParking === '2 Car Garage')>2 Car Garage</option>
+                            <option @selected($currentParking === '3 Car Garage')>3 Car Garage</option>
+                            <option @selected($currentParking === '4 Car Garage')>4 Car Garage</option>
+                            <option @selected($currentParking === 'RV Parking')>RV Parking</option>
 
                         </select>
 
@@ -319,14 +320,15 @@
 
                         </label>
 
+                        @php $currentPool = old('xPool', $flyer->xPoolPvt ?: $flyer->xxPoolPvt ?: ''); @endphp
                         <select
                             name="xPool"
                             class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
 
                             <option value="">Select</option>
-                            <option>Private Pool</option>
-                            <option>Community Pool</option>
-                            <option>No Pool</option>
+                            <option @selected($currentPool === 'Private Pool')>Private Pool</option>
+                            <option @selected($currentPool === 'Community Pool')>Community Pool</option>
+                            <option @selected($currentPool === 'No Pool')>No Pool</option>
 
                         </select>
 

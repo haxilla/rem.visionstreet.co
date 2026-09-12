@@ -20,7 +20,7 @@
 <div style="border-top-left-radius:10px;
 border-top-right-radius:10px;
 background-color:#{{$propInfo->theStyle->flyer_background}};
-color:#333;font-family:arial;
+color:#{{$bodyTextColor}};font-family:arial;
 margin-bottom:15px;line-height:1.52"
 class="flyer_background"
 data-template="{{$propInfo->theStyle->template}}"
@@ -46,7 +46,7 @@ data-flyerbackground="{{$propInfo->theStyle
       <td align="right"
       style="padding:20px;
       padding-right:25px;padding-left:0;
-      color:#{{$propInfo->theStyle->headline_text}};
+      color:#{{$safeHeadlineText}};
       padding-left:0;
       width:40%;" class="headline_text
       @if($display=='screen') clickable @endif"
