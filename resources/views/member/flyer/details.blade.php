@@ -381,7 +381,7 @@
                 <input
                     type="text"
                     name="xHeadline"
-                    value="{{ old('xHeadline',$flyer->xHeadline ?? '') }}"
+                    value="{{ old('xHeadline', $flyer->xHeadline ?: $flyer->xxHeadline ?: '') }}"
                     class="w-full rounded-2xl border border-slate-300 px-4 py-3 transition focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
 
             </div>
