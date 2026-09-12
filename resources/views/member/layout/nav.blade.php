@@ -39,7 +39,7 @@
            logo/avatar being different widths can't push it off-center -
            justify-between alone only guarantees equal gaps, not a
            centered middle element) --}}
-      <nav class="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center gap-8 text-[14px] font-medium tracking-[0.02em] text-white/80">
+      <nav class="hidden lg:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center gap-8 text-[14px] font-medium tracking-[0.02em] text-white/80">
         <a href="/member/flyer/create" class="hover:text-white transition">Create New Flyer</a>
         <a href="/member/dashboard" class="hover:text-white transition">My Flyers</a>
         <a href="/member/campaigns" class="hover:text-white transition">Campaigns</a>
@@ -51,7 +51,7 @@
       <div class="flex items-center gap-3">
 
         {{-- ACCOUNT DROPDOWN (desktop) --}}
-        <details class="relative hidden md:block">
+        <details class="relative hidden lg:block">
           <summary class="flex cursor-pointer list-none items-center rounded-full transition">
             @if($navAgentImg)
               <img src="{{ $navAgentImg }}" alt="" class="h-10 w-10 rounded-full object-cover object-top ring-2 ring-white/25 hover:ring-white/60 transition">
@@ -87,7 +87,7 @@
         </details>
 
         {{-- MOBILE HAMBURGER --}}
-        <details class="relative md:hidden">
+        <details class="relative lg:hidden">
           <summary class="flex h-10 w-10 cursor-pointer list-none items-center justify-center rounded-lg text-white hover:bg-white/10 transition">
             <span class="text-xl leading-none">&#9776;</span>
           </summary>

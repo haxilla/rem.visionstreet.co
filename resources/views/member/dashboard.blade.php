@@ -17,6 +17,13 @@
         transition: box-shadow .15s ease, transform .15s ease, border-color .15s ease;
     }
 
+    /* Photo and address already link to the flyer - this button is
+       only useful as an obvious tap target on the smallest screens,
+       where the stacked card layout makes those links less discoverable. */
+    .view-edit-btn {
+        display: none;
+    }
+
     .flyer-card:hover {
         box-shadow: 0 8px 20px rgba(15,23,42,.08), 0 2px 6px rgba(15,23,42,.04);
         border-color: rgba(15,23,42,.08);
@@ -66,6 +73,10 @@
 
         .flyer-card:hover {
             transform: none;
+        }
+
+        .view-edit-btn {
+            display: inline-block;
         }
 
         .flyer-thumb {
@@ -333,7 +344,7 @@
 
                             <div class="flyer-actions">
                                 <a href="/member/flyer/preview?flyerId={{ $flyer->id }}"
-                                   class="flyer-btn rounded-xl bg-[#123f91] px-4 py-2.5 text-xs font-bold text-white hover:bg-[#0f3274]">
+                                   class="flyer-btn view-edit-btn rounded-xl bg-[#123f91] px-4 py-2.5 text-xs font-bold text-white hover:bg-[#0f3274]">
                                     View / Edit
                                 </a>
 
