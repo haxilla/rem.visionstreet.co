@@ -40,7 +40,7 @@ $subject = $campaigns->first()['emSubject'] ?? '';
                 </a>
 
                 <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
-                    {{ number_format($propInfo->xWebViews ?? 0) }} Flyer Views
+                    {{ number_format(optional($propInfo->theStats)->xWebViews ?? 0) }} Flyer Views
                 </span>
 
             </div>
