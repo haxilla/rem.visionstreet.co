@@ -34,9 +34,9 @@ $subject = $campaigns->first()['emSubject'] ?? '';
 
             <div class="flex flex-col gap-2">
 
-                <a href="/admin/dashboard"
+                <a href="/admin/flyers"
                 class="text-sm text-[#214e9b] font-semibold">
-                    ← Back to Campaigns
+                    ← Back to Flyers
                 </a>
 
             </div>

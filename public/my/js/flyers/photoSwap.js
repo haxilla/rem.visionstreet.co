@@ -12,6 +12,12 @@ document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll(thumbSelector).forEach(function (thumb) {
             thumb.addEventListener('click', function (e) {
                 e.preventDefault();
+                // Stop the click from bubbling to the ancestor
+                // [data-modal-trigger="photopicker"] anchor - otherwise
+                // flyerEditModals.blade.php's click handler also fires
+                // and pops the swap-picker modal open right on top of
+                // this swap, masking the fact that it worked.
+                e.stopPropagation();
                 large.src = thumb.src;
             });
         });
