@@ -300,45 +300,6 @@
                             </p>
                         </div>
 
-                        {{-- SUMMARY CARDS --}}
-                        <div class="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
-                            <div class="rounded-2xl bg-white p-4 shadow-sm">
-                                <div class="text-xs font-semibold uppercase tracking-wide text-slate-400">
-                                    Waiting
-                                </div>
-                                <div class="mt-2 text-2xl font-semibold text-slate-900">
-                                    {{ $waitingCampaigns->count() }}
-                                </div>
-                            </div>
-
-                            <div class="rounded-2xl bg-white p-4 shadow-sm">
-                                <div class="text-xs font-semibold uppercase tracking-wide text-emerald-600">
-                                    Authorized
-                                </div>
-                                <div class="mt-2 text-2xl font-semibold text-slate-900">
-                                    {{ $waitingAuthorized->count() }}
-                                </div>
-                            </div>
-
-                            <div class="rounded-2xl bg-white p-4 shadow-sm">
-                                <div class="text-xs font-semibold uppercase tracking-wide text-red-600">
-                                    Unauthorized
-                                </div>
-                                <div class="mt-2 text-2xl font-semibold text-slate-900">
-                                    {{ $waitingUnauthorized->count() }}
-                                </div>
-                            </div>
-
-                            <div class="rounded-2xl bg-white p-4 shadow-sm">
-                                <div class="text-xs font-semibold uppercase tracking-wide text-blue-600">
-                                    In Progress
-                                </div>
-                                <div class="mt-2 text-2xl font-semibold text-slate-900">
-                                    {{ $inProgressCampaigns->count() }}
-                                </div>
-                            </div>
-                        </div>
-
                         {{-- CAMPAIGN DASHBOARD --}}
                         <div class="mt-6 rounded-[24px] bg-white shadow-[0_12px_35px_rgba(15,23,42,0.06)] overflow-hidden">
 
