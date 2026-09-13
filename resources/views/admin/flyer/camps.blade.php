@@ -218,6 +218,12 @@ $subject = $campaigns->first()['emSubject'] ?? '';
                             <div class="text-sm text-slate-500">
                                 Completed {{ $camp['emComplete'] }}
                             </div>
+
+                            @if($camp['emSubject'])
+                                <div class="text-sm text-slate-500">
+                                    Subject: {{ $camp['emSubject'] }}
+                                </div>
+                            @endif
                         </div>
 
                         <span class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-xs font-semibold">
