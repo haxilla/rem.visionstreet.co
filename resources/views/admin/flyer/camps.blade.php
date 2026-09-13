@@ -101,6 +101,33 @@ $subject = $campaigns->first()['emSubject'] ?? '';
 
         @endphp
 
+        {{-- ADD CAMPAIGN --}}
+        <div class="bg-white rounded-2xl shadow-sm p-5 mb-6">
+
+            <h2 class="font-semibold text-slate-900 mb-4">
+                Add Campaign Area
+            </h2>
+
+            <div class="flex flex-col md:flex-row gap-3">
+
+                <select class="flex-1 border border-slate-300 rounded-xl px-4 py-3">
+                    <option value="">Select Area</option>
+                    @foreach($data['emailCounts'] ?? [] as $areaKey => $count)
+                        <option value="{{ $areaKey }}">
+                            {{ $data['areaLabels'][$areaKey] ?? strtoupper($areaKey) }} ({{ number_format($count) }} contacts)
+                        </option>
+                    @endforeach
+                </select>
+
+                <button
+                    class="bg-[#214e9b] text-white px-5 py-3 rounded-xl font-semibold">
+                    Add Campaign
+                </button>
+
+            </div>
+
+        </div>
+
         {{-- ACTIVE CAMPAIGNS --}}
         <div class="bg-white rounded-2xl shadow-sm overflow-hidden mb-6">
 
@@ -155,28 +182,6 @@ $subject = $campaigns->first()['emSubject'] ?? '';
                     </div>
 
                 @endforeach
-
-            </div>
-
-        </div>
-
-        {{-- ADD CAMPAIGN --}}
-        <div class="bg-white rounded-2xl shadow-sm p-5 mb-6">
-
-            <h2 class="font-semibold text-slate-900 mb-4">
-                Add Campaign Area
-            </h2>
-
-            <div class="flex flex-col md:flex-row gap-3">
-
-                <select class="flex-1 border border-slate-300 rounded-xl px-4 py-3">
-                    <option>Select Area</option>
-                </select>
-
-                <button
-                    class="bg-[#214e9b] text-white px-5 py-3 rounded-xl font-semibold">
-                    Add Campaign
-                </button>
 
             </div>
 

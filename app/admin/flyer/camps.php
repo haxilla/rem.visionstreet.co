@@ -12,11 +12,21 @@ $emailCounts = [
     'azsaz'      => DB::connection('rememaildb')->table('azsaz')->count(),
 ];
 
+$areaLabels = [
+    'azphxmetro' => 'Phoenix Metro',
+    'azphxne'    => 'Phoenix Northeast',
+    'azphxse'    => 'Phoenix Southeast',
+    'azphxwv'    => 'Phoenix West Valley',
+    'aznaz'      => 'North Arizona',
+    'azsaz'      => 'South Arizona',
+];
+
 $data = [
     'waitingFlyerCamps'    => $waitingFlyerCamps,
     'inProgressFlyerCamps' => $inProgressFlyerCamps,
     'completeFlyerCamps'   => $completeFlyerCamps,
     'emailCounts'          => $emailCounts,
+    'areaLabels'           => $areaLabels,
     'campaignsWaiting'     => $campaignsWaiting,
     'campaignsInProgress'  => $campaignsInProgress,
     'campaignsCompleted'   => $campaignsCompleted,
