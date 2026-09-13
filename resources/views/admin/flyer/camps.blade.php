@@ -23,6 +23,16 @@ $campaigns =
     ?? collect();
 
 $subject = $campaigns->first()['emSubject'] ?? '';
+
+// created_at is only reliably populated for flyers created through this
+// app - anything imported from the legacy pre-Laravel system has it
+// null, with the real date only in the legacy creationDate column.
+$createdDate = null;
+if ($propInfo->created_at) {
+    $createdDate = $propInfo->created_at->format('n/j/Y');
+} elseif ($propInfo->creationDate) {
+    $createdDate = \Carbon\Carbon::parse($propInfo->creationDate)->format('n/j/Y');
+}
 @endphp
 
 <main class="pt-[72px]">
@@ -39,9 +49,17 @@ $subject = $campaigns->first()['emSubject'] ?? '';
                     ← Back to Flyers
                 </a>
 
-                <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
-                    {{ number_format(optional($propInfo->theStats)->xWebViews ?? 0) }} Flyer Views
-                </span>
+                <div class="flex flex-wrap items-center gap-2">
+                    @if($createdDate)
+                        <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
+                            Created {{ $createdDate }}
+                        </span>
+                    @endif
+
+                    <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
+                        {{ number_format(optional($propInfo->theStats)->xWebViews ?? 0) }} Flyer Views
+                    </span>
+                </div>
 
             </div>
 
