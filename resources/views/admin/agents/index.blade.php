@@ -11,12 +11,8 @@
     $currentTab = request()->has('nostart_page') ? 'nostart' : 'active';
 @endphp
 
-<div class="flex min-h-screen bg-[#f4f7fb] pt-[72px]">
-
-    @include('admin.includes.sidebar')
-
-    {{-- MAIN --}}
-    <main class="min-w-0 flex-1 px-4 py-6 sm:px-6 lg:px-10 lg:py-8">
+{{-- MAIN --}}
+<main class="min-h-screen bg-[#f4f7fb] pt-24 px-4 py-6 sm:px-6 lg:px-10 lg:py-8">
 
         {{-- HEADER --}}
         <div class="rounded-[24px] bg-white px-5 py-6 shadow-[0_12px_35px_rgba(15,23,42,0.06)] sm:px-8 sm:py-7">
@@ -494,8 +490,6 @@
         </div>
 
     </main>
-
-</div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {

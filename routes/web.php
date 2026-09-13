@@ -25,13 +25,13 @@ Route::get('/member/login',
 Route::post('/member/login',
 [guestController::class, 'memberLogin'])->middleware('throttle:5,1')->name('member.login.submit');
 
-//bouncebox
-Route::post('/admin/bounces/group-delete', [bounceboxController::class, 'groupDelete'])
-    ->name('admin.bounces.groupDelete');
-
-Route::get('/admin/bounces/{messageNumber}', [bounceboxController::class, 'view'])
-    ->whereNumber('messageNumber')
-    ->name('admin.bounces.view');
+//bouncebox - retired, views/app files moved to 0ld
+//Route::post('/admin/bounces/group-delete', [bounceboxController::class, 'groupDelete'])
+//    ->name('admin.bounces.groupDelete');
+//
+//Route::get('/admin/bounces/{messageNumber}', [bounceboxController::class, 'view'])
+//    ->whereNumber('messageNumber')
+//    ->name('admin.bounces.view');
 
 //public details
 Route::get('/homedetails/{flyerslug}',
@@ -49,6 +49,9 @@ Route::get('/admin/agentLogin/{id}',
 
 Route::get('/admin/returnToAdmin',
 [adminController::class, 'returnToAdmin'])->name('admin.returnToAdmin');
+
+Route::get('/admin/logout',
+[adminController::class, 'logout'])->name('admin.logout');
 
 //flyer details
 Route::get('/flyer/{flyerId}', [guestController::class, 'flyerDetail'])->name('flyer.detail');
