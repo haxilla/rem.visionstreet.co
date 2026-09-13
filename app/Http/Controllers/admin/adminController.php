@@ -65,7 +65,7 @@ class adminController extends Controller
     {
 
         include(app_path().'/admin/agent/view.php');
-        return redirect()->back();
+        return view('admin.agents.show', compact('agent', 'flyerCount', 'campaignCount', 'orders'));
 
     }
 
