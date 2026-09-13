@@ -183,6 +183,14 @@ $subject = $campaigns->first()['emSubject'] ?? '';
 
                 @endforeach
 
+                @if($waitingCampaigns->isEmpty() && $inProgressCampaigns->isEmpty())
+
+                    <div class="px-5 py-8 text-center text-slate-500">
+                        No active campaigns found.
+                    </div>
+
+                @endif
+
             </div>
 
         </div>
