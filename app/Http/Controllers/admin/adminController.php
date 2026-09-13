@@ -70,8 +70,9 @@ class adminController extends Controller
 
     }
 
-    public function agentLogin($id)
+    public function agentLogin(Request $request, $id)
     {
+        $this->rememberImpersonationOrigin($request);
 
         include(app_path().'/admin/agent/login.php');
         return redirect('/member/dashboard');
@@ -79,9 +80,29 @@ class adminController extends Controller
 
     public function returnToAdmin()
     {
+        $returnUrl = session('impersonation_return_url', '/admin/dashboard');
 
         include(app_path().'/admin/agent/returnToAdmin.php');
-        return redirect('/admin/dashboard');
+        return redirect($returnUrl);
+    }
+
+    /**
+     * Remember which admin page impersonation was launched from (via the
+     * HTTP Referer, since every "impersonate" link lives on some admin
+     * page), so returnToAdmin() can send the admin back there instead of
+     * always landing on the dashboard. Only same-site /admin/* referers
+     * are trusted, to avoid an open redirect if this header were ever
+     * spoofed.
+     */
+    private function rememberImpersonationOrigin(Request $request): void
+    {
+        $referer = $request->headers->get('referer');
+
+        if ($referer && str_starts_with($referer, url('/admin'))) {
+            session(['impersonation_return_url' => $referer]);
+        } else {
+            session()->forget('impersonation_return_url');
+        }
     }
 
     public function flyerCamps($flyerId)
@@ -94,9 +115,11 @@ class adminController extends Controller
 
     }
 
-    public function flyerEdit($flyerId)
+    public function flyerEdit(Request $request, $flyerId)
     {
         $flyer = Propflyer::findOrFail($flyerId);
+
+        $this->rememberImpersonationOrigin($request);
 
         // Impersonate the flyer's owning agent (same login.php used by
         // agentLogin), then open the flyer the same way the member's own

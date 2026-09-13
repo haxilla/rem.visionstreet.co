@@ -2,4 +2,4 @@
 
 Auth::guard('member')->logout();
 
-session()->forget(['impersonator_admin_id', 'impersonating_member_id']);
+session()->forget(['impersonator_admin_id', 'impersonating_member_id', 'impersonation_return_url']);
