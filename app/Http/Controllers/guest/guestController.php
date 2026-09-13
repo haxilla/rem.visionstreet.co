@@ -25,8 +25,12 @@ class guestController extends Controller
 
     public function adminLoginForm()
     {
+        if (Auth::guard('admin')->check()) {
+            return redirect('/admin/dashboard');
+        }
+
         return view('admin.login');
-    }   
+    }
 
     public function adminLogin(Request $request)
     {
@@ -46,11 +50,8 @@ class guestController extends Controller
             'password'   => $credentials['password'],
         ], $request->boolean('remember'))) {
 
-            /*
-            return redirect()->intended('/admin/dashboard');
-            */
             $request->session()->regenerate();
-            return redirect('/admin/dashboard');
+            return redirect()->intended('/admin/dashboard');
         }
 
         return back()->withErrors([
@@ -60,6 +61,10 @@ class guestController extends Controller
 
     public function memberLoginForm()
     {
+        if (Auth::guard('member')->check()) {
+            return redirect('/member/dashboard');
+        }
+
         include app_path('member/login.php');
         return view('member.login',
         [
