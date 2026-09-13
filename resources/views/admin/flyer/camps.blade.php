@@ -200,7 +200,7 @@ $subject = $campaigns->first()['emSubject'] ?? '';
 
             <div class="px-5 py-4 border-b border-slate-200">
                 <h2 class="font-semibold text-slate-900">
-                    Completed Campaigns
+                    Completed Campaigns ({{ number_format($completedCampaigns->sum('totalEmails')) }})
                 </h2>
             </div>
 
@@ -212,7 +212,7 @@ $subject = $campaigns->first()['emSubject'] ?? '';
 
                         <div>
                             <div class="font-semibold">
-                                {{ $camp['emArea'] }}
+                                {{ $camp['emArea'] }} ({{ number_format($camp['totalEmails'] ?? 0) }})
                             </div>
 
                             <div class="text-sm text-slate-500">

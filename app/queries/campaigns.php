@@ -126,7 +126,8 @@ $completeCampsQuery = Propdelivnow::with([
         'cid',
         'emArea',
         'emArea_display',
-        'emSubject'
+        'emSubject',
+        'totalEmails'
 )
 ->whereNotNull('emComplete')
 ->orderBy('emComplete', 'desc')
@@ -145,6 +146,7 @@ $completeCampsMap = $completeCampsQuery->map(function ($item) {
         'emComplete'   => $item->emComplete,
         'emRequest'    => $item->emRequest,
         'cid'          => $item->cid,
+        'totalEmails'  => $item->totalEmails,
     ];
 });
 
