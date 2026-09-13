@@ -249,6 +249,8 @@ $subject = $campaigns->first()['emSubject'] ?? '';
 }
 </style>
 
+<script src="/my/js/flyers/photoSwap.js"></script>
+
 <script>
 document.addEventListener('DOMContentLoaded', () => {
 
