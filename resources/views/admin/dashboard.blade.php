@@ -4,10 +4,8 @@
 
 @include('admin.layout.nav')
 
-<main class="min-h-screen pt-24 relative">
-
-    <div class="mx-0 sm:mx-4 lg:mx-10">
-        <div class="pageswap p-0 sm:p-4 lg:p-6 w-full">
+<main class="min-h-screen bg-[#f4f7fb] pt-24">
+    <div class="px-4 py-6 sm:px-6 lg:px-10 lg:py-8">
 
             @php
                 /*
@@ -283,7 +281,7 @@
                 };
             @endphp
 
-            <div class="min-h-screen bg-[#f4f7fb] px-2 py-4 sm:px-4 lg:px-10 lg:py-8">
+            <div>
 
                         {{-- HEADER --}}
                         <div class="rounded-[20px] bg-white px-4 py-5 sm:px-6 sm:py-6 lg:px-8 lg:py-7 shadow-[0_12px_35px_rgba(15,23,42,0.06)]">
@@ -555,7 +553,6 @@
             </div>
 
         </div>
-    </div>
 </main>
 
 @include('public.layout.footer')
