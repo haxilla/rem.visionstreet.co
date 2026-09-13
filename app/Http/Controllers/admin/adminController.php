@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Core\Propflyer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -91,5 +92,19 @@ class adminController extends Controller
             'data' => $data
         ]);
 
+    }
+
+    public function flyerEdit($flyerId)
+    {
+        $flyer = Propflyer::findOrFail($flyerId);
+
+        // Impersonate the flyer's owning agent (same login.php used by
+        // agentLogin), then hand off to the member wizard's own
+        // smart-resume logic so it lands on whichever step this flyer
+        // is actually at, instead of guessing a step here.
+        $id = $flyer->propagent_id;
+        include(app_path().'/admin/agent/login.php');
+
+        return redirect('/member/flyer/resume?flyerId='.$flyer->id);
     }
 }
