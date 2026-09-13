@@ -99,12 +99,17 @@ class adminController extends Controller
         $flyer = Propflyer::findOrFail($flyerId);
 
         // Impersonate the flyer's owning agent (same login.php used by
-        // agentLogin), then hand off to the member wizard's own
-        // smart-resume logic so it lands on whichever step this flyer
-        // is actually at, instead of guessing a step here.
+        // agentLogin), then open the flyer the same way the member's own
+        // dashboard does - every flyer card there (draft or complete)
+        // links straight to Preview; resume.php's wizardStep-based step
+        // picker is a separate "Resume" action for drafts only, and
+        // wizardStep is never populated for flyers imported from the
+        // legacy pre-Laravel system, so routing through it here would
+        // incorrectly bounce an already-complete legacy flyer back to
+        // the Details step.
         $id = $flyer->propagent_id;
         include(app_path().'/admin/agent/login.php');
 
-        return redirect('/member/flyer/resume?flyerId='.$flyer->id);
+        return redirect('/member/flyer/preview?flyerId='.$flyer->id);
     }
 }
