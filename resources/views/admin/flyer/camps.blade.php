@@ -32,12 +32,16 @@ $subject = $campaigns->first()['emSubject'] ?? '';
         {{-- HEADER --}}
         <div class="bg-white rounded-2xl shadow-sm p-5 mb-6">
 
-            <div class="flex flex-col gap-2">
+            <div class="flex flex-wrap items-center justify-between gap-2">
 
                 <a href="/admin/flyers"
                 class="text-sm text-[#214e9b] font-semibold">
                     ← Back to Flyers
                 </a>
+
+                <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
+                    {{ number_format($propInfo->xWebViews ?? 0) }} Flyer Views
+                </span>
 
             </div>
 
