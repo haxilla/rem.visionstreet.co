@@ -15,15 +15,15 @@ Route::get('/', [
 //admin/login
 Route::redirect('/admin', '/admin/login');
 Route::get('/admin/login', [guestController::class, 'adminLoginForm'])->name('admin.login');
-Route::post('/admin/login', [guestController::class, 'adminLogin'])->name('admin.login.submit');
+Route::post('/admin/login', [guestController::class, 'adminLogin'])->middleware('throttle:5,1')->name('admin.login.submit');
 
 //member/login
 Route::get('/member', fn () => redirect('/member/login'));
 Route::get('/login', fn () => redirect('/member/login'));
 Route::get('/member/login', 
 [guestController::class, 'memberLoginForm'])->name('member.login');
-Route::post('/member/login', 
-[guestController::class, 'memberLogin'])->name('member.login.submit');
+Route::post('/member/login',
+[guestController::class, 'memberLogin'])->middleware('throttle:5,1')->name('member.login.submit');
 
 //bouncebox
 Route::post('/admin/bounces/group-delete', [bounceboxController::class, 'groupDelete'])

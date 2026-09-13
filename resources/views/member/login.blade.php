@@ -306,6 +306,8 @@
                             </a>
                         </div>
 
+                        <input type="hidden" name="recaptcha_token" id="recaptchaToken">
+
                         {{-- Submit --}}
                         <button
                             type="submit"
@@ -357,6 +359,20 @@
             : `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
                <circle cx="12" cy="12" r="3"/>`;
     }
+</script>
+
+<script src="https://www.google.com/recaptcha/api.js?render={{ config('services.recaptcha.site_key') }}"></script>
+<script>
+    document.querySelector('form[action="{{ route('member.login') }}"]').addEventListener('submit', function (e) {
+        e.preventDefault();
+        var form = e.target;
+        grecaptcha.ready(function () {
+            grecaptcha.execute('{{ config('services.recaptcha.site_key') }}', {action: 'login'}).then(function (token) {
+                document.getElementById('recaptchaToken').value = token;
+                form.submit();
+            });
+        });
+    });
 </script>
 
 </body>

@@ -4,11 +4,23 @@ namespace App\Http\Controllers\guest;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 
 class guestController extends Controller
-{    
-    
+{
+
     private const MAX_SEGMENTS = 5;
+
+    private function verifyRecaptcha(Request $request): bool
+    {
+        $result = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+            'secret'   => config('services.recaptcha.secret_key'),
+            'response' => $request->input('recaptcha_token'),
+            'remoteip' => $request->ip(),
+        ])->json();
+
+        return ($result['success'] ?? false) && ($result['score'] ?? 0) >= 0.5;
+    }
 
 
     public function adminLoginForm()
@@ -22,6 +34,12 @@ class guestController extends Controller
             'username' => ['required', 'email'],
             'password' => ['required'],
         ]);
+
+        if (!$this->verifyRecaptcha($request)) {
+            return back()->withErrors([
+                'username' => 'Verification failed, please try again.',
+            ])->onlyInput('username');
+        }
 
         if (Auth::guard('admin')->attempt([
             'adminEmail' => $credentials['username'],
@@ -56,6 +74,12 @@ class guestController extends Controller
             'xxAgtUname' => ['required', 'email'],
             'password' => ['required'],
         ]);
+
+        if (!$this->verifyRecaptcha($request)) {
+            return back()->withErrors([
+                'xxAgtUname' => 'Verification failed, please try again.',
+            ])->onlyInput('xxAgtUname');
+        }
 
         if (Auth::guard('member')->attempt($credentials)) {
             $request->session()->regenerate();

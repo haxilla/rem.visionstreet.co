@@ -200,6 +200,8 @@ class="relative bg-[#1a2235] min-h-screen font-sans text-gray-800 postgres">
                   </div>
                 @endif
 
+                <input type="hidden" name="recaptcha_token" id="recaptchaToken">
+
                 {{-- Submit --}}
                 <button type="submit"
                   class="w-full bg-yellow-400 hover:bg-yellow-300 active:scale-[0.99] text-[#1a2235] text-sm font-bold tracking-wide py-3 rounded-lg transition shadow-lg shadow-yellow-400/10 hover:shadow-yellow-400/20">
@@ -235,6 +237,20 @@ class="relative bg-[#1a2235] min-h-screen font-sans text-gray-800 postgres">
         icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
       }
     }
+  </script>
+
+  <script src="https://www.google.com/recaptcha/api.js?render={{ config('services.recaptcha.site_key') }}"></script>
+  <script>
+    document.querySelector('form[action="{{ route('admin.login') }}"]').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var form = e.target;
+      grecaptcha.ready(function () {
+        grecaptcha.execute('{{ config('services.recaptcha.site_key') }}', {action: 'login'}).then(function (token) {
+          document.getElementById('recaptchaToken').value = token;
+          form.submit();
+        });
+      });
+    });
   </script>
 </body>
 </html>
