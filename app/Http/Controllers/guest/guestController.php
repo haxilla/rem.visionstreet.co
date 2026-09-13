@@ -26,7 +26,7 @@ class guestController extends Controller
         if (Auth::guard('admin')->attempt([
             'adminEmail' => $credentials['username'],
             'password'   => $credentials['password'],
-        ])) {
+        ], $request->boolean('remember'))) {
 
             /*
             return redirect()->intended('/admin/dashboard');
