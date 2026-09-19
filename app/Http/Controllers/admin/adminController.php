@@ -206,10 +206,40 @@ class adminController extends Controller
     /** Save the system-wide settings shown on /admin/settings. */
     public function settingsSave(Request $request)
     {
-        foreach (AdminSetting::definitions() as $key => $definition) {
+        $definitions = AdminSetting::definitions();
+
+        // Validate everything first so a bad value saves nothing.
+        $rules    = [];
+        $messages = [];
+
+        foreach ($definitions as $key => $definition) {
+            if ($definition['type'] !== 'email') {
+                continue;
+            }
+
+            $rules[$key] = ['nullable', 'email', 'max:255'];
+
+            if (!empty($definition['required_when'])) {
+                $toggle = $definition['required_when'];
+
+                array_unshift(
+                    $rules[$key],
+                    Rule::requiredIf(fn () => $request->boolean($toggle))
+                );
+
+                $messages["{$key}.required"] =
+                    "Enter the {$definition['label']} before turning on {$definitions[$toggle]['label']}.";
+            }
+        }
+
+        $request->validate($rules, $messages);
+
+        foreach ($definitions as $key => $definition) {
             if ($definition['type'] === 'toggle') {
                 // an unchecked checkbox sends nothing, which reads as off
                 AdminSetting::write($key, $request->boolean($key) ? '1' : '0');
+            } elseif ($definition['type'] === 'email') {
+                AdminSetting::write($key, trim((string) $request->input($key, '')));
             }
         }
 

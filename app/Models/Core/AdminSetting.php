@@ -23,16 +23,26 @@ class AdminSetting extends Model
 
     /**
      * Every setting the admin Settings page manages.
-     * type 'toggle' stores '1' (on) or '0' (off).
+     *   type 'toggle' stores '1' (on) or '0' (off).
+     *   type 'email'  stores an email address ('' when unset).
+     *   'required_when' (optional) names a toggle setting; the value is
+     *   then required while that toggle is on.
      */
     public static function definitions(): array
     {
         return [
             'trial_mode' => [
                 'label'       => 'Trial mode',
-                'description' => 'While on, sends are treated as tests: agents do not receive a copy of what is being sent. Turn this on before testing, and off again for real sends.',
+                'description' => 'While on, sends are tests: no credits are used, and the agent does not receive their copy - it goes to the test email below instead. Turn this on before testing and off again for real sends.',
                 'type'        => 'toggle',
                 'default'     => '0',
+            ],
+            'trial_email' => [
+                'label'         => 'Test email address',
+                'description'   => 'Where the agent\'s copy of a send goes while trial mode is on.',
+                'type'          => 'email',
+                'default'       => '',
+                'required_when' => 'trial_mode',
             ],
         ];
     }
@@ -55,6 +65,12 @@ class AdminSetting extends Model
     public static function trialMode(): bool
     {
         return static::read('trial_mode', '0') === '1';
+    }
+
+    /** The address trial-mode agent copies go to ('' when not set). */
+    public static function trialEmail(): string
+    {
+        return trim((string) static::read('trial_email', ''));
     }
 
     /** Current value of every defined setting (falls back to its default). */

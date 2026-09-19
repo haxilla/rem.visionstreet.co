@@ -226,17 +226,12 @@
 
         </div>
 
-        {{-- Mobile wizard: one line of text + a row of tappable step buttons
-             (was five full-width stacked rows, about 280px tall) --}}
-        <div class="p-3 md:hidden">
+        {{-- Mobile wizard: five labeled, tappable segments - number (or
+             checkmark) on top, step name underneath - so it is clear what
+             each step is without taking the height of a stacked list. --}}
+        <div class="p-2 md:hidden">
 
-            <div class="mb-2 text-sm font-black text-slate-900">
-                Step {{ $currentStep }} of {{ count($steps) }}
-                <span class="text-slate-400">&middot;</span>
-                {{ $steps[$currentStep]['title'] }}
-            </div>
-
-            <div class="flex items-center gap-1.5">
+            <div class="flex items-stretch gap-1">
 
                 @foreach ($steps as $stepNumber => $step)
 
@@ -248,39 +243,61 @@
 
                         if ($isCurrent) {
                             $mobileClasses = 'bg-[#123f91] text-white';
+                            $mobileCircleClasses = 'bg-white text-[#123f91]';
                         } elseif ($isCompleted) {
                             $mobileClasses = 'bg-emerald-600 text-white';
+                            $mobileCircleClasses = 'bg-white text-emerald-700';
                         } elseif ($isUnlocked) {
                             $mobileClasses = 'bg-slate-600 text-white';
+                            $mobileCircleClasses = 'bg-white text-slate-700';
                         } else {
                             $mobileClasses = 'bg-slate-100 text-slate-400';
+                            $mobileCircleClasses = 'bg-slate-200 text-slate-500';
                         }
                     @endphp
 
                     @if ($isClickable)
                         <a
                             href="{{ $step['url'] }}"
-                            aria-label="{{ $step['title'] }}"
-                            class="flex h-9 flex-1 items-center justify-center rounded-lg text-xs font-black transition {{ $mobileClasses }}"
+                            class="flex min-w-0 flex-1 flex-col items-center gap-1 rounded-lg px-0.5 py-1.5 text-center transition {{ $mobileClasses }}"
                         >
                     @else
                         <div
-                            aria-label="{{ $step['title'] }}"
                             @if ($isCurrent)
                                 aria-current="step"
                             @endif
                             @if (!$isUnlocked)
                                 aria-disabled="true"
                             @endif
-                            class="flex h-9 flex-1 items-center justify-center rounded-lg text-xs font-black {{ $mobileClasses }}"
+                            class="flex min-w-0 flex-1 flex-col items-center gap-1 rounded-lg px-0.5 py-1.5 text-center {{ $mobileClasses }}"
                         >
                     @endif
 
-                        @if ($isCompleted && !$isCurrent)
-                            ✓
-                        @else
-                            {{ $stepNumber }}
-                        @endif
+                        <span class="flex h-5 w-5 items-center justify-center rounded-full text-[11px] font-black {{ $mobileCircleClasses }}">
+                            @if ($isCompleted && !$isCurrent)
+                                ✓
+                            @else
+                                {{ $stepNumber }}
+                            @endif
+                        </span>
+
+                        <span class="w-full truncate text-[11px] font-bold leading-none tracking-tight">
+                            {{ $step['title'] }}
+                        </span>
+
+                        {{-- Status text for screen readers only; colors and
+                             checkmarks already show it visually. --}}
+                        <span class="sr-only">
+                            @if ($isCurrent)
+                                Current step
+                            @elseif ($isCompleted)
+                                Completed
+                            @elseif ($isUnlocked)
+                                Available
+                            @else
+                                Not available yet
+                            @endif
+                        </span>
 
                     @if ($isClickable)
                         </a>

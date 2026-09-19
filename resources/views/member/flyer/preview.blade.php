@@ -19,6 +19,10 @@
     $flyer = $data['flyer'] ?? null;
     $remCredits = $data['remCredits'] ?? 0;
 
+    // Trial mode (admin Settings): no credits are needed or charged.
+    $trialMode = $data['trialMode'] ?? false;
+    $creditsBlocked = !$trialMode && $remCredits <= 0;
+
     $propInfo = $flyer;
     include(app_path() . '/flyers/variables.php');
 
@@ -50,7 +54,7 @@
                 </p>
             </div>
 
-            @if($remCredits <= 0)
+            @if($creditsBlocked)
                 <div class="flex items-center gap-3 rounded-lg bg-amber-50 px-3 py-2 text-amber-800 ring-1 ring-amber-200">
                     <div class="text-sm font-bold">
                         You need credits to send this flyer.
@@ -80,7 +84,7 @@
                 </div>
             </div>
 
-            @if($remCredits <= 0)
+            @if($creditsBlocked)
                 <a href="/member/buy-credits"
                     class="wz-btn shrink-0 bg-amber-600 text-white hover:bg-amber-700">
                     Purchase Credits

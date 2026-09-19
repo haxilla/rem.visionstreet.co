@@ -70,3 +70,6 @@ if (($flyer->wizardStep ?? 0) < 5) {
 
 $data['flyer'] = $flyer;
 $data['remCredits'] = auth()->user()->remCreds ?? 0;
+
+// Trial mode: no credits are needed or used (see save_sendsetup.php).
+$data['trialMode'] = \App\Models\Core\AdminSetting::trialMode();

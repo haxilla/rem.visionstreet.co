@@ -356,7 +356,7 @@
             {{-- Always in view, so "Save & Continue" never needs hunting for
                  on a long form. Saves everything on this page. --}}
 
-            <div class="fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 bg-white/95 pb-4 pt-3 shadow-[0_-4px_16px_rgba(15,23,42,.08)] backdrop-blur">
+            <div class="wz-pinned-bar fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 bg-white/95 pb-4 pt-3 shadow-[0_-4px_16px_rgba(15,23,42,.08)] backdrop-blur">
                 <div class="mx-auto flex max-w-[1400px] items-center justify-end gap-3 px-4 sm:px-6 lg:px-8">
 
                     <p class="mr-auto hidden text-xs font-semibold text-slate-500 sm:block">

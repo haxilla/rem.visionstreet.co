@@ -75,7 +75,13 @@ if ($propInfo->created_at) {
         {{-- TRIAL MODE / STATUS / ERRORS --}}
         @if($data['trialMode'] ?? false)
             <div class="bg-amber-50 border border-amber-300 text-amber-700 rounded-2xl px-5 py-4 mb-6 text-sm font-semibold">
-                Trial mode is ON. Agents are not receiving a copy of what is sent.
+                Trial mode is ON. No credits are used, and the agent's copy goes to
+                @if(($data['trialEmail'] ?? '') !== '')
+                    {{ $data['trialEmail'] }}
+                @else
+                    the test email (not set yet - add one in Settings)
+                @endif
+                instead of the agent.
                 <a href="/admin/settings" class="underline">Change in Settings</a>
             </div>
         @endif

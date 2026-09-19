@@ -69,3 +69,6 @@ $lastSubject = Propdelivnow::where('propflyer_id', $flyer->id)
 $data['flyer'] = $flyer;
 $data['lastSubject'] = $lastSubject;
 $data['remCredits'] = auth()->user()->remCreds ?? 0;
+
+// Trial mode: no credits are needed or used (see save_sendsetup.php).
+$data['trialMode'] = \App\Models\Core\AdminSetting::trialMode();

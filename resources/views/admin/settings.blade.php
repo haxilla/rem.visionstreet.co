@@ -34,9 +34,19 @@
         </div>
     @endif
 
+    @if($errors->any())
+        <div class="mt-6 rounded-2xl border border-red-200 bg-red-50 px-5 py-4 text-sm font-semibold text-red-700">
+            @foreach($errors->all() as $error)
+                <div>{{ $error }}</div>
+            @endforeach
+        </div>
+    @endif
+
     @if($trialOn)
         <div class="mt-6 rounded-2xl border border-amber-300 bg-amber-50 px-5 py-4 text-sm font-semibold text-amber-700">
-            Trial mode is currently ON. Agents are not receiving a copy of what is sent.
+            Trial mode is currently ON. No credits are used, and the agent's copy goes to
+            {{ ($values['trial_email'] ?? '') !== '' ? $values['trial_email'] : 'the test email (not set yet)' }}
+            instead of the agent.
         </div>
     @endif
 
@@ -67,9 +77,16 @@
                                        name="{{ $key }}"
                                        value="1"
                                        class="h-5 w-5 rounded border-slate-300"
-                                       @checked(($values[$key] ?? '0') === '1')>
+                                       @checked(session()->hasOldInput() ? old($key) === '1' : ($values[$key] ?? '0') === '1')>
                                 On
                             </label>
+                        @elseif($definition['type'] === 'email')
+                            <input type="email"
+                                   id="setting-{{ $key }}"
+                                   name="{{ $key }}"
+                                   value="{{ old($key, $values[$key] ?? '') }}"
+                                   placeholder="name@example.com"
+                                   class="wz-input w-72 max-w-full">
                         @endif
                     </div>
 

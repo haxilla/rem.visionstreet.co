@@ -87,6 +87,7 @@ $data = [
     'agent'                => $agent,
     'sendDetails'          => $sendDetails,
     'trialMode'            => AdminSetting::trialMode(),
+    'trialEmail'           => AdminSetting::trialEmail(),
     'waitingFlyerCamps'    => $waitingFlyerCamps,
     'inProgressFlyerCamps' => $inProgressFlyerCamps,
     'completeFlyerCamps'   => $completeFlyerCamps,

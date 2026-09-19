@@ -9,6 +9,10 @@
     $lastSubject = $data['lastSubject'] ?? null;
     $remCredits = $data['remCredits'] ?? 0;
 
+    // Trial mode (admin Settings): no credits are needed or charged.
+    $trialMode = $data['trialMode'] ?? false;
+    $creditsBlocked = !$trialMode && $remCredits <= 0;
+
     $areas = [
         'phoenix_metro'    => 'Phoenix Metro',
         'northeast_valley' => 'Northeast Valley',
@@ -142,7 +146,7 @@
                 <span class="wz-label-hint">(choose up to 2 areas to send this flyer to)</span>
             </div>
 
-            @if($remCredits <= 0)
+            @if($creditsBlocked)
                 <div class="mb-3 flex flex-wrap items-center gap-3 rounded-lg bg-amber-50 px-3 py-2 text-amber-800 ring-1 ring-amber-200">
                     <div class="text-sm font-bold">
                         You need credits to request a send.
@@ -165,7 +169,7 @@
                             <input type="checkbox" name="areas[]" value="{{ $value }}"
                                 class="hidden"
                                 @checked(in_array($value, $oldAreas))
-                                @disabled($remCredits <= 0)>
+                                @disabled($creditsBlocked)>
                             {{ $label }}
                         </label>
                     @endif

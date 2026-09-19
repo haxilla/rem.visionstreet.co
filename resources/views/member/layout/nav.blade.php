@@ -129,11 +129,28 @@
 </header>
 
 @if(session('impersonator_admin_id'))
+  @php
+    // Only an impersonating admin ever reaches this banner, so trial mode
+    // is shown here and nowhere else in the agent-facing pages.
+    $navTrialMode  = \App\Models\Core\AdminSetting::trialMode();
+    $navTrialEmail = $navTrialMode ? \App\Models\Core\AdminSetting::trialEmail() : '';
+  @endphp
+
+  {{-- Pinned bars (the wizard's Save & Continue) sit above this banner
+       instead of underneath it. 2.75rem = the banner's h-11. --}}
+  <style>.wz-pinned-bar { bottom: 2.75rem !important; }</style>
+
   {{-- IMPERSONATION BANNER: fixed to the bottom so it never needs the
        top header's height to be recalculated on every page --}}
   <div class="fixed bottom-0 left-0 w-full z-50 bg-amber-500 text-amber-950">
     <div class="mx-auto max-w-screen-2xl px-6 lg:px-10 flex h-11 items-center justify-center gap-3 text-sm font-bold" style="max-width:1600px;">
       <span>Viewing as {{ $navAgent->agtFullName ?? 'this agent' }} &mdash; impersonating</span>
+      @if($navTrialMode)
+        <span class="shrink-0 rounded-full bg-red-700 px-3 py-1 text-xs font-black uppercase tracking-wide text-white">Trial mode</span>
+        <span class="hidden md:inline">
+          No credits used &middot; agent copy goes to {{ $navTrialEmail !== '' ? $navTrialEmail : 'the test email (not set)' }}
+        </span>
+      @endif
       <a href="{{ route('admin.returnToAdmin') }}" class="rounded-full bg-amber-950 px-4 py-1.5 text-xs font-black uppercase tracking-wide text-amber-50 hover:bg-amber-900 transition">
         Return to Admin
       </a>

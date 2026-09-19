@@ -352,7 +352,7 @@
                  of the controls - height matches the bar's own height. --}}
             <div class="h-20"></div>
 
-            <div class="fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 bg-white/95 pb-4 pt-3 shadow-[0_-4px_16px_rgba(15,23,42,.08)] backdrop-blur">
+            <div class="wz-pinned-bar fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 bg-white/95 pb-4 pt-3 shadow-[0_-4px_16px_rgba(15,23,42,.08)] backdrop-blur">
                 <div class="mx-auto flex max-w-[1400px] flex-col items-end gap-1 px-4 sm:flex-row sm:items-center sm:justify-end sm:gap-4 sm:px-6 lg:px-8">
                     <p id="save-hint" class="text-xs font-semibold text-slate-500 sm:mr-auto"></p>
 

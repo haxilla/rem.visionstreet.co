@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Core\AdminSetting;
 use App\Models\Core\Propflyer;
 use App\Models\Core\Propdelivnow;
 
@@ -56,7 +57,12 @@ $flyer->save();
 $agent = auth()->user();
 $selectedAreas = $validatedData['areas'] ?? [];
 
-if (!empty($selectedAreas) && ($agent->remCreds ?? 0) >= 1) {
+// Trial mode (admin Settings): sends are tests, so no credit is needed
+// and none is ever charged. Requests are still created normally so the
+// whole flow (including admin approval) can be exercised.
+$trialMode = AdminSetting::trialMode();
+
+if (!empty($selectedAreas) && ($trialMode || ($agent->remCreds ?? 0) >= 1)) {
     $campaignAreaMap = include app_path('flyers/campaignAreas.php');
     $createdAny = false;
 
@@ -93,7 +99,7 @@ if (!empty($selectedAreas) && ($agent->remCreds ?? 0) >= 1) {
         $createdAny = true;
     }
 
-    if ($createdAny) {
+    if ($createdAny && !$trialMode) {
         $agent->remCreds = $agent->remCreds - 1;
         $agent->save();
     }
