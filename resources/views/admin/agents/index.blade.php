@@ -491,6 +491,13 @@ document.addEventListener('DOMContentLoaded', function () {
     const results = document.getElementById('agentSearchResults');
 
     let timer = null;
+    let latest = 0;   // only the newest search may draw its results
+
+    // Agent names and emails are typed by the agents themselves, so they must
+    // never be put into the page as raw HTML.
+    const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[c]));
 
     input.addEventListener('input', function () {
         clearTimeout(timer);
@@ -498,18 +505,24 @@ document.addEventListener('DOMContentLoaded', function () {
         const q = input.value.trim();
 
         if (q.length < 2) {
+            latest++;   // discard any search still in flight
             results.innerHTML = '';
             results.classList.add('hidden');
             return;
         }
 
         timer = setTimeout(() => {
+            const mine = ++latest;
+
             fetch(`/admin/agent/search?q=${encodeURIComponent(q)}`)
                 .then(response => response.json())
                 .then(data => {
-                    results.innerHTML = '';
+                    // a slower, older search finishing late must not overwrite a newer one
+                    if (mine !== latest) return;
 
-                    if (!data.length) {
+                    const agents = data.agents || [];
+
+                    if (!agents.length) {
                         results.innerHTML = `
                             <div class="px-4 py-3 text-sm text-slate-500">
                                 No agents found.
@@ -519,21 +532,33 @@ document.addEventListener('DOMContentLoaded', function () {
                         return;
                     }
 
-                    data.forEach(agent => {
-                        results.innerHTML += `
-                            <div class="flex items-center justify-between border-b border-slate-100 px-4 py-3 hover:bg-slate-50">
-                                <div>
-                                    <a href="/admin/agentView/${agent.id}" class="text-sm font-semibold text-slate-900 hover:underline">
-                                        ${agent.name}
-                                    </a>
-                                    <div class="text-xs text-slate-500">
-                                        ${agent.email ?? 'No email'} — ID:
-                                        <a href="/admin/agentLogin/${agent.id}" class="font-semibold text-[#214e9b] hover:underline">${agent.id}</a>
-                                    </div>
+                    results.innerHTML = agents.map(agent => `
+                        <div class="flex items-center justify-between gap-3 border-b border-slate-100 px-4 py-3 hover:bg-slate-50">
+                            <div class="min-w-0">
+                                <a href="/admin/agentView/${esc(agent.id)}" class="text-sm font-semibold text-slate-900 hover:underline">
+                                    ${esc(agent.name)}
+                                </a>
+                                <div class="break-words text-xs text-slate-500">
+                                    ${esc(agent.email || 'No email')}
+                                    ${agent.username && agent.username !== agent.email ? ' &middot; login ' + esc(agent.username) : ''}
+                                    &mdash; ID:
+                                    <a href="/admin/agentLogin/${esc(agent.id)}" class="font-semibold text-[#214e9b] hover:underline">${esc(agent.id)}</a>
                                 </div>
                             </div>
+
+                            ${agent.startDate
+                                ? `<span class="shrink-0 rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-semibold text-emerald-700">Started ${esc(agent.startDate)}</span>`
+                                : `<span class="shrink-0 rounded-full bg-amber-50 px-2.5 py-0.5 text-xs font-semibold text-amber-700">No start date</span>`}
+                        </div>
+                    `).join('');
+
+                    if (data.more) {
+                        results.innerHTML += `
+                            <div class="px-4 py-3 text-xs font-semibold text-slate-500">
+                                Showing the first ${agents.length} matches - type more of the name to narrow it down.
+                            </div>
                         `;
-                    });
+                    }
 
                     results.classList.remove('hidden');
                 });
