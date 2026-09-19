@@ -78,6 +78,20 @@ class adminController extends Controller
         return redirect('/member/dashboard');
     }
 
+    public function agentFlyerCreate(Request $request, $id)
+    {
+        // Same impersonation as agentLogin, but drops the admin straight
+        // into a brand-new flyer draft for this agent (no flyerId) - for
+        // the rare case of an admin recreating a flyer on an agent's
+        // behalf (e.g. from a known address after old records were
+        // lost), rather than reviewing/editing one that already exists.
+        $this->rememberImpersonationOrigin($request);
+
+        include(app_path().'/admin/agent/login.php');
+
+        return redirect('/member/flyer/create');
+    }
+
     public function returnToAdmin()
     {
         $returnUrl = session('impersonation_return_url', '/admin/dashboard');

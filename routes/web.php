@@ -47,6 +47,9 @@ Route::get('/admin/agentView/{id}',
 Route::get('/admin/agentLogin/{id}',
 [adminController::class, 'agentLogin'])->name('admin.agentLogin');
 
+Route::get('/admin/agentFlyerCreate/{id}',
+[adminController::class, 'agentFlyerCreate'])->name('admin.agentFlyerCreate');
+
 Route::get('/admin/returnToAdmin',
 [adminController::class, 'returnToAdmin'])->name('admin.returnToAdmin');
 
