@@ -121,6 +121,7 @@
                         <tr class="text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
                             <th class="px-4 py-3">Requested</th>
                             <th class="px-4 py-3">Area</th>
+                            <th class="px-4 py-3">Type</th>
                             <th class="px-4 py-3">Subject</th>
                             <th class="px-4 py-3 text-right">Emails</th>
                             <th class="px-4 py-3">Status</th>
@@ -132,6 +133,13 @@
                             <tr>
                                 <td class="whitespace-nowrap px-4 py-3 text-slate-600">{{ $day($c['requested']) }}</td>
                                 <td class="px-4 py-3 font-semibold text-slate-900">{{ $c['area'] }}</td>
+                                <td class="whitespace-nowrap px-4 py-3">
+                                    @if($c['free'])
+                                        <span class="rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700 ring-1 ring-emerald-200">Free</span>
+                                    @else
+                                        <span class="text-slate-600">Chosen by you</span>
+                                    @endif
+                                </td>
                                 <td class="max-w-xs truncate px-4 py-3 text-slate-600" title="{{ $c['subject'] }}">{{ $c['subject'] ?: '—' }}</td>
                                 <td class="px-4 py-3 text-right text-slate-600">{{ $num($c['emails']) }}</td>
                                 <td class="whitespace-nowrap px-4 py-3">
@@ -153,8 +161,15 @@
 
                         <div class="flex items-start justify-between gap-3">
                             <div class="min-w-0">
-                                <div class="font-black text-slate-900">{{ $c['area'] }}</div>
-                                <div class="text-xs text-slate-500">Requested {{ $day($c['requested']) }}</div>
+                                <div class="font-black text-slate-900">
+                                    {{ $c['area'] }}
+                                    @if($c['free'])
+                                        <span class="ml-1 rounded-full bg-emerald-50 px-2 py-0.5 align-middle text-[11px] font-bold text-emerald-700 ring-1 ring-emerald-200">Free</span>
+                                    @endif
+                                </div>
+                                <div class="text-xs text-slate-500">
+                                    {{ $c['free'] ? 'Added free' : 'Chosen by you' }} &middot; Requested {{ $day($c['requested']) }}
+                                </div>
                             </div>
 
                             <span class="shrink-0 rounded-full px-3 py-1 text-xs font-bold {{ $statuses[$c['status']]['class'] }}">

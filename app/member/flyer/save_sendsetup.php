@@ -125,12 +125,23 @@ if (!empty($selectedAreas)) {
             } elseif ($agent->refresh() && ($trialMode || ($agent->remCreds ?? 0) >= 1)) {
                 $createdAny = false;
 
+                // The legacy system stores emRequest in the DATABASE's local
+                // time (its own campCreated default matches). now() here is
+                // the app's clock (UTC), which put requests hours in the
+                // future for anything comparing emRequest with the DB clock
+                // (e.g. "waiting: emRequest <= now") - so use the DB's clock.
+                $dbNow = DB::selectOne('SELECT NOW() AS now_local')->now_local;
+
+                $slot = 0;
+
                 foreach ($selectedAreas as $memberAreaKey) {
                     $areaInfo = $campaignAreaMap[$memberAreaKey] ?? null;
 
                     if (!$areaInfo) {
                         continue;
                     }
+
+                    $slot++;
 
                     $campaign = new Propdelivnow();
                     $campaign->propflyer_id   = $flyer->id;
@@ -139,7 +150,11 @@ if (!empty($selectedAreas)) {
                     $campaign->emArea_display = $areaInfo['label'];
                     $campaign->emSubject      = $validatedData['emSubject'] ?? null;
                     $campaign->totalEmails    = DB::connection('rememaildb')->table($areaInfo['db'])->count();
-                    $campaign->emRequest      = now();
+                    $campaign->emRequest      = $dbNow;
+                    // Same labels the legacy system used for the agent's own
+                    // choices: area1 = first area picked, area2 = second.
+                    // (Admin-added free areas are 'admin' - see adminController.)
+                    $campaign->campLabel      = 'area' . $slot;
                     $campaign->authorized     = 0;
                     $campaign->save();
 

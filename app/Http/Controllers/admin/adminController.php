@@ -243,7 +243,13 @@ class adminController extends Controller
                                         ->orderByDesc('emRequest')
                                         ->value('emSubject');
         $campaign->totalEmails    = $totalEmails;
-        $campaign->emRequest      = now();
+        // The database's own clock, like the legacy system (see
+        // save_sendsetup.php) - not the app's UTC now().
+        $campaign->emRequest      = DB::selectOne('SELECT NOW() AS now_local')->now_local;
+        // How the legacy system marked a free, admin-added area:
+        $campaign->campLabel      = 'admin';
+        $campaign->admin_add      = 1;
+        $campaign->free           = 1;
         $campaign->authorized     = 1;
         $campaign->save();
 

@@ -113,14 +113,26 @@ class memberController extends Controller
                     $status = 'pending';
                 }
 
+                // Free (added by an admin at no charge) vs chosen by the agent.
+                // The legacy system marks a free area with free = 1 and
+                // admin_add = 1 and campLabel = 'admin'; the agent's own picks
+                // are campLabel 'area1' / 'area2' with those two empty. Any one
+                // of the marks counts. (Reads null-safely: the archive table
+                // may not carry every column.)
+                $isFree = (int) ($c->free ?? 0) === 1
+                    || (int) ($c->admin_add ?? 0) === 1
+                    || ($c->campLabel ?? '') === 'admin';
+
                 return [
                     'requested' => $requested,
                     'started'   => $started,
                     'completed' => $completed,
-                    'area'      => ($c->emArea_display ?? null) ?: ($areaLabels[$c->emArea ?? ''] ?? ($c->emArea ?? 'Unknown area')),
+                    // legacy rows store the area code in mixed case (AzPhxSE)
+                    'area'      => ($c->emArea_display ?? null) ?: ($areaLabels[strtolower($c->emArea ?? '')] ?? ($c->emArea ?? 'Unknown area')),
                     'subject'   => $c->emSubject ?? null,
                     'emails'    => $c->totalEmails ?? null,
                     'status'    => $status,
+                    'free'      => $isFree,
                 ];
             })
             // the same campaign held in both tables is one campaign
