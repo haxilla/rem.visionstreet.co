@@ -56,34 +56,34 @@
     }
 @endphp
 
-<main class="min-h-screen bg-[#f0f2f7] pt-24">
+<main class="min-h-screen bg-[#f0f2f7] pt-[88px]">
 
-<div class="mx-auto flex w-full max-w-[900px] flex-col gap-8 px-4 pb-16 sm:px-6 lg:px-8">
+<div class="mx-auto flex w-full max-w-[900px] flex-col gap-3 px-4 pb-10 sm:px-6 lg:px-8">
 
     {{-- HEADER --}}
-    <div>
+    <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
 
-        <a href="/member/flyer/preview?flyerId={{ $flyer->id }}"
-            class="text-sm font-bold text-[#123f91]">
-            ← Back to Preview
-        </a>
-
-        <h1 class="mt-2 text-4xl font-black text-slate-900">
+        <h1 class="text-2xl font-black leading-tight text-slate-900">
             Send This Flyer
         </h1>
+
+        <a href="/member/flyer/preview?flyerId={{ $flyer->id }}"
+            class="text-sm font-bold text-[#123f91] hover:underline">
+            ← Back to Preview
+        </a>
 
     </div>
 
     {{-- PROPERTY SNAPSHOT --}}
     @php $coverPhoto = $flyer->thePhotos->first(); @endphp
-    <div class="flex items-center gap-4 rounded-3xl bg-white p-4 shadow-sm ring-1 ring-black/5">
+    <div class="wz-card flex items-center gap-3 p-3">
 
         @if($coverPhoto)
             <img src="/hqphotos/{{ $flyer->theMeta->zipDir }}/{{ $flyer->theMeta->mlsDir }}/{{ $coverPhoto->photoName }}"
-                class="h-20 w-20 shrink-0 rounded-2xl object-cover">
+                class="h-14 w-14 shrink-0 rounded-lg object-cover">
         @else
-            <div class="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-slate-100 text-slate-300">
-                <svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-300">
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3 9.75L12 3l9 6.75V21a.75.75 0 01-.75.75H3.75A.75.75 0 013 21V9.75z" />
                 </svg>
             </div>
@@ -91,7 +91,7 @@
 
         <div class="min-w-0">
 
-            <div class="truncate text-lg font-black text-slate-900">
+            <div class="truncate text-base font-black text-slate-900">
                 {{ $flyer->xFullStreet }}
             </div>
 
@@ -99,7 +99,7 @@
                 {{ $flyer->xCity }}, {{ $flyer->state }} {{ $flyer->xZip }}
             </div>
 
-            <div class="mt-1 flex flex-wrap gap-x-3 text-sm font-semibold text-slate-600">
+            <div class="flex flex-wrap gap-x-3 text-sm font-semibold text-slate-600">
                 @if($flyer->xListPrice)<span>${{ number_format($flyer->xListPrice) }}</span>@endif
                 @if($flyer->xBeds)<span>{{ $flyer->xBeds }} bd</span>@endif
                 @if($flyer->xBaths)<span>{{ $flyer->xBaths }} ba</span>@endif
@@ -110,46 +110,44 @@
 
     </div>
 
-    <form method="POST" action="/member/flyer/save_sendsetup" class="flex flex-col gap-8">
+    <form method="POST" action="/member/flyer/save_sendsetup" class="flex flex-col gap-3">
 
         @csrf
 
         <input type="hidden" name="flyerId" value="{{ $flyer->id }}">
 
         {{-- SUBJECT --}}
-        <div class="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-black/5">
+        <div class="wz-card">
 
-            <label class="mb-2 block text-sm font-black text-slate-900">
+            <label for="emSubject" class="wz-label">
                 Email Subject
             </label>
 
             <input
                 type="text"
+                id="emSubject"
                 name="emSubject"
                 value="{{ old('emSubject', $lastSubject) }}"
                 placeholder="e.g. Just Listed - {{ $flyer->xFullStreet }}"
-                class="w-full rounded-xl border border-slate-300 px-4 py-3 text-base shadow-inner focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10"
+                class="wz-input"
             >
 
         </div>
 
         {{-- AREAS --}}
-        <div class="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-black/5">
+        <div class="wz-card">
 
-            <label class="mb-1 block text-sm font-black text-slate-900">
+            <div class="wz-label">
                 Areas
-            </label>
-
-            <p class="mb-4 text-sm text-slate-500">
-                Choose up to 2 areas to send this flyer to.
-            </p>
+                <span class="wz-label-hint">(choose up to 2 areas to send this flyer to)</span>
+            </div>
 
             @if($remCredits <= 0)
-                <div class="mb-4 flex flex-wrap items-center gap-3 rounded-2xl bg-amber-50 px-5 py-4 text-amber-800 ring-1 ring-amber-200">
+                <div class="mb-3 flex flex-wrap items-center gap-3 rounded-lg bg-amber-50 px-3 py-2 text-amber-800 ring-1 ring-amber-200">
                     <div class="text-sm font-bold">
                         You need credits to request a send.
                     </div>
-                    <a href="/member/buy-credits" class="shrink-0 rounded-lg bg-amber-600 px-4 py-2 text-xs font-black text-white hover:bg-amber-700">
+                    <a href="/member/buy-credits" class="shrink-0 rounded-md bg-amber-600 px-3 py-1.5 text-xs font-black text-white hover:bg-amber-700">
                         Buy Credits
                     </a>
                 </div>
@@ -159,11 +157,11 @@
 
                 @foreach($areas as $value => $label)
                     @if(in_array($value, $pendingAreaKeys, true))
-                        <span class="rounded-full border-2 border-amber-300 bg-amber-50 px-4 py-2 text-sm font-bold text-amber-700">
+                        <span class="rounded-full border-2 border-amber-300 bg-amber-50 px-3 py-1.5 text-sm font-bold text-amber-700">
                             {{ $label }} — Pending Approval
                         </span>
                     @else
-                        <label class="area-badge cursor-pointer select-none rounded-full border-2 border-slate-200 px-4 py-2 text-sm font-bold text-slate-600 transition has-[:checked]:border-[#123f91] has-[:checked]:bg-[#123f91] has-[:checked]:text-white has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-40">
+                        <label class="area-badge cursor-pointer select-none rounded-full border-2 border-slate-200 px-3 py-1.5 text-sm font-bold text-slate-600 transition has-[:checked]:border-[#123f91] has-[:checked]:bg-[#123f91] has-[:checked]:text-white has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-40">
                             <input type="checkbox" name="areas[]" value="{{ $value }}"
                                 class="hidden"
                                 @checked(in_array($value, $oldAreas))
@@ -178,117 +176,103 @@
         </div>
 
         {{-- MARKETING HIGHLIGHTS --}}
-        <div class="overflow-hidden rounded-3xl bg-slate-100 ring-1 ring-black/5">
+        <div class="wz-card">
 
-            <div class="border-b border-slate-200 px-6 py-5">
-                <h2 class="text-base font-black text-slate-900">Marketing Highlights</h2>
-                <p class="mt-1 text-sm text-slate-500">Optional extras for this listing.</p>
+            <h2 class="text-base font-black text-slate-900">Marketing Highlights</h2>
+            <p class="mb-3 text-xs text-slate-500">Optional extras for this listing.</p>
+
+            {{-- OPEN HOUSES --}}
+            <div class="wz-label">
+                Open Houses
+                <span class="wz-label-hint">(up to two sessions)</span>
             </div>
 
-            <div class="divide-y divide-slate-200">
+            <div class="flex flex-col gap-2">
 
-                {{-- OPEN HOUSES --}}
-                <div class="p-6">
+                @foreach([1, 2] as $n)
 
-                    <label class="mb-1 block text-sm font-black text-slate-900">
-                        Open Houses
-                    </label>
+                    <div class="grid grid-cols-1 gap-2 sm:grid-cols-3">
 
-                    <p class="mb-4 text-sm text-slate-500">
-                        Up to two open house sessions for this listing.
-                    </p>
+                        <input type="date" name="openHouseDate{{ $n }}"
+                            aria-label="Open house {{ $n }} date"
+                            value="{{ old('openHouseDate'.$n, $flyer->{'openHouseDate'.$n}) }}"
+                            class="wz-input">
 
-                    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                        @php $selStart = old('openHouseTime'.$n, $flyer->{'openHouseTime'.$n}); @endphp
+                        <select name="openHouseTime{{ $n }}" aria-label="Open house {{ $n }} start time"
+                            class="wz-input">
+                            <option value="">Start</option>
+                            @foreach($timeOptions as $value => $label)
+                                <option value="{{ $value }}" @selected($selStart && substr($selStart,0,5) === $value)>{{ $label }}</option>
+                            @endforeach
+                        </select>
 
-                        @foreach([1, 2] as $n)
-
-                            <div class="flex flex-col gap-2">
-
-                                <input type="date" name="openHouseDate{{ $n }}"
-                                    value="{{ old('openHouseDate'.$n, $flyer->{'openHouseDate'.$n}) }}"
-                                    class="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
-
-                                <div class="grid grid-cols-2 gap-2">
-
-                                    @php $selStart = old('openHouseTime'.$n, $flyer->{'openHouseTime'.$n}); @endphp
-                                    <select name="openHouseTime{{ $n }}"
-                                        class="rounded-xl border border-slate-300 bg-white px-2 py-2 text-sm focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
-                                        <option value="">Start</option>
-                                        @foreach($timeOptions as $value => $label)
-                                            <option value="{{ $value }}" @selected($selStart && substr($selStart,0,5) === $value)>{{ $label }}</option>
-                                        @endforeach
-                                    </select>
-
-                                    @php $selEnd = old('openHouseEndTime'.$n, $flyer->{'openHouseEndTime'.$n}); @endphp
-                                    <select name="openHouseEndTime{{ $n }}"
-                                        class="rounded-xl border border-slate-300 bg-white px-2 py-2 text-sm focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
-                                        <option value="">End</option>
-                                        @foreach($timeOptions as $value => $label)
-                                            <option value="{{ $value }}" @selected($selEnd && substr($selEnd,0,5) === $value)>{{ $label }}</option>
-                                        @endforeach
-                                    </select>
-
-                                </div>
-
-                            </div>
-
-                        @endforeach
+                        @php $selEnd = old('openHouseEndTime'.$n, $flyer->{'openHouseEndTime'.$n}); @endphp
+                        <select name="openHouseEndTime{{ $n }}" aria-label="Open house {{ $n }} end time"
+                            class="wz-input">
+                            <option value="">End</option>
+                            @foreach($timeOptions as $value => $label)
+                                <option value="{{ $value }}" @selected($selEnd && substr($selEnd,0,5) === $value)>{{ $label }}</option>
+                            @endforeach
+                        </select>
 
                     </div>
 
-                </div>
+                @endforeach
+
+            </div>
+
+            <div class="mt-4 grid grid-cols-1 gap-4 border-t border-slate-200 pt-3 md:grid-cols-2">
 
                 {{-- AGENT BONUS --}}
-                <div class="p-6">
+                <div>
 
-                    <label class="mb-1 block text-sm font-black text-slate-900">
+                    <div class="wz-label">
                         Agent Bonus
-                    </label>
+                        <span class="wz-label-hint">(optional incentive to the buyer's agent)</span>
+                    </div>
 
-                    <p class="mb-4 text-sm text-slate-500">
-                        Optional incentive to the buyer's agent.
-                    </p>
-
-                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div class="flex flex-col gap-2">
 
                         <input type="text" name="agentBonusAmount"
+                            aria-label="Agent bonus amount"
                             value="{{ old('agentBonusAmount', $flyer->agentBonusAmount) }}"
                             placeholder="e.g. $1,000 or 0.5%"
-                            class="rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm shadow-inner focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
+                            class="wz-input">
 
                         <input type="text" name="agentBonusComment"
+                            aria-label="Agent bonus note"
                             value="{{ old('agentBonusComment', $flyer->agentBonusComment) }}"
                             placeholder="Optional note shown with the bonus"
-                            class="rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm shadow-inner focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
+                            class="wz-input">
 
                     </div>
 
                 </div>
 
                 {{-- PRICE REDUCTION --}}
-                <div class="p-6">
+                <div>
 
-                    <label class="mb-1 block text-sm font-black text-slate-900">
+                    <div class="wz-label">
                         Price Reduction
-                    </label>
+                        <span class="wz-label-hint">(amount and date, if any)</span>
+                    </div>
 
-                    <p class="mb-4 text-sm text-slate-500">
-                        Enter the amount and date of a price reduction, if any.
-                    </p>
-
-                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div class="flex flex-col gap-2">
 
                         <div class="relative">
-                            <span class="pointer-events-none absolute inset-y-0 left-4 flex items-center font-semibold text-slate-400">$</span>
+                            <span class="pointer-events-none absolute inset-y-0 left-3 flex items-center text-sm font-semibold text-slate-400">$</span>
                             <input type="text" name="reducedAmount"
+                                aria-label="Price reduction amount"
                                 value="{{ old('reducedAmount', $flyer->reducedAmount) }}"
                                 placeholder="e.g. 10000"
-                                class="w-full rounded-xl border border-slate-300 bg-white py-3 pl-8 pr-4 text-sm shadow-inner focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
+                                class="wz-input pl-7">
                         </div>
 
                         <input type="date" name="reducedDate"
+                            aria-label="Price reduction date"
                             value="{{ old('reducedDate', $flyer->reducedDate) }}"
-                            class="rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm shadow-inner focus:border-[#123f91] focus:outline-none focus:ring-4 focus:ring-[#123f91]/10">
+                            class="wz-input">
 
                     </div>
 
@@ -299,8 +283,7 @@
         </div>
 
         <div class="flex justify-end">
-            <button type="submit"
-                class="rounded-xl bg-[#123f91] px-8 py-4 text-lg font-black text-white hover:bg-[#0d2f6e]">
+            <button type="submit" class="wz-btn wz-btn-primary">
                 Save
             </button>
         </div>

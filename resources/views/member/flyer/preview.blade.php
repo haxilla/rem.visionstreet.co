@@ -25,35 +25,37 @@
     $templateView = 'flyers.s' . strtolower($flyer->theStyle->template ?: '1pc');
 @endphp
 
-<main class="min-h-screen bg-[#f0f2f7] pt-24">
+<main class="min-h-screen bg-[#f0f2f7] pt-[88px]">
 
-<div class="mx-auto flex w-full max-w-[1400px] gap-8 px-4 pb-16 sm:px-6 lg:px-8">
+<div class="mx-auto w-full max-w-[1400px] px-4 pb-10 sm:px-6 lg:px-8">
 
-    <section class="min-w-0 flex-1">
+    <section class="min-w-0">
 
         {{-- HEADER --}}
-        <div class="mb-8 flex flex-wrap items-start justify-between gap-4">
+        <div class="mb-3 flex flex-wrap items-end justify-between gap-x-4 gap-y-2">
 
             <div>
-                <div class="text-sm font-bold uppercase tracking-wider text-[#123f91]">
-                    Step 5 of 5
+                <div class="flex flex-wrap items-baseline gap-x-3 gap-y-0.5">
+                    <h1 class="text-2xl font-black leading-tight text-slate-900">
+                        Preview & Send
+                    </h1>
+
+                    <span class="text-xs font-bold uppercase tracking-wider text-[#123f91]">
+                        Step 5 of 5
+                    </span>
                 </div>
 
-                <h1 class="mt-2 text-4xl font-black text-slate-900">
-                    Preview & Send
-                </h1>
-
-                <p class="mt-2 text-slate-500">
+                <p class="text-sm text-slate-500">
                     This is exactly what recipients will see. Ready to send it out?
                 </p>
             </div>
 
             @if($remCredits <= 0)
-                <div class="flex items-center gap-3 rounded-2xl bg-amber-50 px-5 py-4 text-amber-800 ring-1 ring-amber-200">
+                <div class="flex items-center gap-3 rounded-lg bg-amber-50 px-3 py-2 text-amber-800 ring-1 ring-amber-200">
                     <div class="text-sm font-bold">
                         You need credits to send this flyer.
                     </div>
-                    <a href="/member/buy-credits" class="shrink-0 rounded-lg bg-amber-600 px-4 py-2 text-xs font-black text-white hover:bg-amber-700">
+                    <a href="/member/buy-credits" class="shrink-0 rounded-md bg-amber-600 px-3 py-1.5 text-xs font-black text-white hover:bg-amber-700">
                         Buy Credits
                     </a>
                 </div>
@@ -67,25 +69,25 @@
         ])
 
         {{-- SEND NOW --}}
-        <div class="mb-8 flex flex-col items-center justify-between gap-4 rounded-3xl bg-white p-6 shadow-sm ring-1 ring-black/5 sm:flex-row">
+        <div class="wz-card mb-4 flex flex-col items-center justify-between gap-3 py-4 sm:flex-row">
 
             <div>
-                <div class="text-xl font-black text-slate-900">
+                <div class="text-base font-black text-slate-900">
                     Ready to send?
                 </div>
-                <div class="mt-1 text-sm text-slate-500">
+                <div class="text-sm text-slate-500">
                     Choose who receives this flyer and finish the email details.
                 </div>
             </div>
 
             @if($remCredits <= 0)
                 <a href="/member/buy-credits"
-                    class="shrink-0 rounded-xl bg-amber-600 px-8 py-4 text-lg font-black text-white hover:bg-amber-700">
+                    class="wz-btn shrink-0 bg-amber-600 text-white hover:bg-amber-700">
                     Purchase Credits
                 </a>
             @else
                 <a href="/member/flyer/sendsetup?flyerId={{ $flyer->id }}"
-                    class="shrink-0 rounded-xl bg-emerald-600 px-8 py-4 text-lg font-black text-white hover:bg-emerald-700">
+                    class="wz-btn shrink-0 bg-emerald-600 text-white hover:bg-emerald-700">
                     Finalize →
                 </a>
             @endif
@@ -93,7 +95,7 @@
         </div>
 
         {{-- FLYER PREVIEW --}}
-        <div class="mb-8 rounded-3xl bg-white p-4 shadow-sm ring-1 ring-black/5">
+        <div class="wz-card mb-4 p-3">
 
             <div class="flyer-stage">
 
@@ -117,10 +119,10 @@
 
         </div>
 
-        <div class="mb-8 flex justify-between">
+        <div class="flex justify-between">
 
             <a href="/member/flyer/design?flyerId={{ $flyer->id }}"
-                class="rounded-xl bg-white px-5 py-3 font-bold text-slate-700 shadow-sm ring-1 ring-black/5">
+                class="wz-btn wz-btn-secondary">
                 ← Back to Design
             </a>
 
@@ -137,16 +139,7 @@
 @include('public.layout.footer')
 
 <style>
-    .flyer-stage {
-        width: 100%;
-        overflow: hidden;
-        filter: drop-shadow(0 10px 25px rgba(0,0,0,.12));
-    }
-    #flyer-scale-wrapper {
-        width: 600px;
-        transform-origin: top left;
-        margin: 0 auto;
-    }
+    /* .flyer-stage / #flyer-scale-wrapper live in resources/css/components/wizard.css */
     .flyer-panel.active {
         display: block;
     }

@@ -9,25 +9,32 @@ $flyer = $data['flyer'] ?? null;
 $initialPhotos = collect($data['initialPhotos'] ?? []);
 @endphp
 
-<main class="min-h-screen bg-[#f0f2f7] pt-24">
+<main class="min-h-screen bg-[#f0f2f7] pt-[88px]">
 
-<div class="mx-auto flex w-full max-w-[1400px] gap-8 px-4 pb-16 sm:px-6 lg:px-8">
+<div class="mx-auto w-full max-w-[1400px] px-4 pb-10 sm:px-6 lg:px-8">
 
-    <section class="min-w-0 flex-1">
+    <section class="min-w-0">
 
-        {{-- HEADER --}}
-        <div class="mb-8">
+        {{-- HEADER (property summary folded into the subtitle) --}}
+        <div class="mb-3">
 
-            <div class="text-sm font-bold uppercase tracking-wider text-[#123f91]">
-                Step 3 of 5
+            <div class="flex flex-wrap items-baseline gap-x-3 gap-y-0.5">
+
+                <h1 class="text-2xl font-black leading-tight text-slate-900">
+                    Property Photos
+                </h1>
+
+                <span class="text-xs font-bold uppercase tracking-wider text-[#123f91]">
+                    Step 3 of 5
+                </span>
+
             </div>
 
-            <h1 class="mt-2 text-4xl font-black text-slate-900">
-                Property Photos
-            </h1>
-
-            <p class="mt-2 text-slate-500">
-                Add photos to your flyer.
+            <p class="text-sm text-slate-500">
+                {{ $flyer->xFullStreet }}, {{ $flyer->xCity }}, {{ $flyer->state }} {{ $flyer->xZip }}
+                @if($flyer->xMlsNum)
+                    · MLS #{{ $flyer->xMlsNum }}
+                @endif
             </p>
 
         </div>
@@ -37,37 +44,6 @@ $initialPhotos = collect($data['initialPhotos'] ?? []);
             'flyer' => $data['flyer']
         ])
 
-        {{-- PROPERTY SUMMARY --}}
-        <div class="mb-8 rounded-3xl bg-white p-5 shadow-sm ring-1 ring-black/5">
-
-            <div class="flex items-start justify-between">
-
-                <div>
-
-                    <div class="text-xl font-black text-slate-900">
-                        {{ $flyer->xFullStreet }}
-                    </div>
-
-                    <div class="text-slate-600">
-                        {{ $flyer->xCity }},
-                        {{ $flyer->state }}
-                        {{ $flyer->xZip }}
-                    </div>
-
-                    @if($flyer->xMlsNum)
-
-                        <div class="mt-1 text-sm text-slate-500">
-                            MLS #{{ $flyer->xMlsNum }}
-                        </div>
-
-                    @endif
-
-                </div>
-
-            </div>
-
-        </div>
-
         <div
             id="photoUploader"
             data-flyer-id="{{ $flyer->id }}"
@@ -76,21 +52,13 @@ $initialPhotos = collect($data['initialPhotos'] ?? []);
         >
 
             {{-- PHOTO SECTION --}}
-            <div class="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-black/5">
+            <div class="wz-card">
 
-                <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+                <div class="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
 
-                    <div>
-
-                        <h2 class="text-2xl font-black text-slate-900">
-                            Property Photos
-                        </h2>
-
-                        <p class="mt-1 text-sm text-slate-500">
-                            Drop photos here or click to browse. Uploads begin automatically.
-                        </p>
-
-                    </div>
+                    <p class="text-sm text-slate-500">
+                        Drop photos here or click to browse. Uploads begin automatically.
+                    </p>
 
                     <div
                         id="photoCount"
@@ -103,18 +71,18 @@ $initialPhotos = collect($data['initialPhotos'] ?? []);
                 {{-- DROPZONE --}}
                 <div
                     id="dropZone"
-                    class="mt-6 cursor-pointer rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 px-6 py-10 text-center transition hover:border-[#123f91] hover:bg-white"
+                    class="mt-3 cursor-pointer rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-center transition hover:border-[#123f91] hover:bg-white"
                 >
 
-                    <div class="text-lg font-black text-slate-800">
+                    <div class="text-base font-black text-slate-800">
                         Drop Photos Here
                     </div>
 
-                    <div class="mt-2 text-sm font-semibold text-slate-500">
+                    <div class="text-sm font-semibold text-slate-500">
                         or click anywhere in this box to browse
                     </div>
 
-                    <div class="mt-1 text-xs text-slate-400">
+                    <div class="text-xs text-slate-400">
                         You can select multiple photos at once.
                     </div>
 
@@ -131,31 +99,31 @@ $initialPhotos = collect($data['initialPhotos'] ?? []);
                 {{-- PREVIEW GRID --}}
                 <div
                     id="photoPreviewGrid"
-                    class="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5"
+                    class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5"
                 >
                 </div>
 
                 {{-- UPLOAD STATUS --}}
                 <div id="uploadedPhotosSection"
-                class="mt-10 {{ $initialPhotos->count() ? '' : 'hidden' }}">
+                class="mt-4 {{ $initialPhotos->count() ? '' : 'hidden' }}">
 
                     <div id="uploadedPhotosFooter"
-                    class="mb-8 flex flex-col items-center gap-4 text-center sm:flex-row sm:justify-between sm:text-left {{ $initialPhotos->count() ? '' : 'hidden' }}">
+                    class="mb-4 flex flex-col items-center gap-3 text-center sm:flex-row sm:justify-between sm:text-left {{ $initialPhotos->count() ? '' : 'hidden' }}">
 
                         <div id="uploadedPhotoMessage"
-                            class="text-xl font-black text-emerald-600">
+                            class="text-base font-black text-emerald-600">
                         </div>
 
-                        <div class="flex justify-center gap-4">
+                        <div class="flex justify-center gap-3">
 
                             <button id="uploadMoreButton"
                             type="button"
-                            class="cursor-pointer rounded-xl bg-white px-5 py-3 font-bold text-slate-700 shadow-sm ring-1 ring-black/5">
+                            class="wz-btn wz-btn-secondary cursor-pointer">
                                 Upload More Photos
                             </button>
 
                             <a href="/member/flyer/design?flyerId={{ $flyer->id }}"
-                                class="rounded-xl bg-[#123f91] px-6 py-3 font-bold text-white hover:bg-[#0f3274]">
+                                class="wz-btn wz-btn-primary">
                                 Continue →
                             </a>
 
@@ -164,10 +132,10 @@ $initialPhotos = collect($data['initialPhotos'] ?? []);
                     </div>
 
                     {{-- COVER PHOTO --}}
-                    <div id="heroPhotoWrap" class="mb-6"></div>
+                    <div id="heroPhotoWrap" class="mb-4"></div>
 
                     {{-- OTHER PHOTOS --}}
-                    <p id="otherPhotosLabel" class="mb-3 text-sm font-bold text-slate-500 hidden">
+                    <p id="otherPhotosLabel" class="mb-2 text-sm font-bold text-slate-500 hidden">
                         Other Photos <span class="font-normal text-slate-400">— click any photo to make it the cover</span>
                     </p>
 
