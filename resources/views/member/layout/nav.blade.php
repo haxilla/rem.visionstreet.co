@@ -142,18 +142,41 @@
 
   {{-- IMPERSONATION BANNER: fixed to the bottom so it never needs the
        top header's height to be recalculated on every page --}}
-  <div class="fixed bottom-0 left-0 w-full z-50 bg-amber-500 text-amber-950">
-    <div class="mx-auto max-w-screen-2xl px-6 lg:px-10 flex h-11 items-center justify-center gap-3 text-sm font-bold" style="max-width:1600px;">
-      <span>Viewing as {{ $navAgent->agtFullName ?? 'this agent' }} &mdash; impersonating</span>
-      @if($navTrialMode)
-        <span class="shrink-0 rounded-full bg-red-700 px-3 py-1 text-xs font-black uppercase tracking-wide text-white">Trial mode</span>
-        <span class="hidden md:inline">
-          No credits used &middot; agent copy goes to {{ $navTrialEmail !== '' ? $navTrialEmail : 'the test email (not set)' }}
+  {{-- One fixed-height row that never wraps: the left side (who + trial
+       mode) truncates with "..." when space runs out, and the Return
+       button stays pinned on the right. Text steps down from 14px to 12px
+       on small screens, and optional wording drops out progressively
+       (sm: "Return" -> "Return to Admin", md: adds "impersonating",
+       lg: adds the trial-mode detail). --}}
+  <div class="fixed bottom-0 left-0 z-50 w-full bg-amber-500 text-amber-950">
+    <div class="mx-auto flex h-11 max-w-[1600px] items-center gap-2 px-3 text-xs font-bold sm:gap-3 sm:px-6 sm:text-sm lg:px-10">
+
+      <div class="flex min-w-0 flex-1 items-center gap-2 sm:gap-3">
+
+        <span class="min-w-0 truncate">
+          <span class="font-semibold">Viewing as</span>
+          {{ $navAgent->agtFullName ?? 'this agent' }}
+          <span class="hidden font-semibold md:inline">&mdash; impersonating</span>
         </span>
-      @endif
-      <a href="{{ route('admin.returnToAdmin') }}" class="rounded-full bg-amber-950 px-4 py-1.5 text-xs font-black uppercase tracking-wide text-amber-50 hover:bg-amber-900 transition">
-        Return to Admin
+
+        @if($navTrialMode)
+          <span class="shrink-0 whitespace-nowrap rounded-full bg-red-700 px-2.5 py-0.5 text-[11px] font-black uppercase tracking-wide text-white">
+            Trial mode
+          </span>
+
+          <span class="hidden min-w-0 truncate font-semibold lg:block"
+                title="No credits used. Agent copy goes to {{ $navTrialEmail !== '' ? $navTrialEmail : 'the test email (not set)' }}">
+            No credits used &middot; agent copy to {{ $navTrialEmail !== '' ? $navTrialEmail : 'test email (not set)' }}
+          </span>
+        @endif
+
+      </div>
+
+      <a href="{{ route('admin.returnToAdmin') }}"
+         class="shrink-0 whitespace-nowrap rounded-full bg-amber-950 px-3 py-1.5 text-[11px] font-black uppercase tracking-wide text-amber-50 transition hover:bg-amber-900 sm:px-4">
+        Return<span class="hidden sm:inline">&nbsp;to Admin</span>
       </a>
+
     </div>
   </div>
 @endif
