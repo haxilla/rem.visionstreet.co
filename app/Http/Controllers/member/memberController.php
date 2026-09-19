@@ -21,6 +21,9 @@ class memberController extends Controller
 
         // Runs after auth: signs out a blocked agent on their next request.
         $this->middleware(\App\Http\Middleware\EnsureAgentNotBlocked::class);
+
+        // Everything recorded in the member area uses the agent's own timezone.
+        $this->middleware(\App\Http\Middleware\SetAgentTimezone::class);
     }
 
     public function segments(Request $request)

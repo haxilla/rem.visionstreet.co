@@ -125,12 +125,9 @@ if (!empty($selectedAreas)) {
             } elseif ($agent->refresh() && ($trialMode || ($agent->remCreds ?? 0) >= 1)) {
                 $createdAny = false;
 
-                // The legacy system stores emRequest in the DATABASE's local
-                // time (its own campCreated default matches). now() here is
-                // the app's clock (UTC), which put requests hours in the
-                // future for anything comparing emRequest with the DB clock
-                // (e.g. "waiting: emRequest <= now") - so use the DB's clock.
-                $dbNow = DB::selectOne('SELECT NOW() AS now_local')->now_local;
+                // Every time recorded here is in the AGENT'S timezone, worked
+                // out from the state they live in (see App\Support\AgentTime).
+                $agentNow = \App\Support\AgentTime::now($agent);
 
                 $slot = 0;
 
@@ -150,10 +147,17 @@ if (!empty($selectedAreas)) {
                     $campaign->emArea_display = $areaInfo['label'];
                     $campaign->emSubject      = $validatedData['emSubject'] ?? null;
                     $campaign->totalEmails    = DB::connection('rememaildb')->table($areaInfo['db'])->count();
-                    $campaign->emRequest      = $dbNow;
-                    // Same labels the legacy system used for the agent's own
-                    // choices: area1 = first area picked, area2 = second.
-                    // (Admin-added free areas are 'admin' - see adminController.)
+                    $campaign->emRequest      = $agentNow;
+                    $campaign->campCreated    = $agentNow;   // the legacy rows have this equal to emRequest
+                    $campaign->created_at     = $agentNow;
+                    $campaign->updated_at     = $agentNow;
+
+                    // An agent's own send (first send or a resend), marked the
+                    // way the legacy data marks it: campLabel area1 = first
+                    // area picked, area2 = second; free and admin_add left
+                    // empty (NULL) - those are only set on admin-added areas
+                    // (campLabel 'admin', admin_add 1, free 1 - adminController).
+                    // camp_order is left empty too: the mailer fills it in.
                     $campaign->campLabel      = 'area' . $slot;
                     $campaign->authorized     = 0;
                     $campaign->save();

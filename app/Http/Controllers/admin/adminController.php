@@ -7,6 +7,7 @@ use App\Models\Core\AdminSetting;
 use App\Models\Core\Propagent;
 use App\Models\Core\Propdelivnow;
 use App\Models\Core\Propflyer;
+use App\Support\AgentTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -103,6 +104,9 @@ class adminController extends Controller
     {
         $agent = Propagent::findOrFail($id);
 
+        // The save stamps updated_at - in the agent's timezone.
+        AgentTime::apply($agent);
+
         // The column is missing from the loaded row until the SQL has been run.
         if (!array_key_exists('loginBlocked', $agent->getAttributes())) {
             return redirect()->route('admin.agentView', $agent->id)
@@ -190,6 +194,9 @@ class adminController extends Controller
      */
     public function campaignApprove($flyerId)
     {
+        // The update stamps updated_at - in the flyer's agent's timezone.
+        AgentTime::apply(Propagent::find(Propflyer::whereKey($flyerId)->value('propagent_id')));
+
         $approved = Propdelivnow::where('propflyer_id', $flyerId)
             ->whereNull('emStart')
             ->whereNull('emComplete')
@@ -243,10 +250,18 @@ class adminController extends Controller
                                         ->orderByDesc('emRequest')
                                         ->value('emSubject');
         $campaign->totalEmails    = $totalEmails;
-        // The database's own clock, like the legacy system (see
-        // save_sendsetup.php) - not the app's UTC now().
-        $campaign->emRequest      = DB::selectOne('SELECT NOW() AS now_local')->now_local;
-        // How the legacy system marked a free, admin-added area:
+
+        // Recorded in the AGENT'S timezone (from their state), not the
+        // admin's - same as the agent's own sends (see App\Support\AgentTime).
+        $agent    = Propagent::find($flyer->propagent_id);
+        $agentNow = AgentTime::now($agent);
+
+        $campaign->emRequest      = $agentNow;
+        $campaign->campCreated    = $agentNow;
+        $campaign->created_at     = $agentNow;
+        $campaign->updated_at     = $agentNow;
+
+        // How the legacy system marks a free, admin-added area:
         $campaign->campLabel      = 'admin';
         $campaign->admin_add      = 1;
         $campaign->free           = 1;
