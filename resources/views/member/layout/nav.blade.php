@@ -159,24 +159,94 @@
           <span class="hidden font-semibold md:inline">&mdash; impersonating</span>
         </span>
 
-        @if($navTrialMode)
-          <span class="shrink-0 whitespace-nowrap rounded-full bg-red-700 px-2.5 py-0.5 text-[11px] font-black uppercase tracking-wide text-white">
-            Trial mode
-          </span>
+        {{-- Trial mode switch: always shown (ON or OFF) so it can be flipped
+             either way. Posts without reloading the page, so a half-filled
+             form isn't lost. Turning it OFF asks first, since real sends
+             then use credits and agents get their own copy. --}}
+        <form id="trialToggleForm" method="POST" action="{{ route('admin.trialToggle') }}" class="shrink-0">
+          @csrf
+          <button type="submit"
+                  id="trialToggleBtn"
+                  data-on="{{ $navTrialMode ? '1' : '0' }}"
+                  data-base="whitespace-nowrap rounded-full px-4 py-1.5 text-[11px] font-black uppercase tracking-wide transition"
+                  data-class-on="bg-red-700 text-white hover:bg-red-800"
+                  data-class-off="bg-amber-600/40 text-amber-950 ring-1 ring-amber-950/30 hover:bg-amber-600/60"
+                  title="{{ $navTrialMode ? 'Click to turn trial mode OFF' : 'Click to turn trial mode ON' }}"
+                  class="whitespace-nowrap rounded-full px-4 py-1.5 text-[11px] font-black uppercase tracking-wide transition {{ $navTrialMode ? 'bg-red-700 text-white hover:bg-red-800' : 'bg-amber-600/40 text-amber-950 ring-1 ring-amber-950/30 hover:bg-amber-600/60' }}">
+            Trial<span class="hidden sm:inline"> mode</span>: <span data-state>{{ $navTrialMode ? 'ON' : 'OFF' }}</span>
+          </button>
+        </form>
 
-          <span class="hidden min-w-0 truncate font-semibold lg:block"
-                title="No credits used. Agent copy goes to {{ $navTrialEmail !== '' ? $navTrialEmail : 'the test email (not set)' }}">
-            No credits used &middot; agent copy to {{ $navTrialEmail !== '' ? $navTrialEmail : 'test email (not set)' }}
+        <span id="trialDetail" class="min-w-0 {{ $navTrialMode ? '' : 'hidden' }}">
+          <span class="hidden truncate font-semibold lg:block">
+            No credits used &middot; agent copy to <span data-trial-email>{{ $navTrialEmail !== '' ? $navTrialEmail : 'test email (not set)' }}</span>
           </span>
-        @endif
+        </span>
 
       </div>
 
       <a href="{{ route('admin.returnToAdmin') }}"
-         class="shrink-0 whitespace-nowrap rounded-full bg-amber-950 px-3 py-1.5 text-[11px] font-black uppercase tracking-wide text-amber-50 transition hover:bg-amber-900 sm:px-4">
+         class="shrink-0 whitespace-nowrap rounded-full bg-amber-950 px-4 py-1.5 text-[11px] font-black uppercase tracking-wide text-amber-50 transition hover:bg-amber-900">
         Return<span class="hidden sm:inline">&nbsp;to Admin</span>
       </a>
 
     </div>
   </div>
+
+  <script>
+  (function () {
+      var form = document.getElementById('trialToggleForm');
+      if (!form) return;
+
+      var btn      = document.getElementById('trialToggleBtn');
+      var detail   = document.getElementById('trialDetail');
+      var emailEl  = detail.querySelector('[data-trial-email]');
+      var stateEl  = btn.querySelector('[data-state]');
+
+      function apply(on, email) {
+          btn.dataset.on = on ? '1' : '0';
+          btn.className  = btn.dataset.base + ' ' + (on ? btn.dataset.classOn : btn.dataset.classOff);
+          btn.title      = on ? 'Click to turn trial mode OFF' : 'Click to turn trial mode ON';
+          stateEl.textContent = on ? 'ON' : 'OFF';
+          detail.classList.toggle('hidden', !on);
+          emailEl.textContent = email || 'test email (not set)';
+      }
+
+      form.addEventListener('submit', function (e) {
+          e.preventDefault();
+
+          if (btn.dataset.on === '1' &&
+              !confirm('Turn trial mode OFF?\n\nReal sends will use credits and agents will receive their own copy.')) {
+              return;
+          }
+
+          btn.disabled = true;
+
+          fetch(form.action, {
+              method: 'POST',
+              body: new FormData(form),   // includes the CSRF token
+              headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' }
+          })
+              .then(function (response) {
+                  return response.json().then(function (json) {
+                      return { ok: response.ok, json: json };
+                  });
+              })
+              .then(function (result) {
+                  if (!result.ok) {
+                      alert(result.json.message || 'Could not change trial mode.');
+                      if (result.json.settingsUrl) window.location = result.json.settingsUrl;
+                      return;
+                  }
+                  apply(result.json.trialMode, result.json.trialEmail);
+              })
+              .catch(function () {
+                  alert('Could not change trial mode. Please try again.');
+              })
+              .then(function () {
+                  btn.disabled = false;
+              });
+      });
+  })();
+  </script>
 @endif

@@ -203,6 +203,42 @@ class adminController extends Controller
         );
     }
 
+    /**
+     * Flip trial mode on/off from the impersonation banner. Answers JSON
+     * to the banner's fetch() so the page it's on (e.g. a half-filled
+     * Details form) doesn't have to reload; falls back to a redirect if
+     * JavaScript is off. Same rule as the Settings page: it can't be
+     * turned ON until a test email address exists.
+     */
+    public function trialToggle(Request $request)
+    {
+        $turnOn = !AdminSetting::trialMode();
+
+        if ($turnOn && AdminSetting::trialEmail() === '') {
+            $message = 'Enter the Test email address on the Settings page before turning on Trial mode.';
+
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'message'     => $message,
+                    'settingsUrl' => url('/admin/settings'),
+                ], 422);
+            }
+
+            return redirect('/admin/settings')->withErrors(['trial_email' => $message]);
+        }
+
+        AdminSetting::write('trial_mode', $turnOn ? '1' : '0');
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'trialMode'  => $turnOn,
+                'trialEmail' => AdminSetting::trialEmail(),
+            ]);
+        }
+
+        return redirect()->back();
+    }
+
     /** Save the system-wide settings shown on /admin/settings. */
     public function settingsSave(Request $request)
     {

@@ -74,6 +74,9 @@ Route::post('/admin/campaignApprove/{flyerId}', [adminController::class, 'campai
 Route::post('/admin/campaignAddArea/{flyerId}', [adminController::class, 'campaignAddArea'])
     ->whereNumber('flyerId')->name('admin.campaignAddArea');
 
+//trial mode on/off from the impersonation banner (POST only; changes a system-wide setting)
+Route::post('/admin/trialToggle', [adminController::class, 'trialToggle'])->name('admin.trialToggle');
+
 //system-wide admin settings (GET /admin/settings is served by the segments convention)
 Route::post('/admin/settings', [adminController::class, 'settingsSave'])->name('admin.settingsSave');
 
