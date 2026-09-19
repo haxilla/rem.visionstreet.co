@@ -143,6 +143,10 @@
         // Requested but delivery hasn't started yet (not started, not finished).
         $waitingForFlyer = $flyerCampaigns->filter(fn($c) => empty($c->emStart) && empty($c->emComplete));
 
+        // Any campaign not finished yet (waiting OR running). Such a flyer can't
+        // be deleted until delivery ends - see app/member/flyer/delete.php.
+        $flyer->dashboard_active_delivery = $flyerCampaigns->contains(fn($c) => empty($c->emComplete));
+
         $flyer->dashboard_is_waiting = $waitingForFlyer->isNotEmpty();
         $flyer->dashboard_waiting_since = $waitingForFlyer->max('emRequest');
         $flyer->dashboard_waiting_areas = $waitingForFlyer
@@ -183,6 +187,18 @@
                     {{ $agent->agtFullName ?? 'Member' }}
                 </p>
             </div>
+
+            @if(session('dashboard_status'))
+                <div class="mb-6 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700">
+                    {{ session('dashboard_status') }}
+                </div>
+            @endif
+
+            @if(session('dashboard_error'))
+                <div class="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
+                    {{ session('dashboard_error') }}
+                </div>
+            @endif
 
             {{-- WAITING DELIVERY: requested, delivery not started yet --}}
             @if($waitingFlyers->isNotEmpty())
@@ -332,11 +348,9 @@
                                     Resume
                                 </a>
 
-                                <a href="/member/flyer/delete?flyerId={{ $flyer->id }}"
-                                   onclick="return confirm('Delete this flyer?')"
-                                   class="flyer-btn rounded-xl bg-red-50 px-4 py-2.5 text-xs font-bold text-red-700 ring-1 ring-red-200 hover:bg-red-100">
-                                    Delete
-                                </a>
+                                @unless($flyer->dashboard_active_delivery)
+                                    @include('member.layout.deleteFlyerForm', ['flyer' => $flyer])
+                                @endunless
                             </div>
 
                         </article>
@@ -428,6 +442,12 @@
                                    class="flyer-btn rounded-xl border border-slate-200 px-4 py-2.5 text-xs font-bold text-slate-700 hover:bg-slate-50">
                                     Campaigns
                                 </a>
+
+                                {{-- Sent flyers can be deleted too (soft delete) - but not while a
+                                     newer request is waiting or delivering. --}}
+                                @unless($flyer->dashboard_active_delivery)
+                                    @include('member.layout.deleteFlyerForm', ['flyer' => $flyer])
+                                @endunless
 
                             </div>
 

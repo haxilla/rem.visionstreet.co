@@ -171,6 +171,10 @@ class adminController extends Controller
 
     public function flyerCamps($flyerId)
     {
+        // An agent can soft-delete a flyer once it has been sent, while its
+        // completed campaigns still show in the admin lists. Give a clean
+        // message instead of the "flyer not found" debug dump.
+        abort_unless(Propflyer::whereKey($flyerId)->exists(), 404, 'This flyer has been deleted.');
 
         include(app_path().'/admin/flyer/camps.php');
         return view('admin.flyer.camps', [

@@ -40,7 +40,8 @@ $waitingCampsQuery = Propdelivnow::with([
 $waitingCampsMap = $waitingCampsQuery->map(function ($item) {
     return [
         'flyer'         => $item->theFlyer,
-        'address'       => $item->theFlyer->xFullStreet,
+        // theFlyer is null if the flyer has been (soft) deleted
+        'address'       => $item->theFlyer->xFullStreet ?? 'Deleted flyer',
         'campLabel'     => $item->campLabel,
         'propflyer_id'  => $item->propflyer_id,
         'emSubject'     => $item->emSubject,
