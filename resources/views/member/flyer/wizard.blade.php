@@ -155,11 +155,11 @@
                     @if ($isClickable)
                         <a
                             href="{{ $step['url'] }}"
-                            class="relative flex min-h-[48px] items-center px-4 py-2 transition {{ $stepClasses }}"
+                            class="relative flex min-h-[48px] items-center {{ $loop->first ? 'pl-4' : 'pl-9' }} pr-6 py-2 transition {{ $stepClasses }}"
                         >
                     @else
                         <div
-                            class="relative flex min-h-[48px] items-center px-4 py-2 {{ $stepClasses }}"
+                            class="relative flex min-h-[48px] items-center {{ $loop->first ? 'pl-4' : 'pl-9' }} pr-6 py-2 {{ $stepClasses }}"
                             @if (!$isUnlocked)
                                 aria-disabled="true"
                             @endif
