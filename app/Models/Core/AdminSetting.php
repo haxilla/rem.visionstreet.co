@@ -39,7 +39,7 @@ class AdminSetting extends Model
             ],
             'confirm_agent_deletion' => [
                 'label'       => 'Confirm agent deletion',
-                'description' => 'When on, deleting an agent from the "No Start Date" list asks "Delete this agent?" first. Turn it off to delete with one click and no prompt (handy while clearing out the easy ones), and back on when you are done.',
+                'description' => 'When on, "Delete selected" on the "No Start Date" agents list asks you to confirm first. Turn it off to delete the ticked agents immediately with no prompt (handy while clearing out the easy ones), and back on when you are done.',
                 'type'        => 'toggle',
                 'default'     => '1',
             ],

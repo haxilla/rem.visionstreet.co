@@ -313,6 +313,35 @@
                         @endif
                     </div>
 
+                    {{-- BULK DELETE BAR. The checkboxes in the phone cards and the table below
+                         are attached to this form with form="bulkDeleteForm", so they can live
+                         in either layout. Selection covers the agents on THIS page only. --}}
+                    @if(method_exists($noStartAgents, 'count') && $noStartAgents->count() > 0)
+                        <form id="bulkDeleteForm"
+                              method="POST"
+                              action="{{ route('admin.agentsDeleteMany') }}"
+                              data-confirm="{{ $confirmDelete ? '1' : '0' }}"
+                              class="mb-3 flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-slate-50 px-4 py-3">
+                            @csrf
+
+                            <label class="flex cursor-pointer items-center gap-2 text-sm font-semibold text-slate-700">
+                                <input type="checkbox" id="selectAllNoStart" class="h-5 w-5 rounded border-slate-300">
+                                Select all on this page
+                            </label>
+
+                            <div class="flex items-center gap-3">
+                                <span id="selectedCount" class="text-sm text-slate-500">0 selected</span>
+
+                                <button type="submit"
+                                        id="bulkDeleteBtn"
+                                        disabled
+                                        class="rounded-lg !bg-red-600 px-4 py-2 text-xs font-semibold !text-white shadow-sm hover:!bg-red-700 disabled:cursor-not-allowed disabled:opacity-40">
+                                    Delete selected
+                                </button>
+                            </div>
+                        </form>
+                    @endif
+
                     {{-- NO START DATE: MOBILE CARDS --}}
                     <div class="space-y-3 xl:hidden">
 
@@ -344,18 +373,11 @@
                                     </a>
                                 </div>
 
-                                <div class="mt-4">
-                                    <form method="POST" action="{{ route('admin.agentDelete', $agent->id) }}"
-                                          @if($confirmDelete) onsubmit="return confirm('Delete this agent? This cannot be undone.');" @endif>
-                                        @csrf
-                                        <button
-                                            type="submit"
-                                            class="block w-full rounded-lg !bg-red-600 px-3 py-2 text-center text-xs font-semibold !text-white shadow-sm hover:!bg-red-700"
-                                        >
-                                            Delete
-                                        </button>
-                                    </form>
-                                </div>
+                                <label class="mt-4 flex cursor-pointer items-center gap-2 border-t border-slate-100 pt-3 text-sm font-semibold text-slate-700">
+                                    <input type="checkbox" name="ids[]" value="{{ $agent->id }}" form="bulkDeleteForm"
+                                           class="agent-check h-5 w-5 rounded border-slate-300">
+                                    Select for deletion
+                                </label>
                             </div>
 
                         @empty
@@ -387,7 +409,7 @@
                                     </th>
 
                                     <th class="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wide text-slate-500">
-                                        Actions
+                                        Select
                                     </th>
                                 </tr>
                             </thead>
@@ -426,16 +448,9 @@
                                         </td>
 
                                         <td class="whitespace-nowrap px-6 py-3 text-right">
-                                            <form method="POST" action="{{ route('admin.agentDelete', $agent->id) }}" class="inline"
-                                                  @if($confirmDelete) onsubmit="return confirm('Delete this agent? This cannot be undone.');" @endif>
-                                                @csrf
-                                                <button
-                                                    type="submit"
-                                                    class="inline-flex items-center rounded-lg !bg-red-600 px-3 py-1.5 text-xs font-semibold !text-white shadow-sm hover:!bg-red-700"
-                                                >
-                                                    Delete
-                                                </button>
-                                            </form>
+                                            <input type="checkbox" name="ids[]" value="{{ $agent->id }}" form="bulkDeleteForm"
+                                                   aria-label="Select {{ $displayName }} for deletion"
+                                                   class="agent-check h-5 w-5 rounded border-slate-300">
                                         </td>
 
                                     </tr>
@@ -531,6 +546,78 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
+</script>
+
+{{-- No Start Date: select several agents and delete them together. --}}
+<script>
+(function () {
+    var form = document.getElementById('bulkDeleteForm');
+    if (!form) return;
+
+    var boxes   = Array.prototype.slice.call(document.querySelectorAll('.agent-check'));
+    var all     = document.getElementById('selectAllNoStart');
+    var countEl = document.getElementById('selectedCount');
+    var btn     = document.getElementById('bulkDeleteBtn');
+
+    // Every agent is rendered twice (phone cards + desktop table, only one is
+    // visible at a time), so count each agent once by its id.
+    function selectedIds() {
+        var seen = {};
+        boxes.forEach(function (b) { if (b.checked) seen[b.value] = true; });
+        return Object.keys(seen);
+    }
+
+    function totalAgents() {
+        var seen = {};
+        boxes.forEach(function (b) { seen[b.value] = true; });
+        return Object.keys(seen).length;
+    }
+
+    function refresh() {
+        var n = selectedIds().length;
+
+        countEl.textContent = n + ' selected';
+        btn.disabled = n === 0;
+        all.checked = n > 0 && n === totalAgents();
+        all.indeterminate = n > 0 && n < totalAgents();
+    }
+
+    // Keep an agent's two copies in step, so resizing the window can't leave
+    // one ticked and the other not.
+    boxes.forEach(function (b) {
+        b.addEventListener('change', function () {
+            boxes.forEach(function (other) {
+                if (other.value === b.value) other.checked = b.checked;
+            });
+            refresh();
+        });
+    });
+
+    all.addEventListener('change', function () {
+        boxes.forEach(function (b) { b.checked = all.checked; });
+        refresh();
+    });
+
+    form.addEventListener('submit', function (e) {
+        var n = selectedIds().length;
+
+        if (n === 0) {
+            e.preventDefault();
+            return;
+        }
+
+        // admin Settings > "Confirm agent deletion" (data-confirm = 1 / 0)
+        if (form.dataset.confirm === '1' &&
+            !confirm('Delete ' + n + (n === 1 ? ' agent' : ' agents') + '? This cannot be undone.')) {
+            e.preventDefault();
+        }
+    });
+
+    // Back/forward can restore ticked boxes without firing change events.
+    window.addEventListener('pageshow', refresh);
+
+    refresh();
+})();
 </script>
 
 @include('public.layout.footer')

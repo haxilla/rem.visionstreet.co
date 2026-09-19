@@ -61,29 +61,42 @@ class adminController extends Controller
 
 
     /**
-     * Delete an agent from the "No Start Date" list (POST only). The old
-     * version also deleted the agent's row from a REMOTE database
-     * (remote_realtyemails.emailagents); that connection no longer exists, so
-     * it threw before the local delete ever ran - that step is gone.
+     * Delete the agents ticked on the "No Start Date" list (POST only).
      *
-     * Only agents that never had a start date can be deleted here. This is a
-     * real delete (Propagent isn't soft-deleting) - the confirmation prompt on
-     * the button is controlled by the "Confirm agent deletion" admin setting.
+     * The old single-agent delete also removed the agent's row from a REMOTE
+     * database (remote_realtyemails.emailagents); that connection no longer
+     * exists, so it threw before the local delete ever ran - that step is gone.
+     *
+     * Only agents that never had a start date are deleted, whatever ids are
+     * sent (checked again here, not just on the page); any others are skipped
+     * and counted. This is a real delete (Propagent isn't soft-deleting). The
+     * confirmation prompt is a browser-side prompt controlled by the "Confirm
+     * agent deletion" admin setting.
      */
-    public function agentDelete($id)
+    public function agentsDeleteMany(Request $request)
     {
-        $agent = Propagent::findOrFail($id);
+        $validated = $request->validate([
+            // a page holds 25; the cap just guards against an absurd request
+            'ids'   => ['required', 'array', 'min:1', 'max:200'],
+            'ids.*' => ['integer', 'min:1'],
+        ], [
+            'ids.required' => 'Tick at least one agent to delete.',
+            'ids.min'      => 'Tick at least one agent to delete.',
+        ]);
 
-        if ($agent->startDate) {
-            return redirect()->back()
-                ->withErrors(['agent' => 'Only agents without a start date can be deleted here.']);
+        // the phone list and the table both carry each agent, so ids can repeat
+        $ids = array_values(array_unique(array_map('intval', $validated['ids'])));
+
+        $deleted = Propagent::whereIn('id', $ids)->whereNull('startDate')->delete();
+        $skipped = count($ids) - $deleted;
+
+        $message = 'Deleted ' . $deleted . ($deleted === 1 ? ' agent.' : ' agents.');
+
+        if ($skipped > 0) {
+            $message .= " Skipped {$skipped} (they have a start date, or were already gone).";
         }
 
-        $name = $agent->agtFullName ?: ($agent->xxAgtUname ?: ($agent->agtEmail ?: 'agent ' . $agent->id));
-
-        $agent->delete();
-
-        return redirect()->back()->with('status', "Deleted {$name}.");
+        return redirect()->back()->with('status', $message);
     }
 
     public function agentView($id)

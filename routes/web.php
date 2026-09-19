@@ -37,9 +37,9 @@ Route::post('/member/login',
 Route::get('/homedetails/{flyerslug}',
 [guestController::class, 'publicDetails'])->name('public.details');
 
-//agentDelete (POST only - it deletes data, so it carries a CSRF token)
-Route::post('/admin/agentDelete/{id}',
-[adminController::class, 'agentDelete'])->whereNumber('id')->name('admin.agentDelete');
+//delete the ticked agents from the "No Start Date" list (POST only - it deletes data, so it carries a CSRF token)
+Route::post('/admin/agentsDeleteMany',
+[adminController::class, 'agentsDeleteMany'])->name('admin.agentsDeleteMany');
 
 Route::get('/admin/agentView/{id}',
 [adminController::class, 'agentView'])->name('admin.agentView');
