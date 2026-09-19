@@ -89,3 +89,60 @@
         background: #f8fafc;
     }
 }
+
+/*
+ * Flyer side panel (Design + Details steps).
+ *
+ * Wide screens: a sticky right-hand column that stays in view while the
+ * form scrolls. Narrow screens: hidden until "Preview flyer" adds
+ * .is-open, which turns the SAME element into a full-screen overlay
+ * (never a second copy, so live updates keep working). Modals the flyer
+ * can launch use z-index 1000, above this overlay's 70.
+ *
+ * Unlayered on purpose: these are id/structure rules for the legacy flyer
+ * markup, not utility-style components.
+ */
+.flyer-stage {
+    width: 100%;
+    overflow: hidden;
+    filter: drop-shadow(0 10px 25px rgba(0, 0, 0, 0.12));
+}
+
+#flyer-scale-wrapper {
+    width: 600px;
+    transform-origin: top left;
+    margin: 0 auto;
+}
+
+#flyer-live.is-loading {
+    opacity: 0.6;
+    transition: opacity 0.15s;
+}
+
+@media (min-width: 1024px) {
+    #flyer-side {
+        position: sticky;
+        top: 88px;
+        align-self: start;
+        /* stays inside the space under the navbar and above the pinned
+           action bar; scrolls inside itself if the flyer is taller */
+        max-height: calc(100vh - 188px);
+        overflow-y: auto;
+    }
+}
+
+@media (max-width: 1023.98px) {
+    #flyer-side {
+        display: none;
+    }
+
+    #flyer-side.is-open {
+        display: block;
+        position: fixed;
+        inset: 0;
+        z-index: 70;
+        overflow-y: auto;
+        background: #f0f2f7;
+        padding: 12px;
+    }
+}

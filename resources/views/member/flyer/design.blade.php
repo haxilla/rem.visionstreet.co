@@ -430,46 +430,9 @@
     .flyer-btn { padding: 8px 16px; border: none; cursor: pointer; font-size: 14px; background: #f1f5f9; color: #334155; font-weight: 700; }
     .flyer-btn.active { background: #123f91; color: white; }
     .flyer-btn:not(.active):hover { background: #e2e8f0; }
-    .flyer-stage {
-        width: 100%;
-        overflow: hidden;
-        filter: drop-shadow(0 10px 25px rgba(0,0,0,.12));
-    }
-    #flyer-scale-wrapper {
-        width: 600px;
-        transform-origin: top left;
-        margin: 0 auto;
-    }
-
-    /* Wide screens: flyer is a sticky right-hand column that stays in
-       view while the controls scroll. It scrolls inside itself if the
-       scaled flyer is taller than the space under the navbar and above
-       the pinned save bar. */
-    @media (min-width: 1024px) {
-        #flyer-side {
-            position: sticky;
-            top: 88px;
-            align-self: start;
-            max-height: calc(100vh - 188px);
-            overflow-y: auto;
-        }
-    }
-
-    /* Narrow screens: no room beside the controls, so the flyer is
-       hidden until "Preview flyer" opens it as a full-screen overlay
-       (the modals it can launch use z-index 1000, above this). */
-    @media (max-width: 1023.98px) {
-        #flyer-side { display: none; }
-        #flyer-side.is-open {
-            display: block;
-            position: fixed;
-            inset: 0;
-            z-index: 70;
-            overflow-y: auto;
-            background: #f0f2f7;
-            padding: 12px;
-        }
-    }
+    /* .flyer-stage, #flyer-scale-wrapper and the #flyer-side column /
+       narrow-screen overlay rules live in resources/css/components/wizard.css
+       (shared with the Details step). */
     .step-card {
         background: #ffffff;
         border-radius: 14px;
