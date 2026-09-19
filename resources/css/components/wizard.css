@@ -1,0 +1,91 @@
+/*
+ * Flyer wizard - shared form styles.
+ *
+ * One place to tune how dense the wizard forms feel, instead of long
+ * repeated utility strings on every field. Plain CSS (no @apply) so it
+ * doesn't depend on where it sits in the Tailwind import order.
+ * Tailwind utilities still win over these when added to an element
+ * (e.g. `wz-input` + `pl-8`), because utilities are a later layer.
+ *
+ * Rhythm: 12px between fields in a group (gap-3), 16px between
+ * groups/cards (gap-4 / mb-4). Field height is about 38px.
+ */
+@layer components {
+
+    .wz-card {
+        border-radius: 1rem;
+        background: #fff;
+        padding: 1.25rem;
+        box-shadow: 0 1px 2px rgb(0 0 0 / 0.05);
+        border: 1px solid rgb(0 0 0 / 0.05);
+    }
+
+    .wz-label {
+        display: block;
+        margin-bottom: 0.25rem;
+        font-size: 0.8125rem;
+        line-height: 1.25rem;
+        font-weight: 700;
+        color: #334155;
+    }
+
+    .wz-label-hint {
+        font-weight: 400;
+        color: #94a3b8;
+    }
+
+    .wz-input {
+        display: block;
+        width: 100%;
+        border-radius: 0.5rem;
+        border: 1px solid #cbd5e1;
+        background: #fff;
+        padding: 0.5rem 0.75rem;
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+        color: #0f172a;
+        transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .wz-input::placeholder {
+        color: #94a3b8;
+    }
+
+    .wz-input:focus {
+        outline: none;
+        border-color: #123f91;
+        box-shadow: 0 0 0 3px rgb(18 63 145 / 0.12);
+    }
+
+    .wz-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        border-radius: 0.5rem;
+        padding: 0.5rem 1.25rem;
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+        font-weight: 700;
+        transition: background-color 0.15s;
+    }
+
+    .wz-btn-primary {
+        background: #123f91;
+        color: #fff;
+    }
+
+    .wz-btn-primary:hover {
+        background: #0f3274;
+    }
+
+    .wz-btn-secondary {
+        background: #fff;
+        color: #334155;
+        box-shadow: 0 1px 2px rgb(0 0 0 / 0.05);
+        border: 1px solid rgb(0 0 0 / 0.08);
+    }
+
+    .wz-btn-secondary:hover {
+        background: #f8fafc;
+    }
+}

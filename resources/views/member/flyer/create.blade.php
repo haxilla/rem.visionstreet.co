@@ -8,24 +8,28 @@
 $flyer = $data['flyer'] ?? null;
 @endphp
 
-<main class="min-h-screen bg-[#f0f2f7] pt-24">
+<main class="min-h-screen bg-[#f0f2f7] pt-[88px]">
 
-<div class="mx-auto w-full max-w-[900px] px-4 pb-16 sm:px-6 lg:px-8">
+<div class="mx-auto w-full max-w-[900px] px-4 pb-10 sm:px-6 lg:px-8">
 
     <section>
 
         {{-- HEADER --}}
-        <div class="mb-8">
+        <div class="mb-3">
 
-            <div class="text-sm font-bold uppercase tracking-wider text-[#123f91]">
-                Step 1 of 5
+            <div class="flex flex-wrap items-baseline gap-x-3 gap-y-0.5">
+
+                <h1 class="text-2xl font-black leading-tight text-slate-900">
+                    {{ $flyer ? 'Edit Flyer' : 'Create New Flyer' }}
+                </h1>
+
+                <span class="text-xs font-bold uppercase tracking-wider text-[#123f91]">
+                    Step 1 of 5
+                </span>
+
             </div>
 
-            <h1 class="mt-2 text-4xl font-black text-slate-900">
-                {{ $flyer ? 'Edit Flyer' : 'Create New Flyer' }}
-            </h1>
-
-            <p class="mt-2 text-slate-500">
+            <p class="text-sm text-slate-500">
                 {{ $flyer ? 'Update the property information below.' : 'Start by entering the MLS# and property address.' }}
             </p>
 
@@ -40,9 +44,9 @@ $flyer = $data['flyer'] ?? null;
 
         @if ($errors->any())
 
-            <div class="mb-6 rounded-xl border border-red-200 bg-red-50 p-4">
+            <div class="mb-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm">
 
-                <div class="mb-2 font-bold text-red-700">
+                <div class="mb-1 font-bold text-red-700">
                     Please correct the following:
                 </div>
 
@@ -74,113 +78,103 @@ $flyer = $data['flyer'] ?? null;
 
             <input type="hidden" name="return" value="{{ request('return') }}">
 
-            {{-- MLS CARD --}}
-            <div class="mb-6 rounded-3xl bg-white p-8 shadow-sm ring-1 ring-black/5">
+            {{-- PROPERTY CARD (MLS number shares the first row with the
+                 address; MLS stays first so it's still first in tab order) --}}
+            <div class="wz-card">
 
-                <div>
-
-                    <label class="mb-2 block text-sm font-bold text-slate-700">
-                        MLS Number
-                    </label>
-
-                    <p class="mb-2 text-sm text-slate-500">
-                        If your property is not in the MLS yet, leave this blank.
-                    </p>
-
-                    <input
-                        type="text"
-                        name="xMlsNum"
-                        value="{{ old('xMlsNum', $flyer->xMlsNum ?? '') }}"
-                        class="w-full rounded-2xl border border-slate-300 px-4 py-3"
-                    >
-
-                </div>
-
-            </div>
-
-            {{-- PROPERTY CARD --}}
-            <div class="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-black/5">
-
-                <h2 class="text-2xl font-black text-slate-900">
-                    Property Information
-                </h2>
-
-                <p class="mt-1 text-sm text-slate-500">
-                    Enter the property address to begin.
-                </p>
-
-                <div class="mt-8 space-y-6">
+                <div class="grid gap-3 md:grid-cols-3">
 
                     <div>
 
-                        <label class="mb-2 block text-sm font-bold text-slate-700">
+                        <label for="xMlsNum" class="wz-label">
+                            MLS Number
+                            <span class="wz-label-hint">(blank if not listed)</span>
+                        </label>
+
+                        <input
+                            type="text"
+                            id="xMlsNum"
+                            name="xMlsNum"
+                            value="{{ old('xMlsNum', $flyer->xMlsNum ?? '') }}"
+                            class="wz-input"
+                        >
+
+                    </div>
+
+                    <div class="md:col-span-2">
+
+                        <label for="xFullStreet" class="wz-label">
                             Property Address
                         </label>
 
                         <input
                             type="text"
+                            id="xFullStreet"
                             name="xFullStreet"
                             value="{{ old('xFullStreet', $flyer->xFullStreet ?? '') }}"
-                            class="w-full rounded-2xl border border-slate-300 px-5 py-4 text-lg focus:border-[#123f91] focus:outline-none"
+                            class="wz-input"
                             placeholder="123 Main Street"
                             required
                         >
 
                     </div>
 
-                    <div class="grid gap-6 md:grid-cols-3">
+                </div>
 
-                        <div>
+                <div class="mt-3 grid gap-3 md:grid-cols-3">
 
-                            <label class="mb-2 block text-sm font-bold text-slate-700">
-                                City
-                            </label>
+                    <div>
 
-                            <input
-                                type="text"
-                                name="xCity"
-                                value="{{ old('xCity', $flyer->xCity ?? '') }}"
-                                class="w-full rounded-2xl border border-slate-300 px-4 py-3"
-                                required
-                            >
+                        <label for="xCity" class="wz-label">
+                            City
+                        </label>
 
-                        </div>
+                        <input
+                            type="text"
+                            id="xCity"
+                            name="xCity"
+                            value="{{ old('xCity', $flyer->xCity ?? '') }}"
+                            class="wz-input"
+                            required
+                        >
 
-                        <div>
+                    </div>
 
-                            <label class="mb-2 block text-sm font-bold text-slate-700">
-                                State
-                            </label>
+                    <div>
 
-                            <select
-                                name="xState"
-                                class="w-full rounded-2xl border border-slate-300 px-4 py-3"
-                                required
-                            >
-                                <option value="">Select state</option>
-                                @php $selectedState = old('xState', $flyer->state ?? ''); @endphp
-                                @foreach(config('usstates') as $abbr => $name)
-                                    <option value="{{ $abbr }}" @selected($selectedState === $abbr)>{{ $name }}</option>
-                                @endforeach
-                            </select>
+                        <label for="xState" class="wz-label">
+                            State
+                        </label>
 
-                        </div>
+                        <select
+                            id="xState"
+                            name="xState"
+                            class="wz-input"
+                            required
+                        >
+                            <option value="">Select state</option>
+                            @php $selectedState = old('xState', $flyer->state ?? ''); @endphp
+                            @foreach(config('usstates') as $abbr => $name)
+                                <option value="{{ $abbr }}" @selected($selectedState === $abbr)>{{ $name }}</option>
+                            @endforeach
+                        </select>
 
-                        <div>
+                    </div>
 
-                            <label class="mb-2 block text-sm font-bold text-slate-700">
-                                ZIP Code
-                            </label>
+                    <div>
 
-                            <input
-                                type="text"
-                                name="xZip"
-                                value="{{ old('xZip', $flyer?->xZip ?: $flyer?->xxZip ?: '') }}"
-                                class="w-full rounded-2xl border border-slate-300 px-4 py-3"
-                                required
-                            >
+                        <label for="xZip" class="wz-label">
+                            ZIP Code
+                        </label>
 
-                        </div>
+                        <input
+                            type="text"
+                            id="xZip"
+                            name="xZip"
+                            value="{{ old('xZip', $flyer?->xZip ?: $flyer?->xxZip ?: '') }}"
+                            class="wz-input"
+                            required
+                        >
 
                     </div>
 
@@ -189,16 +183,13 @@ $flyer = $data['flyer'] ?? null;
             </div>
 
             {{-- ACTIONS --}}
-            <div class="mt-8 flex items-center justify-between">
+            <div class="mt-4 flex items-center justify-between">
 
-                <a href="/member/dashboard"
-                   class="rounded-xl bg-white px-5 py-3 font-bold text-slate-700 shadow-sm ring-1 ring-black/5">
+                <a href="/member/dashboard" class="wz-btn wz-btn-secondary">
                     Cancel
                 </a>
 
-                <button
-                    type="submit"
-                    class="rounded-xl bg-[#123f91] px-6 py-3 font-bold text-white hover:bg-[#0f3274]">
+                <button type="submit" class="wz-btn wz-btn-primary">
                     Save & Continue →
                 </button>
 

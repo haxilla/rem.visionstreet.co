@@ -22,6 +22,7 @@
 @import "../icons/themify/css/themify-icons.css";
 
 @import "tailwindcss" source(none);
+@import "./components/wizard.css";
 
 @source "../views/**/*.blade.php";
 @source "../js/**/*.js";

@@ -100,9 +100,9 @@
 @endphp
 
 @if($hasOtherFlyers)
-    <div class="mb-4">
-        <a href="/member/dashboard" class="inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-black text-[#123f91] shadow-sm ring-1 ring-black/5 hover:bg-slate-50">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <div class="mb-2">
+        <a href="/member/dashboard" class="inline-flex items-center gap-1 text-sm font-bold text-[#123f91] hover:underline">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="15 18 9 12 15 6"></polyline>
             </svg>
             Back to My Flyers
@@ -110,8 +110,8 @@
     </div>
 @endif
 
-<div class="mb-8">
-    <div class="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-black/5">
+<div class="mb-4">
+    <div class="overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-black/5">
 
         {{-- Desktop wizard --}}
         <div class="hidden md:flex">
@@ -155,21 +155,21 @@
                     @if ($isClickable)
                         <a
                             href="{{ $step['url'] }}"
-                            class="relative flex min-h-[84px] items-center px-6 py-4 transition {{ $stepClasses }}"
+                            class="relative flex min-h-[48px] items-center px-4 py-2 transition {{ $stepClasses }}"
                         >
                     @else
                         <div
-                            class="relative flex min-h-[84px] items-center px-6 py-4 {{ $stepClasses }}"
+                            class="relative flex min-h-[48px] items-center px-4 py-2 {{ $stepClasses }}"
                             @if (!$isUnlocked)
                                 aria-disabled="true"
                             @endif
                         >
                     @endif
 
-                        <div class="relative z-20 flex min-w-0 items-center gap-3">
+                        <div class="relative z-20 flex min-w-0 items-center gap-2.5">
 
                             <span
-                                class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-black shadow-sm {{ $circleClasses }}"
+                                class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-black shadow-sm {{ $circleClasses }}"
                             >
                                 @if ($isCompleted && !$isCurrent)
                                     ✓
@@ -179,11 +179,13 @@
                             </span>
 
                             <div class="min-w-0">
-                                <div class="truncate font-black">
+                                <div class="truncate text-sm font-black">
                                     {{ $step['title'] }}
                                 </div>
 
-                                <div class="mt-0.5 text-xs font-semibold opacity-80">
+                                {{-- Status text kept for screen readers only; the colors and
+                                     checkmarks already show it visually. --}}
+                                <div class="sr-only">
                                     @if ($isCurrent)
                                         Current step
                                     @elseif ($isCompleted)
@@ -224,81 +226,71 @@
 
         </div>
 
-        {{-- Mobile wizard --}}
-        <div class="grid gap-2 p-3 md:hidden">
+        {{-- Mobile wizard: one line of text + a row of tappable step buttons
+             (was five full-width stacked rows, about 280px tall) --}}
+        <div class="p-3 md:hidden">
 
-            @foreach ($steps as $stepNumber => $step)
+            <div class="mb-2 text-sm font-black text-slate-900">
+                Step {{ $currentStep }} of {{ count($steps) }}
+                <span class="text-slate-400">&middot;</span>
+                {{ $steps[$currentStep]['title'] }}
+            </div>
 
-                @php
-                    $isCurrent = $stepNumber === $currentStep;
-                    $isUnlocked = $stepNumber <= $highestUnlockedStep;
-                    $isClickable = $isUnlocked && !$isCurrent;
-                    $isCompleted = !$isCurrent && $stepNumber <= $highestUnlockedStep;
+            <div class="flex items-center gap-1.5">
 
-                    if ($isCurrent) {
-                        $mobileClasses = 'bg-[#123f91] text-white';
-                        $mobileCircleClasses = 'bg-white text-[#123f91]';
-                    } elseif ($isCompleted) {
-                        $mobileClasses = 'bg-emerald-600 text-white';
-                        $mobileCircleClasses = 'bg-white text-emerald-700';
-                    } elseif ($isUnlocked) {
-                        $mobileClasses = 'bg-slate-600 text-white';
-                        $mobileCircleClasses = 'bg-white text-slate-700';
-                    } else {
-                        $mobileClasses = 'bg-slate-100 text-slate-400';
-                        $mobileCircleClasses = 'bg-slate-200 text-slate-500';
-                    }
-                @endphp
+                @foreach ($steps as $stepNumber => $step)
 
-                @if ($isClickable)
-                    <a
-                        href="{{ $step['url'] }}"
-                        class="flex items-center gap-3 rounded-xl px-4 py-3 transition {{ $mobileClasses }}"
-                    >
-                @else
-                    <div
-                        class="flex items-center gap-3 rounded-xl px-4 py-3 {{ $mobileClasses }}"
-                        @if (!$isUnlocked)
-                            aria-disabled="true"
-                        @endif
-                    >
-                @endif
+                    @php
+                        $isCurrent = $stepNumber === $currentStep;
+                        $isUnlocked = $stepNumber <= $highestUnlockedStep;
+                        $isClickable = $isUnlocked && !$isCurrent;
+                        $isCompleted = !$isCurrent && $stepNumber <= $highestUnlockedStep;
 
-                    <span
-                        class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-black {{ $mobileCircleClasses }}"
-                    >
+                        if ($isCurrent) {
+                            $mobileClasses = 'bg-[#123f91] text-white';
+                        } elseif ($isCompleted) {
+                            $mobileClasses = 'bg-emerald-600 text-white';
+                        } elseif ($isUnlocked) {
+                            $mobileClasses = 'bg-slate-600 text-white';
+                        } else {
+                            $mobileClasses = 'bg-slate-100 text-slate-400';
+                        }
+                    @endphp
+
+                    @if ($isClickable)
+                        <a
+                            href="{{ $step['url'] }}"
+                            aria-label="{{ $step['title'] }}"
+                            class="flex h-9 flex-1 items-center justify-center rounded-lg text-xs font-black transition {{ $mobileClasses }}"
+                        >
+                    @else
+                        <div
+                            aria-label="{{ $step['title'] }}"
+                            @if ($isCurrent)
+                                aria-current="step"
+                            @endif
+                            @if (!$isUnlocked)
+                                aria-disabled="true"
+                            @endif
+                            class="flex h-9 flex-1 items-center justify-center rounded-lg text-xs font-black {{ $mobileClasses }}"
+                        >
+                    @endif
+
                         @if ($isCompleted && !$isCurrent)
                             ✓
                         @else
                             {{ $stepNumber }}
                         @endif
-                    </span>
 
-                    <div class="flex-1">
-                        <div class="font-black">
-                            {{ $step['title'] }}
+                    @if ($isClickable)
+                        </a>
+                    @else
                         </div>
-                    </div>
+                    @endif
 
-                    <div class="text-xs font-bold opacity-80">
-                        @if ($isCurrent)
-                            Current
-                        @elseif ($isCompleted)
-                            Completed
-                        @elseif ($isUnlocked)
-                            Available
-                        @else
-                            Locked
-                        @endif
-                    </div>
+                @endforeach
 
-                @if ($isClickable)
-                    </a>
-                @else
-                    </div>
-                @endif
-
-            @endforeach
+            </div>
 
         </div>
 
