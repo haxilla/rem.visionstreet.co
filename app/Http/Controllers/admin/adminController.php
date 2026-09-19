@@ -3,9 +3,13 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Core\AdminSetting;
+use App\Models\Core\Propdelivnow;
 use App\Models\Core\Propflyer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class adminController extends Controller
 {
@@ -127,6 +131,89 @@ class adminController extends Controller
             'data' => $data
         ]);
 
+    }
+
+    /**
+     * Approve every request still waiting on this flyer. "Approved" is
+     * propdelivnow.authorized = 1, which is what the mail system looks
+     * for. Only rows that haven't started or completed are touched.
+     */
+    public function campaignApprove($flyerId)
+    {
+        $approved = Propdelivnow::where('propflyer_id', $flyerId)
+            ->whereNull('emStart')
+            ->whereNull('emComplete')
+            ->where(function ($query) {
+                $query->where('authorized', 0)->orWhereNull('authorized');
+            })
+            ->update(['authorized' => 1]);
+
+        $message = $approved
+            ? "Approved {$approved} " . ($approved === 1 ? 'area' : 'areas') . '.'
+            : 'Nothing was waiting for approval on this flyer.';
+
+        return redirect()->route('admin.flyerCamps', $flyerId)->with('status', $message);
+    }
+
+    /**
+     * Admin-only: add an extra area to a flyer at no cost to the agent.
+     * Deliberately does NOT touch the agent's credits (unlike the
+     * member send-setup flow). The row is created already approved, so
+     * it is ready for the mail system straight away.
+     */
+    public function campaignAddArea(Request $request, $flyerId)
+    {
+        $areasByDb = collect(include app_path('flyers/campaignAreas.php'))->keyBy('db');
+
+        $validated = $request->validate([
+            'area' => ['required', 'string', Rule::in($areasByDb->keys()->all())],
+        ]);
+
+        $flyer = Propflyer::findOrFail($flyerId);
+        $area  = $areasByDb[$validated['area']];
+
+        $alreadyQueued = Propdelivnow::where('propflyer_id', $flyer->id)
+            ->where('emArea', $area['db'])
+            ->whereNull('emComplete')
+            ->exists();
+
+        if ($alreadyQueued) {
+            return redirect()->route('admin.flyerCamps', $flyer->id)
+                ->withErrors(["{$area['label']} is already waiting or in progress for this flyer."]);
+        }
+
+        $totalEmails = DB::connection('rememaildb')->table($area['db'])->count();
+
+        $campaign = new Propdelivnow();
+        $campaign->propflyer_id   = $flyer->id;
+        $campaign->propagent_id   = $flyer->propagent_id;
+        $campaign->emArea         = $area['db'];
+        $campaign->emArea_display = $area['label'];
+        $campaign->emSubject      = Propdelivnow::where('propflyer_id', $flyer->id)
+                                        ->orderByDesc('emRequest')
+                                        ->value('emSubject');
+        $campaign->totalEmails    = $totalEmails;
+        $campaign->emRequest      = now();
+        $campaign->authorized     = 1;
+        $campaign->save();
+
+        return redirect()->route('admin.flyerCamps', $flyer->id)->with(
+            'status',
+            "Added {$area['label']} (" . number_format($totalEmails) . ' contacts) at no charge. It is approved and ready to send.'
+        );
+    }
+
+    /** Save the system-wide settings shown on /admin/settings. */
+    public function settingsSave(Request $request)
+    {
+        foreach (AdminSetting::definitions() as $key => $definition) {
+            if ($definition['type'] === 'toggle') {
+                // an unchecked checkbox sends nothing, which reads as off
+                AdminSetting::write($key, $request->boolean($key) ? '1' : '0');
+            }
+        }
+
+        return redirect('/admin/settings')->with('status', 'Settings saved.');
     }
 
     public function flyerEdit(Request $request, $flyerId)

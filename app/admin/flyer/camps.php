@@ -1,6 +1,9 @@
 <?php
 
+use App\Models\Core\AdminSetting;
+use App\Models\Core\Propagent;
 use App\Models\Core\Propdelivnow;
+use App\Models\Core\Propflyer;
 
 include app_path('queries/campaigns.php');
 include app_path('queries/flyerdetails.php');
@@ -47,7 +50,43 @@ foreach ($campaignAreas as $memberKey => $area) {
     $areaLabels[$area['db']] = $area['label'];
 }
 
+// ---- approval screen data ----
+
+// Everything still queued for this flyer (not started, not completed),
+// approved or not, so the admin sees the full request in one place.
+$pendingRequests = Propdelivnow::where('propflyer_id', $propInfo->id)
+    ->whereNull('emStart')
+    ->whereNull('emComplete')
+    ->orderBy('emRequest')
+    ->get();
+
+// Areas already waiting OR running for this flyer - not offered again in
+// the "add free area" dropdown.
+$busyAreas = Propdelivnow::where('propflyer_id', $propInfo->id)
+    ->whereNull('emComplete')
+    ->pluck('emArea')
+    ->unique()
+    ->values()
+    ->all();
+
+$agent = Propagent::select('id', 'agtFullName', 'agtEmail', 'agtMainPhone', 'remCreds')
+    ->find($propInfo->propagent_id);
+
+// Send-setup details the agent entered (not part of flyerdetails.php's
+// select): open houses, agent bonus and price reduction.
+$sendDetails = Propflyer::select(
+    'id',
+    'openHouseDate1', 'openHouseTime1', 'openHouseEndTime1',
+    'openHouseDate2', 'openHouseTime2', 'openHouseEndTime2',
+    'agentBonusAmount', 'agentBonusComment', 'reducedAmount', 'reducedDate'
+)->find($propInfo->id);
+
 $data = [
+    'pendingRequests'      => $pendingRequests,
+    'busyAreas'            => $busyAreas,
+    'agent'                => $agent,
+    'sendDetails'          => $sendDetails,
+    'trialMode'            => AdminSetting::trialMode(),
     'waitingFlyerCamps'    => $waitingFlyerCamps,
     'inProgressFlyerCamps' => $inProgressFlyerCamps,
     'completeFlyerCamps'   => $completeFlyerCamps,

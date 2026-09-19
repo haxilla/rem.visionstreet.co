@@ -65,6 +65,15 @@ Route::get('/member/flyer/photos/{flyerId}', [memberController::class, 'flyerPho
 Route::get('/admin/flyerEdit/{flyerId}', [adminController::class, 'flyerEdit'])->name('admin.flyeredit');
 Route::get('/admin/flyerCamps/{flyerId}', [adminController::class, 'flyerCamps'])->name('admin.flyerCamps');
 
+//campaign approval (POST only - changes data, so it must carry a CSRF token)
+Route::post('/admin/campaignApprove/{flyerId}', [adminController::class, 'campaignApprove'])
+    ->whereNumber('flyerId')->name('admin.campaignApprove');
+Route::post('/admin/campaignAddArea/{flyerId}', [adminController::class, 'campaignAddArea'])
+    ->whereNumber('flyerId')->name('admin.campaignAddArea');
+
+//system-wide admin settings (GET /admin/settings is served by the segments convention)
+Route::post('/admin/settings', [adminController::class, 'settingsSave'])->name('admin.settingsSave');
+
 
 Route::match(['get', 'post'], '/admin/{segments}', [adminController::class, 'segments'])
     ->where('segments', '.+');

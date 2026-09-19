@@ -48,6 +48,9 @@ $waitingCampsMap = $waitingCampsQuery->map(function ($item) {
         'emStart'       => $item->emStart,
         'emRequest'     => $item->emRequest,
         'cid'           => $item->cid,
+        // needed so the admin dashboard/campaign page can tell approved
+        // requests from ones still waiting on approval
+        'authorized'    => $item->authorized,
     ];
 });
 
@@ -96,6 +99,7 @@ $inProgressCampsMap = $inProgressCampsQuery->map(function ($item) {
         'emStart'      => $item->emStart,
         'emRequest'    => $item->emRequest,
         'cid'          => $item->cid,
+        'authorized'   => $item->authorized,
     ];
 });
 

@@ -37,6 +37,7 @@
         <a href="/admin/dashboard" class="hover:text-white transition">Dashboard</a>
         <a href="/admin/agents" class="hover:text-white transition">Agents</a>
         <a href="/admin/flyers" class="hover:text-white transition">Flyers</a>
+        <a href="/admin/settings" class="hover:text-white transition">Settings</a>
       </nav>
 
       {{-- RIGHT SIDE --}}
@@ -89,6 +90,7 @@
             <a href="/admin/dashboard" class="block rounded-xl px-4 py-2.5 text-sm font-bold hover:bg-slate-100">Dashboard</a>
             <a href="/admin/agents" class="block rounded-xl px-4 py-2.5 text-sm font-bold hover:bg-slate-100">Agents</a>
             <a href="/admin/flyers" class="block rounded-xl px-4 py-2.5 text-sm font-bold hover:bg-slate-100">Flyers</a>
+            <a href="/admin/settings" class="block rounded-xl px-4 py-2.5 text-sm font-bold hover:bg-slate-100">Settings</a>
             <div class="my-1 h-px bg-slate-100"></div>
             <a href="{{ route('admin.logout') }}" class="block rounded-xl px-4 py-2.5 text-sm font-bold text-red-600 hover:bg-red-50">Log out</a>
           </div>
