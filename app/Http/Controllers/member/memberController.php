@@ -116,15 +116,10 @@ class memberController extends Controller
                     $status = 'pending';
                 }
 
-                // Free (added by an admin at no charge) vs chosen by the agent.
-                // The legacy system marks a free area with free = 1 and
-                // admin_add = 1 and campLabel = 'admin'; the agent's own picks
-                // are campLabel 'area1' / 'area2' with those two empty. Any one
-                // of the marks counts. (Reads null-safely: the archive table
-                // may not carry every column.)
-                $isFree = (int) ($c->free ?? 0) === 1
-                    || (int) ($c->admin_add ?? 0) === 1
-                    || ($c->campLabel ?? '') === 'admin';
+                // Free (added by an admin at no charge) vs chosen by the agent -
+                // the rule lives in the CampaignSource trait, shared with the
+                // admin pages.
+                $isFree = $c->isAdminAdded();
 
                 return [
                     'requested' => $requested,

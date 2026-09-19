@@ -19,7 +19,7 @@ $completeFlyerCamps[$propInfo->id] = Propdelivnow::where('propflyer_id', $propIn
     ->whereNotNull('emComplete')
     ->orderBy('emComplete', 'desc')
     ->select(
-        'propflyer_id', 'propagent_id', 'emRequest', 'campLabel',
+        'propflyer_id', 'propagent_id', 'emRequest', 'campLabel', 'free', 'admin_add',
         'authorized', 'emStart', 'emComplete', 'cid', 'emArea',
         'emArea_display', 'emSubject', 'totalEmails'
     )
@@ -29,6 +29,7 @@ $completeFlyerCamps[$propInfo->id] = Propdelivnow::where('propflyer_id', $propIn
             'flyer'        => $propInfo,
             'address'      => $propInfo->xFullStreet ?? 'N/A',
             'campLabel'    => $item->campLabel,
+            'admin_added'  => $item->isAdminAdded(),
             'propflyer_id' => $item->propflyer_id,
             'emSubject'    => $item->emSubject,
             'emArea'       => $item->emArea,

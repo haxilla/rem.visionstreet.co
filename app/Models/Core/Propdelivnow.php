@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Propdelivnow extends Model
 {
+   use \App\Models\Core\Concerns\CampaignSource;
+
    protected $table        = 'propdelivnow';
    protected $dates        = ['emRequest','emStart','emComplete','created_at',
                               'updated_at','campCreated'];

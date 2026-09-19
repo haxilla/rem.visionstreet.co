@@ -226,7 +226,10 @@ if ($propInfo->created_at) {
                     @forelse($pendingRequests as $req)
                         <div class="px-5 py-3 flex items-center justify-between gap-3">
                             <div>
-                                <div class="font-semibold">{{ $areaLabel($req) }}</div>
+                                <div class="font-semibold">
+                                    {{ $areaLabel($req) }}
+                                    @include('admin.flyer.campSource', ['adminAdded' => $req->isAdminAdded()])
+                                </div>
                                 <div class="text-sm text-slate-500">{{ number_format($req->totalEmails ?? ($data['emailCounts'][$req->emArea] ?? 0)) }} contacts</div>
                             </div>
 
@@ -382,6 +385,7 @@ if ($propInfo->created_at) {
                         <div>
                             <div class="font-semibold">
                                 {{ $camp['emArea'] }}
+                                @include('admin.flyer.campSource', ['adminAdded' => $camp['admin_added'] ?? false])
                             </div>
 
                             <div class="text-sm text-slate-500">
@@ -410,6 +414,7 @@ if ($propInfo->created_at) {
                         <div>
                             <div class="font-semibold">
                                 {{ $camp['emArea'] }}
+                                @include('admin.flyer.campSource', ['adminAdded' => $camp['admin_added'] ?? false])
                             </div>
 
                             <div class="text-sm text-slate-500">
@@ -455,6 +460,7 @@ if ($propInfo->created_at) {
                         <div>
                             <div class="font-semibold">
                                 {{ $camp['emArea'] }} ({{ number_format($camp['totalEmails'] ?? 0) }})
+                                @include('admin.flyer.campSource', ['adminAdded' => $camp['admin_added'] ?? false])
                             </div>
 
                             <div class="text-sm text-slate-500">

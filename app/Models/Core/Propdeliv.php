@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Propdeliv extends Model
 {
+   use \App\Models\Core\Concerns\CampaignSource;
+
    protected $primaryKey   = 'cid';
    protected $dates = ['emRequest','emStart','emComplete',
    'created_at','updated_at'];
