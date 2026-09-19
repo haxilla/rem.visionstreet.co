@@ -72,18 +72,17 @@
 
                 <div class="text-sm text-slate-500">{{ $location ?: 'Location unavailable' }}</div>
 
-                <div class="mt-0.5 text-xs font-semibold text-slate-500">
-                    {{ number_format($views) }} {{ $views === 1 ? 'view' : 'views' }}
-                    @if($flyer->xListPrice)
-                        &middot; ${{ number_format((float) $flyer->xListPrice) }}
-                    @endif
-                </div>
+                @if($flyer->xListPrice)
+                    <div class="mt-0.5 text-xs font-semibold text-slate-500">
+                        ${{ number_format((float) $flyer->xListPrice) }}
+                    </div>
+                @endif
             </div>
 
         </div>
 
         {{-- SUMMARY --}}
-        <div class="mb-3 grid grid-cols-2 gap-3 md:grid-cols-4">
+        <div class="mb-3 grid grid-cols-2 gap-3 md:grid-cols-5">
 
             <div class="wz-card p-3">
                 <div class="text-xs font-semibold uppercase tracking-wide text-slate-400">Campaigns Sent</div>
@@ -103,6 +102,12 @@
             <div class="wz-card p-3">
                 <div class="text-xs font-semibold uppercase tracking-wide text-slate-400">In Queue</div>
                 <div class="mt-1 text-2xl font-black text-slate-900">{{ number_format($summary['inQueue']) }}</div>
+            </div>
+
+            {{-- five tiles: on a phone (2 columns) this last one spans the full row --}}
+            <div class="wz-card col-span-2 p-3 md:col-span-1">
+                <div class="text-xs font-semibold uppercase tracking-wide text-slate-400">Flyer Hits</div>
+                <div class="mt-1 text-2xl font-black text-slate-900">{{ number_format($views) }}</div>
             </div>
 
         </div>
