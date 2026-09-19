@@ -44,25 +44,35 @@
     $isDarkBackground = in_array($flyer->theStyle->flyer_background, ['996600', '990000', '000066', '000000'], true);
 @endphp
 
-<main class="min-h-screen bg-[#f0f2f7] pt-24">
+<main class="min-h-screen bg-[#f0f2f7] pt-[88px]">
 
-<div class="mx-auto flex w-full max-w-[1400px] gap-8 px-4 pb-16 sm:px-6 lg:px-8">
+<div class="mx-auto w-full max-w-[1400px] px-4 pb-10 sm:px-6 lg:px-8">
 
-    <section class="min-w-0 flex-1">
+    {{-- Two columns on wide screens: controls on the left, the live flyer
+         on the right (sticky, so it stays in view while the controls
+         scroll). Below lg it is one column and the flyer opens from a
+         "Preview flyer" button instead - see #flyer-side. --}}
+    <div class="lg:grid lg:grid-cols-[minmax(0,1fr)_420px] lg:gap-6 xl:grid-cols-[minmax(0,1fr)_520px] 2xl:grid-cols-[minmax(0,1fr)_640px]">
 
-        {{-- HEADER --}}
-        <div class="mb-8">
+    <section class="min-w-0">
 
-            <div class="text-sm font-bold uppercase tracking-wider text-[#123f91]">
-                Step 4 of 5
+        {{-- HEADER (property summary folded into the subtitle) --}}
+        <div class="mb-3">
+
+            <div class="flex flex-wrap items-baseline gap-x-3 gap-y-0.5">
+
+                <h1 class="text-2xl font-black leading-tight text-slate-900">
+                    Design Your Flyer
+                </h1>
+
+                <span class="text-xs font-bold uppercase tracking-wider text-[#123f91]">
+                    Step 4 of 5
+                </span>
+
             </div>
 
-            <h1 class="mt-2 text-4xl font-black text-slate-900">
-                Design Your Flyer
-            </h1>
-
-            <p class="mt-2 text-slate-500">
-                Pick a layout, colors, and headline banner.
+            <p class="text-sm text-slate-500">
+                {{ $flyer->xFullStreet }}, {{ $flyer->xCity }}, {{ $flyer->state }} {{ $flyer->xZip }}
             </p>
 
         </div>
@@ -72,30 +82,15 @@
             'flyer' => $flyer
         ])
 
-        {{-- PROPERTY SUMMARY --}}
-        <div class="mb-8 rounded-3xl bg-white p-5 shadow-sm ring-1 ring-black/5">
-
-            <div class="text-xl font-black text-slate-900">
-                {{ $flyer->xFullStreet }}
-            </div>
-
-            <div class="text-slate-600">
-                {{ $flyer->xCity }},
-                {{ $flyer->state }}
-                {{ $flyer->xZip }}
-            </div>
-
-        </div>
-
         @if($errors->any())
 
-            <div class="mb-8 rounded-2xl border border-red-200 bg-red-50 p-5">
+            <div class="mb-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm">
 
                 <div class="font-bold text-red-700">
                     Please correct the following:
                 </div>
 
-                <ul class="mt-3 list-disc pl-5 text-red-600">
+                <ul class="mt-1 list-disc pl-5 text-red-600">
                     @foreach($errors->all() as $error)
                         <li>{{ $error }}</li>
                     @endforeach
@@ -125,11 +120,7 @@
                  impossible to miss. Each locks until the one before it is
                  chosen; once chosen a step collapses to a summary that can
                  be reopened with "Edit". --}}
-            <div class="mb-3 text-xs uppercase tracking-wide text-slate-400 px-1">
-                Flyer Controls
-            </div>
-
-            <div class="mb-8 flex flex-col gap-3">
+            <div class="mb-4 flex flex-col gap-3">
 
                 {{-- STEP: STYLE --}}
                 <div class="step-card" id="step-style" data-step="style">
@@ -357,32 +348,24 @@
 
             </div>
 
-            {{-- FLYER PREVIEW --}}
-            <div class="mb-8 rounded-3xl bg-white p-4 shadow-sm ring-1 ring-black/5">
-
-                <div class="flyer-stage">
-
-                    <div id="flyer-scale-wrapper">
-
-                        <div id="flyer-s1pc" class="flyer-panel">@include('flyers.s1pc')</div>
-                        <div id="flyer-s2pb" class="flyer-panel">@include('flyers.s2pb')</div>
-                        <div id="flyer-s3pt" class="flyer-panel">@include('flyers.s3pt')</div>
-                        <div id="flyer-s4sp" class="flyer-panel">@include('flyers.s4sp')</div>
-                        <div id="flyer-s5pt" class="flyer-panel">@include('flyers.s5pt')</div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
             {{-- Spacer so the fixed save bar below never overlaps the end
-                 of the preview - height matches the bar's own height. --}}
-            <div class="h-24"></div>
+                 of the controls - height matches the bar's own height. --}}
+            <div class="h-20"></div>
 
-            <div class="fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 bg-white/95 pb-6 pt-4 shadow-[0_-4px_16px_rgba(15,23,42,.08)] backdrop-blur">
+            <div class="fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 bg-white/95 pb-4 pt-3 shadow-[0_-4px_16px_rgba(15,23,42,.08)] backdrop-blur">
                 <div class="mx-auto flex max-w-[1400px] flex-col items-end gap-1 px-4 sm:flex-row sm:items-center sm:justify-end sm:gap-4 sm:px-6 lg:px-8">
                     <p id="save-hint" class="text-xs font-semibold text-slate-500 sm:mr-auto"></p>
+
+                    {{-- Narrow screens only: the flyer isn't shown beside the
+                         controls there, so this opens it full-screen. --}}
+                    <button type="button" id="openPreviewBtn" class="wz-btn wz-btn-secondary lg:hidden">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                        Preview flyer
+                    </button>
+
                     <button type="submit"
                         id="saveDesignBtn"
                         @disabled(!$flyer->theStyle->headline_chosen)
@@ -399,6 +382,39 @@
         </form>
 
     </section>
+
+    {{-- FLYER (right column on wide screens; on narrow screens it is hidden
+         until "Preview flyer" opens it as a full-screen overlay. It is the
+         same element in both cases - never duplicated - so the live color/
+         headline scripts that update it keep working either way.) --}}
+    <aside id="flyer-side" aria-label="Flyer preview">
+
+        <div class="mb-2 flex items-center justify-between lg:hidden">
+            <span class="text-sm font-black text-slate-900">Flyer preview</span>
+            <button type="button" id="closePreviewBtn" class="wz-btn wz-btn-primary">Close</button>
+        </div>
+
+        <div class="wz-card p-3">
+
+            <div class="flyer-stage">
+
+                <div id="flyer-scale-wrapper">
+
+                    <div id="flyer-s1pc" class="flyer-panel">@include('flyers.s1pc')</div>
+                    <div id="flyer-s2pb" class="flyer-panel">@include('flyers.s2pb')</div>
+                    <div id="flyer-s3pt" class="flyer-panel">@include('flyers.s3pt')</div>
+                    <div id="flyer-s4sp" class="flyer-panel">@include('flyers.s4sp')</div>
+                    <div id="flyer-s5pt" class="flyer-panel">@include('flyers.s5pt')</div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </aside>
+
+    </div>
 
 </div>
 
@@ -424,9 +440,39 @@
         transform-origin: top left;
         margin: 0 auto;
     }
+
+    /* Wide screens: flyer is a sticky right-hand column that stays in
+       view while the controls scroll. It scrolls inside itself if the
+       scaled flyer is taller than the space under the navbar and above
+       the pinned save bar. */
+    @media (min-width: 1024px) {
+        #flyer-side {
+            position: sticky;
+            top: 88px;
+            align-self: start;
+            max-height: calc(100vh - 188px);
+            overflow-y: auto;
+        }
+    }
+
+    /* Narrow screens: no room beside the controls, so the flyer is
+       hidden until "Preview flyer" opens it as a full-screen overlay
+       (the modals it can launch use z-index 1000, above this). */
+    @media (max-width: 1023.98px) {
+        #flyer-side { display: none; }
+        #flyer-side.is-open {
+            display: block;
+            position: fixed;
+            inset: 0;
+            z-index: 70;
+            overflow-y: auto;
+            background: #f0f2f7;
+            padding: 12px;
+        }
+    }
     .step-card {
         background: #ffffff;
-        border-radius: 20px;
+        border-radius: 14px;
         box-shadow: 0 1px 2px rgba(0,0,0,.06);
         border: 1px solid rgba(0,0,0,.05);
         overflow: hidden;
@@ -436,8 +482,8 @@
         width: 100%;
         display: flex;
         align-items: center;
-        gap: 14px;
-        padding: 16px 20px;
+        gap: 12px;
+        padding: 10px 16px;
         background: none;
         border: none;
         text-align: left;
@@ -471,9 +517,8 @@
     }
     .step-card.complete .step-edit { display: inline-flex; }
     .step-body {
-        padding: 0 20px 20px;
+        padding: 12px 16px 16px;
         border-top: 1px solid #f1f5f9;
-        padding-top: 16px;
     }
     .step-body.hidden { display: none; }
     .step-confirm {
@@ -668,6 +713,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!activeFlyer) return;
 
         const availableWidth = stage.clientWidth;
+
+        // Hidden (narrow screen, preview not open) reads as width 0 -
+        // scaling to 0 would collapse the flyer, so wait until it's shown.
+        if (!availableWidth) return;
+
         const scale = Math.min(availableWidth / 600, 1);
 
         wrapper.style.transformOrigin = 'top left';
@@ -677,6 +727,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
     scaleFlyer();
     window.addEventListener('resize', scaleFlyer);
+
+    // ------------------------------------------------------------
+    // Narrow screens: "Preview flyer" opens the flyer full-screen,
+    // "Close" (or Escape) returns to the controls. Same element as the
+    // wide-screen column, so nothing the agent chose is lost either way.
+    // ------------------------------------------------------------
+
+    const flyerSide  = document.getElementById('flyer-side');
+    const openBtn    = document.getElementById('openPreviewBtn');
+    const closeBtn   = document.getElementById('closePreviewBtn');
+    const wideScreen = window.matchMedia('(min-width: 1024px)');
+
+    function setPreviewOpen(open) {
+        flyerSide.classList.toggle('is-open', open);
+        document.body.style.overflow = open ? 'hidden' : '';
+
+        // Its width is only known once it's actually displayed.
+        scaleFlyer();
+    }
+
+    openBtn.addEventListener('click', () => setPreviewOpen(true));
+    closeBtn.addEventListener('click', () => setPreviewOpen(false));
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && flyerSide.classList.contains('is-open')) {
+            setPreviewOpen(false);
+        }
+    });
+
+    // Rotating/resizing up to a wide screen while the overlay is open:
+    // drop the overlay state so it becomes the normal side column.
+    wideScreen.addEventListener('change', () => {
+        setPreviewOpen(false);
+    });
 
     // ------------------------------------------------------------
     // Read the live-previewed choices back out of the DOM (colorswatch.js
