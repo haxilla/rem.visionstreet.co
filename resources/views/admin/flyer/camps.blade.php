@@ -70,7 +70,7 @@ if ($propInfo->created_at) {
 
 <main class="pt-[72px]">
 
-    <div class="max-w-6xl mx-auto px-3 sm:px-4 lg:px-6 py-6">
+    <div class="max-w-6xl lg:max-w-[1400px] mx-auto px-3 sm:px-4 lg:px-6 py-6">
 
         {{-- TRIAL MODE / STATUS / ERRORS --}}
         @if($data['trialMode'] ?? false)
@@ -133,8 +133,16 @@ if ($propInfo->created_at) {
 
         </div>
 
+        {{-- TWO COLUMNS on large screens: review / approval / campaign lists on the
+             left, the flyer beside them in a sticky right column so it stays in view
+             while you work. Below lg everything stacks in the order the sections
+             appear here (review, subject, flyer, campaigns). Each section pins itself
+             to a column with lg:col-start-*; card bottom margins (mb-6) give the
+             vertical spacing, so only a column gap is needed. --}}
+        <div class="lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,460px)] xl:grid-cols-[minmax(0,1fr)_minmax(0,600px)] lg:gap-x-6">
+
         {{-- SEND REQUEST REVIEW --}}
-        <div class="bg-white rounded-2xl shadow-sm overflow-hidden mb-6">
+        <div class="bg-white rounded-2xl shadow-sm overflow-hidden mb-6 lg:col-start-1">
 
             <div class="px-5 py-4 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3">
                 <h2 class="font-semibold text-slate-900">Send Request</h2>
@@ -310,7 +318,7 @@ if ($propInfo->created_at) {
         </div>
 
         {{-- SUBJECT --}}
-        <div class="bg-white rounded-2xl shadow-sm p-5 mb-6">
+        <div class="bg-white rounded-2xl shadow-sm p-5 mb-6 lg:col-start-1">
 
             <label class="block text-sm font-semibold text-slate-700 mb-2">
                 Email Subject
@@ -333,18 +341,25 @@ if ($propInfo->created_at) {
 
         </div>
 
-        {{-- FLYER --}}
-        <div class="bg-white rounded-2xl shadow-sm p-4 mb-6">
+        {{-- FLYER: right-hand column spanning the four left-hand sections on large
+             screens (sticky, and scrollable within itself if it's taller than the
+             window); a normal full-width card in the stack on small screens. The
+             flyer scales itself to whatever width it's given (see scaleFlyer). --}}
+        <div class="mb-6 lg:col-start-2 lg:row-start-1 lg:row-span-4 lg:sticky lg:top-[88px] lg:self-start lg:max-h-[calc(100vh-104px)] lg:overflow-y-auto">
 
-            <div class="flyer-stage">
+            <div class="bg-white rounded-2xl shadow-sm p-4">
 
-                <div id="flyer-scale-wrapper">
+                <div class="flyer-stage">
 
-                    <div class="flyer-panel active">
+                    <div id="flyer-scale-wrapper">
 
-                        @if(View::exists($templateView))
-                            @include($templateView)
-                        @endif
+                        <div class="flyer-panel active">
+
+                            @if(View::exists($templateView))
+                                @include($templateView)
+                            @endif
+
+                        </div>
 
                     </div>
 
@@ -368,7 +383,7 @@ if ($propInfo->created_at) {
         @endphp
 
         {{-- ACTIVE CAMPAIGNS --}}
-        <div class="bg-white rounded-2xl shadow-sm overflow-hidden mb-6">
+        <div class="bg-white rounded-2xl shadow-sm overflow-hidden mb-6 lg:col-start-1">
 
             <div class="px-5 py-4 border-b border-slate-200">
                 <h2 class="font-semibold text-slate-900">
@@ -443,7 +458,7 @@ if ($propInfo->created_at) {
         </div>
 
         {{-- COMPLETED --}}
-        <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+        <div class="bg-white rounded-2xl shadow-sm overflow-hidden lg:col-start-1">
 
             <div class="px-5 py-4 border-b border-slate-200">
                 <h2 class="font-semibold text-slate-900">
@@ -491,6 +506,8 @@ if ($propInfo->created_at) {
             </div>
 
         </div>
+
+        </div>{{-- /two-column grid --}}
 
     </div>
 
