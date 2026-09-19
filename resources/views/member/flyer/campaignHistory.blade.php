@@ -27,8 +27,10 @@
     $statuses = [
         'completed'  => ['label' => 'Completed',                  'class' => 'bg-emerald-100 text-emerald-700'],
         'delivering' => ['label' => 'Delivering',                 'class' => 'bg-blue-100 text-blue-700'],
-        'approved'   => ['label' => 'Approved, waiting to send',  'class' => 'bg-indigo-100 text-indigo-700'],
-        'pending'    => ['label' => 'Awaiting approval',          'class' => 'bg-amber-100 text-amber-700'],
+        // Whether or not an admin has approved it yet is not the agent's concern:
+        // both just mean "in the queue".
+        'approved'   => ['label' => 'Added to Queue',             'class' => 'bg-indigo-100 text-indigo-700'],
+        'pending'    => ['label' => 'Added to Queue',             'class' => 'bg-indigo-100 text-indigo-700'],
     ];
 
     $day  = fn($d) => $d ? $d->format('M j, Y') : '—';
@@ -64,7 +66,7 @@
 
             <div class="min-w-0 flex-1">
                 <a href="/member/flyer/preview?flyerId={{ $flyer->id }}"
-                   class="block truncate text-base font-black text-[#123f91] hover:underline">
+                   class="block break-words text-base font-black text-[#123f91] hover:underline">
                     {{ $flyer->xFullStreet ?: 'Untitled Flyer' }}
                 </a>
 
@@ -105,7 +107,9 @@
 
         </div>
 
-        {{-- HISTORY --}}
+        {{-- HISTORY: one card per campaign. Nothing is truncated or forced onto one
+             line, so text wraps and the details re-flow (2 columns on a phone, 4 on
+             wider screens) instead of being cut off when space runs out. --}}
         @if($campaigns->isEmpty())
 
             <div class="rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center text-sm text-slate-500">
@@ -114,79 +118,57 @@
 
         @else
 
-            {{-- wide screens: table --}}
-            <div class="wz-card hidden overflow-hidden p-0 md:block">
-                <table class="min-w-full divide-y divide-slate-200 text-sm">
-                    <thead class="bg-slate-50">
-                        <tr class="text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
-                            <th class="px-4 py-3">Requested</th>
-                            <th class="px-4 py-3">Area</th>
-                            <th class="px-4 py-3">Type</th>
-                            <th class="px-4 py-3">Subject</th>
-                            <th class="px-4 py-3 text-right">Emails</th>
-                            <th class="px-4 py-3">Status</th>
-                            <th class="px-4 py-3">Completed</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-100">
-                        @foreach($campaigns as $c)
-                            <tr>
-                                <td class="whitespace-nowrap px-4 py-3 text-slate-600">{{ $day($c['requested']) }}</td>
-                                <td class="px-4 py-3 font-semibold text-slate-900">{{ $c['area'] }}</td>
-                                <td class="whitespace-nowrap px-4 py-3">
-                                    @if($c['free'])
-                                        <span class="rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700 ring-1 ring-emerald-200">Free</span>
-                                    @else
-                                        <span class="text-slate-600">Chosen by you</span>
-                                    @endif
-                                </td>
-                                <td class="max-w-xs truncate px-4 py-3 text-slate-600" title="{{ $c['subject'] }}">{{ $c['subject'] ?: '—' }}</td>
-                                <td class="px-4 py-3 text-right text-slate-600">{{ $num($c['emails']) }}</td>
-                                <td class="whitespace-nowrap px-4 py-3">
-                                    <span class="rounded-full px-3 py-1 text-xs font-bold {{ $statuses[$c['status']]['class'] }}">
-                                        {{ $statuses[$c['status']]['label'] }}
-                                    </span>
-                                </td>
-                                <td class="whitespace-nowrap px-4 py-3 text-slate-600">{{ $time($c['completed']) }}</td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-
-            {{-- narrow screens: one card per campaign --}}
-            <div class="space-y-3 md:hidden">
+            <div class="space-y-3">
                 @foreach($campaigns as $c)
-                    <div class="wz-card p-3">
+                    <div class="wz-card p-4">
 
-                        <div class="flex items-start justify-between gap-3">
-                            <div class="min-w-0">
-                                <div class="font-black text-slate-900">
+                        <div class="flex flex-wrap items-start justify-between gap-x-4 gap-y-2">
+
+                            <div class="min-w-0 flex-1 basis-56">
+                                @if($c['slot'])
+                                    <div class="text-[11px] font-bold uppercase tracking-wide text-slate-400">
+                                        Area {{ $c['slot'] }}
+                                    </div>
+                                @endif
+
+                                <div class="break-words text-base font-black text-slate-900">
                                     {{ $c['area'] }}
-                                    @if($c['free'])
-                                        <span class="ml-1 rounded-full bg-emerald-50 px-2 py-0.5 align-middle text-[11px] font-bold text-emerald-700 ring-1 ring-emerald-200">Free</span>
-                                    @endif
                                 </div>
-                                <div class="text-xs text-slate-500">
-                                    {{ $c['free'] ? 'Added free' : 'Chosen by you' }} &middot; Requested {{ $day($c['requested']) }}
+
+                                <div class="mt-0.5 break-words text-sm text-slate-600">
+                                    {{ $c['subject'] ?: 'No subject' }}
                                 </div>
                             </div>
 
                             <span class="shrink-0 rounded-full px-3 py-1 text-xs font-bold {{ $statuses[$c['status']]['class'] }}">
                                 {{ $statuses[$c['status']]['label'] }}
                             </span>
+
                         </div>
 
-                        @if($c['subject'])
-                            <div class="mt-2 text-sm text-slate-600">{{ $c['subject'] }}</div>
-                        @endif
+                        <dl class="mt-3 grid grid-cols-2 gap-x-4 gap-y-3 border-t border-slate-100 pt-3 text-sm sm:grid-cols-4">
 
-                        <div class="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs font-semibold text-slate-500">
-                            <span>{{ $num($c['emails']) }} emails</span>
-                            @if($c['completed'])
-                                <span>Completed {{ $time($c['completed']) }}</span>
-                            @endif
-                        </div>
+                            <div>
+                                <dt class="text-xs font-semibold uppercase tracking-wide text-slate-400">Requested</dt>
+                                <dd class="font-semibold text-slate-700">{{ $time($c['requested']) }}</dd>
+                            </div>
+
+                            <div>
+                                <dt class="text-xs font-semibold uppercase tracking-wide text-slate-400">Emails</dt>
+                                <dd class="font-semibold text-slate-700">{{ $num($c['emails']) }}</dd>
+                            </div>
+
+                            <div>
+                                <dt class="text-xs font-semibold uppercase tracking-wide text-slate-400">Started</dt>
+                                <dd class="font-semibold text-slate-700">{{ $time($c['started']) }}</dd>
+                            </div>
+
+                            <div>
+                                <dt class="text-xs font-semibold uppercase tracking-wide text-slate-400">Completed</dt>
+                                <dd class="font-semibold text-slate-700">{{ $time($c['completed']) }}</dd>
+                            </div>
+
+                        </dl>
 
                     </div>
                 @endforeach

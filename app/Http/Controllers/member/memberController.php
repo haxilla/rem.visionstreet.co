@@ -116,10 +116,11 @@ class memberController extends Controller
                     $status = 'pending';
                 }
 
-                // Free (added by an admin at no charge) vs chosen by the agent -
-                // the rule lives in the CampaignSource trait, shared with the
-                // admin pages.
-                $isFree = $c->isAdminAdded();
+                // Which of the agent's two picks this was: campLabel 'area1' /
+                // 'area2' (how the legacy data and the send form record them).
+                // Anything else - e.g. an area an admin added - has no number,
+                // and the agent-facing page says nothing about who added it.
+                $slot = preg_match('/^area([12])$/i', (string) ($c->campLabel ?? ''), $m) ? (int) $m[1] : null;
 
                 return [
                     'requested' => $requested,
@@ -130,7 +131,7 @@ class memberController extends Controller
                     'subject'   => $c->emSubject ?? null,
                     'emails'    => $c->totalEmails ?? null,
                     'status'    => $status,
-                    'free'      => $isFree,
+                    'slot'      => $slot,
                 ];
             })
             // the same campaign held in both tables is one campaign
