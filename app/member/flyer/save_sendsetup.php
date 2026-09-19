@@ -51,9 +51,9 @@ $flyer->save();
 // Turn selected areas into pending (unauthorized) campaign requests -
 // one propdelivnow row per area, picked up later by the admin approval
 // queue and the separate mail-sending system. Costs 1 credit for the
-// whole submission (covers up to 2 areas), charged only if this
-// submission actually creates at least one new request - re-saving an
-// area that's already pending just refreshes its subject, free.
+// whole submission (covers up to 2 areas). A flyer that already has a
+// request waiting for delivery is never given another one (checked
+// below, before anything is added), so nothing can be requested twice.
 $agent = auth()->user();
 
 // The same area twice in one submission must not create two requests.
@@ -64,7 +64,8 @@ $selectedAreas = array_values(array_unique($validatedData['areas'] ?? []));
 // whole flow (including admin approval) can be exercised.
 $trialMode = AdminSetting::trialMode();
 
-$queued           = false;   // at least one request is now waiting for delivery
+$queued           = false;   // the flyer is now (or already was) waiting for delivery
+$alreadyQueued    = false;   // refused: it's already waiting and different areas were asked for
 $notEnoughCredits = false;
 $busy             = false;   // another submission for this flyer is mid-flight
 
@@ -88,31 +89,46 @@ if (!empty($selectedAreas)) {
 
     if (!$busy) {
         try {
-            // Re-read credits now that we hold the lock - a request that
-            // just finished ahead of us may already have charged one.
-            $agent->refresh();
+            $campaignAreaMap = include app_path('flyers/campaignAreas.php');
 
-            if ($trialMode || ($agent->remCreds ?? 0) >= 1) {
-                $campaignAreaMap = include app_path('flyers/campaignAreas.php');
+            // Existence check FIRST, before anything is added: a flyer that
+            // already has a request waiting for delivery (not started, not
+            // finished) never gets another one.
+            $pendingNow = Propdelivnow::where('propflyer_id', $flyer->id)
+                ->whereNull('emStart')
+                ->whereNull('emComplete')
+                ->pluck('emArea')
+                ->all();
+
+            $requestedDb = [];
+            foreach ($selectedAreas as $memberAreaKey) {
+                if (isset($campaignAreaMap[$memberAreaKey])) {
+                    $requestedDb[] = $campaignAreaMap[$memberAreaKey]['db'];
+                }
+            }
+
+            if (!empty($pendingNow)) {
+
+                // Same areas again = a repeated submit (double-click, refresh):
+                // nothing to add, and from the agent's side it's still just
+                // "in the queue". Different areas = an attempt to add more
+                // while one is already queued, which is refused.
+                if (empty(array_diff($requestedDb, $pendingNow))) {
+                    $queued = true;
+                } else {
+                    $alreadyQueued = true;
+                }
+
+            // Nothing waiting yet. Credits are re-read now that we hold the
+            // lock - a request that just finished ahead of us may already
+            // have charged one.
+            } elseif ($agent->refresh() && ($trialMode || ($agent->remCreds ?? 0) >= 1)) {
                 $createdAny = false;
 
                 foreach ($selectedAreas as $memberAreaKey) {
                     $areaInfo = $campaignAreaMap[$memberAreaKey] ?? null;
 
                     if (!$areaInfo) {
-                        continue;
-                    }
-
-                    $existing = Propdelivnow::where('propflyer_id', $flyer->id)
-                        ->where('emArea', $areaInfo['db'])
-                        ->whereNull('emStart')
-                        ->whereNull('emComplete')
-                        ->first();
-
-                    if ($existing) {
-                        $existing->emSubject = $validatedData['emSubject'] ?? null;
-                        $existing->save();
-                        $queued = true;
                         continue;
                     }
 
@@ -152,6 +168,12 @@ if (!empty($selectedAreas)) {
 if ($busy) {
 
     session()->flash('sendsetup_error', 'This request is already being processed. Please wait a moment.');
+    session()->save();
+    redirect('/member/flyer/sendsetup?flyerId=' . $flyer->id)->send();
+
+} elseif ($alreadyQueued) {
+
+    session()->flash('sendsetup_error', 'This flyer is already in the delivery queue. You can request another send once delivery has started.');
     session()->save();
     redirect('/member/flyer/sendsetup?flyerId=' . $flyer->id)->send();
 

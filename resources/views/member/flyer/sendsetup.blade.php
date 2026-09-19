@@ -48,6 +48,11 @@
         }
     }
 
+    // A flyer that already has a request waiting for delivery can't be
+    // requested again until delivery has started (also enforced server-side).
+    $hasPending = !empty($pendingAreaKeys);
+    $areasLocked = $creditsBlocked || $hasPending;
+
     $timeOptions = [];
     for ($h = 6; $h <= 21; $h++) {
         foreach ([0, 30] as $m) {
@@ -77,6 +82,12 @@
         </a>
 
     </div>
+
+    @if($hasPending)
+        <div class="rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm font-semibold text-blue-800">
+            This flyer is already in the delivery queue. You can request another send once delivery has started.
+        </div>
+    @endif
 
     @if(session('sendsetup_status'))
         <div class="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700">
@@ -181,7 +192,7 @@
                             <input type="checkbox" name="areas[]" value="{{ $value }}"
                                 class="hidden"
                                 @checked(in_array($value, $oldAreas))
-                                @disabled($creditsBlocked)>
+                                @if($areasLocked) disabled data-locked="1" @endif>
                             {{ $label }}
                         </label>
                     @endif
@@ -299,7 +310,7 @@
         </div>
 
         <div class="flex justify-end">
-            <button type="submit" id="submitBtn" class="wz-btn wz-btn-primary disabled:cursor-not-allowed disabled:opacity-60">
+            <button type="submit" id="submitBtn" @disabled($hasPending) class="wz-btn wz-btn-primary disabled:cursor-not-allowed disabled:opacity-60">
                 Submit for Delivery
             </button>
         </div>
@@ -319,7 +330,8 @@
     function syncMax() {
         var checkedCount = Array.prototype.filter.call(boxes, function (b) { return b.checked; }).length;
         boxes.forEach(function (b) {
-            b.disabled = !b.checked && checkedCount >= 2;
+            // boxes the server locked (no credits / already queued) stay locked
+            b.disabled = b.dataset.locked === '1' || (!b.checked && checkedCount >= 2);
         });
     }
 
