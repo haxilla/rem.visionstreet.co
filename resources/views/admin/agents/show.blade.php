@@ -233,13 +233,38 @@
                     <dt class="text-slate-500">Username</dt>
                     <dd class="break-all text-right font-medium text-slate-900">{{ $agent->xxAgtUname ?: '—' }}</dd>
                 </div>
+                @php
+                    // The login checks only the hashed `password` column. Older
+                    // agents may still have just the plain-text `agtPswd` from the
+                    // previous system (not converted yet) - the value is never
+                    // shown, only whether one exists.
+                    $hasHash   = filled($agent->password);
+                    $hasLegacy = !$hasHash && filled($agent->agtPswd);
+                @endphp
                 <div class="flex justify-between gap-4 py-2.5">
                     <dt class="text-slate-500">Password</dt>
-                    <dd class="text-right font-medium {{ $agent->password ? 'text-slate-900' : 'text-red-600' }}">
-                        {{ $agent->password ? 'Set' : 'Not set' }}
+                    <dd class="text-right font-medium {{ $hasHash ? 'text-slate-900' : 'text-red-600' }}">
+                        @if($hasHash)
+                            Set
+                        @elseif($hasLegacy)
+                            Not converted
+                        @else
+                            Not set
+                        @endif
                     </dd>
                 </div>
             </dl>
+
+            @unless($hasHash)
+                <p class="mt-3 rounded-lg bg-red-50 px-3 py-2 text-xs font-semibold text-red-700">
+                    @if($hasLegacy)
+                        This agent only has an old-system password that was never converted, so they can't
+                        sign in until you set a new one below.
+                    @else
+                        This agent has no password, so they can't sign in until you set one below.
+                    @endif
+                </p>
+            @endunless
 
             <form method="POST" action="{{ route('admin.agentPassword', $agent->id) }}" class="mt-4 border-t border-slate-100 pt-4">
                 @csrf
