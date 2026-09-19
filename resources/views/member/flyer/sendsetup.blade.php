@@ -78,6 +78,18 @@
 
     </div>
 
+    @if(session('sendsetup_status'))
+        <div class="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700">
+            {{ session('sendsetup_status') }}
+        </div>
+    @endif
+
+    @if(session('sendsetup_error'))
+        <div class="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
+            {{ session('sendsetup_error') }}
+        </div>
+    @endif
+
     {{-- PROPERTY SNAPSHOT --}}
     @php $coverPhoto = $flyer->thePhotos->first(); @endphp
     <div class="wz-card flex items-center gap-3 p-3">
@@ -287,8 +299,8 @@
         </div>
 
         <div class="flex justify-end">
-            <button type="submit" class="wz-btn wz-btn-primary">
-                Save
+            <button type="submit" id="submitBtn" class="wz-btn wz-btn-primary disabled:cursor-not-allowed disabled:opacity-60">
+                Submit for Delivery
             </button>
         </div>
 
@@ -313,6 +325,33 @@
 
     boxes.forEach(function (b) { b.addEventListener('change', syncMax); });
     syncMax();
+
+    // Lock the form after the first submit. A second click / Enter press used
+    // to send a second identical request, which created duplicate areas.
+    var form = document.querySelector('form[action="/member/flyer/save_sendsetup"]');
+    var submitBtn = document.getElementById('submitBtn');
+    var submitted = false;
+
+    form.addEventListener('submit', function (e) {
+        if (submitted) {
+            e.preventDefault();
+            return;
+        }
+
+        submitted = true;
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Submitting…';
+    });
+
+    // Coming back with the browser's Back button restores the page from
+    // memory with the button still locked - unlock it.
+    window.addEventListener('pageshow', function (e) {
+        if (e.persisted) {
+            submitted = false;
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Submit for Delivery';
+        }
+    });
 })();
 </script>
 

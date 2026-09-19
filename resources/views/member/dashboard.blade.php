@@ -140,11 +140,28 @@
         $flyer->dashboard_last_sent_raw = $lastSentRaw;
         $flyer->dashboard_is_sent = !empty($lastSentRaw);
 
+        // Requested but delivery hasn't started yet (not started, not finished).
+        $waitingForFlyer = $flyerCampaigns->filter(fn($c) => empty($c->emStart) && empty($c->emComplete));
+
+        $flyer->dashboard_is_waiting = $waitingForFlyer->isNotEmpty();
+        $flyer->dashboard_waiting_since = $waitingForFlyer->max('emRequest');
+        $flyer->dashboard_waiting_areas = $waitingForFlyer
+            ->map(fn($c) => $c->emArea_display ?: $c->emArea)
+            ->filter()
+            ->unique()
+            ->values();
+
         return $flyer;
     });
 
+    // Flyers with a request waiting for delivery get their own section, so
+    // they're not also listed as drafts.
+    $waitingFlyers = $flyersWithStatus
+        ->filter(fn($flyer) => $flyer->dashboard_is_waiting)
+        ->sortByDesc(fn($flyer) => $flyer->dashboard_waiting_since);
+
     $unsentFlyers = $flyersWithStatus
-        ->filter(fn($flyer) => !$flyer->dashboard_is_sent)
+        ->filter(fn($flyer) => !$flyer->dashboard_is_sent && !$flyer->dashboard_is_waiting)
         ->sortByDesc(fn($flyer) => $flyer->created_at ?? $flyer->id);
 
     $recentFlyers = $flyersWithStatus
@@ -166,6 +183,88 @@
                     {{ $agent->agtFullName ?? 'Member' }}
                 </p>
             </div>
+
+            {{-- WAITING DELIVERY: requested, delivery not started yet --}}
+            @if($waitingFlyers->isNotEmpty())
+                <div class="mb-5">
+                    <div class="flex items-center gap-3">
+                        <span class="flex h-9 min-w-9 items-center justify-center rounded-full bg-emerald-600 px-2 text-xl font-black text-white shadow-sm">
+                            {{ $waitingFlyers->count() }}
+                        </span>
+                        <h2 class="text-2xl font-black text-slate-900">Waiting Delivery</h2>
+                    </div>
+                    <p class="mt-1 text-sm text-slate-500">Requested and in the delivery queue. Campaigns will begin shortly.</p>
+                </div>
+
+                <div class="mb-10 space-y-4">
+                    @foreach($waitingFlyers as $flyer)
+                        @php
+                            $img = $photoUrl($flyer);
+
+                            $location = trim(
+                                ($flyer->xCity ?? '') . ' ' .
+                                ($flyer->state ?? '') . ' ' .
+                                ($flyer->xxZip ?? $flyer->xZip ?? '')
+                            );
+
+                            $requestedOn = $flyer->dashboard_waiting_since
+                                ? Carbon::parse($flyer->dashboard_waiting_since)->format('M j, Y')
+                                : null;
+                        @endphp
+
+                        <article class="flyer-card">
+
+                            <a href="/member/flyer/preview?flyerId={{ $flyer->id }}" class="flyer-thumb">
+                                @if($img)
+                                    <img src="{{ $img }}" alt="{{ $flyer->xFullStreet }}">
+                                @else
+                                    <div class="flex h-full items-center justify-center text-xs font-bold text-slate-400">
+                                        No Photo
+                                    </div>
+                                @endif
+                            </a>
+
+                            <div class="flyer-info">
+                                @if($requestedOn)
+                                    <div class="text-xs text-slate-400">
+                                        Requested: {{ $requestedOn }}
+                                    </div>
+                                @endif
+
+                                <a href="/member/flyer/preview?flyerId={{ $flyer->id }}" class="block truncate text-lg font-black text-[#123f91] hover:underline">
+                                    {{ $flyer->xFullStreet ?: 'Untitled Flyer' }}
+                                </a>
+
+                                <div class="mt-1 text-sm text-slate-500">
+                                    {{ $location ?: 'Location unavailable' }}
+                                </div>
+
+                                <div class="mt-3 flex flex-wrap gap-2 text-xs font-bold">
+                                    <span class="rounded-full bg-blue-50 px-3 py-1 text-blue-700">
+                                        {{ $money($flyer->xListPrice) }}
+                                    </span>
+
+                                    @if($flyer->dashboard_waiting_areas->isNotEmpty())
+                                        <span class="rounded-full bg-slate-100 px-3 py-1 text-slate-600">
+                                            {{ $flyer->dashboard_waiting_areas->implode(', ') }}
+                                        </span>
+                                    @endif
+                                </div>
+                            </div>
+
+                            {{-- No Delete here: removing a flyer that's already in the
+                                 queue would leave the queue entry pointing at nothing. --}}
+                            <div class="flyer-actions">
+                                <a href="/member/flyer/preview?flyerId={{ $flyer->id }}"
+                                   class="flyer-btn rounded-xl border border-slate-200 px-4 py-2.5 text-xs font-bold text-slate-700 hover:bg-slate-50">
+                                    View Flyer
+                                </a>
+                            </div>
+
+                        </article>
+                    @endforeach
+                </div>
+            @endif
 
             {{-- UNSENT FLYERS --}}
             @if($unsentFlyers->isNotEmpty())
@@ -342,6 +441,65 @@
     </div>
 
 </main>
+
+{{-- Shown once, right after "Submit for Delivery" (flashed by save_sendsetup.php).
+     Closing it leaves the agent on their dashboard, where the flyer is listed
+     under "Waiting Delivery". --}}
+@if(session('delivery_queued'))
+    <div id="queuedModal"
+         class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/50 p-4"
+         role="dialog" aria-modal="true" aria-labelledby="queuedModalTitle">
+
+        <div class="w-full max-w-md rounded-2xl bg-white p-6 text-center shadow-xl">
+
+            <div class="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100 text-2xl font-black text-emerald-600">
+                &#10003;
+            </div>
+
+            <h2 id="queuedModalTitle" class="text-xl font-black text-slate-900">
+                Added to the delivery queue
+            </h2>
+
+            <p class="mt-2 text-sm text-slate-600">
+                <span class="font-bold text-slate-900">{{ session('delivery_queued') }}</span>
+                was added to the delivery queue. Your campaigns will begin shortly.
+            </p>
+
+            <button type="button" id="queuedModalClose" class="wz-btn wz-btn-primary mt-5">
+                Close
+            </button>
+
+        </div>
+    </div>
+
+    <script>
+    (function () {
+        var modal = document.getElementById('queuedModal');
+        var closeBtn = document.getElementById('queuedModalClose');
+
+        function close() {
+            modal.remove();
+            document.body.style.overflow = '';
+            document.removeEventListener('keydown', onKey);
+        }
+
+        function onKey(e) {
+            if (e.key === 'Escape') close();
+        }
+
+        document.body.style.overflow = 'hidden';
+        closeBtn.addEventListener('click', close);
+        document.addEventListener('keydown', onKey);
+
+        // clicking the dimmed area outside the box also closes it
+        modal.addEventListener('click', function (e) {
+            if (e.target === modal) close();
+        });
+
+        closeBtn.focus();
+    })();
+    </script>
+@endif
 
 @include('public.layout.footer')
 

@@ -55,56 +55,127 @@ $flyer->save();
 // submission actually creates at least one new request - re-saving an
 // area that's already pending just refreshes its subject, free.
 $agent = auth()->user();
-$selectedAreas = $validatedData['areas'] ?? [];
+
+// The same area twice in one submission must not create two requests.
+$selectedAreas = array_values(array_unique($validatedData['areas'] ?? []));
 
 // Trial mode (admin Settings): sends are tests, so no credit is needed
 // and none is ever charged. Requests are still created normally so the
 // whole flow (including admin approval) can be exercised.
 $trialMode = AdminSetting::trialMode();
 
-if (!empty($selectedAreas) && ($trialMode || ($agent->remCreds ?? 0) >= 1)) {
-    $campaignAreaMap = include app_path('flyers/campaignAreas.php');
-    $createdAny = false;
+$queued           = false;   // at least one request is now waiting for delivery
+$notEnoughCredits = false;
+$busy             = false;   // another submission for this flyer is mid-flight
 
-    foreach ($selectedAreas as $memberAreaKey) {
-        $areaInfo = $campaignAreaMap[$memberAreaKey] ?? null;
+if (!empty($selectedAreas)) {
 
-        if (!$areaInfo) {
-            continue;
-        }
+    // One submission at a time per flyer. A double-click (or a refresh
+    // re-POST) sends two identical requests at once; without this both see
+    // "no pending request for this area yet" and each creates its own
+    // rows - 2 chosen areas became 4. A MySQL advisory lock needs no
+    // tables and works whatever the storage engine. If locking isn't
+    // available (e.g. a non-MySQL dev database) carry on unlocked.
+    $lockName = 'sendsetup-flyer-' . $flyer->id;
+    $haveLock = false;
 
-        $existing = Propdelivnow::where('propflyer_id', $flyer->id)
-            ->where('emArea', $areaInfo['db'])
-            ->whereNull('emStart')
-            ->whereNull('emComplete')
-            ->first();
-
-        if ($existing) {
-            $existing->emSubject = $validatedData['emSubject'] ?? null;
-            $existing->save();
-            continue;
-        }
-
-        $campaign = new Propdelivnow();
-        $campaign->propflyer_id   = $flyer->id;
-        $campaign->propagent_id   = $flyer->propagent_id;
-        $campaign->emArea         = $areaInfo['db'];
-        $campaign->emArea_display = $areaInfo['label'];
-        $campaign->emSubject      = $validatedData['emSubject'] ?? null;
-        $campaign->totalEmails    = DB::connection('rememaildb')->table($areaInfo['db'])->count();
-        $campaign->emRequest      = now();
-        $campaign->authorized     = 0;
-        $campaign->save();
-
-        $createdAny = true;
+    try {
+        $haveLock = (bool) (DB::selectOne('SELECT GET_LOCK(?, 10) AS got', [$lockName])->got ?? false);
+        $busy     = !$haveLock;
+    } catch (\Throwable $e) {
+        report($e);
     }
 
-    if ($createdAny && !$trialMode) {
-        $agent->remCreds = $agent->remCreds - 1;
-        $agent->save();
+    if (!$busy) {
+        try {
+            // Re-read credits now that we hold the lock - a request that
+            // just finished ahead of us may already have charged one.
+            $agent->refresh();
+
+            if ($trialMode || ($agent->remCreds ?? 0) >= 1) {
+                $campaignAreaMap = include app_path('flyers/campaignAreas.php');
+                $createdAny = false;
+
+                foreach ($selectedAreas as $memberAreaKey) {
+                    $areaInfo = $campaignAreaMap[$memberAreaKey] ?? null;
+
+                    if (!$areaInfo) {
+                        continue;
+                    }
+
+                    $existing = Propdelivnow::where('propflyer_id', $flyer->id)
+                        ->where('emArea', $areaInfo['db'])
+                        ->whereNull('emStart')
+                        ->whereNull('emComplete')
+                        ->first();
+
+                    if ($existing) {
+                        $existing->emSubject = $validatedData['emSubject'] ?? null;
+                        $existing->save();
+                        $queued = true;
+                        continue;
+                    }
+
+                    $campaign = new Propdelivnow();
+                    $campaign->propflyer_id   = $flyer->id;
+                    $campaign->propagent_id   = $flyer->propagent_id;
+                    $campaign->emArea         = $areaInfo['db'];
+                    $campaign->emArea_display = $areaInfo['label'];
+                    $campaign->emSubject      = $validatedData['emSubject'] ?? null;
+                    $campaign->totalEmails    = DB::connection('rememaildb')->table($areaInfo['db'])->count();
+                    $campaign->emRequest      = now();
+                    $campaign->authorized     = 0;
+                    $campaign->save();
+
+                    $createdAny = true;
+                    $queued     = true;
+                }
+
+                if ($createdAny && !$trialMode) {
+                    $agent->remCreds = $agent->remCreds - 1;
+                    $agent->save();
+                }
+            } else {
+                $notEnoughCredits = true;
+            }
+        } finally {
+            if ($haveLock) {
+                DB::select('SELECT RELEASE_LOCK(?)', [$lockName]);
+            }
+        }
     }
 }
 
-redirect('/member/flyer/sendsetup?flyerId=' . $flyer->id)->send();
+// This handler ends with redirect()->send() + exit(), which skips the
+// normal end-of-request step that saves the session - so anything flashed
+// for the next page has to be saved explicitly first or it is lost.
+if ($busy) {
+
+    session()->flash('sendsetup_error', 'This request is already being processed. Please wait a moment.');
+    session()->save();
+    redirect('/member/flyer/sendsetup?flyerId=' . $flyer->id)->send();
+
+} elseif ($notEnoughCredits) {
+
+    session()->flash('sendsetup_error', 'You need at least 1 credit to request a send.');
+    session()->save();
+    redirect('/member/flyer/sendsetup?flyerId=' . $flyer->id)->send();
+
+} elseif ($queued) {
+
+    // Finished: back to the dashboard, where a modal confirms the flyer is
+    // in the delivery queue and it is listed under "Waiting Delivery".
+    session()->flash('delivery_queued', $flyer->xFullStreet ?: 'Your flyer');
+    session()->save();
+    redirect('/member/dashboard')->send();
+
+} else {
+
+    // No area chosen: only the subject / open house / bonus details were saved.
+    session()->flash('sendsetup_status', 'Saved. Choose an area to send this flyer.');
+    session()->save();
+    redirect('/member/flyer/sendsetup?flyerId=' . $flyer->id)->send();
+
+}
 
 exit();
