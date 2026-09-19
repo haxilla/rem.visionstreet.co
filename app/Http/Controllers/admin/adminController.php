@@ -10,7 +10,6 @@ use App\Models\Core\Propflyer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 
 class adminController extends Controller
@@ -77,28 +76,48 @@ class adminController extends Controller
     }
 
     /**
-     * Admin sets a new password for an agent. Writes the hashed
-     * `password` column - the one the member login (Auth::attempt on
-     * xxAgtUname + password) actually checks. The legacy plain-text
-     * `agtPswd` column is deliberately left alone. The password is never
-     * shown back or put in the flash message.
+     * "Send password reset email" - a stand-in for now. There is no email
+     * sending set up yet, so this sends NOTHING and says so plainly; the
+     * button, route and CSRF-protected POST already exist so only the
+     * sending itself needs adding here later.
      */
-    public function agentPassword(Request $request, $id)
+    public function agentPasswordReset($id)
     {
         $agent = Propagent::findOrFail($id);
 
-        $validated = $request->validate([
-            // bcrypt only uses the first 72 bytes
-            'new_password' => ['required', 'string', 'min:8', 'max:72'],
-        ]);
+        // TODO: when email sending exists, create a reset token / link for
+        // $agent (login username = $agent->xxAgtUname) and email it here.
 
-        $agent->password = Hash::make($validated['new_password']);
+        return redirect()->route('admin.agentView', $agent->id)
+            ->with('status', 'Password reset email is not set up yet - nothing was sent.');
+    }
+
+    /**
+     * Block / unblock an agent's login. The flag is propagents.loginBlocked
+     * (added by hand with raw SQL). It is enforced at sign-in
+     * (guestController::memberLogin) and on every request in the member
+     * area (EnsureAgentNotBlocked), so blocking also ends a session that
+     * is already open.
+     */
+    public function agentLoginBlock($id)
+    {
+        $agent = Propagent::findOrFail($id);
+
+        // The column is missing from the loaded row until the SQL has been run.
+        if (!array_key_exists('loginBlocked', $agent->getAttributes())) {
+            return redirect()->route('admin.agentView', $agent->id)
+                ->withErrors(['loginBlocked' => 'The loginBlocked column has not been added to the database yet.']);
+        }
+
+        $block = (int) $agent->loginBlocked !== 1;
+
+        $agent->loginBlocked = $block ? 1 : 0;
         $agent->save();
 
         $name = $agent->agtFullName ?: ($agent->xxAgtUname ?: 'this agent');
 
         return redirect()->route('admin.agentView', $agent->id)
-            ->with('status', "Password changed for {$name}.");
+            ->with('status', $block ? "Login blocked for {$name}." : "Login unblocked for {$name}.");
     }
 
     public function agentLogin(Request $request, $id)

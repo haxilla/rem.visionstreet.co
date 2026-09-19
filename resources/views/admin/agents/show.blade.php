@@ -11,6 +11,17 @@
     }
 
     $showExpireDate = in_array((int) $agent->accountType, [2, 3], true);
+
+    // The login checks only the hashed `password` column. Older agents may
+    // still have just the plain-text `agtPswd` from the previous system
+    // (never converted) - the value is never shown, only whether one exists.
+    $hasHash   = filled($agent->password);
+    $hasLegacy = !$hasHash && filled($agent->agtPswd);
+
+    // loginBlocked is a column added by hand (raw SQL); until it exists the
+    // attribute is simply absent from the loaded row.
+    $blockAvailable = array_key_exists('loginBlocked', $agent->getAttributes());
+    $isBlocked      = $blockAvailable && (int) $agent->loginBlocked === 1;
 @endphp
 
 <main class="min-h-screen bg-[#f4f7fb] pt-24">
@@ -24,8 +35,13 @@
                     Admin / Agents
                 </div>
 
-                <h1 class="mt-2 text-2xl font-semibold text-slate-900 sm:text-[32px]">
+                <h1 class="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-2xl font-semibold text-slate-900 sm:text-[32px]">
                     {{ $displayName }}
+                    @if($isBlocked)
+                        <span class="rounded-full bg-red-600 px-3 py-1 text-xs font-bold uppercase tracking-wide text-white">
+                            Login blocked
+                        </span>
+                    @endif
                 </h1>
 
                 <p class="mt-2 text-[14px] text-slate-600">
@@ -224,23 +240,16 @@
             </dl>
         </div>
 
-        {{-- LOGIN & PASSWORD --}}
+        {{-- LOGIN & ACCESS --}}
         <div id="login" class="rounded-[24px] bg-white p-5 shadow-[0_12px_35px_rgba(15,23,42,0.06)] sm:p-6">
-            <h2 class="text-lg font-semibold text-slate-900">Login &amp; Password</h2>
+            <h2 class="text-lg font-semibold text-slate-900">Login &amp; Access</h2>
 
             <dl class="mt-4 divide-y divide-slate-100 text-sm">
                 <div class="flex justify-between gap-4 py-2.5">
                     <dt class="text-slate-500">Username</dt>
                     <dd class="break-all text-right font-medium text-slate-900">{{ $agent->xxAgtUname ?: '—' }}</dd>
                 </div>
-                @php
-                    // The login checks only the hashed `password` column. Older
-                    // agents may still have just the plain-text `agtPswd` from the
-                    // previous system (not converted yet) - the value is never
-                    // shown, only whether one exists.
-                    $hasHash   = filled($agent->password);
-                    $hasLegacy = !$hasHash && filled($agent->agtPswd);
-                @endphp
+
                 <div class="flex justify-between gap-4 py-2.5">
                     <dt class="text-slate-500">Password</dt>
                     <dd class="text-right font-medium {{ $hasHash ? 'text-slate-900' : 'text-red-600' }}">
@@ -253,57 +262,74 @@
                         @endif
                     </dd>
                 </div>
+
+                <div class="flex justify-between gap-4 py-2.5">
+                    <dt class="text-slate-500">Login access</dt>
+                    <dd class="text-right font-medium
+                        {{ !$blockAvailable ? 'text-slate-400' : ($isBlocked ? 'text-red-600' : 'text-emerald-600') }}">
+                        @if(!$blockAvailable)
+                            Not available yet
+                        @elseif($isBlocked)
+                            Blocked
+                        @else
+                            Active
+                        @endif
+                    </dd>
+                </div>
             </dl>
 
             @unless($hasHash)
                 <p class="mt-3 rounded-lg bg-red-50 px-3 py-2 text-xs font-semibold text-red-700">
                     @if($hasLegacy)
                         This agent only has an old-system password that was never converted, so they can't
-                        sign in until you set a new one below.
+                        sign in until they reset their password.
                     @else
-                        This agent has no password, so they can't sign in until you set one below.
+                        This agent has no password, so they can't sign in until they reset it.
                     @endif
                 </p>
             @endunless
 
-            <form method="POST" action="{{ route('admin.agentPassword', $agent->id) }}" class="mt-4 border-t border-slate-100 pt-4">
-                @csrf
-
-                <label for="new_password" class="mb-1 block text-sm font-semibold text-slate-700">
-                    New password
-                </label>
-
-                <div class="flex flex-wrap gap-2">
-                    <input type="password"
-                           id="new_password"
-                           name="new_password"
-                           required
-                           minlength="8"
-                           maxlength="72"
-                           autocomplete="new-password"
-                           class="min-w-0 flex-1 rounded-lg border border-slate-300 px-3 py-2.5 text-sm focus:border-[#214e9b] focus:outline-none focus:ring-2 focus:ring-[#214e9b]/20">
-
-                    <button type="button" id="pwShow"
-                            class="rounded-lg border border-slate-200 px-3 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-100">
-                        Show
-                    </button>
-
-                    <button type="button" id="pwGenerate"
-                            class="rounded-lg border border-slate-200 px-3 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-100">
-                        Generate
-                    </button>
-                </div>
-
-                <p class="mt-2 text-xs text-slate-500">
-                    At least 8 characters. Passwords are stored securely and can't be viewed afterwards,
-                    so copy it before saving and give it to the agent.
+            @if($isBlocked)
+                <p class="mt-3 rounded-lg bg-red-50 px-3 py-2 text-xs font-semibold text-red-700">
+                    Login is blocked. This agent can't sign in, and if they're already signed in they're
+                    signed out on their next click.
                 </p>
+            @endif
 
-                <button type="submit"
-                        class="mt-3 rounded-lg bg-[#214e9b] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#1b3f80]">
-                    Change password
-                </button>
-            </form>
+            @unless($blockAvailable)
+                <p class="mt-3 rounded-lg bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-700">
+                    Blocking isn't available until the <code>loginBlocked</code> column has been added to the
+                    database.
+                </p>
+            @endunless
+
+            <div class="mt-4 flex flex-wrap gap-2 border-t border-slate-100 pt-4">
+
+                <form method="POST" action="{{ route('admin.agentPasswordReset', $agent->id) }}">
+                    @csrf
+                    <button type="submit"
+                            class="rounded-lg border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-100">
+                        Send password reset email
+                    </button>
+                </form>
+
+                <form method="POST" action="{{ route('admin.agentLoginBlock', $agent->id) }}">
+                    @csrf
+                    <button type="submit"
+                            @disabled(!$blockAvailable)
+                            class="rounded-lg px-4 py-2.5 text-sm font-semibold disabled:cursor-not-allowed disabled:opacity-40
+                                {{ $isBlocked
+                                    ? 'bg-emerald-600 text-white hover:bg-emerald-700'
+                                    : 'border border-red-200 text-red-600 hover:bg-red-50' }}">
+                        {{ $isBlocked ? 'Unblock login' : 'Block login' }}
+                    </button>
+                </form>
+
+            </div>
+
+            <p class="mt-2 text-xs text-slate-500">
+                Email sending isn't set up yet, so "Send password reset email" doesn't send anything for now.
+            </p>
         </div>
 
         </div>
@@ -356,43 +382,6 @@
 </main>
 
 @include('public.layout.footer')
-
-<script>
-(function () {
-    var input   = document.getElementById('new_password');
-    var showBtn = document.getElementById('pwShow');
-    var genBtn  = document.getElementById('pwGenerate');
-
-    if (!input) return;
-
-    function setVisible(visible) {
-        input.type = visible ? 'text' : 'password';
-        showBtn.textContent = visible ? 'Hide' : 'Show';
-    }
-
-    showBtn.addEventListener('click', function () {
-        setVisible(input.type === 'password');
-    });
-
-    // 12 random characters, skipping look-alikes (0/O, 1/l/I) so it can be
-    // read out or typed without mistakes. Revealed so it can be copied.
-    genBtn.addEventListener('click', function () {
-        var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789';
-        var bytes = new Uint32Array(12);
-        var out = '';
-
-        crypto.getRandomValues(bytes);
-
-        for (var i = 0; i < bytes.length; i++) {
-            out += chars.charAt(bytes[i] % chars.length);
-        }
-
-        input.value = out;
-        setVisible(true);
-        input.select();
-    });
-})();
-</script>
 
 </body>
 </html>

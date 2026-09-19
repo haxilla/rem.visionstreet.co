@@ -16,6 +16,9 @@ class memberController extends Controller
     public function __construct()
     {
         $this->middleware('auth:member');
+
+        // Runs after auth: signs out a blocked agent on their next request.
+        $this->middleware(\App\Http\Middleware\EnsureAgentNotBlocked::class);
     }
 
     public function segments(Request $request)

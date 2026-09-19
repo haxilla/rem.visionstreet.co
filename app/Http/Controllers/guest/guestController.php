@@ -87,6 +87,18 @@ class guestController extends Controller
         }
 
         if (Auth::guard('member')->attempt($credentials)) {
+
+            // A blocked agent can't sign in even with the right password
+            // (propagents.loginBlocked; see also EnsureAgentNotBlocked,
+            // which ends sessions that are already open).
+            if ((int) (Auth::guard('member')->user()->loginBlocked ?? 0) === 1) {
+                Auth::guard('member')->logout();
+
+                return back()->withErrors([
+                    'xxAgtUname' => 'Your account has been blocked. Please contact support.',
+                ])->onlyInput('xxAgtUname');
+            }
+
             $request->session()->regenerate();
             return redirect()->intended('/member/dashboard');
         }

@@ -44,9 +44,13 @@ Route::get('/admin/agentDelete/{id}',
 Route::get('/admin/agentView/{id}',
 [adminController::class, 'agentView'])->name('admin.agentView');
 
-//set a new password for an agent (POST only - carries a CSRF token, admin-only via the controller)
-Route::post('/admin/agentPassword/{id}',
-[adminController::class, 'agentPassword'])->whereNumber('id')->name('admin.agentPassword');
+//password reset email for an agent (stand-in until email sending exists) and login block on/off
+//(POST only - both change or will change data, so they carry a CSRF token; admin-only via the controller)
+Route::post('/admin/agentPasswordReset/{id}',
+[adminController::class, 'agentPasswordReset'])->whereNumber('id')->name('admin.agentPasswordReset');
+
+Route::post('/admin/agentLoginBlock/{id}',
+[adminController::class, 'agentLoginBlock'])->whereNumber('id')->name('admin.agentLoginBlock');
 
 Route::get('/admin/agentLogin/{id}',
 [adminController::class, 'agentLogin'])->name('admin.agentLogin');
