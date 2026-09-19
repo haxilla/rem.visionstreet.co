@@ -215,8 +215,9 @@ class adminController extends Controller
     /**
      * Admin-only: add an extra area to a flyer at no cost to the agent.
      * Deliberately does NOT touch the agent's credits (unlike the
-     * member send-setup flow). The row is created already approved, so
-     * it is ready for the mail system straight away.
+     * member send-setup flow). Like every other request the row starts
+     * UNAPPROVED (authorized = 0); it is approved together with the rest
+     * of the flyer's waiting areas by campaignApprove().
      */
     public function campaignAddArea(Request $request, $flyerId)
     {
@@ -265,12 +266,12 @@ class adminController extends Controller
         $campaign->campLabel      = 'admin';
         $campaign->admin_add      = 1;
         $campaign->free           = 1;
-        $campaign->authorized     = 1;
+        $campaign->authorized     = 0;   // approved later, with the flyer's other waiting areas
         $campaign->save();
 
         return redirect()->route('admin.flyerCamps', $flyer->id)->with(
             'status',
-            "Added {$area['label']} (" . number_format($totalEmails) . ' contacts) at no charge. It is approved and ready to send.'
+            "Added {$area['label']} (" . number_format($totalEmails) . ' contacts) at no charge. It is waiting for approval with this flyer\'s other areas.'
         );
     }
 

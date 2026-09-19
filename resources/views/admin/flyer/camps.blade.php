@@ -335,7 +335,7 @@ if ($propInfo->created_at) {
             </h2>
 
             <p class="text-sm text-slate-500 mb-4">
-                No credit is charged to the agent. The area is added already approved, so it is ready to send right away.
+                No credit is charged to the agent. The area is added as unapproved and is approved together with this flyer's other waiting areas.
             </p>
 
             <form method="POST"
