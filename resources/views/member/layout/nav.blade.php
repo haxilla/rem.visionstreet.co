@@ -160,9 +160,10 @@
         </span>
 
         {{-- Trial mode switch: always shown (ON or OFF) so it can be flipped
-             either way. Posts without reloading the page, so a half-filled
-             form isn't lost. Turning it OFF asks first, since real sends
-             then use credits and agents get their own copy. --}}
+             either way with one click. It never navigates or reloads, so a
+             half-filled form isn't lost. If it's ON but no test email is
+             set, a warning mark shows on the button (and in the detail text
+             on wide screens). --}}
         <form id="trialToggleForm" method="POST" action="{{ route('admin.trialToggle') }}" class="shrink-0">
           @csrf
           <button type="submit"
@@ -173,7 +174,7 @@
                   data-class-off="bg-amber-600/40 text-amber-950 ring-1 ring-amber-950/30 hover:bg-amber-600/60"
                   title="{{ $navTrialMode ? 'Click to turn trial mode OFF' : 'Click to turn trial mode ON' }}"
                   class="whitespace-nowrap rounded-full px-4 py-1.5 text-[11px] font-black uppercase tracking-wide transition {{ $navTrialMode ? 'bg-red-700 text-white hover:bg-red-800' : 'bg-amber-600/40 text-amber-950 ring-1 ring-amber-950/30 hover:bg-amber-600/60' }}">
-            Trial<span class="hidden sm:inline"> mode</span>: <span data-state>{{ $navTrialMode ? 'ON' : 'OFF' }}</span>
+            Trial<span class="hidden sm:inline"> mode</span>: <span data-state>{{ $navTrialMode ? 'ON' : 'OFF' }}</span><span data-warn class="{{ $navTrialMode && $navTrialEmail === '' ? '' : 'hidden' }}" title="No test email is set - add one in Settings"> &#9888;</span>
           </button>
         </form>
 
@@ -202,6 +203,7 @@
       var detail   = document.getElementById('trialDetail');
       var emailEl  = detail.querySelector('[data-trial-email]');
       var stateEl  = btn.querySelector('[data-state]');
+      var warnEl   = btn.querySelector('[data-warn]');
 
       function apply(on, email) {
           btn.dataset.on = on ? '1' : '0';
@@ -210,15 +212,12 @@
           stateEl.textContent = on ? 'ON' : 'OFF';
           detail.classList.toggle('hidden', !on);
           emailEl.textContent = email || 'test email (not set)';
+          warnEl.classList.toggle('hidden', !(on && !email));
       }
 
+      // One click flips it in place - no confirmation, no navigation.
       form.addEventListener('submit', function (e) {
           e.preventDefault();
-
-          if (btn.dataset.on === '1' &&
-              !confirm('Turn trial mode OFF?\n\nReal sends will use credits and agents will receive their own copy.')) {
-              return;
-          }
 
           btn.disabled = true;
 
@@ -228,17 +227,11 @@
               headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' }
           })
               .then(function (response) {
-                  return response.json().then(function (json) {
-                      return { ok: response.ok, json: json };
-                  });
+                  if (!response.ok) throw new Error('HTTP ' + response.status);
+                  return response.json();
               })
-              .then(function (result) {
-                  if (!result.ok) {
-                      alert(result.json.message || 'Could not change trial mode.');
-                      if (result.json.settingsUrl) window.location = result.json.settingsUrl;
-                      return;
-                  }
-                  apply(result.json.trialMode, result.json.trialEmail);
+              .then(function (json) {
+                  apply(json.trialMode, json.trialEmail);
               })
               .catch(function () {
                   alert('Could not change trial mode. Please try again.');
