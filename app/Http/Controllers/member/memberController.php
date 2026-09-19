@@ -145,7 +145,10 @@ class memberController extends Controller
             'sent'      => $completedRows->count(),
             'emails'    => (int) $completedRows->sum(fn ($r) => (int) $r['emails']),
             'lastSent'  => $completedRows->map(fn ($r) => $r['completed'])->filter()->sortDesc()->first(),
-            'inQueue'   => $rows->whereIn('status', ['pending', 'approved', 'delivering'])->count(),
+            // requested but not started yet
+            'inQueue'    => $rows->whereIn('status', ['pending', 'approved'])->count(),
+            // started but not finished
+            'inProgress' => $rows->where('status', 'delivering')->count(),
         ];
 
         return view('member.flyer.campaignHistory', [

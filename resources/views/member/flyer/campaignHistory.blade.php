@@ -26,7 +26,7 @@
 
     $statuses = [
         'completed'  => ['label' => 'Completed',                  'class' => 'bg-emerald-100 text-emerald-700'],
-        'delivering' => ['label' => 'Delivering',                 'class' => 'bg-blue-100 text-blue-700'],
+        'delivering' => ['label' => 'In Progress',                'class' => 'bg-blue-100 text-blue-700'],
         // Whether or not an admin has approved it yet is not the agent's concern:
         // both just mean "in the queue".
         'approved'   => ['label' => 'Added to Queue',             'class' => 'bg-indigo-100 text-indigo-700'],
@@ -82,7 +82,7 @@
         </div>
 
         {{-- SUMMARY --}}
-        <div class="mb-3 grid grid-cols-2 gap-3 md:grid-cols-5">
+        <div class="mb-3 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-6">
 
             <div class="wz-card p-3">
                 <div class="text-xs font-semibold uppercase tracking-wide text-slate-400">Campaigns Sent</div>
@@ -104,8 +104,12 @@
                 <div class="mt-1 text-2xl font-black text-slate-900">{{ number_format($summary['inQueue']) }}</div>
             </div>
 
-            {{-- five tiles: on a phone (2 columns) this last one spans the full row --}}
-            <div class="wz-card col-span-2 p-3 md:col-span-1">
+            <div class="wz-card p-3">
+                <div class="text-xs font-semibold uppercase tracking-wide text-slate-400">In Progress</div>
+                <div class="mt-1 text-2xl font-black text-slate-900">{{ number_format($summary['inProgress']) }}</div>
+            </div>
+
+            <div class="wz-card p-3">
                 <div class="text-xs font-semibold uppercase tracking-wide text-slate-400">Flyer Hits</div>
                 <div class="mt-1 text-2xl font-black text-slate-900">{{ number_format($views) }}</div>
             </div>
