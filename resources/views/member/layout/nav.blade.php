@@ -136,9 +136,20 @@
     $navTrialEmail = $navTrialMode ? \App\Models\Core\AdminSetting::trialEmail() : '';
   @endphp
 
-  {{-- Pinned bars (the wizard's Save & Continue) sit above this banner
-       instead of underneath it. 2.75rem = the banner's h-11. --}}
-  <style>.wz-pinned-bar { bottom: 2.75rem !important; }</style>
+  {{-- Room for the fixed banner (2.75rem = its h-11), only while impersonating:
+       - pinned bars (the wizard's Save & Continue) sit above it, with extra
+         padding under their buttons so they aren't crowding the banner;
+       - the page gets extra space at the very end, so the last buttons /
+         flyer / options can always be scrolled fully clear of the banner;
+       - the sticky flyer column is a little shorter so it doesn't run
+         under the banner either. --}}
+  <style>
+    .wz-pinned-bar { bottom: 2.75rem !important; padding-bottom: 1.5rem !important; }
+    body { padding-bottom: 4.5rem; }
+    @media (min-width: 1024px) {
+      #flyer-side { max-height: calc(100vh - 232px) !important; }
+    }
+  </style>
 
   {{-- IMPERSONATION BANNER: fixed to the bottom so it never needs the
        top header's height to be recalculated on every page --}}
