@@ -68,3 +68,4 @@ $lastSubject = Propdelivnow::where('propflyer_id', $flyer->id)
 
 $data['flyer'] = $flyer;
 $data['lastSubject'] = $lastSubject;
+$data['remCredits'] = auth()->user()->remCreds ?? 0;

@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Core\Propflyer;
+use App\Models\Core\Propdelivnow;
 
 $validatedData = $request->validate([
 
@@ -29,8 +30,6 @@ if (!$flyer) {
     dd("Error: Flyer not found or you don't have permission to edit it.");
 }
 
-// emSubject/areas aren't saved yet - where a send request actually gets
-// queued (propdelivnow) is a separate decision that hasn't been made.
 $flyer->openHouseDate1    = $validatedData['openHouseDate1'] ?? null;
 $flyer->openHouseTime1    = $validatedData['openHouseTime1'] ?? null;
 $flyer->openHouseEndTime1 = $validatedData['openHouseEndTime1'] ?? null;
@@ -47,6 +46,58 @@ $flyer->reducedAmount = $validatedData['reducedAmount'] ?? null;
 $flyer->reducedDate   = $validatedData['reducedDate'] ?? null;
 
 $flyer->save();
+
+// Turn selected areas into pending (unauthorized) campaign requests -
+// one propdelivnow row per area, picked up later by the admin approval
+// queue and the separate mail-sending system. Costs 1 credit for the
+// whole submission (covers up to 2 areas), charged only if this
+// submission actually creates at least one new request - re-saving an
+// area that's already pending just refreshes its subject, free.
+$agent = auth()->user();
+$selectedAreas = $validatedData['areas'] ?? [];
+
+if (!empty($selectedAreas) && ($agent->remCreds ?? 0) >= 1) {
+    $campaignAreaMap = include app_path('flyers/campaignAreas.php');
+    $createdAny = false;
+
+    foreach ($selectedAreas as $memberAreaKey) {
+        $areaInfo = $campaignAreaMap[$memberAreaKey] ?? null;
+
+        if (!$areaInfo) {
+            continue;
+        }
+
+        $existing = Propdelivnow::where('propflyer_id', $flyer->id)
+            ->where('emArea', $areaInfo['db'])
+            ->whereNull('emStart')
+            ->whereNull('emComplete')
+            ->first();
+
+        if ($existing) {
+            $existing->emSubject = $validatedData['emSubject'] ?? null;
+            $existing->save();
+            continue;
+        }
+
+        $campaign = new Propdelivnow();
+        $campaign->propflyer_id   = $flyer->id;
+        $campaign->propagent_id   = $flyer->propagent_id;
+        $campaign->emArea         = $areaInfo['db'];
+        $campaign->emArea_display = $areaInfo['label'];
+        $campaign->emSubject      = $validatedData['emSubject'] ?? null;
+        $campaign->totalEmails    = DB::connection('rememaildb')->table($areaInfo['db'])->count();
+        $campaign->emRequest      = now();
+        $campaign->authorized     = 0;
+        $campaign->save();
+
+        $createdAny = true;
+    }
+
+    if ($createdAny) {
+        $agent->remCreds = $agent->remCreds - 1;
+        $agent->save();
+    }
+}
 
 redirect('/member/flyer/sendsetup?flyerId=' . $flyer->id)->send();
 

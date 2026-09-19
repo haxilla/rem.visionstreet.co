@@ -37,23 +37,15 @@ $completeFlyerCamps[$propInfo->id] = Propdelivnow::where('propflyer_id', $propIn
         ];
     });
 
-$emailCounts = [
-    'azphxmetro' => DB::connection('rememaildb')->table('azphxmetro')->count(),
-    'azphxne'    => DB::connection('rememaildb')->table('azphxne')->count(),
-    'azphxse'    => DB::connection('rememaildb')->table('azphxse')->count(),
-    'azphxwv'    => DB::connection('rememaildb')->table('azphxwv')->count(),
-    'aznaz'      => DB::connection('rememaildb')->table('aznaz')->count(),
-    'azsaz'      => DB::connection('rememaildb')->table('azsaz')->count(),
-];
+$campaignAreas = include app_path('flyers/campaignAreas.php');
 
-$areaLabels = [
-    'azphxmetro' => 'Phoenix Metro',
-    'azphxne'    => 'Phoenix Northeast',
-    'azphxse'    => 'Phoenix Southeast',
-    'azphxwv'    => 'Phoenix West Valley',
-    'aznaz'      => 'North Arizona',
-    'azsaz'      => 'South Arizona',
-];
+$emailCounts = [];
+$areaLabels = [];
+
+foreach ($campaignAreas as $memberKey => $area) {
+    $emailCounts[$area['db']] = DB::connection('rememaildb')->table($area['db'])->count();
+    $areaLabels[$area['db']] = $area['label'];
+}
 
 $data = [
     'waitingFlyerCamps'    => $waitingFlyerCamps,

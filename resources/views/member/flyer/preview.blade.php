@@ -17,6 +17,7 @@
 
 @php
     $flyer = $data['flyer'] ?? null;
+    $remCredits = $data['remCredits'] ?? 0;
 
     $propInfo = $flyer;
     include(app_path() . '/flyers/variables.php');
@@ -31,19 +32,32 @@
     <section class="min-w-0 flex-1">
 
         {{-- HEADER --}}
-        <div class="mb-8">
+        <div class="mb-8 flex flex-wrap items-start justify-between gap-4">
 
-            <div class="text-sm font-bold uppercase tracking-wider text-[#123f91]">
-                Step 5 of 5
+            <div>
+                <div class="text-sm font-bold uppercase tracking-wider text-[#123f91]">
+                    Step 5 of 5
+                </div>
+
+                <h1 class="mt-2 text-4xl font-black text-slate-900">
+                    Preview & Send
+                </h1>
+
+                <p class="mt-2 text-slate-500">
+                    This is exactly what recipients will see. Ready to send it out?
+                </p>
             </div>
 
-            <h1 class="mt-2 text-4xl font-black text-slate-900">
-                Preview & Send
-            </h1>
-
-            <p class="mt-2 text-slate-500">
-                This is exactly what recipients will see. Ready to send it out?
-            </p>
+            @if($remCredits <= 0)
+                <div class="flex items-center gap-3 rounded-2xl bg-amber-50 px-5 py-4 text-amber-800 ring-1 ring-amber-200">
+                    <div class="text-sm font-bold">
+                        You need credits to send this flyer.
+                    </div>
+                    <a href="/member/buy-credits" class="shrink-0 rounded-lg bg-amber-600 px-4 py-2 text-xs font-black text-white hover:bg-amber-700">
+                        Buy Credits
+                    </a>
+                </div>
+            @endif
 
         </div>
 
@@ -64,10 +78,17 @@
                 </div>
             </div>
 
-            <a href="/member/flyer/sendsetup?flyerId={{ $flyer->id }}"
-                class="shrink-0 rounded-xl bg-emerald-600 px-8 py-4 text-lg font-black text-white hover:bg-emerald-700">
-                Finalize →
-            </a>
+            @if($remCredits <= 0)
+                <a href="/member/buy-credits"
+                    class="shrink-0 rounded-xl bg-amber-600 px-8 py-4 text-lg font-black text-white hover:bg-amber-700">
+                    Purchase Credits
+                </a>
+            @else
+                <a href="/member/flyer/sendsetup?flyerId={{ $flyer->id }}"
+                    class="shrink-0 rounded-xl bg-emerald-600 px-8 py-4 text-lg font-black text-white hover:bg-emerald-700">
+                    Finalize →
+                </a>
+            @endif
 
         </div>
 

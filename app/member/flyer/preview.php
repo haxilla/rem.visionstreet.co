@@ -69,3 +69,4 @@ if (($flyer->wizardStep ?? 0) < 5) {
 }
 
 $data['flyer'] = $flyer;
+$data['remCredits'] = auth()->user()->remCreds ?? 0;

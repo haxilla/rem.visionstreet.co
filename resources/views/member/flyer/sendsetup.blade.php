@@ -7,6 +7,7 @@
 @php
     $flyer = $data['flyer'] ?? null;
     $lastSubject = $data['lastSubject'] ?? null;
+    $remCredits = $data['remCredits'] ?? 0;
 
     $areas = [
         'phoenix_metro'    => 'Phoenix Metro',
@@ -18,6 +19,30 @@
     ];
 
     $oldAreas = old('areas', []);
+
+    // Which of these areas already have a pending (requested, not yet
+    // started/completed) campaign for this flyer, so the agent can see
+    // what's already awaiting admin approval instead of the page looking
+    // like nothing happened after saving.
+    $campaignAreaMap = include app_path('flyers/campaignAreas.php');
+    $dbToMemberKey = [];
+    foreach ($campaignAreaMap as $memberKey => $areaInfo) {
+        $dbToMemberKey[$areaInfo['db']] = $memberKey;
+    }
+
+    $pendingAreaKeys = [];
+    if ($flyer) {
+        $pendingDbAreas = \App\Models\Core\Propdelivnow::where('propflyer_id', $flyer->id)
+            ->whereNull('emStart')
+            ->whereNull('emComplete')
+            ->pluck('emArea');
+
+        foreach ($pendingDbAreas as $dbArea) {
+            if (isset($dbToMemberKey[$dbArea])) {
+                $pendingAreaKeys[] = $dbToMemberKey[$dbArea];
+            }
+        }
+    }
 
     $timeOptions = [];
     for ($h = 6; $h <= 21; $h++) {
@@ -119,15 +144,33 @@
                 Choose up to 2 areas to send this flyer to.
             </p>
 
+            @if($remCredits <= 0)
+                <div class="mb-4 flex flex-wrap items-center gap-3 rounded-2xl bg-amber-50 px-5 py-4 text-amber-800 ring-1 ring-amber-200">
+                    <div class="text-sm font-bold">
+                        You need credits to request a send.
+                    </div>
+                    <a href="/member/buy-credits" class="shrink-0 rounded-lg bg-amber-600 px-4 py-2 text-xs font-black text-white hover:bg-amber-700">
+                        Buy Credits
+                    </a>
+                </div>
+            @endif
+
             <div id="area-badges" class="flex flex-wrap gap-2">
 
                 @foreach($areas as $value => $label)
-                    <label class="area-badge cursor-pointer select-none rounded-full border-2 border-slate-200 px-4 py-2 text-sm font-bold text-slate-600 transition has-[:checked]:border-[#123f91] has-[:checked]:bg-[#123f91] has-[:checked]:text-white has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-40">
-                        <input type="checkbox" name="areas[]" value="{{ $value }}"
-                            class="hidden"
-                            @checked(in_array($value, $oldAreas))>
-                        {{ $label }}
-                    </label>
+                    @if(in_array($value, $pendingAreaKeys, true))
+                        <span class="rounded-full border-2 border-amber-300 bg-amber-50 px-4 py-2 text-sm font-bold text-amber-700">
+                            {{ $label }} — Pending Approval
+                        </span>
+                    @else
+                        <label class="area-badge cursor-pointer select-none rounded-full border-2 border-slate-200 px-4 py-2 text-sm font-bold text-slate-600 transition has-[:checked]:border-[#123f91] has-[:checked]:bg-[#123f91] has-[:checked]:text-white has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-40">
+                            <input type="checkbox" name="areas[]" value="{{ $value }}"
+                                class="hidden"
+                                @checked(in_array($value, $oldAreas))
+                                @disabled($remCredits <= 0)>
+                            {{ $label }}
+                        </label>
+                    @endif
                 @endforeach
 
             </div>
