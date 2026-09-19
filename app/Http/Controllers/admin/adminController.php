@@ -11,6 +11,7 @@ use App\Support\AgentTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 
 class adminController extends Controller
@@ -105,6 +106,111 @@ class adminController extends Controller
         include(app_path().'/admin/agent/view.php');
         return view('admin.agents.show', compact('agent', 'flyerCount', 'campaignCount', 'orders'));
 
+    }
+
+    /**
+     * Add or subtract credits on an agent's remaining balance (remCreds).
+     * "Purchased credits" (pCreds) is a record of purchases and is left alone -
+     * an admin adjustment isn't a purchase.
+     *
+     * The change is a single atomic UPDATE so it can't race with the agent
+     * spending a credit at the same moment, and a subtraction is refused (not
+     * clamped) if the agent doesn't have that many. Logged, since there is no
+     * other record of who changed a balance.
+     */
+    public function agentCredits(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'operation' => ['required', 'in:add,subtract'],
+            'amount'    => ['required', 'integer', 'min:1', 'max:100000'],
+        ], [
+            'amount.required' => 'Enter how many credits to add or subtract.',
+            'amount.integer'  => 'Credits must be a whole number.',
+            'amount.min'      => 'Credits must be at least 1.',
+        ]);
+
+        $agent = Propagent::findOrFail($id);
+
+        // the update stamps updated_at - in the agent's timezone
+        AgentTime::apply($agent);
+
+        $amount = (int) $validated['amount'];
+        $before = (int) ($agent->remCreds ?? 0);
+
+        if ($validated['operation'] === 'add') {
+            // COALESCE: a NULL balance counts as 0
+            Propagent::whereKey($agent->id)
+                ->update(['remCreds' => DB::raw('COALESCE(remCreds, 0) + ' . $amount)]);
+
+            $ok = true;
+        } else {
+            $ok = Propagent::whereKey($agent->id)
+                ->where('remCreds', '>=', $amount)
+                ->update(['remCreds' => DB::raw('remCreds - ' . $amount)]) === 1;
+        }
+
+        if (!$ok) {
+            return redirect()->route('admin.agentView', $agent->id)->withErrors([
+                'amount' => "Can't subtract {$amount} - this agent only has {$before} "
+                    . ($before === 1 ? 'credit.' : 'credits.'),
+            ]);
+        }
+
+        $after = (int) Propagent::whereKey($agent->id)->value('remCreds');
+
+        Log::info('Agent credits adjusted by admin', [
+            'admin_id'  => Auth::guard('admin')->id(),
+            'agent_id'  => $agent->id,
+            'operation' => $validated['operation'],
+            'amount'    => $amount,
+            'before'    => $before,
+            'after'     => $after,
+        ]);
+
+        $name = $agent->agtFullName ?: ($agent->xxAgtUname ?: 'this agent');
+
+        return redirect()->route('admin.agentView', $agent->id)->with(
+            'status',
+            ($validated['operation'] === 'add' ? 'Added ' : 'Subtracted ') . $amount
+                . ($amount === 1 ? ' credit' : ' credits')
+                . ($validated['operation'] === 'add' ? ' to ' : ' from ')
+                . "{$name}. Balance is now {$after}."
+        );
+    }
+
+    /**
+     * Set or change an agent's start date (a date picker on the agent page).
+     * An agent with a start date is listed under "Agents With Start Date"
+     * instead of "No Start Date". A date is required - it can't be cleared
+     * here, because clearing it would put an agent back in the list that
+     * "Delete selected" works on.
+     */
+    public function agentStartDate(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'startDate' => ['required', 'date_format:Y-m-d', 'after:2000-01-01', 'before:2100-01-01'],
+        ], [
+            'startDate.required'    => 'Pick a start date.',
+            'startDate.date_format' => 'Pick a valid start date.',
+            'startDate.after'       => 'The start date must be after 2000.',
+            'startDate.before'      => 'The start date must be before 2100.',
+        ]);
+
+        $agent = Propagent::findOrFail($id);
+
+        // the save stamps updated_at - in the agent's timezone
+        AgentTime::apply($agent);
+
+        $agent->startDate = $validated['startDate'];
+        $agent->save();
+
+        $name = $agent->agtFullName ?: ($agent->xxAgtUname ?: 'this agent');
+
+        return redirect()->route('admin.agentView', $agent->id)->with(
+            'status',
+            "Start date for {$name} set to "
+                . \Illuminate\Support\Carbon::parse($validated['startDate'])->format('m/d/Y') . '.'
+        );
     }
 
     /**

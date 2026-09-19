@@ -44,6 +44,13 @@ Route::post('/admin/agentsDeleteMany',
 Route::get('/admin/agentView/{id}',
 [adminController::class, 'agentView'])->name('admin.agentView');
 
+//add / subtract an agent's credits, and set / change their start date (POST only - each changes data)
+Route::post('/admin/agentCredits/{id}',
+[adminController::class, 'agentCredits'])->whereNumber('id')->name('admin.agentCredits');
+
+Route::post('/admin/agentStartDate/{id}',
+[adminController::class, 'agentStartDate'])->whereNumber('id')->name('admin.agentStartDate');
+
 //password reset email for an agent (stand-in until email sending exists) and login block on/off
 //(POST only - both change or will change data, so they carry a CSRF token; admin-only via the controller)
 Route::post('/admin/agentPasswordReset/{id}',

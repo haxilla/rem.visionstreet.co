@@ -186,10 +186,25 @@
                     <dt class="text-slate-500">Account Type</dt>
                     <dd class="text-right font-medium text-slate-900">{{ $agent->accountType ?? '—' }}</dd>
                 </div>
-                <div class="flex justify-between gap-4 py-2.5">
+                {{-- START DATE: editable in place (date picker). Setting one moves the
+                     agent from "No Start Date" to "Agents With Start Date". --}}
+                <div class="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 py-2.5">
                     <dt class="text-slate-500">Start Date</dt>
-                    <dd class="text-right font-medium text-slate-900">
-                        {{ $agent->startDate ? \Carbon\Carbon::parse($agent->startDate)->format('m/d/Y') : '—' }}
+                    <dd class="font-medium text-slate-900">
+                        <form method="POST" action="{{ route('admin.agentStartDate', $agent->id) }}"
+                              class="flex flex-wrap items-center justify-end gap-2">
+                            @csrf
+                            <input type="date"
+                                   name="startDate"
+                                   required
+                                   aria-label="Start date"
+                                   value="{{ $agent->startDate ? \Carbon\Carbon::parse($agent->startDate)->format('Y-m-d') : '' }}"
+                                   class="rounded-lg border border-slate-300 px-2.5 py-1.5 text-sm focus:border-[#214e9b] focus:outline-none focus:ring-2 focus:ring-[#214e9b]/20">
+                            <button type="submit"
+                                    class="rounded-lg bg-[#214e9b] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[#1b3f80]">
+                                {{ $agent->startDate ? 'Change' : 'Set' }}
+                            </button>
+                        </form>
                     </dd>
                 </div>
                 @if($showExpireDate)
@@ -200,9 +215,39 @@
                         </dd>
                     </div>
                 @endif
-                <div class="flex justify-between gap-4 py-2.5">
+                {{-- REMAINING CREDITS: the balance, with an amount box and Add / Subtract
+                     right beside it. Purchased Credits below is a purchase record and
+                     stays read-only. --}}
+                <div class="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 py-2.5">
                     <dt class="text-slate-500">Remaining Credits</dt>
-                    <dd class="text-right font-medium text-slate-900">{{ $agent->remCreds ?? 0 }}</dd>
+                    <dd class="font-medium text-slate-900">
+                        <form method="POST" action="{{ route('admin.agentCredits', $agent->id) }}"
+                              class="flex flex-wrap items-center justify-end gap-2">
+                            @csrf
+                            <span class="mr-1 text-base font-semibold" title="Current balance">{{ $agent->remCreds ?? 0 }}</span>
+
+                            <input type="number"
+                                   name="amount"
+                                   min="1"
+                                   max="100000"
+                                   step="1"
+                                   required
+                                   inputmode="numeric"
+                                   placeholder="Amount"
+                                   aria-label="Number of credits to add or subtract"
+                                   class="w-24 rounded-lg border border-slate-300 px-2.5 py-1.5 text-sm focus:border-[#214e9b] focus:outline-none focus:ring-2 focus:ring-[#214e9b]/20">
+
+                            <button type="submit" name="operation" value="add"
+                                    class="rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-emerald-700">
+                                Add
+                            </button>
+
+                            <button type="submit" name="operation" value="subtract"
+                                    class="rounded-lg border border-red-200 px-3 py-1.5 text-xs font-semibold text-red-600 hover:bg-red-50">
+                                Subtract
+                            </button>
+                        </form>
+                    </dd>
                 </div>
                 <div class="flex justify-between gap-4 py-2.5">
                     <dt class="text-slate-500">Purchased Credits</dt>
