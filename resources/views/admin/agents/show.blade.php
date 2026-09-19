@@ -215,36 +215,29 @@
                         </dd>
                     </div>
                 @endif
-                {{-- REMAINING CREDITS: the balance, with an amount box and Add / Subtract
-                     right beside it. Purchased Credits below is a purchase record and
-                     stays read-only. --}}
+                {{-- REMAINING CREDITS: the current balance in an editable field; change it
+                     and Save to set the new balance. Purchased Credits below is a
+                     purchase record and stays read-only. --}}
                 <div class="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 py-2.5">
                     <dt class="text-slate-500">Remaining Credits</dt>
                     <dd class="font-medium text-slate-900">
                         <form method="POST" action="{{ route('admin.agentCredits', $agent->id) }}"
                               class="flex flex-wrap items-center justify-end gap-2">
                             @csrf
-                            <span class="mr-1 text-base font-semibold" title="Current balance">{{ $agent->remCreds ?? 0 }}</span>
-
                             <input type="number"
-                                   name="amount"
-                                   min="1"
+                                   name="credits"
+                                   min="0"
                                    max="100000"
                                    step="1"
                                    required
                                    inputmode="numeric"
-                                   placeholder="Amount"
-                                   aria-label="Number of credits to add or subtract"
+                                   aria-label="Remaining credits"
+                                   value="{{ $agent->remCreds ?? 0 }}"
                                    class="w-24 rounded-lg border border-slate-300 px-2.5 py-1.5 text-sm focus:border-[#214e9b] focus:outline-none focus:ring-2 focus:ring-[#214e9b]/20">
 
-                            <button type="submit" name="operation" value="add"
-                                    class="rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-emerald-700">
-                                Add
-                            </button>
-
-                            <button type="submit" name="operation" value="subtract"
-                                    class="rounded-lg border border-red-200 px-3 py-1.5 text-xs font-semibold text-red-600 hover:bg-red-50">
-                                Subtract
+                            <button type="submit"
+                                    class="rounded-lg bg-[#214e9b] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[#1b3f80]">
+                                Save
                             </button>
                         </form>
                     </dd>
