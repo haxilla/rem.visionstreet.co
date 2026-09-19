@@ -70,6 +70,10 @@ Route::get('/member/flyerEdit/{flyerId}', [memberController::class, 'flyerEdit']
 Route::get('/member/flyer/text/{flyerId}', [memberController::class, 'flyerText'])->name('member.flyerText');
 Route::get('/member/flyer/photos/{flyerId}', [memberController::class, 'flyerPhotos'])->name('member.flyerPhotos');
 
+//full campaign history for one of the agent's flyers (linked from the dashboard's flyer cards)
+Route::get('/member/campaigns/{flyerId}', [memberController::class, 'flyerCampaigns'])
+    ->whereNumber('flyerId')->name('member.flyerCampaigns');
+
 //live flyer preview for the Details step (renders unsaved form values; never saves)
 Route::post('/member/flyerPreview', [memberController::class, 'flyerPreview'])->name('member.flyerPreview');
 

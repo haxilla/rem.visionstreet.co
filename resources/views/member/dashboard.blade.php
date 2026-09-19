@@ -275,6 +275,11 @@
                                    class="flyer-btn rounded-xl border border-slate-200 px-4 py-2.5 text-xs font-bold text-slate-700 hover:bg-slate-50">
                                     View Flyer
                                 </a>
+
+                                <a href="/member/campaigns/{{ $flyer->id }}"
+                                   class="flyer-btn rounded-xl border border-slate-200 px-4 py-2.5 text-xs font-bold text-slate-700 hover:bg-slate-50">
+                                    Campaigns
+                                </a>
                             </div>
 
                         </article>
