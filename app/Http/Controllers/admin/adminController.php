@@ -4,11 +4,13 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Core\AdminSetting;
+use App\Models\Core\Propagent;
 use App\Models\Core\Propdelivnow;
 use App\Models\Core\Propflyer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 
 class adminController extends Controller
@@ -72,6 +74,31 @@ class adminController extends Controller
         include(app_path().'/admin/agent/view.php');
         return view('admin.agents.show', compact('agent', 'flyerCount', 'campaignCount', 'orders'));
 
+    }
+
+    /**
+     * Admin sets a new password for an agent. Writes the hashed
+     * `password` column - the one the member login (Auth::attempt on
+     * xxAgtUname + password) actually checks. The legacy plain-text
+     * `agtPswd` column is deliberately left alone. The password is never
+     * shown back or put in the flash message.
+     */
+    public function agentPassword(Request $request, $id)
+    {
+        $agent = Propagent::findOrFail($id);
+
+        $validated = $request->validate([
+            // bcrypt only uses the first 72 bytes
+            'new_password' => ['required', 'string', 'min:8', 'max:72'],
+        ]);
+
+        $agent->password = Hash::make($validated['new_password']);
+        $agent->save();
+
+        $name = $agent->agtFullName ?: ($agent->xxAgtUname ?: 'this agent');
+
+        return redirect()->route('admin.agentView', $agent->id)
+            ->with('status', "Password changed for {$name}.");
     }
 
     public function agentLogin(Request $request, $id)

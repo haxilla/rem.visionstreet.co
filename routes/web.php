@@ -44,6 +44,10 @@ Route::get('/admin/agentDelete/{id}',
 Route::get('/admin/agentView/{id}',
 [adminController::class, 'agentView'])->name('admin.agentView');
 
+//set a new password for an agent (POST only - carries a CSRF token, admin-only via the controller)
+Route::post('/admin/agentPassword/{id}',
+[adminController::class, 'agentPassword'])->whereNumber('id')->name('admin.agentPassword');
+
 Route::get('/admin/agentLogin/{id}',
 [adminController::class, 'agentLogin'])->name('admin.agentLogin');
 

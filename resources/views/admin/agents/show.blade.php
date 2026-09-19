@@ -30,6 +30,9 @@
 
                 <p class="mt-2 text-[14px] text-slate-600">
                     Agent ID {{ $agent->id }}
+                    <span class="mx-1.5 text-slate-300">&middot;</span>
+                    Username
+                    <span class="font-semibold text-slate-900">{{ $agent->xxAgtUname ?: '—' }}</span>
                 </p>
             </div>
 
@@ -46,6 +49,20 @@
             </div>
         </div>
     </div>
+
+    @if(session('status'))
+        <div class="mt-6 rounded-2xl border border-emerald-300 bg-emerald-50 px-5 py-4 text-sm font-semibold text-emerald-700">
+            {{ session('status') }}
+        </div>
+    @endif
+
+    @if($errors->any())
+        <div class="mt-6 rounded-2xl border border-red-200 bg-red-50 px-5 py-4 text-sm font-semibold text-red-700">
+            @foreach($errors->all() as $error)
+                <div>{{ $error }}</div>
+            @endforeach
+        </div>
+    @endif
 
     {{-- HISTORY STAT TILES --}}
     <div class="mt-6 grid grid-cols-2 gap-3">
@@ -76,7 +93,9 @@
 
             <dl class="mt-4 divide-y divide-slate-100 text-sm">
                 <div class="flex justify-between gap-4 py-2.5">
-                    <dt class="text-slate-500">Username</dt>
+                    {{-- agtUname is a legacy field; the login username is
+                         xxAgtUname (shown in the header and in Login & Password). --}}
+                    <dt class="text-slate-500">Legacy Username</dt>
                     <dd class="text-right font-medium text-slate-900">{{ $agent->agtUname ?: '—' }}</dd>
                 </div>
                 <div class="flex justify-between gap-4 py-2.5">
@@ -137,6 +156,10 @@
                 </div>
             </dl>
         </div>
+
+        {{-- RIGHT COLUMN: Account Info + Login & Password (Account Info is the
+             shorter card, so stacking here also balances the two columns) --}}
+        <div class="flex flex-col gap-6">
 
         {{-- ACCOUNT INFO --}}
         <div class="rounded-[24px] bg-white p-5 shadow-[0_12px_35px_rgba(15,23,42,0.06)] sm:p-6">
@@ -201,6 +224,65 @@
             </dl>
         </div>
 
+        {{-- LOGIN & PASSWORD --}}
+        <div id="login" class="rounded-[24px] bg-white p-5 shadow-[0_12px_35px_rgba(15,23,42,0.06)] sm:p-6">
+            <h2 class="text-lg font-semibold text-slate-900">Login &amp; Password</h2>
+
+            <dl class="mt-4 divide-y divide-slate-100 text-sm">
+                <div class="flex justify-between gap-4 py-2.5">
+                    <dt class="text-slate-500">Username</dt>
+                    <dd class="break-all text-right font-medium text-slate-900">{{ $agent->xxAgtUname ?: '—' }}</dd>
+                </div>
+                <div class="flex justify-between gap-4 py-2.5">
+                    <dt class="text-slate-500">Password</dt>
+                    <dd class="text-right font-medium {{ $agent->password ? 'text-slate-900' : 'text-red-600' }}">
+                        {{ $agent->password ? 'Set' : 'Not set' }}
+                    </dd>
+                </div>
+            </dl>
+
+            <form method="POST" action="{{ route('admin.agentPassword', $agent->id) }}" class="mt-4 border-t border-slate-100 pt-4">
+                @csrf
+
+                <label for="new_password" class="mb-1 block text-sm font-semibold text-slate-700">
+                    New password
+                </label>
+
+                <div class="flex flex-wrap gap-2">
+                    <input type="password"
+                           id="new_password"
+                           name="new_password"
+                           required
+                           minlength="8"
+                           maxlength="72"
+                           autocomplete="new-password"
+                           class="min-w-0 flex-1 rounded-lg border border-slate-300 px-3 py-2.5 text-sm focus:border-[#214e9b] focus:outline-none focus:ring-2 focus:ring-[#214e9b]/20">
+
+                    <button type="button" id="pwShow"
+                            class="rounded-lg border border-slate-200 px-3 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-100">
+                        Show
+                    </button>
+
+                    <button type="button" id="pwGenerate"
+                            class="rounded-lg border border-slate-200 px-3 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-100">
+                        Generate
+                    </button>
+                </div>
+
+                <p class="mt-2 text-xs text-slate-500">
+                    At least 8 characters. Passwords are stored securely and can't be viewed afterwards,
+                    so copy it before saving and give it to the agent.
+                </p>
+
+                <button type="submit"
+                        class="mt-3 rounded-lg bg-[#214e9b] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#1b3f80]">
+                    Change password
+                </button>
+            </form>
+        </div>
+
+        </div>
+
     </div>
 
     {{-- PURCHASES --}}
@@ -249,6 +331,43 @@
 </main>
 
 @include('public.layout.footer')
+
+<script>
+(function () {
+    var input   = document.getElementById('new_password');
+    var showBtn = document.getElementById('pwShow');
+    var genBtn  = document.getElementById('pwGenerate');
+
+    if (!input) return;
+
+    function setVisible(visible) {
+        input.type = visible ? 'text' : 'password';
+        showBtn.textContent = visible ? 'Hide' : 'Show';
+    }
+
+    showBtn.addEventListener('click', function () {
+        setVisible(input.type === 'password');
+    });
+
+    // 12 random characters, skipping look-alikes (0/O, 1/l/I) so it can be
+    // read out or typed without mistakes. Revealed so it can be copied.
+    genBtn.addEventListener('click', function () {
+        var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789';
+        var bytes = new Uint32Array(12);
+        var out = '';
+
+        crypto.getRandomValues(bytes);
+
+        for (var i = 0; i < bytes.length; i++) {
+            out += chars.charAt(bytes[i] % chars.length);
+        }
+
+        input.value = out;
+        setVisible(true);
+        input.select();
+    });
+})();
+</script>
 
 </body>
 </html>
