@@ -37,6 +37,12 @@ class AdminSetting extends Model
                 'type'        => 'toggle',
                 'default'     => '0',
             ],
+            'confirm_agent_deletion' => [
+                'label'       => 'Confirm agent deletion',
+                'description' => 'When on, deleting an agent from the "No Start Date" list asks "Delete this agent?" first. Turn it off to delete with one click and no prompt (handy while clearing out the easy ones), and back on when you are done.',
+                'type'        => 'toggle',
+                'default'     => '1',
+            ],
             'trial_email' => [
                 'label'         => 'Test email address',
                 'description'   => 'Where the agent\'s copy of a send goes while trial mode is on.',
@@ -65,6 +71,16 @@ class AdminSetting extends Model
     public static function trialMode(): bool
     {
         return static::read('trial_mode', '0') === '1';
+    }
+
+    /**
+     * Whether deleting an agent from the "No Start Date" list asks for
+     * confirmation. On unless explicitly switched off - a missing row means on,
+     * so the safe behaviour is the default.
+     */
+    public static function confirmAgentDeletion(): bool
+    {
+        return static::read('confirm_agent_deletion', '1') !== '0';
     }
 
     /** The address trial-mode agent copies go to ('' when not set). */

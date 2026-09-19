@@ -34,4 +34,6 @@ $noStartAgents = Propagent::select([
 $data = [
     'activeAgents' => $activeAgents,
     'noStartAgents' => $noStartAgents,
+    // admin Settings: does Delete ask "Delete this agent?" first
+    'confirmDelete' => \App\Models\Core\AdminSetting::confirmAgentDeletion(),
 ];

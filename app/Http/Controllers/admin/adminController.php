@@ -60,12 +60,30 @@ class adminController extends Controller
     }   
 
 
+    /**
+     * Delete an agent from the "No Start Date" list (POST only). The old
+     * version also deleted the agent's row from a REMOTE database
+     * (remote_realtyemails.emailagents); that connection no longer exists, so
+     * it threw before the local delete ever ran - that step is gone.
+     *
+     * Only agents that never had a start date can be deleted here. This is a
+     * real delete (Propagent isn't soft-deleting) - the confirmation prompt on
+     * the button is controlled by the "Confirm agent deletion" admin setting.
+     */
     public function agentDelete($id)
     {
+        $agent = Propagent::findOrFail($id);
 
-        include(app_path().'/admin/agent/delete.php');
-        return redirect()->back();
+        if ($agent->startDate) {
+            return redirect()->back()
+                ->withErrors(['agent' => 'Only agents without a start date can be deleted here.']);
+        }
 
+        $name = $agent->agtFullName ?: ($agent->xxAgtUname ?: ($agent->agtEmail ?: 'agent ' . $agent->id));
+
+        $agent->delete();
+
+        return redirect()->back()->with('status', "Deleted {$name}.");
     }
 
     public function agentView($id)

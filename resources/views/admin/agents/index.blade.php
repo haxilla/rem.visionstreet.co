@@ -9,6 +9,9 @@
     $noStartAgents = $data['noStartAgents'] ?? collect();
 
     $currentTab = request()->has('nostart_page') ? 'nostart' : 'active';
+
+    // admin Settings > "Confirm agent deletion": does Delete ask first?
+    $confirmDelete = $data['confirmDelete'] ?? true;
 @endphp
 
 {{-- MAIN --}}
@@ -29,6 +32,20 @@
                 View and manage agent accounts in the Realty Emails system.
             </p>
         </div>
+
+        @if(session('status'))
+            <div class="mt-6 rounded-2xl border border-emerald-300 bg-emerald-50 px-5 py-4 text-sm font-semibold text-emerald-700">
+                {{ session('status') }}
+            </div>
+        @endif
+
+        @if($errors->any())
+            <div class="mt-6 rounded-2xl border border-red-200 bg-red-50 px-5 py-4 text-sm font-semibold text-red-700">
+                @foreach($errors->all() as $error)
+                    <div>{{ $error }}</div>
+                @endforeach
+            </div>
+        @endif
 
         {{-- SEARCH AGENTS --}}
         <div class="mt-6 rounded-[24px] bg-white p-4 shadow-[0_12px_35px_rgba(15,23,42,0.06)] sm:mt-8 sm:p-6">
@@ -328,12 +345,16 @@
                                 </div>
 
                                 <div class="mt-4">
-                                    <a
-                                        href="/admin/agentDelete/{{ $agent->id }}"
-                                        class="block rounded-lg !bg-red-600 px-3 py-2 text-center text-xs font-semibold !text-white shadow-sm hover:!bg-red-700"
-                                    >
-                                        Delete
-                                    </a>
+                                    <form method="POST" action="{{ route('admin.agentDelete', $agent->id) }}"
+                                          @if($confirmDelete) onsubmit="return confirm('Delete this agent? This cannot be undone.');" @endif>
+                                        @csrf
+                                        <button
+                                            type="submit"
+                                            class="block w-full rounded-lg !bg-red-600 px-3 py-2 text-center text-xs font-semibold !text-white shadow-sm hover:!bg-red-700"
+                                        >
+                                            Delete
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
 
@@ -405,12 +426,16 @@
                                         </td>
 
                                         <td class="whitespace-nowrap px-6 py-3 text-right">
-                                            <a
-                                                href="/admin/agentDelete/{{ $agent->id }}"
-                                                class="inline-flex items-center rounded-lg !bg-red-600 px-3 py-1.5 text-xs font-semibold !text-white shadow-sm hover:!bg-red-700"
-                                            >
-                                                Delete
-                                            </a>
+                                            <form method="POST" action="{{ route('admin.agentDelete', $agent->id) }}" class="inline"
+                                                  @if($confirmDelete) onsubmit="return confirm('Delete this agent? This cannot be undone.');" @endif>
+                                                @csrf
+                                                <button
+                                                    type="submit"
+                                                    class="inline-flex items-center rounded-lg !bg-red-600 px-3 py-1.5 text-xs font-semibold !text-white shadow-sm hover:!bg-red-700"
+                                                >
+                                                    Delete
+                                                </button>
+                                            </form>
                                         </td>
 
                                     </tr>

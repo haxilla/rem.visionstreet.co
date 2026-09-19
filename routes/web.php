@@ -37,9 +37,9 @@ Route::post('/member/login',
 Route::get('/homedetails/{flyerslug}',
 [guestController::class, 'publicDetails'])->name('public.details');
 
-//agentDelete
-Route::get('/admin/agentDelete/{id}',
-[adminController::class, 'agentDelete'])->name('admin.agentDelete');
+//agentDelete (POST only - it deletes data, so it carries a CSRF token)
+Route::post('/admin/agentDelete/{id}',
+[adminController::class, 'agentDelete'])->whereNumber('id')->name('admin.agentDelete');
 
 Route::get('/admin/agentView/{id}',
 [adminController::class, 'agentView'])->name('admin.agentView');
