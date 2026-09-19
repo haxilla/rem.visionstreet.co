@@ -247,6 +247,46 @@ if ($propInfo->created_at) {
                 </div>
             </div>
 
+            {{-- ADD FREE AREA: directly under the requested areas it adds to --}}
+            <div class="border-t border-slate-200 px-5 py-4">
+
+                <div class="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                    Add a Free Area
+                </div>
+
+                <p class="mb-3 mt-1 text-sm text-slate-500">
+                    No credit is charged to the agent. The area is added as unapproved and is approved together with this flyer's other waiting areas.
+                </p>
+
+                <form method="POST"
+                      action="{{ route('admin.campaignAddArea', $propInfo->id) }}"
+                      class="flex flex-col md:flex-row gap-3">
+                    @csrf
+
+                    <select name="area" required class="flex-1 border border-slate-300 rounded-xl px-4 py-3">
+                        <option value="">Select Area</option>
+                        @foreach($addableAreas as $areaKey => $count)
+                            <option value="{{ $areaKey }}">
+                                {{ $data['areaLabels'][$areaKey] ?? strtoupper($areaKey) }} ({{ number_format($count) }} contacts)
+                            </option>
+                        @endforeach
+                    </select>
+
+                    <button type="submit"
+                        class="bg-[#214e9b] text-white px-5 py-3 rounded-xl font-semibold">
+                        Add Free Area
+                    </button>
+
+                </form>
+
+                @if($addableAreas->isEmpty())
+                    <p class="text-sm text-slate-500 mt-3">
+                        Every area is already waiting or in progress for this flyer.
+                    </p>
+                @endif
+
+            </div>
+
             {{-- APPROVE --}}
             @if($awaitingApproval->isNotEmpty())
                 <form method="POST"
@@ -256,8 +296,8 @@ if ($propInfo->created_at) {
                     @csrf
 
                     <p class="text-sm text-slate-600">
-                        Approving marks the request ready for the mail system to send.
-                        You can add free areas below first.
+                        Approving marks every waiting area ready for the mail system to send.
+                        Add any free areas above first.
                     </p>
 
                     <button type="submit"
@@ -326,46 +366,6 @@ if ($propInfo->created_at) {
             $data['completeFlyerCamps'][$propInfo->id] ?? collect();
 
         @endphp
-
-        {{-- ADD CAMPAIGN --}}
-        <div class="bg-white rounded-2xl shadow-sm p-5 mb-6">
-
-            <h2 class="font-semibold text-slate-900 mb-1">
-                Add Campaign Area (Free)
-            </h2>
-
-            <p class="text-sm text-slate-500 mb-4">
-                No credit is charged to the agent. The area is added as unapproved and is approved together with this flyer's other waiting areas.
-            </p>
-
-            <form method="POST"
-                  action="{{ route('admin.campaignAddArea', $propInfo->id) }}"
-                  class="flex flex-col md:flex-row gap-3">
-                @csrf
-
-                <select name="area" required class="flex-1 border border-slate-300 rounded-xl px-4 py-3">
-                    <option value="">Select Area</option>
-                    @foreach($addableAreas as $areaKey => $count)
-                        <option value="{{ $areaKey }}">
-                            {{ $data['areaLabels'][$areaKey] ?? strtoupper($areaKey) }} ({{ number_format($count) }} contacts)
-                        </option>
-                    @endforeach
-                </select>
-
-                <button type="submit"
-                    class="bg-[#214e9b] text-white px-5 py-3 rounded-xl font-semibold">
-                    Add Free Area
-                </button>
-
-            </form>
-
-            @if($addableAreas->isEmpty())
-                <p class="text-sm text-slate-500 mt-3">
-                    Every area is already waiting or in progress for this flyer.
-                </p>
-            @endif
-
-        </div>
 
         {{-- ACTIVE CAMPAIGNS --}}
         <div class="bg-white rounded-2xl shadow-sm overflow-hidden mb-6">
