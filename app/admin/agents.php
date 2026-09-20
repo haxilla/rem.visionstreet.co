@@ -195,6 +195,65 @@ if (request()->has('duplicates') && $dupCount > 0) {
         ->values();
 }
 
+// NO PHOTO / NO LOGO: one tab each, and once opened each divides into two lists -
+//   "file missing"  the database NAMES a photo / logo but the file isn't on the server (the agent thinks they
+//                   have one, their flyers show none): the ones to fix FIRST, so it is the default list;
+//   "nothing named" no photo / logo listed in the database at all (the lists above: $noPhotoAgents / $noLogoAgents).
+// The missing-file count needs a check of a file per agent, so it is kept for ten minutes and refreshed exactly
+// whenever its list is opened (App\Support\AgentMissingImages). A list's page parameter says which list you are
+// on (nophotomissing_page = missing, nophoto_page = nothing named); ?nophoto=1 alone opens the tab.
+$imageLists = [];
+
+foreach (['photo' => 'nophoto', 'logo' => 'nologo'] as $kind => $param) {
+
+    $missingCount = \App\Support\AgentMissingImages::count($kind);
+    $inTab        = request()->has($param) || request()->has($param . '_page') || request()->has($param . 'missing_page');
+
+    $sub = request()->has($param . 'missing_page') ? 'missing'
+        : (request()->has($param . '_page') ? 'none'
+        : ($missingCount > 0 ? 'missing' : 'none'));
+
+    $missingAgents = null;
+
+    if ($inTab && $sub === 'missing') {
+
+        // checked fresh now, and the count is corrected to match
+        $missingIds   = \App\Support\AgentMissingImages::ids($kind);
+        $missingCount = count($missingIds);
+        \App\Support\AgentMissingImages::remember($kind, $missingCount);
+
+        // newest start date first (recent customers matter most), paged like the other lists
+        $ordered = $missingIds === [] ? [] : Propagent::whereIn('id', $missingIds)
+            ->orderBy('startDate', 'desc')
+            ->orderBy('id', 'desc')
+            ->pluck('id')
+            ->all();
+
+        $pageName = $param . 'missing_page';
+        $page     = \Illuminate\Pagination\Paginator::resolveCurrentPage($pageName);
+        $slice    = array_slice($ordered, ($page - 1) * 25, 25);
+
+        $rows = $slice === [] ? collect() : Propagent::select([
+                'id', 'agtFirst', 'agtLast', 'agtFullName', 'agtUname', 'agtEmail', 'remCreds', 'startDate', 'agtPhoto', 'agtLogo',
+            ])
+            ->whereIn('id', $slice)
+            ->get()
+            ->sortBy(fn ($agent) => array_search($agent->id, $slice))
+            ->values();
+
+        $missingAgents = new \Illuminate\Pagination\LengthAwarePaginator(
+            $rows, count($ordered), 25, $page,
+            ['path' => request()->url(), 'pageName' => $pageName]
+        );
+    }
+
+    $imageLists[$kind] = [
+        'sub'           => $sub,
+        'missingCount'  => $missingCount,
+        'missingAgents' => $missingAgents,
+    ];
+}
+
 // DUPLICATE NAMES: accounts that share a NAME (the same match the agent web address slugs use - see
 // App\Support\AgentNameDuplicates). Unlike a shared login email, a shared name can be two different
 // people, so each group says what points to one person (the same email or phone) and what doesn't.
@@ -304,6 +363,7 @@ $data = [
     'noStartBlockers' => $noStartBlockers,
     'dupCount' => $dupCount,
     'dupGroups' => $dupGroups,
+    'imageLists'    => $imageLists,
     'nameDupCount'  => $nameDupCount,
     'nameDupLikely' => $nameDupLikely,
     'nameDupGroups' => $nameDupGroups,

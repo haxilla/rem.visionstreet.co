@@ -19,8 +19,9 @@
         // the tab only exists while some login email still has more than one account
         request()->has('duplicateNames')       => 'duplicateNames',
         request()->has('duplicates') && $hasDuplicates => 'duplicates',
-        request()->has('nologo_page')          => 'nologo',
-        request()->has('nophoto_page')         => 'nophoto',
+        // No Logo / No Photo: one tab each; its two lists have their own page parameters (see app/admin/agents.php)
+        request()->has('nologo') || request()->has('nologo_page') || request()->has('nologomissing_page')    => 'nologo',
+        request()->has('nophoto') || request()->has('nophoto_page') || request()->has('nophotomissing_page') => 'nophoto',
         request()->has('nostartcredits_page')  => 'nostartcredits',
         request()->has('nostart_page')         => 'nostart',
         default                                => 'active',
@@ -108,8 +109,9 @@
         ['key' => 'active',         'label' => 'With Start Date',        'query' => '',                       'count' => $pagerTotal($activeAgents)],
         ['key' => 'nostart',        'label' => 'No Start Date',          'query' => '?nostart_page=1',        'count' => $pagerTotal($noStartAgents)],
         ['key' => 'nostartcredits', 'label' => 'No Start Date + Credits', 'query' => '?nostartcredits_page=1', 'count' => $pagerTotal($noStartCreditAgents)],
-        ['key' => 'nophoto',        'label' => 'No Photo',               'query' => '?nophoto_page=1',        'count' => $pagerTotal($noPhotoAgents)],
-        ['key' => 'nologo',         'label' => 'No Logo',                'query' => '?nologo_page=1',         'count' => $pagerTotal($noLogoAgents)],
+        // one tab each; the count is BOTH of its lists (a named-but-missing file, and nothing named at all)
+        ['key' => 'nophoto',        'label' => 'No Photo',               'query' => '?nophoto=1',             'count' => $pagerTotal($noPhotoAgents) + ($data['imageLists']['photo']['missingCount'] ?? 0)],
+        ['key' => 'nologo',         'label' => 'No Logo',                'query' => '?nologo=1',              'count' => $pagerTotal($noLogoAgents) + ($data['imageLists']['logo']['missingCount'] ?? 0)],
     ];
 
     // Only while some login email still has more than one account.
@@ -389,24 +391,24 @@
 
                 @elseif($currentTab === 'nophoto')
 
-                    @include('admin.agents.agentReviewPanel', [
-                        'agents'        => $noPhotoAgents,
-                        'title'         => 'Agents Without a Photo',
-                        'description'   => 'Agents with a start date who have no photo on file.',
-                        'emptyText'     => 'Every agent with a start date has a photo.',
-                        'showStartDate' => true,
-                        'showCredits'   => true,
+                    @include('admin.agents.imageTabs', [
+                        'kind'          => 'photo',
+                        'param'         => 'nophoto',
+                        'sub'           => $data['imageLists']['photo']['sub'] ?? 'none',
+                        'missingCount'  => $data['imageLists']['photo']['missingCount'] ?? 0,
+                        'missingAgents' => $data['imageLists']['photo']['missingAgents'] ?? null,
+                        'noneAgents'    => $noPhotoAgents,
                     ])
 
                 @elseif($currentTab === 'nologo')
 
-                    @include('admin.agents.agentReviewPanel', [
-                        'agents'        => $noLogoAgents,
-                        'title'         => 'Agents Without a Logo',
-                        'description'   => 'Agents with a start date who have no logo on file.',
-                        'emptyText'     => 'Every agent with a start date has a logo.',
-                        'showStartDate' => true,
-                        'showCredits'   => true,
+                    @include('admin.agents.imageTabs', [
+                        'kind'          => 'logo',
+                        'param'         => 'nologo',
+                        'sub'           => $data['imageLists']['logo']['sub'] ?? 'none',
+                        'missingCount'  => $data['imageLists']['logo']['missingCount'] ?? 0,
+                        'missingAgents' => $data['imageLists']['logo']['missingAgents'] ?? null,
+                        'noneAgents'    => $noLogoAgents,
                     ])
 
                 @elseif($currentTab === 'duplicateNames')

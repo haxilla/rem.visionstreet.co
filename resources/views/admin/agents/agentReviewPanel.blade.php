@@ -10,6 +10,8 @@
       $emptyText      shown when the list is empty
       $showStartDate  (bool) show each agent's start date
       $showCredits    (bool) show each agent's credit balance
+      $fileColumn     (optional) an agent column naming a file (agtPhoto / agtLogo): shown as
+                      "Missing file" - for the lists of agents whose named file isn't on the server
 
     Also reachable by URL through the /admin/{segments} convention, where none of
     those exist - hence the guard below.
@@ -21,7 +23,8 @@
     $emptyText     = $emptyText ?? 'No agents found.';
     $showStartDate = $showStartDate ?? false;
     $showCredits   = $showCredits ?? false;
-    $columnCount   = 4 + ($showStartDate ? 1 : 0) + ($showCredits ? 1 : 0);
+    $fileColumn    = $fileColumn ?? null;
+    $columnCount   = 4 + ($showStartDate ? 1 : 0) + ($showCredits ? 1 : 0) + ($fileColumn ? 1 : 0);
 @endphp
 
 <div class="mb-5 flex flex-wrap items-center justify-between gap-2">
@@ -62,6 +65,12 @@
                 <div class="break-words text-xs text-slate-500">
                     {{ $agent->agtEmail ?: '—' }}
                 </div>
+
+                @if($fileColumn)
+                    <div class="mt-1 break-all text-xs text-amber-700">
+                        Missing file: <span class="font-mono font-semibold">{{ $agent->{$fileColumn} }}</span>
+                    </div>
+                @endif
             </div>
 
             @if($showStartDate || $showCredits)
@@ -116,6 +125,9 @@
                 @if($showCredits)
                     <th class="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wide text-slate-500">Credits</th>
                 @endif
+                @if($fileColumn)
+                    <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Missing file</th>
+                @endif
                 <th class="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wide text-slate-500"></th>
             </tr>
         </thead>
@@ -161,6 +173,12 @@
                     @if($showCredits)
                         <td class="whitespace-nowrap px-6 py-3 text-right text-sm font-semibold text-slate-900">
                             {{ number_format($agent->remCreds ?? 0) }}
+                        </td>
+                    @endif
+
+                    @if($fileColumn)
+                        <td class="break-all px-6 py-3 font-mono text-xs text-amber-700">
+                            {{ $agent->{$fileColumn} }}
                         </td>
                     @endif
 
