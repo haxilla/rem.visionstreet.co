@@ -42,7 +42,7 @@
             @if($adminAdded ?? false)
                 <span class="whitespace-nowrap rounded-full bg-violet-100 px-2 py-0.5 text-[11px] font-semibold text-violet-700">Admin</span>
             @else
-                <span class="whitespace-nowrap rounded-full bg-sky-100 px-2 py-0.5 text-[11px] font-semibold text-sky-700">Agent@if(!empty($slot)) &middot; Area {{ $slot }}@endif</span>
+                <span class="whitespace-nowrap rounded-full bg-sky-100 px-2 py-0.5 text-[11px] font-semibold text-sky-700">Agent{{ !empty($slot) ? ' · Area ' . $slot : '' }}</span>
             @endif
         </span>
 

@@ -8,5 +8,5 @@
 @if($adminAdded)
     <span class="ml-1 rounded-full bg-violet-100 px-2.5 py-0.5 align-middle text-xs font-semibold text-violet-700">Admin added &middot; Free</span>
 @else
-    <span class="ml-1 rounded-full bg-sky-100 px-2.5 py-0.5 align-middle text-xs font-semibold text-sky-700">Agent sent@if($slot) &middot; Area {{ $slot }}@endif</span>
+    <span class="ml-1 rounded-full bg-sky-100 px-2.5 py-0.5 align-middle text-xs font-semibold text-sky-700">Agent sent{{ $slot ? ' · Area ' . $slot : '' }}</span>
 @endif
