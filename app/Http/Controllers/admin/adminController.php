@@ -7,6 +7,7 @@ use App\Models\Core\AdminSetting;
 use App\Models\Core\Propagent;
 use App\Models\Core\Propdelivnow;
 use App\Models\Core\Propflyer;
+use App\Support\AgentImages;
 use App\Support\AgentTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -112,8 +113,108 @@ class adminController extends Controller
     {
 
         include(app_path().'/admin/agent/view.php');
-        return view('admin.agents.show', compact('agent', 'flyerCount', 'campaignCount', 'orders'));
 
+        // where their photo / logo are and whether the files are really there
+        $photo     = AgentImages::photo($agent);
+        $logo      = AgentImages::logo($agent);
+        $hasOffice = (bool) $agent->theAgtOffice;
+
+        return view('admin.agents.show', compact('agent', 'flyerCount', 'campaignCount', 'orders', 'photo', 'logo', 'hasOffice'));
+
+    }
+
+    /**
+     * Add or change an agent's photo or logo ($kind is "photo" or "logo").
+     *
+     * Follows the member area's own upload (save_modal_agentcontact.php): an
+     * image up to 5 MB, saved as {agentId}agtphoto-/agtlogo-{random}.{ext} in the
+     * same folders the flyers read from, and the previous file is deleted.
+     * SVG is deliberately not accepted - it is served straight from the site and
+     * can carry script. A logo needs the agent's office record (the flyers build
+     * its address from it), so without one it is refused.
+     */
+    public function agentImageUpload(Request $request, $id, $kind)
+    {
+        $agent = Propagent::with('theAgtOffice')->findOrFail($id);
+
+        [$column, $prefix, $label, $dir] = $this->imageSpec($agent, $kind);
+
+        if ($dir === null) {
+            return redirect()->route('admin.agentView', $agent->id)->withErrors([
+                'image' => 'This agent has no office record, so a logo can\'t be added yet.',
+            ]);
+        }
+
+        $request->validate([
+            'image' => ['required', 'file', 'image', 'mimes:jpg,jpeg,png,gif,webp', 'max:5120'],
+        ], [
+            'image.required' => "Choose a {$label} to upload.",
+            'image.image'    => "The {$label} must be an image (JPG, PNG, GIF or WebP).",
+            'image.mimes'    => "The {$label} must be a JPG, PNG, GIF or WebP image.",
+            'image.max'      => "The {$label} can't be larger than 5 MB.",
+            'image.uploaded' => "The {$label} couldn't be uploaded - it may be larger than the server allows.",
+        ]);
+
+        if (!is_dir($dir)) {
+            mkdir($dir, 0755, true);
+        }
+
+        $previous = basename((string) $agent->{$column});
+        $file     = $request->file('image');
+        $filename = $agent->id . $prefix . '-' . strtoupper(bin2hex(random_bytes(16))) . '.' . $file->extension();
+
+        $file->move($dir, $filename);
+
+        // remove the old file - only from this same folder (an older copy in a
+        // legacy folder is left alone)
+        if ($previous !== '' && is_file("{$dir}/{$previous}")) {
+            @unlink("{$dir}/{$previous}");
+        }
+
+        // the save stamps updated_at - in the agent's timezone
+        AgentTime::apply($agent);
+
+        $agent->{$column} = $filename;
+        $agent->save();
+
+        $name = $agent->agtFullName ?: ($agent->xxAgtUname ?: 'this agent');
+
+        return redirect()->route('admin.agentView', $agent->id)
+            ->with('status', ($previous !== '' ? 'Changed' : 'Added') . " the {$label} for {$name}.");
+    }
+
+    /** Clear an agent's photo or logo: forget the file name and delete the file. */
+    public function agentImageClear($id, $kind)
+    {
+        $agent = Propagent::with('theAgtOffice')->findOrFail($id);
+
+        [$column, , $label, $dir] = $this->imageSpec($agent, $kind);
+
+        $previous = basename((string) $agent->{$column});
+
+        if ($dir !== null && $previous !== '' && is_file("{$dir}/{$previous}")) {
+            @unlink("{$dir}/{$previous}");
+        }
+
+        // the save stamps updated_at - in the agent's timezone
+        AgentTime::apply($agent);
+
+        // NULL, the same "none" the Agents-page filters look for
+        $agent->{$column} = null;
+        $agent->save();
+
+        $name = $agent->agtFullName ?: ($agent->xxAgtUname ?: 'this agent');
+
+        return redirect()->route('admin.agentView', $agent->id)
+            ->with('status', ucfirst($label) . " cleared for {$name}.");
+    }
+
+    /** [database column, file-name prefix, label, folder on disk (null = none possible)] */
+    private function imageSpec(Propagent $agent, string $kind): array
+    {
+        return $kind === 'photo'
+            ? ['agtPhoto', 'agtphoto', 'photo', AgentImages::photoDir($agent)]
+            : ['agtLogo',  'agtlogo',  'logo',  AgentImages::logoDir($agent)];
     }
 
     /**

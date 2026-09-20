@@ -44,7 +44,14 @@ Route::post('/admin/agentsDeleteMany',
 Route::get('/admin/agentView/{id}',
 [adminController::class, 'agentView'])->name('admin.agentView');
 
-//add / subtract an agent's credits, and set / change their start date (POST only - each changes data)
+//upload (add / change) or clear an agent's photo or logo (POST only; {kind} is "photo" or "logo")
+Route::post('/admin/agentImage/{id}/{kind}',
+[adminController::class, 'agentImageUpload'])->whereNumber('id')->whereIn('kind', ['photo', 'logo'])->name('admin.agentImageUpload');
+
+Route::post('/admin/agentImage/{id}/{kind}/clear',
+[adminController::class, 'agentImageClear'])->whereNumber('id')->whereIn('kind', ['photo', 'logo'])->name('admin.agentImageClear');
+
+//set an agent's credits, and set / change their start date (POST only - each changes data)
 Route::post('/admin/agentCredits/{id}',
 [adminController::class, 'agentCredits'])->whereNumber('id')->name('admin.agentCredits');
 
