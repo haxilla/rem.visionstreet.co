@@ -199,7 +199,14 @@
 
         <div class="rounded-2xl bg-white p-4 shadow-sm sm:p-5">
             <div class="text-xs font-semibold uppercase tracking-wide text-slate-400">Campaigns Sent</div>
-            <div class="mt-2 text-2xl font-semibold text-slate-900 sm:text-3xl">{{ number_format($campaignCount) }}</div>
+            <div class="mt-2 flex flex-wrap items-baseline gap-x-2">
+                <span class="text-2xl font-semibold text-slate-900 sm:text-3xl">{{ number_format($campaignCount) }}</span>
+
+                {{-- requested or in progress, not finished - so a zero here is never a mystery --}}
+                @if($campaignsInQueue > 0)
+                    <span class="text-xs font-semibold text-amber-600">+ {{ number_format($campaignsInQueue) }} in queue / in progress</span>
+                @endif
+            </div>
         </div>
 
         <div class="rounded-2xl bg-white p-4 shadow-sm sm:p-5">

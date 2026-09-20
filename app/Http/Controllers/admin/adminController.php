@@ -120,7 +120,7 @@ class adminController extends Controller
         $logo      = AgentImages::logo($agent);
         $hasOffice = (bool) $agent->theAgtOffice;
 
-        return view('admin.agents.show', compact('agent', 'flyerCount', 'campaignCount', 'orders', 'photo', 'logo', 'hasOffice'));
+        return view('admin.agents.show', compact('agent', 'flyerCount', 'campaignCount', 'campaignsInQueue', 'orders', 'photo', 'logo', 'hasOffice'));
 
     }
 
