@@ -61,6 +61,19 @@ return Application::configure(basePath: dirname(__DIR__))
                 'form_token'     => $request->has('_token') || $request->headers->has('X-CSRF-TOKEN'),
                 'admin'          => \Illuminate\Support\Facades\Auth::guard('admin')->check(),
                 'member'         => \Illuminate\Support\Facades\Auth::guard('member')->check(),
+                // how this server is set up to keep sessions, and how the request looked to it
+                'session'        => [
+                    'driver'   => config('session.driver'),
+                    'lifetime' => config('session.lifetime'),
+                    'domain'   => config('session.domain'),
+                    'secure'   => config('session.secure'),
+                    'same_site' => config('session.same_site'),
+                ],
+                'request'        => [
+                    'host'   => $request->getHost(),
+                    'secure' => $request->secure(),
+                    'agent'  => substr((string) $request->userAgent(), 0, 80),
+                ],
             ]);
 
             if ($request->expectsJson()) {
