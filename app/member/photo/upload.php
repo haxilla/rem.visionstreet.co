@@ -19,7 +19,23 @@ if (!isset($_FILES['photo'])) {
 
 }
 
-$flyer = Propflyer::with('theMeta')->find((int)$_POST['flyerId']);
+// PHP itself reports an upload that failed part-way or was over the server's size limit.
+if (
+    is_array($_FILES['photo']['tmp_name'])
+    || ($_FILES['photo']['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK
+    || !is_uploaded_file($_FILES['photo']['tmp_name'])
+) {
+
+    echo json_encode([
+        'success' => false,
+        'message' => 'The photo did not upload. It may be too large - please try again.'
+    ]);
+
+    exit;
+
+}
+
+$flyer = Propflyer::with('theMeta')->find((int)($_POST['flyerId'] ?? 0));
 
 if (!$flyer) {
 
@@ -91,9 +107,31 @@ if (!is_writable($uploadDir)) {
 
 }
 
-$extension = strtolower(
-    pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION)
-);
+// Decide what the file IS by reading it, BEFORE it is put anywhere in the public folder.
+// The name the browser sends is never trusted: a script renamed "photo.jpg", or a
+// "photo.php", must not be saved. Only a real JPEG / PNG / GIF is accepted (the
+// resizer below can't read anything else), and the saved file's extension comes
+// from what it really is.
+$imageInfo = @getimagesize($_FILES['photo']['tmp_name']);
+
+$allowedTypes = [
+    IMAGETYPE_JPEG => 'jpg',
+    IMAGETYPE_PNG  => 'png',
+    IMAGETYPE_GIF  => 'gif',
+];
+
+if (!$imageInfo || !isset($allowedTypes[$imageInfo[2]])) {
+
+    echo json_encode([
+        'success' => false,
+        'message' => 'That file is not a JPG, PNG or GIF photo.'
+    ]);
+
+    exit;
+
+}
+
+$extension = $allowedTypes[$imageInfo[2]];
 
 $fileName = uniqid('', true) . '.' . $extension;
 
@@ -104,19 +142,6 @@ if (!move_uploaded_file($_FILES['photo']['tmp_name'], $destination)) {
     echo json_encode([
         'success' => false,
         'message' => 'Unable to save file'
-    ]);
-
-    exit;
-
-}
-
-$imageInfo = getimagesize($destination);
-
-if (!$imageInfo) {
-
-    echo json_encode([
-        'success' => false,
-        'message' => 'Unable to read image size'
     ]);
 
     exit;
