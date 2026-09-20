@@ -102,7 +102,7 @@ Artisan::command('flyers:backfill-slugs {--dry-run : Show what would be done, ch
 | Run agents:tidy-names first so an ALL-CAPS name doesn't become the slug's spelling, and the
 | agent_slug column must exist (the old agtURL renamed - see the SQL this prints when it doesn't).
 */
-Artisan::command('agents:backfill-slugs {--dry-run : Show what would be done, change nothing} {--limit=0 : Stop after assigning this many slugs (0 = all)} {--all : Every agent without a slug, not only those who have sent something}', function () {
+Artisan::command('agents:backfill-slugs {--dry-run : Show what would be done, change nothing} {--limit=0 : Stop after assigning this many slugs (0 = all)} {--all : Every agent without a slug, not only those who have sent something} {--duplicates : List every name shared by more than one agent (also saved as a CSV)}', function () {
     if (!\App\Support\AgentSlug::columnExists()) {
         $this->error('propagents has no agent_slug column yet. Run this SQL first (it renames the old agtURL, which never worked, and clears it), then this command again:');
         $this->line('');
@@ -116,6 +116,7 @@ Artisan::command('agents:backfill-slugs {--dry-run : Show what would be done, ch
     $dryRun = (bool) $this->option('dry-run');
     $limit  = (int) $this->option('limit');
     $all    = (bool) $this->option('all');
+    $duplicates = (bool) $this->option('duplicates');
 
     $query = \App\Support\AgentSlug::backfillCandidates($all)->orderBy('id');
     $total = (clone $query)->count();
@@ -128,10 +129,11 @@ Artisan::command('agents:backfill-slugs {--dry-run : Show what would be done, ch
     $shown     = 0;
     $samples   = [];
     $pending   = [];    // dry run: slugs handed out in THIS run, so duplicates within it are seen
+    $groups    = [];    // base name => the agents that share it (id, slug, name, email, phone)
     $processed = 0;
 
-    $query->select('id', 'agtFirst', 'agtLast', 'agtFullName')
-        ->chunkById(500, function ($agents) use ($dryRun, $limit, &$assigned, &$numbered, &$skipped, &$shown, &$samples, &$pending, &$processed) {
+    $query->select('id', 'agtFirst', 'agtLast', 'agtFullName', 'agtEmail', 'xxAgtUname', 'agtMainPhone')
+        ->chunkById(500, function ($agents) use ($dryRun, $limit, &$assigned, &$numbered, &$skipped, &$shown, &$samples, &$pending, &$processed, &$groups) {
             foreach ($agents as $agent) {
                 if ($limit > 0 && $assigned >= $limit) {
                     return false;
@@ -168,7 +170,16 @@ Artisan::command('agents:backfill-slugs {--dry-run : Show what would be done, ch
                     $numbered++;
                 }
 
-                if ($shown++ < 20 || $slug !== $base && $shown < 60) {
+                // everyone who shares this name, first (lowest id) to last, for --duplicates
+                $groups[strtolower($base)][] = [
+                    'id'    => $agent->id,
+                    'slug'  => $slug,
+                    'name'  => $agent->agtFullName ?: trim($agent->agtFirst . ' ' . $agent->agtLast),
+                    'email' => trim((string) ($agent->agtEmail ?: $agent->xxAgtUname)),
+                    'phone' => trim((string) $agent->agtMainPhone),
+                ];
+
+                if ($shown++ < 20) {
                     $this->line("  #{$agent->id}  ->  {$slug}" . ($slug !== $base ? "   (\"{$base}\" was taken)" : ''));
                 }
 
@@ -180,6 +191,47 @@ Artisan::command('agents:backfill-slugs {--dry-run : Show what would be done, ch
 
     $this->newLine();
     $this->info(($dryRun ? 'Would assign ' : 'Assigned ') . number_format($assigned) . ' slug(s), ' . number_format($numbered) . ' of them numbered for a duplicate name.');
+
+    // names shared by more than one agent, the biggest groups first
+    $shared = array_filter($groups, fn ($members) => count($members) > 1);
+    uasort($shared, fn ($a, $b) => count($b) <=> count($a));
+
+    if ($shared) {
+        // a group where two agents have the same email is almost certainly one person with two accounts
+        $sameEmail = array_filter($shared, function ($members) {
+            $emails = array_filter(array_map(fn ($m) => strtolower($m['email']), $members));
+
+            return count($emails) !== count(array_unique($emails));
+        });
+
+        $this->comment(number_format(count($shared)) . ' name(s) are shared by more than one agent ('
+            . number_format(count($sameEmail)) . ' of them include two accounts with the SAME email - likely one person twice).'
+            . ($duplicates ? '' : ' Run again with --duplicates to list them.'));
+    }
+
+    if ($duplicates && $shared) {
+        $csvPath = storage_path('app/agent-slug-duplicates.csv');
+        $csv     = fopen($csvPath, 'w');
+        fputcsv($csv, ['name shared', 'agents sharing it', 'same email?', 'agent id', 'slug it would get', 'agent name', 'email', 'phone']);
+
+        foreach ($shared as $base => $members) {
+            $same = isset($sameEmail[$base]) ? 'YES' : '';
+
+            $this->newLine();
+            $this->line('<options=bold>' . $members[0]['slug'] . '</>  (' . count($members) . ' agents' . ($same ? ', same email on at least two - likely one person' : '') . ')');
+
+            foreach ($members as $member) {
+                $this->line(sprintf('    #%-6d %-24s %-28s %-34s %s', $member['id'], $member['slug'], mb_substr($member['name'], 0, 28), mb_substr($member['email'], 0, 34), $member['phone']));
+
+                fputcsv($csv, [$members[0]['slug'], count($members), $same, $member['id'], $member['slug'], $member['name'], $member['email'], $member['phone']]);
+            }
+        }
+
+        fclose($csv);
+
+        $this->newLine();
+        $this->info('Saved the same list to ' . $csvPath);
+    }
 
     if ($skipped) {
         $this->warn(number_format($skipped) . ' agent(s) skipped - no usable name (or fewer than ' . \App\Support\AgentSlug::MIN . ' letters). Examples:');
