@@ -12,7 +12,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // admin / member pages are never served from the browser's cache (stale CSRF tokens -> 419)
+        $middleware->web(append: [\App\Http\Middleware\NoStorePages::class]);
+
         $middleware->redirectGuestsTo(function (Request $request) {
             if ($request->is('admin') || $request->is('admin/*')) {
                 return route('admin.login');
@@ -39,5 +41,34 @@ return Application::configure(basePath: dirname(__DIR__))
             ]);
 
             return null;
+        });
+
+        // "419 Page Expired" = the form's security token no longer matches the session (the page sat
+        // open past the session's life, or was a stored copy from an older session). Instead of a
+        // dead-end error page, go back to the page with a fresh token, keep what was typed (never
+        // a password) and say what happened - then the same click works. The details are logged so
+        // a pattern can be traced.
+        $exceptions->render(function (\Symfony\Component\HttpKernel\Exception\HttpException $e, Request $request) {
+            if ($e->getStatusCode() !== 419) {
+                return null;
+            }
+
+            \Illuminate\Support\Facades\Log::warning('419 Page Expired', [
+                'method'         => $request->method(),
+                'url'            => $request->fullUrl(),
+                'referer'        => $request->headers->get('referer'),
+                'session_cookie' => $request->hasCookie(config('session.cookie')),
+                'form_token'     => $request->has('_token') || $request->headers->has('X-CSRF-TOKEN'),
+                'admin'          => \Illuminate\Support\Facades\Auth::guard('admin')->check(),
+                'member'         => \Illuminate\Support\Facades\Auth::guard('member')->check(),
+            ]);
+
+            if ($request->expectsJson()) {
+                return null;
+            }
+
+            return redirect()->back()
+                ->withInput($request->except(['_token', 'password', 'password_confirmation', 'recaptcha_token']))
+                ->withErrors(['csrf' => 'Your page had expired, so nothing was saved. Please try again.']);
         });
     })->create();
