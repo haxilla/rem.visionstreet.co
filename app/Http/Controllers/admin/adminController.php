@@ -836,10 +836,15 @@ class adminController extends Controller
 
         $name = $agent->agtFullName ?: trim(($agent->agtFirst ?? '') . ' ' . ($agent->agtLast ?? '')) ?: 'No name';
 
-        DB::transaction(function () use ($agent) {
+        $agent->delete();
+
+        // Tidy the account's unused password links. Best effort: the table comes from the
+        // password-reset SQL, and deleting an account must not depend on it existing.
+        try {
             \App\Models\Core\AgentPasswordReset::where('propagent_id', $agent->id)->delete();
-            $agent->delete();
-        });
+        } catch (\Throwable $e) {
+            Log::warning('Could not clear password links for deleted agent ' . $agent->id . ': ' . $e->getMessage());
+        }
 
         Log::info('Admin deleted a duplicate agent account', [
             'admin_id' => Auth::guard('admin')->id(),

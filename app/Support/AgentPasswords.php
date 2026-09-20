@@ -264,8 +264,14 @@ class AgentPasswords
     /** Every unused link for the agent stops working (used after a successful reset). */
     public static function voidAll(int $agentId): void
     {
-        AgentPasswordReset::where('propagent_id', $agentId)
-            ->whereNull('used_at')
-            ->update(['used_at' => Carbon::now('UTC')->format(self::DB_FORMAT)]);
+        // Before the agent_password_resets table has been created there are no links to
+        // cancel, and that must not stop an admin action (moving / deleting an account).
+        try {
+            AgentPasswordReset::where('propagent_id', $agentId)
+                ->whereNull('used_at')
+                ->update(['used_at' => Carbon::now('UTC')->format(self::DB_FORMAT)]);
+        } catch (\Throwable $e) {
+            Log::warning('Could not cancel password links for agent ' . $agentId . ': ' . $e->getMessage());
+        }
     }
 }
