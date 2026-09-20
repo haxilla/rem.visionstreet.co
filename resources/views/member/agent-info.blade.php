@@ -203,30 +203,12 @@
                         <input type="email" id="agtEmail" name="agtEmail" maxlength="100" autocomplete="email"
                                value="{{ old('agtEmail', $agent->agtEmail) }}">
                     </div>
+                    {{-- The one phone number the flyer's contact banner shows (agtMainPhone). The other
+                         phone fields and the website aren't on the flyer, so they aren't asked for here. --}}
                     <div class="ai-field">
-                        <label for="agtMainPhone">Main phone</label>
+                        <label for="agtMainPhone">Phone</label>
                         <input type="tel" id="agtMainPhone" name="agtMainPhone" maxlength="30" autocomplete="tel"
                                value="{{ old('agtMainPhone', $agent->agtMainPhone) }}">
-                    </div>
-                    <div class="ai-field">
-                        <label for="agtMobile">Mobile</label>
-                        <input type="tel" id="agtMobile" name="agtMobile" maxlength="30"
-                               value="{{ old('agtMobile', $agent->agtMobile) }}">
-                    </div>
-                    <div class="ai-field">
-                        <label for="agtHomePhone">Home phone</label>
-                        <input type="tel" id="agtHomePhone" name="agtHomePhone" maxlength="30"
-                               value="{{ old('agtHomePhone', $agent->agtHomePhone) }}">
-                    </div>
-                    <div class="ai-field">
-                        <label for="agtPhone2">Other phone</label>
-                        <input type="tel" id="agtPhone2" name="agtPhone2" maxlength="30"
-                               value="{{ old('agtPhone2', $agent->agtPhone2) }}">
-                    </div>
-                    <div class="ai-field">
-                        <label for="agtWebsite">Website</label>
-                        <input type="text" id="agtWebsite" name="agtWebsite" maxlength="255" placeholder="www.example.com"
-                               value="{{ old('agtWebsite', $agent->agtWebsite) }}">
                     </div>
                 </div>
             </div>
