@@ -90,35 +90,37 @@ Artisan::command('flyers:backfill-slugs {--dry-run : Show what would be done, ch
 })->purpose('Give every flyer without a url_slug its Zillow-style slug');
 
 /*
-| php artisan agents:backfill-slugs [--dry-run] [--limit=N]
+| php artisan agents:backfill-slugs [--dry-run] [--limit=N] [--all]
 |
-| Gives agents their web address slug (first and last name joined, lowercase: debralee), using the same
-| builder new agents use (App\Support\AgentSlug). Only agents who have SENT something - an email request
-| or a flyer with a last-sent date - are looked at; everyone else is left out of the run. An agent who
-| already has a slug is never touched, so it is safe to run more than once. --dry-run shows what it
-| WOULD do (including which agents would get a number for a duplicate name, e.g. mikesmith2) and writes
-| nothing. --limit=N stops after N slugs have been ASSIGNED.
+| Gives agents their web address slug (first and last name as one PascalCase word: DebraLee), using the
+| same builder new agents use (App\Support\AgentSlug). By default only agents who have SENT something -
+| an email request or a flyer with a last-sent date - are looked at; --all takes every agent that has no
+| slug. An agent who already has a slug is never touched, so it is safe to run more than once.
+| --dry-run shows what it WOULD do (including which agents would get a number for a duplicate name,
+| e.g. MikeSmith2) and writes nothing. --limit=N stops after N slugs have been ASSIGNED.
 |
-| The agent_slug column must exist first; if it doesn't, this prints the SQL that adds it.
+| Run agents:tidy-names first so an ALL-CAPS name doesn't become the slug's spelling, and the
+| agent_slug column must exist (the old agtURL renamed - see the SQL this prints when it doesn't).
 */
-Artisan::command('agents:backfill-slugs {--dry-run : Show what would be done, change nothing} {--limit=0 : Stop after assigning this many slugs (0 = all)}', function () {
+Artisan::command('agents:backfill-slugs {--dry-run : Show what would be done, change nothing} {--limit=0 : Stop after assigning this many slugs (0 = all)} {--all : Every agent without a slug, not only those who have sent something}', function () {
     if (!\App\Support\AgentSlug::columnExists()) {
-        $this->error('propagents has no agent_slug column yet. Run this SQL first, then this command again:');
+        $this->error('propagents has no agent_slug column yet. Run this SQL first (it renames the old agtURL, which never worked, and clears it), then this command again:');
         $this->line('');
+        $this->line('  UPDATE remuserdb.propagents SET agtURL = NULL;');
         $this->line('  ALTER TABLE remuserdb.propagents');
-        $this->line('    ADD COLUMN agent_slug VARCHAR(40) NULL,');
-        $this->line('    ADD UNIQUE INDEX propagents_agent_slug_unique (agent_slug);');
+        $this->line('    CHANGE COLUMN agtURL agent_slug VARCHAR(40) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL;');
 
         return 1;
     }
 
     $dryRun = (bool) $this->option('dry-run');
     $limit  = (int) $this->option('limit');
+    $all    = (bool) $this->option('all');
 
-    $query = \App\Support\AgentSlug::backfillCandidates()->orderBy('id');
+    $query = \App\Support\AgentSlug::backfillCandidates($all)->orderBy('id');
     $total = (clone $query)->count();
 
-    $this->info(($dryRun ? '[dry run] ' : '') . number_format($total) . ' agent(s) who have sent something have no agent_slug' . ($limit > 0 ? " (stopping after {$limit} are assigned)" : '') . '.');
+    $this->info(($dryRun ? '[dry run] ' : '') . number_format($total) . ' agent(s) ' . ($all ? '' : 'who have sent something ') . 'have no slug' . ($limit > 0 ? " (stopping after {$limit} are assigned)" : '') . '.');
 
     $assigned  = 0;
     $numbered  = 0;     // got a number because the name was already taken
@@ -187,3 +189,75 @@ Artisan::command('agents:backfill-slugs {--dry-run : Show what would be done, ch
         }
     }
 })->purpose('Give agents who have sent something their web address slug');
+
+/*
+| php artisan agents:tidy-names [--dry-run] [--limit=N]
+|
+| Puts ALL-CAPS and all-lowercase agent names in proper form (MARY BEANS -> Mary Beans, MCKENNA -> McKenna,
+| O'MALLEY -> O'Malley, SMITH-JONES -> Smith-Jones), so the flyers, the emails and the agent's web address
+| all spell the name right. It changes CAPITALS ONLY - never the letters - and only fields that are entirely
+| capitals or entirely lowercase: agtFirst, agtLast and agtFullName are each looked at on their own, and a
+| name already in mixed case (McKenna, MaryAnn, "Mary Ann Beans") is left exactly as it is. --dry-run shows
+| what it WOULD change and writes nothing. Run it before agents:backfill-slugs. The same tidying is applied
+| whenever an agent saves their name (AgentProfile::saveContact).
+*/
+Artisan::command('agents:tidy-names {--dry-run : Show what would be changed, change nothing} {--limit=0 : Stop after changing this many agents (0 = all)}', function () {
+    $dryRun = (bool) $this->option('dry-run');
+    $limit  = (int) $this->option('limit');
+
+    $changed = 0;
+    $fields  = ['agtFirst' => 0, 'agtLast' => 0, 'agtFullName' => 0];
+    $shown   = 0;
+
+    \App\Models\Core\Propagent::query()
+        ->select('id', 'agtFirst', 'agtLast', 'agtFullName')
+        ->chunkById(1000, function ($agents) use ($dryRun, $limit, &$changed, &$fields, &$shown) {
+            foreach ($agents as $agent) {
+                if ($limit > 0 && $changed >= $limit) {
+                    return false;
+                }
+
+                $update = [];
+
+                foreach (array_keys($fields) as $field) {
+                    $value = (string) $agent->{$field};
+
+                    if ($value !== '' && \App\Support\AgentNames::needsTidy($value)) {
+                        $tidy = \App\Support\AgentNames::tidy($value);
+
+                        if ($tidy !== $value) {
+                            $update[$field] = $tidy;
+                        }
+                    }
+                }
+
+                if (!$update) {
+                    continue;
+                }
+
+                $changed++;
+
+                foreach (array_keys($update) as $field) {
+                    $fields[$field]++;
+                }
+
+                if ($shown++ < 40) {
+                    $this->line("  #{$agent->id}  " . implode('   |   ', array_map(
+                        fn ($field) => "{$field}: \"{$agent->{$field}}\" -> \"{$update[$field]}\"",
+                        array_keys($update)
+                    )));
+                }
+
+                if (!$dryRun) {
+                    // straight to the table: no updated_at change, no model events
+                    \App\Models\Core\Propagent::whereKey($agent->id)->toBase()->update($update);
+                }
+            }
+        });
+
+    $this->newLine();
+    $this->info(($dryRun ? 'Would change ' : 'Changed ') . number_format($changed) . ' agent(s): '
+        . number_format($fields['agtFirst']) . ' first names, '
+        . number_format($fields['agtLast']) . ' last names, '
+        . number_format($fields['agtFullName']) . ' full names.');
+})->purpose('Put ALL-CAPS and all-lowercase agent names in proper capitals');

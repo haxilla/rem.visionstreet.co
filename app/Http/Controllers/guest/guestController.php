@@ -306,19 +306,22 @@ class guestController extends Controller
 
     /**
      * An agent's own page (agent_slug, see App\Support\AgentSlug): their contact details and the
-     * listings they have finished. Null when the address isn't an agent's, or when the agent_slug
-     * column hasn't been added yet, so the normal 404 shows.
+     * listings they have finished. Null when the address isn't an agent's, or when the slug
+     * column isn't there yet, so the normal 404 shows.
      */
     private function agentPage(Request $request)
     {
         $segment = (string) $request->route('segment', '');
 
-        if (!preg_match('/^[A-Za-z0-9]{3,}$/', $segment)) {
+        if (!preg_match('/^[A-Za-z0-9]{3,40}$/', $segment)) {
             return null;
         }
 
+        $column = \App\Support\AgentSlug::COLUMN;
+
         try {
-            $agent = Propagent::with('theAgtOffice')->where('agent_slug', strtolower($segment))->first();
+            // the column compares without regard to case: /debralee, /DEBRALEE and /DebraLee all match
+            $agent = Propagent::with('theAgtOffice')->where($column, $segment)->first();
         } catch (\Throwable $e) {
             return null;
         }
@@ -327,9 +330,9 @@ class guestController extends Controller
             return null;
         }
 
-        // one address per agent: /DebraLee goes to /debralee
-        if ($segment !== strtolower($segment)) {
-            return redirect('/' . strtolower($segment), 301);
+        // one address per agent: any casing goes to the stored form (/debralee -> /DebraLee)
+        if ($segment !== $agent->{$column}) {
+            return redirect('/' . $agent->{$column}, 301);
         }
 
         // Their listings: flyers with a public page that are finished (the wizard's last step)

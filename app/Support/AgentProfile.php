@@ -92,6 +92,14 @@ class AgentProfile
             $data['agtWebsite'] = 'https://' . $data['agtWebsite'];
         }
 
+        // names are stored in proper form: ALL CAPS or all lowercase is tidied (MARY -> Mary); a name
+        // already in mixed case is left as the agent wrote it. The web address is built from them.
+        foreach (['agtFirst', 'agtLast'] as $nameField) {
+            if (isset($data[$nameField])) {
+                $data[$nameField] = AgentNames::tidy($data[$nameField]);
+            }
+        }
+
         $fullName = AgentNames::combine($data['agtFirst'] ?? null, $data['agtLast'] ?? null);
 
         if ($fullName !== null) {

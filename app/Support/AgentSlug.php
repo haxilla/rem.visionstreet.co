@@ -10,13 +10,19 @@ use Illuminate\Support\Str;
 /**
  * An agent's web address slug (propagents.agent_slug): the last part of their own page,
  *
- *     https://<the site>/debralee
+ *     https://<the site>/DebraLee
  *
- * It is the agent's first and last name joined, lowercase, letters and digits only
- * ("Mary-Ann O'Brien" -> maryannobrien). A name that would run past LIMIT characters becomes
- * the first name plus the last initial ("Christopher Vanderbilt-Montgomery" -> christopherv),
- * and if even that is too long the first name is cut to make room for the initial. Two agents
- * with the same name get a number: debralee, debralee2, debralee3.
+ * It is the agent's first and last name joined as one PascalCase word, letters and digits only
+ * ("Mary Ann O'Brien-Smith" -> MaryAnnOBrienSmith, "Mark McKenna" -> MarkMcKenna). It never has
+ * an ALL-CAPS word: an all-caps or all-lowercase name is capitalised (MARY -> Mary), while a name
+ * typed with its own capitals keeps them. The address works in ANY casing - /debralee, /DEBRALEE,
+ * /DebraLee all reach the page (the column compares without regard to case) and the site
+ * redirects to the stored form.
+ *
+ * A name that would run past LIMIT characters becomes the first name plus the last initial
+ * ("Christopher Vanderbilt-Montgomery" -> ChristopherV), and if even that is too long the first
+ * name is cut to make room for the initial. Two agents with the same name get a number:
+ * DebraLee, DebraLee2, DebraLee3.
  *
  * A slug is made ONCE (Propagent's saved hook calls ensure(), as does the backfill command) and
  * never changed by this class - the address goes into emails and has to keep working.
@@ -27,6 +33,12 @@ use Illuminate\Support\Str;
  */
 class AgentSlug
 {
+    /** The column the slug lives in (case-insensitive, with a unique index). */
+    public const COLUMN = 'agent_slug';
+
+    /** The column's width: a slug, numbered for a duplicate or not, never runs past it. */
+    public const COLUMN_LENGTH = 40;
+
     /** Longest slug built from a name (a number added for a duplicate can run a few over). */
     public const LIMIT = 20;
 
@@ -55,14 +67,14 @@ class AgentSlug
                 return null;
             }
 
-            $agent = Propagent::find($agentId, ['id', 'agent_slug', 'agtFirst', 'agtLast', 'agtFullName']);
+            $agent = Propagent::find($agentId, ['id', self::COLUMN, 'agtFirst', 'agtLast', 'agtFullName']);
 
             if (!$agent) {
                 return null;
             }
 
-            if (filled($agent->agent_slug)) {
-                return $agent->agent_slug;
+            if (filled($agent->{self::COLUMN})) {
+                return $agent->{self::COLUMN};
             }
 
             $slug = self::build($agent->getAttributes());
@@ -74,7 +86,7 @@ class AgentSlug
             $slug = self::unique($slug, $agent->getKey());
 
             // straight to the table: no updated_at change, no model events
-            Propagent::whereKey($agent->getKey())->toBase()->update(['agent_slug' => $slug]);
+            Propagent::whereKey($agent->getKey())->toBase()->update([self::COLUMN => $slug]);
 
             return $slug;
         } catch (\Throwable $e) {
@@ -96,9 +108,9 @@ class AgentSlug
         $result = ['slug' => null, 'email' => null];
 
         try {
-            $row = Propagent::whereKey($agentId)->first(['agtEmail', 'agent_slug']);
+            $row = Propagent::whereKey($agentId)->first(['agtEmail', self::COLUMN]);
 
-            $result['slug']  = filled($row?->agent_slug) ? $row->agent_slug : null;
+            $result['slug']  = filled($row?->{self::COLUMN}) ? trim($row->{self::COLUMN}) : null;
             $result['email'] = filled($row?->agtEmail) ? trim($row->agtEmail) : null;
         } catch (\Throwable $e) {
             // the column may not exist yet - still get the email
@@ -119,8 +131,9 @@ class AgentSlug
     {
         [$first, $last] = AgentNames::forForm((object) $parts);
 
-        $first = self::letters($first);
-        $last  = self::letters($last);
+        // each name as one PascalCase word (see AgentNames::pascal)
+        $first = AgentNames::pascal($first);
+        $last  = AgentNames::pascal($last);
 
         if ($first === '' && $last === '') {
             return null;
@@ -130,7 +143,7 @@ class AgentSlug
 
         if (strlen($slug) > self::LIMIT) {
             // first name + last initial; a first name too long for that is cut to leave room for it
-            $initial = substr($last, 0, 1);
+            $initial = strtoupper(substr($last, 0, 1));
             $slug    = strlen($first . $initial) <= self::LIMIT
                 ? $first . $initial
                 : substr($first, 0, self::LIMIT - strlen($initial)) . $initial;
@@ -145,12 +158,13 @@ class AgentSlug
      */
     public static function unique(string $slug, $exceptAgentId = null, array $alsoTaken = []): string
     {
-        $candidate = $slug;
+        $candidate = substr($slug, 0, self::COLUMN_LENGTH);
 
         for ($n = 2; $n < 1000; $n++) {
+            // the stored ones (old capitals and all) count: the column compares without regard to case
             $taken = self::isReserved($candidate)
-                || in_array($candidate, $alsoTaken, true)
-                || Propagent::where('agent_slug', $candidate)
+                || in_array(strtolower($candidate), array_map('strtolower', $alsoTaken), true)
+                || Propagent::where(self::COLUMN, $candidate)
                     ->when($exceptAgentId, fn ($query) => $query->whereKeyNot($exceptAgentId))
                     ->exists();
 
@@ -158,10 +172,11 @@ class AgentSlug
                 return $candidate;
             }
 
-            $candidate = $slug . $n;
+            // slug + number, cut back so it still fits the column
+            $candidate = substr($slug, 0, self::COLUMN_LENGTH - strlen((string) $n)) . $n;
         }
 
-        return $slug . ($exceptAgentId ?: uniqid());
+        return substr($slug, 0, self::COLUMN_LENGTH - 6) . str_pad((string) ($exceptAgentId ?: mt_rand(1, 999999)), 6, '0', STR_PAD_LEFT);
     }
 
     public static function isReserved(string $slug): bool
@@ -215,15 +230,15 @@ class AgentSlug
      * agent is left out of the run entirely. New agents are unaffected: the saved hook gives any
      * agent a slug once they have a name.
      */
-    public static function backfillCandidates()
+    public static function backfillCandidates(bool $everyone = false)
     {
         $since = '1971-01-01';
 
         return Propagent::query()
             ->where(function ($query) {
-                $query->whereNull('agent_slug')->orWhere('agent_slug', '');
+                $query->whereNull(self::COLUMN)->orWhere(self::COLUMN, '');
             })
-            ->where(function ($query) use ($since) {
+            ->when(!$everyone, fn ($query) => $query->where(function ($query) use ($since) {
                 $query->whereIn('id', \App\Models\Core\Propdelivnow::query()
                         ->select('propagent_id')
                         ->whereNotNull('emRequest')
@@ -236,17 +251,17 @@ class AgentSlug
                         ->select('propagent_id')
                         ->whereNotNull('xLastDeliveryDate')
                         ->where('xLastDeliveryDate', '>=', $since));
-            });
+            }));
     }
 
-    /** Whether propagents has the agent_slug column (the SQL in the command's help adds it). */
+    /** Whether propagents has the slug column (agent_slug - the SQL in the backfill command's help renames the old agtURL to it). */
     public static function columnExists(): bool
     {
         static $exists = null;
 
         if ($exists === null) {
             $model  = new Propagent();
-            $exists = Schema::connection($model->getConnectionName())->hasColumn($model->getTable(), 'agent_slug');
+            $exists = Schema::connection($model->getConnectionName())->hasColumn($model->getTable(), self::COLUMN);
         }
 
         return $exists;

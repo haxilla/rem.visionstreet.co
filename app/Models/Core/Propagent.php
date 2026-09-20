@@ -21,15 +21,17 @@ class Propagent extends Authenticatable
         static::saved(function (Propagent $agent) {
             $attributes = $agent->getAttributes();
 
-            if (array_key_exists('agent_slug', $attributes) && filled($attributes['agent_slug'])) {
+            $column = \App\Support\AgentSlug::COLUMN;
+
+            if (array_key_exists($column, $attributes) && filled($attributes[$column])) {
                 return;
             }
 
             $slug = \App\Support\AgentSlug::ensure($agent->getKey());
 
             if ($slug) {
-                $agent->setAttribute('agent_slug', $slug);
-                $agent->syncOriginalAttribute('agent_slug');
+                $agent->setAttribute($column, $slug);
+                $agent->syncOriginalAttribute($column);
             }
         });
     }
