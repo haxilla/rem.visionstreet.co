@@ -158,8 +158,13 @@ Route::get('/admin/flyerCamps/{flyerId}', [adminController::class, 'flyerCamps']
 //campaign approval (POST only - changes data, so it must carry a CSRF token)
 Route::post('/admin/campaignApprove/{flyerId}', [adminController::class, 'campaignApprove'])
     ->whereNumber('flyerId')->name('admin.campaignApprove');
+Route::post('/admin/campaignUnapprove/{flyerId}', [adminController::class, 'campaignUnapprove'])
+    ->whereNumber('flyerId')->name('admin.campaignUnapprove');
 Route::post('/admin/campaignAddArea/{flyerId}', [adminController::class, 'campaignAddArea'])
     ->whereNumber('flyerId')->name('admin.campaignAddArea');
+//edit a campaign's requested / started / completed dates (POST only)
+Route::post('/admin/campaignDates/{cid}', [adminController::class, 'campaignDates'])
+    ->whereNumber('cid')->name('admin.campaignDates');
 
 //trial mode on/off from the impersonation banner (POST only; changes a system-wide setting)
 Route::post('/admin/trialToggle', [adminController::class, 'trialToggle'])->name('admin.trialToggle');

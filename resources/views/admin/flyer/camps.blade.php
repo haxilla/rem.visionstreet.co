@@ -27,6 +27,7 @@ $subject = $campaigns->first()['emSubject'] ?? '';
 // ---- approval screen ----
 $pendingRequests = $data['pendingRequests'] ?? collect();
 $awaitingApproval = $pendingRequests->filter(fn ($c) => (int) $c->authorized !== 1);
+$approvedWaiting  = $pendingRequests->filter(fn ($c) => (int) $c->authorized === 1);
 $agent       = $data['agent'] ?? null;
 $sendDetails = $data['sendDetails'] ?? null;
 
@@ -239,6 +240,7 @@ if ($propInfo->created_at) {
                                     @include('admin.flyer.campSource', ['adminAdded' => $req->isAdminAdded()])
                                 </div>
                                 <div class="text-sm text-slate-500">{{ number_format($req->totalEmails ?? ($data['emailCounts'][$req->emArea] ?? 0)) }} contacts</div>
+                                @include('admin.flyer.campDates', ['cid' => $req->cid, 'requested' => $req->emRequest, 'started' => $req->emStart, 'completed' => $req->emComplete])
                             </div>
 
                             @if((int) $req->authorized === 1)
@@ -311,6 +313,26 @@ if ($propInfo->created_at) {
                     <button type="submit"
                             class="bg-emerald-600 text-white px-5 py-3 rounded-xl font-semibold hover:bg-emerald-700">
                         Approve {{ $awaitingApproval->count() }} {{ $awaitingApproval->count() === 1 ? 'Area' : 'Areas' }}
+                    </button>
+                </form>
+            @endif
+
+            {{-- UNAPPROVE: takes approved areas that haven't started back to awaiting approval --}}
+            @if($approvedWaiting->isNotEmpty())
+                <form method="POST"
+                      action="{{ route('admin.campaignUnapprove', $propInfo->id) }}"
+                      onsubmit="return confirm('Unapprove {{ $approvedWaiting->count() }} area(s) for {{ addslashes($propInfo->xFullStreet ?? 'this flyer') }}? They will not be sent until approved again.');"
+                      class="border-t border-slate-200 px-5 py-4 flex flex-wrap items-center justify-between gap-3">
+                    @csrf
+
+                    <p class="text-sm text-slate-600">
+                        Unapproving stops the mail system from picking up the approved areas that
+                        have not started yet. Areas already in progress are not affected.
+                    </p>
+
+                    <button type="submit"
+                            class="bg-white text-red-600 border border-red-300 px-5 py-3 rounded-xl font-semibold hover:bg-red-50">
+                        Unapprove {{ $approvedWaiting->count() }} {{ $approvedWaiting->count() === 1 ? 'Area' : 'Areas' }}
                     </button>
                 </form>
             @endif
@@ -405,6 +427,8 @@ if ($propInfo->created_at) {
                             <div class="text-sm text-slate-500">
                                 Started {{ $camp['emStart'] }}
                             </div>
+
+                            @include('admin.flyer.campDates', ['cid' => $camp['cid'], 'requested' => $camp['emRequest'], 'started' => $camp['emStart'], 'completed' => null])
                         </div>
 
                         <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-semibold">
@@ -457,6 +481,8 @@ if ($propInfo->created_at) {
                                     Subject: {{ $camp['emSubject'] }}
                                 </div>
                             @endif
+
+                            @include('admin.flyer.campDates', ['cid' => $camp['cid'], 'requested' => $camp['emRequest'], 'started' => $camp['emStart'], 'completed' => $camp['emComplete']])
                         </div>
 
                         <span class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-xs font-semibold">
@@ -532,6 +558,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     scaleFlyer();
     window.addEventListener('resize', scaleFlyer);
+
+    // The flyer's height changes after this first pass as its photos and logos
+    // load (a longer flyer was clipped until a reload, when they were cached),
+    // so measure again whenever the flyer or its column changes size.
+    window.addEventListener('load', scaleFlyer);
+
+    if ('ResizeObserver' in window) {
+        const observer = new ResizeObserver(scaleFlyer);
+        const flyerPanel = document.querySelector('#flyer-scale-wrapper .flyer-panel.active');
+        const stage = document.querySelector('.flyer-stage');
+
+        if (flyerPanel) observer.observe(flyerPanel);
+        if (stage) observer.observe(stage);
+    }
 
 });
 </script>

@@ -16,6 +16,7 @@ use App\Support\AgentTime;
 use App\Support\DuplicateAccounts;
 use App\Support\ImageOptimizer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -1250,6 +1251,29 @@ class adminController extends Controller
     }
 
     /**
+     * Undo campaignApprove(): put every approved-but-not-started request on
+     * this flyer back to awaiting approval (authorized = 0). Anything the
+     * mail system has already started or finished is left alone.
+     */
+    public function campaignUnapprove($flyerId)
+    {
+        // The update stamps updated_at - in the flyer's agent's timezone.
+        AgentTime::apply(Propagent::find(Propflyer::whereKey($flyerId)->value('propagent_id')));
+
+        $unapproved = Propdelivnow::where('propflyer_id', $flyerId)
+            ->whereNull('emStart')
+            ->whereNull('emComplete')
+            ->where('authorized', 1)
+            ->update(['authorized' => 0]);
+
+        $message = $unapproved
+            ? "Unapproved {$unapproved} " . ($unapproved === 1 ? 'area' : 'areas') . '. ' . ($unapproved === 1 ? 'It is' : 'They are') . ' waiting for approval again.'
+            : 'Nothing approved and waiting to send on this flyer.';
+
+        return redirect()->route('admin.flyerCamps', $flyerId)->with('status', $message);
+    }
+
+    /**
      * Admin-only: add an extra area to a flyer at no cost to the agent.
      * Deliberately does NOT touch the agent's credits (unlike the
      * member send-setup flow). Like every other request the row starts
@@ -1310,6 +1334,60 @@ class adminController extends Controller
             'status',
             "Added {$area['label']} (" . number_format($totalEmails) . ' contacts) at no charge. It is waiting for approval with this flyer\'s other areas.'
         );
+    }
+
+    /**
+     * Admin-only: correct a campaign's requested / started / completed dates
+     * (for campaigns entered by hand from the old server). The dates ARE the
+     * campaign's status - no start = waiting, a start = in progress, a
+     * completion = completed - so editing them moves it between the lists on
+     * the flyer page. Values are plain wall-clock times, like the legacy data.
+     */
+    public function campaignDates(Request $request, $cid)
+    {
+        $campaign = Propdelivnow::findOrFail($cid);
+
+        $format = 'date_format:Y-m-d\TH:i:s,Y-m-d\TH:i';
+
+        $validated = $request->validate([
+            'emRequest'  => ['required', $format],
+            'emStart'    => ['nullable', $format],
+            'emComplete' => ['nullable', $format],
+        ], [
+            'emRequest.required' => 'A requested date is required.',
+            '*.date_format'      => 'That date was not understood.',
+        ]);
+
+        $requested = Carbon::parse($validated['emRequest']);
+        $started   = filled($validated['emStart'] ?? null) ? Carbon::parse($validated['emStart']) : null;
+        $completed = filled($validated['emComplete'] ?? null) ? Carbon::parse($validated['emComplete']) : null;
+
+        $problem = null;
+
+        if ($completed && !$started) {
+            $problem = 'A completed campaign needs a started date too.';
+        } elseif ($started && $started->lt($requested)) {
+            $problem = 'The started date cannot be before the requested date.';
+        } elseif ($completed && $completed->lt($started)) {
+            $problem = 'The completed date cannot be before the started date.';
+        }
+
+        if ($problem) {
+            return redirect()->route('admin.flyerCamps', $campaign->propflyer_id)
+                ->withErrors([$problem])
+                ->withInput();
+        }
+
+        // The save stamps updated_at - in the flyer's agent's timezone.
+        AgentTime::apply(Propagent::find($campaign->propagent_id));
+
+        $campaign->emRequest  = $requested->format('Y-m-d H:i:s');
+        $campaign->emStart    = $started?->format('Y-m-d H:i:s');
+        $campaign->emComplete = $completed?->format('Y-m-d H:i:s');
+        $campaign->save();
+
+        return redirect()->route('admin.flyerCamps', $campaign->propflyer_id)
+            ->with('status', 'Dates updated.');
     }
 
     /**
