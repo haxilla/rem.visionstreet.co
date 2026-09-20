@@ -185,12 +185,31 @@ if ($propInfo->created_at) {
             <div class="{{ $cardHead }}">
                 <h2 class="text-base font-bold text-white">Send Request</h2>
 
-                @if($awaitingApproval->isNotEmpty())
-                    <span class="rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-800">Not authorized</span>
-                @elseif($pendingRequests->isNotEmpty())
-                    <span class="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">Authorized</span>
-                @else
+                {{-- AUTHORIZE ALL / UNAUTHORIZE ALL: one toggle for the whole request. Off (some or all
+                     areas not authorized) authorizes every waiting area; on (all authorized) unauthorizes
+                     them. Areas already in progress are never touched. Each area also has its own toggle. --}}
+                @if($pendingRequests->isEmpty())
                     <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">No pending request</span>
+                @else
+                    @php
+                        $allOn = $awaitingApproval->isEmpty();
+                        $headLabel = $allOn ? 'Authorized' : ($approvedWaiting->isEmpty() ? 'Not authorized' : 'Partly authorized');
+                    @endphp
+
+                    <form method="POST"
+                          action="{{ $allOn ? route('admin.campaignUnapprove', $propInfo->id) : route('admin.campaignApprove', $propInfo->id) }}"
+                          onsubmit="return confirm('{{ $allOn ? 'Unauthorize all '.$approvedWaiting->count().' area(s) for '.addslashes($propInfo->xFullStreet ?? 'this flyer').'? They will not be sent until authorized again.' : 'Authorize '.$awaitingApproval->count().' area(s) for '.addslashes($propInfo->xFullStreet ?? 'this flyer').'?' }}');">
+                        @csrf
+
+                        <button type="submit"
+                                title="{{ $allOn ? 'Click to unauthorize all areas' : 'Click to authorize all areas' }}"
+                                class="inline-flex items-center gap-2 rounded-full py-1 pl-3 pr-1.5 text-xs font-bold ring-1 ring-black/5 {{ $allOn ? 'bg-indigo-100 text-indigo-700' : 'bg-amber-100 text-amber-800' }}">
+                            {{ $headLabel }}
+                            <span class="relative inline-block h-5 w-9 rounded-full transition-colors {{ $allOn ? 'bg-indigo-600' : 'bg-slate-400' }}">
+                                <span class="absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-all {{ $allOn ? 'left-[18px]' : 'left-0.5' }}"></span>
+                            </span>
+                        </button>
+                    </form>
                 @endif
             </div>
 
@@ -214,9 +233,6 @@ if ($propInfo->created_at) {
                     <div class="text-slate-900">
                         {{ $pendingRequests->isNotEmpty() ? \Carbon\Carbon::parse($pendingRequests->first()->emRequest)->format('M j, Y g:i A') : '-' }}
                     </div>
-
-                    <div class="{{ $eyebrow }} mt-3 mb-1">Email Subject</div>
-                    <div class="text-slate-900">{{ $pendingRequests->first()->emSubject ?? $subject ?: 'No subject' }}</div>
                 </div>
 
                 <div class="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
@@ -254,6 +270,36 @@ if ($propInfo->created_at) {
                     @endif
                 </div>
 
+                {{-- EMAIL SUBJECT for every campaign that is waiting or in progress
+                     (completed ones keep what they were sent with) --}}
+                <div class="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200 md:col-span-2">
+                    <form method="POST" action="{{ route('admin.flyerSubject', $propInfo->id) }}">
+                        @csrf
+
+                        <label for="flyer-subject" class="{{ $eyebrow }} mb-2 block">
+                            Email Subject
+                            <span class="font-medium normal-case tracking-normal text-slate-500">&middot; all waiting and in-progress campaigns</span>
+                        </label>
+
+                        <div class="flex flex-col gap-3 md:flex-row">
+                            <input
+                                id="flyer-subject"
+                                type="text"
+                                name="subject"
+                                maxlength="255"
+                                required
+                                value="{{ old('subject', $subject) }}"
+                                class="flex-1 rounded-xl border border-slate-300 bg-white px-4 py-3"
+                            >
+
+                            <button type="submit"
+                                    class="rounded-xl bg-[#214e9b] px-5 py-3 font-semibold text-white hover:bg-[#1b3f80]">
+                                Save Subject
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
             </div>
 
             {{-- REQUESTED AREAS: waiting to be authorized, or authorized and waiting to send --}}
@@ -287,7 +333,7 @@ if ($propInfo->created_at) {
                     <div class="{{ $eyebrow }}">Add a Free Area</div>
 
                     <p class="mb-3 mt-1 text-sm text-slate-500">
-                        No credit is charged to the agent. The area is added as not authorized; authorize it below, alone or with this flyer's other waiting areas.
+                        No credit is charged to the agent. The area is added as not authorized.
                     </p>
 
                     <form method="POST"
@@ -316,81 +362,7 @@ if ($propInfo->created_at) {
                         </p>
                     @endif
                 </div>
-
-                {{-- AUTHORIZE ALL / UNAUTHORIZE ALL --}}
-                @if($pendingRequests->isNotEmpty())
-                    <div class="border-t border-slate-200 pt-5">
-                        <div class="{{ $eyebrow }}">Authorization</div>
-
-                        <p class="mb-3 mt-1 text-sm text-slate-500">
-                            Authorizing makes an area ready for the mail system to send (add any free areas first).
-                            Use these to change every waiting area at once, or the toggle on an area's badge to change just that one.
-                            Areas already in progress are not affected.
-                        </p>
-
-                        <div class="flex flex-wrap gap-3">
-
-                            <form method="POST"
-                                  action="{{ route('admin.campaignApprove', $propInfo->id) }}"
-                                  onsubmit="return confirm('Authorize {{ $awaitingApproval->count() }} area(s) for {{ addslashes($propInfo->xFullStreet ?? 'this flyer') }}?');">
-                                @csrf
-                                <button type="submit" @disabled($awaitingApproval->isEmpty())
-                                        class="rounded-xl bg-emerald-600 px-5 py-3 font-semibold text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-emerald-600">
-                                    Authorize All
-                                </button>
-                            </form>
-
-                            <form method="POST"
-                                  action="{{ route('admin.campaignUnapprove', $propInfo->id) }}"
-                                  onsubmit="return confirm('Unauthorize {{ $approvedWaiting->count() }} area(s) for {{ addslashes($propInfo->xFullStreet ?? 'this flyer') }}? They will not be sent until authorized again.');">
-                                @csrf
-                                <button type="submit" @disabled($approvedWaiting->isEmpty())
-                                        class="rounded-xl border border-red-300 bg-white px-5 py-3 font-semibold text-red-600 hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-white">
-                                    Unauthorize All
-                                </button>
-                            </form>
-
-                        </div>
-                    </div>
-                @endif
-
             </div>
-
-        </div>
-
-        {{-- SUBJECT --}}
-        <div class="{{ $card }} p-5 mb-6 lg:col-start-1">
-
-            <form method="POST" action="{{ route('admin.flyerSubject', $propInfo->id) }}">
-                @csrf
-
-                <label for="flyer-subject" class="{{ $eyebrow }} mb-1 block">Email Subject</label>
-
-                <p class="mb-3 text-sm text-slate-500">
-                    Applies to every campaign on this flyer that is waiting or in progress. Completed campaigns
-                    keep the subject they were sent with; change a single campaign with Edit on its card.
-                </p>
-
-                <div class="flex flex-col gap-3 md:flex-row">
-
-                    <input
-                        id="flyer-subject"
-                        type="text"
-                        name="subject"
-                        maxlength="255"
-                        required
-                        value="{{ old('subject', $subject) }}"
-                        class="flex-1 rounded-xl border border-slate-300 px-4 py-3"
-                    >
-
-                    <button type="submit"
-                        class="rounded-xl bg-[#214e9b] px-5 py-3 font-semibold text-white hover:bg-[#1b3f80]">
-                        Save Subject
-                    </button>
-
-                </div>
-
-            </form>
 
         </div>
 
@@ -398,7 +370,7 @@ if ($propInfo->created_at) {
              (sticky, and scrollable within itself if it's taller than the window); a
              normal full-width card in the stack on small screens. The flyer scales
              itself to whatever width it's given (see scaleFlyer). --}}
-        <div class="mb-6 lg:col-start-2 lg:row-start-1 lg:row-span-4 lg:sticky lg:top-[88px] lg:self-start lg:max-h-[calc(100vh-104px)] lg:overflow-y-auto">
+        <div class="mb-6 lg:col-start-2 lg:row-start-1 lg:row-span-3 lg:sticky lg:top-[88px] lg:self-start lg:max-h-[calc(100vh-104px)] lg:overflow-y-auto">
 
             <div class="{{ $card }} p-4">
 
