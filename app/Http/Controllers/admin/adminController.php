@@ -11,6 +11,7 @@ use App\Support\AgentCampaigns;
 use App\Support\AgentImages;
 use App\Support\AgentPasswords;
 use App\Support\AgentTime;
+use App\Support\DuplicateAccounts;
 use App\Support\ImageOptimizer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -541,10 +542,12 @@ class adminController extends Controller
             ->orderByDesc('id')
             ->get(['id', 'propagent_id', 'xFullStreet', 'xCity', 'state', 'xZip', 'creationDate', 'created_at', 'deleted_at']);
 
-        $busy = $this->flyersBeingDelivered($flyers->pluck('id')->all());
+        $busy     = $this->flyersBeingDelivered($flyers->pluck('id')->all());
+        $blockers = DuplicateAccounts::blockersFor($accounts);
 
-        $rows = $accounts->map(function ($account) use ($flyers, $busy) {
+        $rows = $accounts->map(function ($account) use ($flyers, $busy, $blockers) {
             $mine = $flyers->where('propagent_id', $account->id)->values();
+            $b    = $blockers[(int) $account->id] ?? ['flyers' => 0, 'reasons' => []];
 
             return [
                 'id'      => $account->id,
@@ -552,6 +555,9 @@ class adminController extends Controller
                 'office'  => optional($account->theAgtOffice)->officeName,
                 'start'   => $account->startDate,
                 'credits' => (int) ($account->remCreds ?? 0),
+                // the Delete button shows only for an account with no flyers (and nothing else to lose)
+                'can_delete' => DuplicateAccounts::canDelete($b),
+                'reasons'    => $b['reasons'],
                 'flyers'  => $mine->map(function ($flyer) use ($busy) {
                     $photo = $flyer->thePhotos->firstWhere('resized', 500) ?? $flyer->thePhotos->first();
                     $meta  = $flyer->theMeta;
@@ -573,7 +579,11 @@ class adminController extends Controller
             ];
         });
 
-        return view('admin.agents.merge', ['agent' => $agent, 'accounts' => $rows]);
+        return view('admin.agents.merge', [
+            'agent'         => $agent,
+            'accounts'      => $rows,
+            'confirmDelete' => AdminSetting::confirmAgentDeletion(),
+        ]);
     }
 
     /**
@@ -709,6 +719,71 @@ class adminController extends Controller
         }
 
         return $back()->with('status', $message);
+    }
+
+    /**
+     * Delete a leftover duplicate account (POST only).
+     *
+     * Only for an account that shares its login email with another account (never the
+     * last one on an email), and only once it has NO flyers - deleted flyers count, they
+     * still hold campaign history (move them first with the merge page). It also refuses
+     * an account with credits, order history or campaign history, since deleting those
+     * would destroy real records. All of it is re-checked here, not just on the page.
+     *
+     * Like the existing agent delete, this removes the agent's row (Propagent isn't
+     * soft-deleting); its unused password links go with it. Uploaded photo / logo files
+     * are left on disk.
+     */
+    public function agentDeleteDuplicate(Request $request, $id)
+    {
+        $agent  = Propagent::findOrFail($id);
+        $others = AgentPasswords::accountsForEmail($agent->xxAgtUname)
+            ->reject(fn ($account) => (int) $account->id === (int) $agent->id)
+            ->values();
+
+        $fail = fn (string $message) => redirect()->back()->withErrors(['deleteAccount' => $message]);
+
+        if ($others->isEmpty()) {
+            return $fail('Not deleted: no other account uses this login email, so this is the agent\'s only account.');
+        }
+
+        $blockers = DuplicateAccounts::blockersFor(collect([$agent]))[(int) $agent->id];
+
+        if ($blockers['flyers'] > 0) {
+            return $fail('Not deleted: this account still has ' . $blockers['flyers'] . ' ' . ($blockers['flyers'] === 1 ? 'flyer' : 'flyers') . ' (deleted ones count). Move them first.');
+        }
+
+        if ($blockers['reasons'] !== []) {
+            return $fail('Not deleted: this account has ' . implode(', ', $blockers['reasons']) . '.');
+        }
+
+        $name = $agent->agtFullName ?: trim(($agent->agtFirst ?? '') . ' ' . ($agent->agtLast ?? '')) ?: 'No name';
+
+        DB::transaction(function () use ($agent) {
+            \App\Models\Core\AgentPasswordReset::where('propagent_id', $agent->id)->delete();
+            $agent->delete();
+        });
+
+        Log::info('Admin deleted a duplicate agent account', [
+            'admin_id' => Auth::guard('admin')->id(),
+            'agent_id' => $agent->id,
+            'name'     => $name,
+            'email'    => $agent->xxAgtUname,
+            'ip'       => $request->ip(),
+        ]);
+
+        $message = "Deleted account #{$agent->id} {$name}.";
+
+        // Where next: still duplicates left on this email -> stay in the tool; otherwise the list.
+        if ($others->count() >= 2) {
+            $to = $request->input('from') === 'merge'
+                ? route('admin.agentMerge', $others->first()->id)
+                : url('/admin/agents?duplicates=1');
+        } else {
+            $to = url('/admin/agents?duplicates=1');
+        }
+
+        return redirect($to)->with('status', $message);
     }
 
     /** [flyerId => true] for flyers with a campaign that has started delivering but not finished. */

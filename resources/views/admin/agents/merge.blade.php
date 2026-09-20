@@ -110,6 +110,22 @@
                         </p>
                     </div>
 
+                    {{-- Delete only shows once the account has no flyers left (deleted ones count) --}}
+                    @if(count($acct['flyers']) === 0)
+                        @if($acct['can_delete'])
+                            <button type="submit"
+                                    formaction="{{ route('admin.agentDeleteDuplicate', $acct['id']) }}"
+                                    formnovalidate
+                                    name="from" value="merge"
+                                    @if($confirmDelete ?? true) onclick="return confirm('Delete account #{{ $acct['id'] }} {{ e($acct['name']) }}? This cannot be undone.')" @endif
+                                    class="rounded-lg border border-red-200 px-3 py-1.5 text-xs font-semibold text-red-600 hover:bg-red-50">
+                                Delete account
+                            </button>
+                        @else
+                            <span class="text-xs text-slate-500">Can't delete: it has {{ implode(', ', $acct['reasons']) }}.</span>
+                        @endif
+                    @endif
+
                     @if(count($acct['flyers']) > 0)
                         <div class="flex gap-2">
                             <button type="button" data-select-all="{{ $acct['id'] }}"
@@ -235,6 +251,9 @@
     });
 
     form.addEventListener('submit', function (e) {
+        // a "Delete account" button submits this same form to its own address - not a move
+        if (e.submitter && e.submitter.hasAttribute('formaction')) { return; }
+
         var n    = ticked().length;
         var name = dest.options[dest.selectedIndex].getAttribute('data-name');
 

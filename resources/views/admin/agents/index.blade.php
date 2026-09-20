@@ -391,6 +391,7 @@
                     @include('admin.agents.duplicateLogins', [
                         'groups' => $data['dupGroups'] ?? collect(),
                         'total'  => $data['dupCount'] ?? 0,
+                        'confirmDelete' => $confirmDelete,
                     ])
 
                 @else

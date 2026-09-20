@@ -100,6 +100,26 @@
                                 @if($row['blocked'])
                                     <span class="ml-1 rounded-full bg-red-600 px-2.5 py-0.5 text-white">Blocked</span>
                                 @endif
+
+                                {{-- Delete only shows for an account with NO flyers (deleted ones count).
+                                     If something else would be lost too, say so instead of a button. --}}
+                                @if($row['flyers_all'] === 0)
+                                    @if($row['can_delete'])
+                                        <form method="POST" action="{{ route('admin.agentDeleteDuplicate', $row['id']) }}"
+                                              class="mt-1.5"
+                                              @if($confirmDelete ?? true) onsubmit="return confirm('Delete account #{{ $row['id'] }} {{ e($row['name']) }}? This cannot be undone.')" @endif>
+                                            @csrf
+                                            <input type="hidden" name="from" value="tab">
+                                            <button type="submit" class="rounded-lg border border-red-200 px-2.5 py-1 text-xs font-semibold text-red-600 hover:bg-red-50">
+                                                Delete account
+                                            </button>
+                                        </form>
+                                    @else
+                                        <div class="mt-1.5 max-w-[14rem] text-xs font-normal text-slate-500">
+                                            Can't delete: it has {{ implode(', ', $row['reasons']) }}.
+                                        </div>
+                                    @endif
+                                @endif
                             </td>
                         </tr>
                     @endforeach

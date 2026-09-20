@@ -113,21 +113,26 @@ if (request()->has('duplicates') && $dupCount > 0) {
         ->orderBy('id')
         ->get();
 
-    // flyers each account holds (deleted ones don't count) and when it last sent one
-    $dupStats = \App\Models\Core\Propflyer::query()
+    // flyers each account holds (live ones, and all of them counting deleted ones - those
+    // still hold campaign history) and when it last sent one
+    $dupStats = \App\Models\Core\Propflyer::withTrashed()
         ->leftJoin('propflyerstats', 'propflyers.id', '=', 'propflyerstats.propflyer_id')
         ->whereIn('propflyers.propagent_id', $dupAccounts->pluck('id')->all())
         ->groupBy('propflyers.propagent_id')
-        ->selectRaw('propflyers.propagent_id as agent_id, COUNT(*) as flyers, MAX(propflyerstats.xLastDeliveryDate) as last_sent')
+        ->selectRaw('propflyers.propagent_id as agent_id, COUNT(*) as flyers_all, SUM(propflyers.deleted_at IS NULL) as flyers, MAX(propflyerstats.xLastDeliveryDate) as last_sent')
         ->get()
         ->keyBy('agent_id');
 
+    // what stops an account being deleted (see DuplicateAccounts): flyers, credits, orders, campaigns
+    $dupBlockers = \App\Support\DuplicateAccounts::blockersFor($dupAccounts);
+
     $dupGroups = $dupAccounts
         ->groupBy(fn ($a) => mb_strtolower(trim((string) $a->xxAgtUname)))
-        ->map(function ($accounts) use ($dupStats) {
+        ->map(function ($accounts) use ($dupStats, $dupBlockers) {
 
-            $rows = $accounts->map(function ($a) use ($dupStats) {
+            $rows = $accounts->map(function ($a) use ($dupStats, $dupBlockers) {
                 $s = $dupStats->get($a->id);
+                $b = $dupBlockers[(int) $a->id] ?? ['flyers' => 0, 'reasons' => []];
 
                 $name = trim(($a->agtFirst ?? '') . ' ' . ($a->agtLast ?? ''))
                     ?: ($a->agtFullName ?: 'No name');
@@ -137,7 +142,11 @@ if (request()->has('duplicates') && $dupCount > 0) {
                     'name'      => $name,
                     'office'    => optional($a->theAgtOffice)->officeName,
                     'flyers'    => (int) ($s->flyers ?? 0),
+                    'flyers_all' => (int) ($s->flyers_all ?? 0),
                     'last_sent' => $s->last_sent ?? null,
+                    // the Delete button shows only when there are no flyers at all (and nothing else to lose)
+                    'can_delete' => \App\Support\DuplicateAccounts::canDelete($b),
+                    'reasons'   => $b['reasons'],
                     'credits'   => (int) ($a->remCreds ?? 0),
                     'start'     => $a->startDate,
                     'blocked'   => (int) ($a->loginBlocked ?? 0) === 1,
@@ -152,7 +161,7 @@ if (request()->has('duplicates') && $dupCount > 0) {
             $rows = $rows->map(function ($r) use ($keep) {
                 $r['keep']  = $r['id'] === $keep;
                 // nothing in it to lose: no flyers, no start date, no credits
-                $r['empty'] = $r['flyers'] === 0 && !$r['start'] && $r['credits'] <= 0;
+                $r['empty'] = $r['flyers_all'] === 0 && !$r['start'] && $r['credits'] <= 0;
                 return $r;
             });
 
@@ -160,7 +169,7 @@ if (request()->has('duplicates') && $dupCount > 0) {
                 'email'    => $accounts->first()->xxAgtUname,
                 'accounts' => $rows,
                 // flyers still sitting in the accounts that are NOT the one to keep
-                'toMove'   => $rows->where('keep', false)->sum('flyers'),
+                'toMove'   => $rows->where('keep', false)->sum('flyers_all'),
             ];
         })
         // groups with flyers to move first, then the rest by email
