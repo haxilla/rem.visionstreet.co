@@ -153,7 +153,7 @@
             </div>
 
             <div class="flex flex-wrap gap-2">
-                <a href="/admin/agents" class="rounded-lg border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-100">
+                <a href="{{ session('admin_agents_list_url', '/admin/agents') }}" class="rounded-lg border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-100">
                     Back to Agents
                 </a>
                 <a href="/admin/agentFlyerCreate/{{ $agent->id }}" class="rounded-lg border border-[#214e9b] px-4 py-2.5 text-sm font-semibold text-[#214e9b] hover:bg-[#214e9b]/5">

@@ -14,6 +14,9 @@ $activeAgents = Propagent::select([
 ])
 ->whereNotNull('startDate')
 ->orderBy('startDate', 'desc')
+// start dates are plain dates, so many agents share one: without a tiebreaker MySQL is free to
+// list those in any order (and to change it after an edit, and to repeat / skip rows between pages)
+->orderBy('id', 'desc')
 ->paginate(25, ['*'], 'active_page');
 
 $noStartAgents = Propagent::select([
@@ -70,6 +73,9 @@ $noPhotoAgents = Propagent::select([
     $query->whereNull('agtPhoto')->orWhere('agtPhoto', '');
 })
 ->orderBy('startDate', 'desc')
+// start dates are plain dates, so many agents share one: without a tiebreaker MySQL is free to
+// list those in any order (and to change it after an edit, and to repeat / skip rows between pages)
+->orderBy('id', 'desc')
 ->paginate(25, ['*'], 'nophoto_page');
 
 $noLogoAgents = Propagent::select([
@@ -87,6 +93,9 @@ $noLogoAgents = Propagent::select([
     $query->whereNull('agtLogo')->orWhere('agtLogo', '');
 })
 ->orderBy('startDate', 'desc')
+// start dates are plain dates, so many agents share one: without a tiebreaker MySQL is free to
+// list those in any order (and to change it after an edit, and to repeat / skip rows between pages)
+->orderBy('id', 'desc')
 ->paginate(25, ['*'], 'nologo_page');
 
 // DUPLICATE LOGINS: the same login email (xxAgtUname) on more than one account. Such agents
@@ -176,6 +185,9 @@ if (request()->has('duplicates') && $dupCount > 0) {
         ->sortBy(fn ($g) => [-$g['toMove'], mb_strtolower($g['email'])])
         ->values();
 }
+
+// 'Back to Agents' on an agent's page returns to THIS list (same tab, same page)
+session(['admin_agents_list_url' => request()->fullUrl()]);
 
 $data = [
     'dupCount' => $dupCount,
