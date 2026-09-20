@@ -176,13 +176,16 @@ if (request()->has('duplicates') && $dupCount > 0) {
 
             return [
                 'email'    => $accounts->first()->xxAgtUname,
+                'anchor'   => \App\Support\AgentPasswords::groupAnchor($accounts->first()->xxAgtUname),
                 'accounts' => $rows,
                 // flyers still sitting in the accounts that are NOT the one to keep
                 'toMove'   => $rows->where('keep', false)->sum('flyers_all'),
             ];
         })
-        // groups with flyers to move first, then the rest by email
-        ->sortBy(fn ($g) => [-$g['toMove'], mb_strtolower($g['email'])])
+        // ALWAYS alphabetical by email. (It used to list groups with flyers to move first, so a
+        // group jumped somewhere else in the list the moment you moved its flyers or deleted an
+        // account. A fixed order means every group stays where you found it.)
+        ->sortBy(fn ($g) => mb_strtolower($g['email']))
         ->values();
 }
 

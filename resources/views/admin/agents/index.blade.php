@@ -70,6 +70,7 @@
     .ag-tab.is-warn.is-on .ag-count { background: #d97706; color: #fff; }
 
     .ag-body    { padding: 14px 16px 16px; }
+    .ag-group   { scroll-margin-top: 96px; }   /* a group scrolled to by its #anchor clears the fixed navbar */
 
     /* status / error messages: slim */
     .ag-alert   { margin-bottom: 12px; padding: 10px 14px; border-radius: 12px; font-size: 13px; font-weight: 600; border: 1px solid; }

@@ -77,6 +77,15 @@ class AgentPasswords
             ->first();
     }
 
+    /**
+     * A short, stable id for one login email's group on the Duplicate Logins tab, used as the
+     * page anchor so the page can scroll back to that group after an action.
+     */
+    public static function groupAnchor(?string $email): string
+    {
+        return 'dup-' . substr(md5(mb_strtolower(trim((string) $email))), 0, 12);
+    }
+
     /** Is this account blocked from signing in? */
     public static function isBlocked($agent): bool
     {

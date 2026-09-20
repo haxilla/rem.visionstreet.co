@@ -31,7 +31,7 @@
 
 @forelse($groups as $group)
 
-    <div class="mb-4 overflow-hidden rounded-2xl border border-slate-200">
+    <div id="{{ $group['anchor'] }}" class="ag-group mb-4 overflow-hidden rounded-2xl border border-slate-200">
 
         <div class="flex flex-wrap items-center justify-between gap-2 bg-slate-50 px-4 py-3">
             <div class="min-w-0 break-all text-sm font-semibold text-slate-900">

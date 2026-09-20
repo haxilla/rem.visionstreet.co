@@ -857,12 +857,11 @@ class adminController extends Controller
         $message = "Deleted account #{$agent->id} {$name}.";
 
         // Where next: still duplicates left on this email -> stay in the tool; otherwise the list.
-        if ($others->count() >= 2) {
-            $to = $request->input('from') === 'merge'
-                ? route('admin.agentMerge', $others->first()->id)
-                : url('/admin/agents?duplicates=1');
+        // The list link carries the group's anchor, so the page scrolls back to where you were.
+        if ($others->count() >= 2 && $request->input('from') === 'merge') {
+            $to = route('admin.agentMerge', $others->first()->id);
         } else {
-            $to = url('/admin/agents?duplicates=1');
+            $to = url('/admin/agents?duplicates=1') . '#' . AgentPasswords::groupAnchor($agent->xxAgtUname);
         }
 
         return redirect($to)->with('status', $message);
