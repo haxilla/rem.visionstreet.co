@@ -623,7 +623,10 @@
                                 use this same login email.
                             </p>
                             <p class="mt-0.5">
-                                They get one password together, and the agent picks which account to open at sign-in.
+                                They get one password together, and signing in opens the one with the most flyers.
+                                Merge them from the
+                                <a href="/admin/agents?duplicates=1" class="font-semibold text-blue-700 hover:underline">Duplicate Logins</a>
+                                tab.
                             </p>
                             <ul class="mt-1.5 space-y-0.5">
                                 @foreach($sameEmailAccounts as $other)

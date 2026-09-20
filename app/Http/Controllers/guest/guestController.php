@@ -4,7 +4,6 @@ namespace App\Http\Controllers\guest;
 use App\Http\Controllers\Controller;
 use App\Mail\AgentPasswordChangedMail;
 use App\Models\Core\Propagent;
-use App\Models\Core\Propflyer;
 use App\Support\AgentPasswords;
 use App\Support\AgentTime;
 use Illuminate\Http\Request;
@@ -116,85 +115,18 @@ class guestController extends Controller
             ])->onlyInput('xxAgtUname');
         }
 
-        if ($open->count() === 1) {
-            Auth::guard('member')->login($open->first());
+        if ($open->isNotEmpty()) {
+            // Normally exactly one. If the same email still has several accounts (admins
+            // merge them from the "Duplicate Logins" tab on the Agents page) the one with
+            // the most flyers is opened - see AgentPasswords::primaryAccount.
+            Auth::guard('member')->login(AgentPasswords::primaryAccount($open));
             $request->session()->regenerate();
             return redirect()->intended('/member/dashboard');
-        }
-
-        // The same email has more than one account: they've proved who they are, now
-        // they pick which account to open (member.login.account).
-        if ($open->count() > 1) {
-            $request->session()->put('login_pending', [
-                'ids'     => $open->pluck('id')->all(),
-                'expires' => now()->addMinutes(10)->timestamp,
-            ]);
-
-            return redirect()->route('member.login.account');
         }
 
         return back()->withErrors([
             'xxAgtUname' => 'That email and password did not match. If you haven\'t created a password on our new site yet, use "Create your password" below.',
         ])->onlyInput('xxAgtUname');
-    }
-
-    // ---- Choosing between several accounts that share one email ----
-
-    /** The accounts waiting for a choice (proved by password moments ago), or null. */
-    private function pendingAccounts(Request $request)
-    {
-        $pending = $request->session()->get('login_pending');
-
-        if (!is_array($pending) || ($pending['expires'] ?? 0) < now()->timestamp) {
-            $request->session()->forget('login_pending');
-            return null;
-        }
-
-        // Re-read them: one could have been blocked since.
-        $accounts = Propagent::whereIn('id', $pending['ids'])->orderBy('id')->get()
-            ->reject(fn ($a) => AgentPasswords::isBlocked($a))->values();
-
-        return $accounts->isEmpty() ? null : $accounts;
-    }
-
-    public function accountChooseForm(Request $request)
-    {
-        $accounts = $this->pendingAccounts($request);
-
-        if (!$accounts) {
-            return redirect()->route('member.login');
-        }
-
-        $rows = $accounts->map(fn ($a) => [
-            'id'      => $a->id,
-            'name'    => $a->agtFullName ?: trim(($a->agtFirst ?? '') . ' ' . ($a->agtLast ?? '')) ?: 'Account ' . $a->id,
-            'office'  => optional($a->theAgtOffice)->officeName,
-            'flyers'  => Propflyer::where('propagent_id', $a->id)->count(),
-            'started' => $a->startDate,
-        ]);
-
-        return view('member.password.choose', ['accounts' => $rows]);
-    }
-
-    public function accountChoose(Request $request)
-    {
-        $accounts = $this->pendingAccounts($request);
-
-        if (!$accounts) {
-            return redirect()->route('member.login');
-        }
-
-        $chosen = $accounts->firstWhere('id', (int) $request->input('agent'));
-
-        if (!$chosen) {
-            return back()->withErrors(['agent' => 'Please pick one of the accounts.']);
-        }
-
-        $request->session()->forget('login_pending');
-        Auth::guard('member')->login($chosen);
-        $request->session()->regenerate();
-
-        return redirect()->intended('/member/dashboard');
     }
 
     // ---- Forgot password / set a new password (emailed one-time link) ----

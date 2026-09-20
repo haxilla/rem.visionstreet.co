@@ -452,7 +452,7 @@ class adminController extends Controller
         $targets = $request->boolean('all_accounts') ? $group : collect([$agent]);
 
         // An email already used by some OTHER account would put these accounts in that
-        // person's picker (and give them the same password). Not without a human deciding.
+        // person's account (and give them the same password). Not without a human deciding.
         $clash = AgentPasswords::accountsForEmail($new)->reject(fn ($a) => $targets->contains('id', $a->id));
 
         if ($clash->isNotEmpty()) {

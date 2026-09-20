@@ -14,6 +14,7 @@
 
     // which list is showing (each has its own page parameter)
     $currentTab = match (true) {
+        request()->has('duplicates')           => 'duplicates',
         request()->has('nologo_page')          => 'nologo',
         request()->has('nophoto_page')         => 'nophoto',
         request()->has('nostartcredits_page')  => 'nostartcredits',
@@ -139,6 +140,17 @@
 
                         <span class="ml-2 rounded-full bg-white/20 px-2 py-0.5 text-xs">
                             {{ method_exists($noLogoAgents, 'total') ? $noLogoAgents->total() : 0 }}
+                        </span>
+                    </a>
+
+                    <a
+                        href="{{ request()->url() }}?duplicates=1"
+                        class="{{ $currentTab === 'duplicates' ? 'bg-[#214e9b] text-white shadow' : 'bg-slate-200 text-slate-700' }} rounded-t-xl px-4 py-3 text-sm font-semibold sm:px-5"
+                    >
+                        Duplicate Logins
+
+                        <span class="ml-2 rounded-full bg-white/20 px-2 py-0.5 text-xs">
+                            {{ $data['dupCount'] ?? 0 }}
                         </span>
                     </a>
 
@@ -367,6 +379,13 @@
                         'emptyText'     => 'Every agent with a start date has a logo.',
                         'showStartDate' => true,
                         'showCredits'   => true,
+                    ])
+
+                @elseif($currentTab === 'duplicates')
+
+                    @include('admin.agents.duplicateLogins', [
+                        'groups' => $data['dupGroups'] ?? collect(),
+                        'total'  => $data['dupCount'] ?? 0,
                     ])
 
                 @else

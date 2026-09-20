@@ -5,6 +5,7 @@ namespace App\Support;
 use App\Mail\AgentPasswordResetMail;
 use App\Models\Core\AgentPasswordReset;
 use App\Models\Core\Propagent;
+use App\Models\Core\Propflyer;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
@@ -44,7 +45,8 @@ class AgentPasswords
      * Every account that uses this login email. Some agents have several (the same
      * email was registered more than once over the years). The email - i.e. the
      * mailbox - is what proves who they are, so one password is set for all of an
-     * email's accounts together, and at sign-in they pick which account to open.
+     * email's accounts together. (Admins are meant to merge such accounts into one -
+     * the "Duplicate Logins" tab on the Agents page lists them.)
      * (MySQL compares the email case-insensitively, so "Bob@x.com" = "bob@x.com".)
      */
     public static function accountsForEmail(?string $email): Collection
@@ -52,6 +54,27 @@ class AgentPasswords
         $email = trim((string) $email);
 
         return $email === '' ? collect() : Propagent::where('xxAgtUname', $email)->orderBy('id')->get();
+    }
+
+    /**
+     * Which account a sign-in opens when the SAME email has several (until an admin has
+     * merged them - see the "Duplicate Logins" tab on the Agents page): the one with the
+     * most flyers, i.e. the one the agent actually uses, and the oldest account on a tie.
+     */
+    public static function primaryAccount(Collection $accounts)
+    {
+        if ($accounts->count() <= 1) {
+            return $accounts->first();
+        }
+
+        $flyers = Propflyer::whereIn('propagent_id', $accounts->pluck('id')->all())
+            ->selectRaw('propagent_id, COUNT(*) as total')
+            ->groupBy('propagent_id')
+            ->pluck('total', 'propagent_id');
+
+        return $accounts
+            ->sortBy(fn ($a) => [-1 * (int) ($flyers[$a->id] ?? 0), (int) $a->id])
+            ->first();
     }
 
     /** Is this account blocked from signing in? */

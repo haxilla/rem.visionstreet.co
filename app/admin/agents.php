@@ -89,7 +89,88 @@ $noLogoAgents = Propagent::select([
 ->orderBy('startDate', 'desc')
 ->paginate(25, ['*'], 'nologo_page');
 
+// DUPLICATE LOGINS: the same login email (xxAgtUname) on more than one account. Such agents
+// have to be merged by hand - move the flyers into the account they really use, then delete
+// the old one(s) - so this tab lists them with what each account holds. (MySQL compares the
+// email case-insensitively, so "Bob@x.com" and "bob@x.com" are one group.)
+$dupEmails = Propagent::select('xxAgtUname')
+    ->whereNotNull('xxAgtUname')
+    ->where('xxAgtUname', '<>', '')
+    ->groupBy('xxAgtUname')
+    ->havingRaw('COUNT(*) > 1')
+    ->orderBy('xxAgtUname')
+    ->pluck('xxAgtUname');
+
+$dupCount  = $dupEmails->count();
+$dupGroups = collect();
+
+// The detail is only worked out when the tab is open.
+if (request()->has('duplicates') && $dupCount > 0) {
+
+    $dupAccounts = Propagent::with('theAgtOffice')
+        ->whereIn('xxAgtUname', $dupEmails->all())
+        ->orderBy('xxAgtUname')
+        ->orderBy('id')
+        ->get();
+
+    // flyers each account holds (deleted ones don't count) and when it last sent one
+    $dupStats = \App\Models\Core\Propflyer::query()
+        ->leftJoin('propflyerstats', 'propflyers.id', '=', 'propflyerstats.propflyer_id')
+        ->whereIn('propflyers.propagent_id', $dupAccounts->pluck('id')->all())
+        ->groupBy('propflyers.propagent_id')
+        ->selectRaw('propflyers.propagent_id as agent_id, COUNT(*) as flyers, MAX(propflyerstats.xLastDeliveryDate) as last_sent')
+        ->get()
+        ->keyBy('agent_id');
+
+    $dupGroups = $dupAccounts
+        ->groupBy(fn ($a) => mb_strtolower(trim((string) $a->xxAgtUname)))
+        ->map(function ($accounts) use ($dupStats) {
+
+            $rows = $accounts->map(function ($a) use ($dupStats) {
+                $s = $dupStats->get($a->id);
+
+                $name = trim(($a->agtFirst ?? '') . ' ' . ($a->agtLast ?? ''))
+                    ?: ($a->agtFullName ?: 'No name');
+
+                return [
+                    'id'        => $a->id,
+                    'name'      => $name,
+                    'office'    => optional($a->theAgtOffice)->officeName,
+                    'flyers'    => (int) ($s->flyers ?? 0),
+                    'last_sent' => $s->last_sent ?? null,
+                    'credits'   => (int) ($a->remCreds ?? 0),
+                    'start'     => $a->startDate,
+                    'blocked'   => (int) ($a->loginBlocked ?? 0) === 1,
+                ];
+            })->values();
+
+            // The account they actually use: the most flyers, then the latest send, then the oldest.
+            $keep = $rows
+                ->sortBy(fn ($r) => [-$r['flyers'], $r['last_sent'] ? -strtotime($r['last_sent']) : 0, $r['id']])
+                ->first()['id'];
+
+            $rows = $rows->map(function ($r) use ($keep) {
+                $r['keep']  = $r['id'] === $keep;
+                // nothing in it to lose: no flyers, no start date, no credits
+                $r['empty'] = $r['flyers'] === 0 && !$r['start'] && $r['credits'] <= 0;
+                return $r;
+            });
+
+            return [
+                'email'    => $accounts->first()->xxAgtUname,
+                'accounts' => $rows,
+                // flyers still sitting in the accounts that are NOT the one to keep
+                'toMove'   => $rows->where('keep', false)->sum('flyers'),
+            ];
+        })
+        // groups with flyers to move first, then the rest by email
+        ->sortBy(fn ($g) => [-$g['toMove'], mb_strtolower($g['email'])])
+        ->values();
+}
+
 $data = [
+    'dupCount' => $dupCount,
+    'dupGroups' => $dupGroups,
     'activeAgents' => $activeAgents,
     'noStartAgents' => $noStartAgents,
     'noStartCreditAgents' => $noStartCreditAgents,
