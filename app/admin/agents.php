@@ -199,7 +199,7 @@ if (request()->has('duplicates') && $dupCount > 0) {
 // App\Support\AgentNameDuplicates). Unlike a shared login email, a shared name can be two different
 // people, so each group says what points to one person (the same email or phone) and what doesn't.
 // It scans every agent, so it is only worked out while the tab is open.
-$nameDupCount  = null;
+$nameDupCount  = \App\Support\AgentNameDuplicates::count();   // kept for a few minutes: the tab hides itself at 0
 $nameDupLikely = 0;
 $nameDupGroups = collect();
 
@@ -207,6 +207,7 @@ if (request()->has('duplicateNames')) {
 
     $sharedNames  = \App\Support\AgentNameDuplicates::groups();   // name key => account ids
     $nameDupCount = count($sharedNames);
+    \App\Support\AgentNameDuplicates::rememberCount($nameDupCount);
     $nameIds      = collect($sharedNames)->flatten()->map(fn ($id) => (int) $id)->all();
 
     $nameAccounts = Propagent::with('theAgtOffice')->whereIn('id', $nameIds)->get()->keyBy('id');

@@ -73,6 +73,41 @@ class AgentNameDuplicates
             ->get();
     }
 
+    /** Where the number of shared names is kept, so the Agents page can tell whether the tab is empty without a scan. */
+    public const COUNT_CACHE_KEY = 'agents.nameDuplicateCount';
+
+    /**
+     * How many names are shared by two or more accounts. Finding out reads every agent, so the answer
+     * is kept for five minutes (and dropped when an account is deleted or a name is edited); opening the
+     * Duplicate Names tab refreshes it exactly. A cache problem just means it is worked out each time.
+     */
+    public static function count(): int
+    {
+        try {
+            return (int) \Illuminate\Support\Facades\Cache::remember(self::COUNT_CACHE_KEY, 300, fn () => count(self::groups()));
+        } catch (\Throwable $e) {
+            return count(self::groups());
+        }
+    }
+
+    public static function rememberCount(int $count): void
+    {
+        try {
+            \Illuminate\Support\Facades\Cache::put(self::COUNT_CACHE_KEY, $count, 300);
+        } catch (\Throwable $e) {
+            // not cached - it is worked out again next time
+        }
+    }
+
+    public static function forgetCount(): void
+    {
+        try {
+            \Illuminate\Support\Facades\Cache::forget(self::COUNT_CACHE_KEY);
+        } catch (\Throwable $e) {
+            // nothing to forget
+        }
+    }
+
     /** An id a group can be linked to on the page. */
     public static function anchor(string $key): string
     {

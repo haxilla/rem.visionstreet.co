@@ -110,6 +110,7 @@ class AgentProfile
         AgentTime::apply($agent);
 
         $agent->forceFill($data)->save();
+        AgentNameDuplicates::forgetCount();   // a name may have changed
     }
 
     /**

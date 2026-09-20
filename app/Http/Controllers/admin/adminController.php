@@ -157,6 +157,7 @@ class adminController extends Controller
         $name = $agent->agtFullName ?: trim(($agent->agtFirst ?? '') . ' ' . ($agent->agtLast ?? '')) ?: 'No name';
 
         $agent->delete();
+        AgentNameDuplicates::forgetCount();   // a shared name may have just been resolved
 
         try {
             \App\Models\Core\AgentPasswordReset::where('propagent_id', $agent->id)->delete();
@@ -1263,6 +1264,7 @@ class adminController extends Controller
         }
 
         $agent->delete();
+        AgentNameDuplicates::forgetCount();   // a shared name may have just been resolved
 
         // Tidy the account's unused password links. Best effort: the table comes from the
         // password-reset SQL, and deleting an account must not depend on it existing.

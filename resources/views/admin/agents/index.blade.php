@@ -117,9 +117,19 @@
         $tabs[] = ['key' => 'duplicates', 'label' => 'Duplicate Logins', 'query' => '?duplicates=1', 'count' => $data['dupCount'] ?? 0, 'warn' => true];
     }
 
-    // Always there: names can be shared by different people, so this tab never empties. It needs a scan
-    // of every agent, so its count only shows once it has been opened.
+    // Names shared by more than one account (the count is kept for a few minutes - see AgentNameDuplicates::count).
     $tabs[] = ['key' => 'duplicateNames', 'label' => 'Duplicate Names', 'query' => '?duplicateNames=1', 'count' => $data['nameDupCount'] ?? null, 'warn' => true];
+
+    // A tab with nothing in it goes away, and comes back the moment it has something. Two stay whatever
+    // their count: the tab you are ON (so the page never loses its highlight - e.g. right after you delete
+    // the last agent in a list), and "With Start Date", the page's home tab. A count that isn't known
+    // (null) also keeps its tab.
+    $tabs = array_values(array_filter($tabs, fn ($tab) =>
+        $tab['key'] === 'active'
+        || $currentTab === $tab['key']
+        || ($tab['count'] ?? null) === null
+        || $tab['count'] > 0
+    ));
 @endphp
 
 {{-- MAIN --}}
