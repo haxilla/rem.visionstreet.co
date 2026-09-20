@@ -12,9 +12,12 @@
     $noPhotoAgents       = $data['noPhotoAgents'] ?? collect();
     $noLogoAgents        = $data['noLogoAgents'] ?? collect();
 
+    $hasDuplicates = ($data['dupCount'] ?? 0) > 0;
+
     // which list is showing (each has its own page parameter)
     $currentTab = match (true) {
-        request()->has('duplicates')           => 'duplicates',
+        // the tab only exists while some login email still has more than one account
+        request()->has('duplicates') && $hasDuplicates => 'duplicates',
         request()->has('nologo_page')          => 'nologo',
         request()->has('nophoto_page')         => 'nophoto',
         request()->has('nostartcredits_page')  => 'nostartcredits',
@@ -143,6 +146,7 @@
                         </span>
                     </a>
 
+                    @if($hasDuplicates)
                     <a
                         href="{{ request()->url() }}?duplicates=1"
                         class="{{ $currentTab === 'duplicates' ? 'bg-[#214e9b] text-white shadow' : 'bg-slate-200 text-slate-700' }} rounded-t-xl px-4 py-3 text-sm font-semibold sm:px-5"
@@ -153,6 +157,7 @@
                             {{ $data['dupCount'] ?? 0 }}
                         </span>
                     </a>
+                    @endif
 
                 </div>
             </div>
