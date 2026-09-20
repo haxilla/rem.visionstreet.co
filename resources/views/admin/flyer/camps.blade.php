@@ -371,9 +371,6 @@ if ($propInfo->created_at) {
 
         @php
 
-        $waitingCampaigns =
-            $data['waitingFlyerCamps'][$propInfo->id] ?? collect();
-
         $inProgressCampaigns =
             $data['inProgressFlyerCamps'][$propInfo->id] ?? collect();
 
@@ -382,45 +379,18 @@ if ($propInfo->created_at) {
 
         @endphp
 
-        {{-- ACTIVE CAMPAIGNS --}}
+        {{-- IN PROGRESS: campaigns that have started but not finished. Campaigns still
+             WAITING to start are listed once, under "Requested Areas" in the Send Request
+             card (that is where they are approved), so they are not repeated here. --}}
         <div class="bg-white rounded-2xl shadow-sm overflow-hidden mb-6 lg:col-start-1">
 
             <div class="px-5 py-4 border-b border-slate-200">
                 <h2 class="font-semibold text-slate-900">
-                    Active Campaigns
+                    In Progress ({{ $inProgressCampaigns->count() }})
                 </h2>
             </div>
 
             <div class="divide-y divide-slate-100">
-
-                @foreach($waitingCampaigns as $camp)
-
-                    <div class="px-5 py-4 flex items-center justify-between">
-
-                        <div>
-                            <div class="font-semibold">
-                                {{ $camp['emArea'] }}
-                                @include('admin.flyer.campSource', ['adminAdded' => $camp['admin_added'] ?? false])
-                            </div>
-
-                            <div class="text-sm text-slate-500">
-                                Requested {{ $camp['emRequest'] }}
-                            </div>
-                        </div>
-
-                        @if((int) ($camp['authorized'] ?? 0) === 1)
-                            <span class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-xs font-semibold">
-                                Approved - waiting to send
-                            </span>
-                        @else
-                            <span class="bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-xs font-semibold">
-                                Awaiting approval
-                            </span>
-                        @endif
-
-                    </div>
-
-                @endforeach
 
                 @foreach($inProgressCampaigns as $camp)
 
@@ -445,10 +415,10 @@ if ($propInfo->created_at) {
 
                 @endforeach
 
-                @if($waitingCampaigns->isEmpty() && $inProgressCampaigns->isEmpty())
+                @if($inProgressCampaigns->isEmpty())
 
                     <div class="px-5 py-8 text-center text-slate-500">
-                        No active campaigns found.
+                        No campaigns are in progress.
                     </div>
 
                 @endif
