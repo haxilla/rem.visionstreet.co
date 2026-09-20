@@ -75,6 +75,18 @@
                     }
                 };
 
+                // Column widths for every campaign list, defined ONCE (the rows and all four
+                // heading rows use it): Area | Address (takes the rest) | Agent | Emails | Date.
+                // The wide layout starts at xl (1280px); narrower screens get stacked cards.
+                // The date column is wide enough for "Sep 19, 2026 3:18 PM" on one line.
+                $rowGrid = 'xl:grid xl:grid-cols-[10rem_minmax(0,1fr)_14rem_6rem_12rem] xl:items-center xl:gap-4';
+
+                // Readable names for the area codes stored on each campaign (azphxne -> Phoenix Northeast)
+                $areaLabels = [];
+                foreach (include app_path('flyers/campaignAreas.php') as $areaInfo) {
+                    $areaLabels[$areaInfo['db']] = $areaInfo['label'];
+                }
+
                 $isEmptyDate = function ($date) {
                     return empty($date) || $date === '0000-00-00' || $date === '0000-00-00 00:00:00';
                 };
@@ -204,7 +216,9 @@
                     $getThumbUrl,
                     $getAddress,
                     $getFlyerId,
-                    $getAgent
+                    $getAgent,
+                    $rowGrid,
+                    $areaLabels
                 ) {
                     $thumbUrl   = $getThumbUrl($campaign);
                     $address    = $getAddress($campaign);
@@ -217,60 +231,68 @@
                     $area       = $campaignValue($campaign, ['emArea'], 'N/A');
                     $areaKey    = strtolower(trim($area));
                     $emailCount = $data['emailCounts'][$areaKey] ?? 0;
+                    $areaName   = $areaLabels[$areaKey] ?? $area;
+                    $agentName  = $agent?->agtFullName ?? 'N/A';
 
                     $emRequest  = $campaignDate($campaign, ['emRequest']);
                     $emStart    = $campaignDate($campaign, ['emStart']);
                     $emFinished = $campaignDate($campaign, ['emFinished', 'emComplete']);
 
                     $authorized = $campaignAuthorized($campaign);
+
+                    // the date this list is about: when it started / finished / was requested
+                    $listDate = $status === 'progress'
+                        ? $formatDate($emStart)
+                        : ($status === 'completed' ? $formatDate($emFinished) : $formatDate($emRequest));
                 @endphp
 
-                <div class="border-b border-slate-200 px-2 py-2 hover:bg-slate-50">
+                <div class="border-b border-slate-200 px-3 py-3 hover:bg-slate-50">
 
-                    <div class="hidden lg:flex lg:items-center lg:gap-4 text-sm">
+                    {{-- WIDE (xl and up): one line per campaign, columns set by $rowGrid. The
+                         date never wraps (whitespace-nowrap, in a column wide enough for it);
+                         anything that is clipped shows in full on hover. --}}
+                    <div class="hidden {{ $rowGrid }} text-sm">
 
-                        <div class="w-32 shrink-0 truncate">
-                            {{ $area }}
+                        <div class="truncate font-medium text-slate-700" title="{{ $areaName }}">
+                            {{ $areaName }}
                         </div>
 
-                        <div class="flex-1 truncate">
-                            <a href="/admin/flyerCamps/{{ $flyerId }}" class="text-blue-500 hover:underline">{{ $address }}</a>
+                        <div class="min-w-0 truncate">
+                            <a href="/admin/flyerCamps/{{ $flyerId }}" class="text-blue-600 hover:underline" title="{{ $address }}">{{ $address }}</a>
                         </div>
 
-                        <div class="w-48 shrink-0 truncate">
-                            {{ $agent?->agtFullName ?? 'N/A' }}
+                        <div class="truncate text-slate-700" title="{{ $agentName }}">
+                            {{ $agentName }}
                         </div>
 
-                        <div class="w-24 shrink-0 text-right">
+                        <div class="text-right tabular-nums text-slate-700">
                             {{ number_format($emailCount) }}
                         </div>
 
-                        <div class="w-32 shrink-0 text-right">
-                            @if($status === 'progress')
-                                {{ $formatDate($emStart) }}
-                            @elseif($status === 'completed')
-                                {{ $formatDate($emFinished) }}
-                            @else
-                                {{ $formatDate($emRequest) }}
-                            @endif
+                        <div class="whitespace-nowrap text-right tabular-nums text-slate-600">
+                            {{ $listDate }}
                         </div>
 
                     </div>
 
-                    <div class="lg:hidden text-sm">
+                    {{-- NARROWER: a stacked card - address and date on the first line (the
+                         date can't wrap), the details underneath --}}
+                    <div class="text-sm xl:hidden">
 
-                        <div class="flex-1 truncate pl-3">
-                            {{ $address }}
+                        <div class="flex items-start justify-between gap-3">
+                            <a href="/admin/flyerCamps/{{ $flyerId }}" class="min-w-0 break-words font-medium text-blue-600 hover:underline">
+                                {{ $address }}
+                            </a>
+
+                            <span class="shrink-0 whitespace-nowrap text-xs tabular-nums text-slate-500">
+                                {{ $listDate }}
+                            </span>
                         </div>
 
-                        <div class="text-xs text-slate-500 mt-1">
-                            Area: {{ $area }}
-                            · Agent: {{ $agent?->agtFullName ?? 'N/A' }}
-                            · Emails: {{ $emails ? number_format($emails) : '-' }}
-                        </div>
-
-                        <div class="text-xs text-slate-400 mt-1">
-                            {{ $formatDate($emRequest) }}
+                        <div class="mt-1 flex flex-wrap gap-x-3 gap-y-0.5 text-xs text-slate-500">
+                            <span class="font-medium text-slate-600">{{ $areaName }}</span>
+                            <span>Agent: {{ $agentName }}</span>
+                            <span>{{ $emails ? number_format($emails) : '-' }} emails</span>
                         </div>
 
                     </div>
@@ -388,13 +410,7 @@
                                     {{-- UNAUTHORIZED WAITING --}}
                                     <div class="waiting-panel" id="waiting-unauthorized">
 
-                                        <div class="hidden lg:flex lg:items-center lg:gap-4 text-xs font-semibold uppercase tracking-wide text-slate-500 border-b border-slate-300 px-2 py-2">
-                                            <div class="w-32 shrink-0">Area</div>
-                                            <div class="flex-1">Address</div>
-                                            <div class="w-48 shrink-0">Agent</div>
-                                            <div class="w-24 shrink-0 text-right">Emails</div>
-                                            <div class="w-32 shrink-0 text-right">Requested</div>
-                                        </div>
+                                        @include('admin.campaignColumnHeader', ['rowGrid' => $rowGrid, 'dateLabel' => 'Requested'])
 
                                         <div>
                                             @forelse($waitingUnauthorized as $campaign)
@@ -411,13 +427,7 @@
                                     {{-- AUTHORIZED WAITING --}}
                                     <div class="waiting-panel hidden" id="waiting-authorized">
 
-                                        <div class="hidden lg:flex lg:items-center lg:gap-4 text-xs font-semibold uppercase tracking-wide text-slate-500 border-b border-slate-300 px-2 py-2">
-                                            <div class="w-32 shrink-0">Area</div>
-                                            <div class="flex-1">Address</div>
-                                            <div class="w-48 shrink-0">Agent</div>
-                                            <div class="w-24 shrink-0 text-right">Emails</div>
-                                            <div class="w-32 shrink-0 text-right">Requested</div>
-                                        </div>
+                                        @include('admin.campaignColumnHeader', ['rowGrid' => $rowGrid, 'dateLabel' => 'Requested'])
 
                                         <div>
                                             @forelse($waitingAuthorized as $campaign)
@@ -452,29 +462,7 @@
                                         </span>
                                     </div>
 
-                                    <div class="hidden lg:flex lg:items-center lg:gap-4 text-xs font-semibold uppercase tracking-wide text-slate-500 border-b border-slate-300 px-2 py-2">
-
-                                        <div class="w-32 shrink-0">
-                                            Area
-                                        </div>
-
-                                        <div class="flex-1">
-                                            Address
-                                        </div>
-
-                                        <div class="w-48 shrink-0">
-                                            Agent
-                                        </div>
-
-                                        <div class="w-24 shrink-0 text-right">
-                                            Emails
-                                        </div>
-
-                                        <div class="w-32 shrink-0 text-right">
-                                            Started
-                                        </div>
-
-                                    </div>
+                                    @include('admin.campaignColumnHeader', ['rowGrid' => $rowGrid, 'dateLabel' => 'Started'])
 
                                     <div>
 
@@ -509,29 +497,7 @@
                                         </span>
                                     </div>
 
-                                    <div class="hidden lg:flex lg:items-center lg:gap-4 text-xs font-semibold uppercase tracking-wide text-slate-500 border-b border-slate-300 px-2 py-2">
-
-                                        <div class="w-32 shrink-0">
-                                            Area
-                                        </div>
-
-                                        <div class="flex-1">
-                                            Address
-                                        </div>
-
-                                        <div class="w-48 shrink-0">
-                                            Agent
-                                        </div>
-
-                                        <div class="w-24 shrink-0 text-right">
-                                            Emails
-                                        </div>
-
-                                        <div class="w-32 shrink-0 text-right">
-                                            Finished
-                                        </div>
-
-                                    </div>
+                                    @include('admin.campaignColumnHeader', ['rowGrid' => $rowGrid, 'dateLabel' => 'Finished'])
 
                                     <div>
 
