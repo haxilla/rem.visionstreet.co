@@ -49,6 +49,7 @@
     <div class="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
 
         <div class="flex min-w-0 flex-1 basis-56 flex-wrap items-center gap-x-2 gap-y-1">
+            <span class="text-xs font-semibold tabular-nums text-slate-500" title="Campaign ID">#{{ $cid }}</span>
             <span class="break-words text-lg font-bold text-slate-900">{{ $area }}</span>
 
             @include('admin.flyer.campSource', ['adminAdded' => $adminAdded ?? false])
