@@ -83,20 +83,17 @@
                         {{-- CAMPAIGN DASHBOARD --}}
                         <div class="rounded-2xl bg-white shadow-[0_12px_35px_rgba(15,23,42,0.06)] overflow-hidden">
 
-                            {{-- TITLE + MAIN TAB BUTTONS: one slim bar - the title on the left, the tabs
-                                 sitting on the bar's bottom edge on the right --}}
-                            <div class="flex flex-col gap-3 border-b border-slate-200 bg-slate-50 px-3 pt-3 pb-3 sm:flex-row sm:items-end sm:justify-between sm:gap-6 sm:px-6 sm:pb-0">
+                            {{-- TITLE + MAIN TAB BUTTONS: one slim bar, the title on the left and the
+                                 tabs on the right, evenly padded all round --}}
+                            <div class="flex flex-col gap-3 border-b border-slate-200 bg-slate-50 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:px-6">
 
-                                <div class="sm:pb-3">
-                                    <h1 class="text-lg font-semibold leading-tight text-slate-900">Campaign Overview</h1>
-                                    <p class="text-xs text-slate-500">Each flyer's request by stage. Open a card to see its areas.</p>
-                                </div>
+                                <h1 class="text-lg font-semibold leading-tight text-slate-900">Campaign Overview</h1>
 
                                 <div class="grid grid-cols-1 gap-2 sm:flex sm:flex-wrap">
 
                                     <button
                                         type="button"
-                                        class="campaign-tab-btn bg-[#214e9b] text-white rounded-xl sm:rounded-b-none sm:rounded-t-xl px-5 py-3 text-sm font-semibold shadow"
+                                        class="campaign-tab-btn bg-[#214e9b] text-white rounded-xl px-5 py-2 text-sm font-semibold shadow"
                                         data-tab="waiting"
                                     >
                                         Waiting
@@ -107,7 +104,7 @@
 
                                     <button
                                         type="button"
-                                        class="campaign-tab-btn bg-slate-200 text-slate-700 rounded-xl sm:rounded-b-none sm:rounded-t-xl px-5 py-3 text-sm font-semibold"
+                                        class="campaign-tab-btn bg-slate-200 text-slate-700 rounded-xl px-5 py-2 text-sm font-semibold"
                                         data-tab="progress"
                                     >
                                         In Progress
@@ -118,7 +115,7 @@
 
                                     <button
                                         type="button"
-                                        class="campaign-tab-btn bg-slate-200 text-slate-700 rounded-xl sm:rounded-b-none sm:rounded-t-xl px-5 py-3 text-sm font-semibold"
+                                        class="campaign-tab-btn bg-slate-200 text-slate-700 rounded-xl px-5 py-2 text-sm font-semibold"
                                         data-tab="completed"
                                     >
                                         Completed
@@ -136,19 +133,10 @@
                                 {{-- WAITING --}}
                                 <div class="campaign-panel" id="tab-waiting">
 
-                                    <div class="mb-3">
-                                        <h2 class="text-base font-semibold text-slate-900">Waiting Campaigns</h2>
+                                    {{-- WAITING SUB MENU, with the tab's summary on the same row --}}
+                                    <div class="mb-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
 
-                                        <p class="text-sm text-slate-500">
-                                            {{ $summary($waitingAll) }}
-                                            @if($oldestWaiting)
-                                                &middot; oldest request {{ $oldestWaiting->diffForHumans() }}
-                                            @endif
-                                        </p>
-                                    </div>
-
-                                    {{-- WAITING SUB MENU --}}
-                                    <div class="mb-5 grid grid-cols-1 gap-2 sm:flex sm:flex-wrap">
+                                    <div class="grid grid-cols-1 gap-2 sm:flex sm:flex-wrap">
                                         <button type="button"
                                         class="waiting-tab-btn bg-emerald-600 text-white rounded-xl px-4 py-2 text-sm font-semibold shadow"
                                         data-waiting-tab="unauthorized">
@@ -166,6 +154,15 @@
                                                 {{ $waitingAuthorized->count() }}
                                             </span>
                                         </button>
+
+                                    </div>
+
+                                    <p class="text-sm text-slate-500">
+                                        {{ $summary($waitingAll) }}
+                                        @if($oldestWaiting)
+                                            &middot; oldest request {{ $oldestWaiting->diffForHumans() }}
+                                        @endif
+                                    </p>
 
                                     </div>
 
@@ -196,10 +193,7 @@
                                 {{-- IN PROGRESS --}}
                                 <div class="campaign-panel hidden" id="tab-progress">
 
-                                    <div class="mb-3">
-                                        <h2 class="text-base font-semibold text-slate-900">In Progress Campaigns</h2>
-                                        <p class="text-sm text-slate-500">{{ $summary($inProgress) }}</p>
-                                    </div>
+                                    <p class="mb-4 text-sm text-slate-500">{{ $summary($inProgress) }}</p>
 
                                     <div class="space-y-3">
                                         @forelse($inProgress as $group)
@@ -214,10 +208,7 @@
                                 {{-- COMPLETED --}}
                                 <div class="campaign-panel hidden" id="tab-completed">
 
-                                    <div class="mb-3">
-                                        <h2 class="text-base font-semibold text-slate-900">Recently Completed Campaigns</h2>
-                                        <p class="text-sm text-slate-500">Last {{ $completed->count() }} flyers to finish &middot; {{ $summary($completed) }}</p>
-                                    </div>
+                                    <p class="mb-4 text-sm text-slate-500">Last {{ $completed->count() }} flyers to finish &middot; {{ $summary($completed) }}</p>
 
                                     <div class="space-y-3">
                                         @forelse($completed as $group)
