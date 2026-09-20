@@ -34,27 +34,9 @@
     // Only real web links become links (never javascript: and the like).
     $webLink = fn ($u) => (is_string($u) && preg_match('#^https?://#i', $u) && filter_var($u, FILTER_VALIDATE_URL)) ? $u : null;
 
-    // The agent's OWN street address: any street-type column on their row
-    // (agtAddress1 / agtAddress2, or agtAddress, agtStreet... - the column names
-    // aren't used anywhere else in the app), in name order. City / state / zip
-    // are handled separately below.
-    $agentStreet = collect(array_keys($agent->getAttributes()))
-        ->filter(fn ($key) => preg_match('/^agt(Add|Addr|Address|Street)/i', $key)
-            && !preg_match('/mail|city|state|zip/i', $key))
-        ->sort()
-        ->map(fn ($key) => trim((string) $agent->{$key}))
-        ->filter()
-        ->implode(' ');
-
-    $addressLine1 = $agentStreet;
-    $addressLine2 = trim(
-        ($agent->agtCity ?? '')
-        . (($agent->agtCity && $agent->agtState) ? ', ' : '')
-        . ($agent->agtState ?? '') . ' ' . ($agent->agtZip ?? '')
-    );
-
-    // The OFFICE address - where the flyers and the agent's own contact form keep
-    // the street address (agtoffices: officeAddress1, city, state, zip).
+    // The agent's address IS their office address - where the flyers and the
+    // agent's own contact form keep it (agtoffices: officeAddress1, city, state,
+    // zip) - so that's the only address shown.
     $office       = $agent->theAgtOffice;
     $officeLine1  = trim((string) ($office->officeAddress1 ?? ''));
     $officeLine2  = trim(
@@ -74,7 +56,6 @@
     ];
 
     $licenseRows = [
-        ['Office / brokerage', $agent->theAgtOffice->officeName ?? null],
         ['MLS ID',             $agent->agtMlsID],
         ['Board',              $agent->agtBoard],
         ['Designations',       $agent->agtDesigs],
@@ -393,16 +374,8 @@
                 <dl class="{{ $cardBody }} divide-y divide-slate-100">
 
                     <div class="{{ $row }}">
-                        <dt class="{{ $label }}">Address</dt>
-                        <dd class="{{ $value }}">
-                            @if($addressLine1 !== '' || $addressLine2 !== '')
-                                {{ $addressLine1 }}
-                                @if($addressLine1 !== '' && $addressLine2 !== '')<br>@endif
-                                {{ $addressLine2 }}
-                            @else
-                                —
-                            @endif
-                        </dd>
+                        <dt class="{{ $label }}">Brokerage</dt>
+                        <dd class="{{ $value }}">{{ $office->officeName ?? '—' }}</dd>
                     </div>
 
                     <div class="{{ $row }}">
