@@ -7,6 +7,7 @@ use App\Models\Core\AdminSetting;
 use App\Models\Core\Propagent;
 use App\Models\Core\Propdelivnow;
 use App\Models\Core\Propflyer;
+use App\Support\AgentCampaigns;
 use App\Support\AgentImages;
 use App\Support\AgentTime;
 use App\Support\ImageOptimizer;
@@ -122,6 +123,40 @@ class adminController extends Controller
 
         return view('admin.agents.show', compact('agent', 'flyerCount', 'campaignCount', 'campaignsInQueue', 'orders', 'photo', 'logo', 'hasOffice'));
 
+    }
+
+    /**
+     * Every campaign an agent has, grouped by flyer: each flyer's address is a
+     * heading with that flyer's campaigns listed under it. Flyers are ordered by
+     * their most recent campaign activity, newest first. A flyer the agent has
+     * since deleted is still listed (marked as deleted) so its campaigns aren't
+     * lost from the history.
+     */
+    public function agentCampaigns($id)
+    {
+        $agent     = Propagent::findOrFail($id);
+        $campaigns = AgentCampaigns::forAgent($agent->id);
+
+        // withTrashed: a soft-deleted flyer keeps its campaign history
+        $flyers = Propflyer::withTrashed()
+            ->whereIn('id', $campaigns->pluck('flyer_id')->unique()->all())
+            ->get(['id', 'xFullStreet', 'xCity', 'state', 'xZip', 'deleted_at'])
+            ->keyBy('id');
+
+        $groups = $campaigns->groupBy('flyer_id')->map(function ($items, $flyerId) use ($flyers) {
+            $flyer = $flyers->get($flyerId);
+
+            return [
+                'flyerId'   => $flyerId,
+                'title'     => $flyer ? ($flyer->xFullStreet ?: 'Untitled flyer') : 'Flyer no longer exists',
+                'place'     => $flyer ? trim(($flyer->xCity ?? '') . ' ' . ($flyer->state ?? '') . ' ' . ($flyer->xZip ?? '')) : '',
+                'deleted'   => !$flyer || $flyer->trashed(),
+                'campaigns' => $items->sortByDesc('sort')->values(),
+                'latest'    => $items->max('sort'),
+            ];
+        })->sortByDesc('latest')->values();
+
+        return view('admin.agents.campaigns', compact('agent', 'groups', 'campaigns'));
     }
 
     /**

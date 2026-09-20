@@ -44,6 +44,10 @@ Route::post('/admin/agentsDeleteMany',
 Route::get('/admin/agentView/{id}',
 [adminController::class, 'agentView'])->name('admin.agentView');
 
+//every campaign an agent has, grouped by flyer (linked from the "Campaigns Sent" tile)
+Route::get('/admin/agentCampaigns/{id}',
+[adminController::class, 'agentCampaigns'])->whereNumber('id')->name('admin.agentCampaigns');
+
 //upload (add / change) or clear an agent's photo or logo (POST only; {kind} is "photo" or "logo")
 Route::post('/admin/agentImage/{id}/{kind}',
 [adminController::class, 'agentImageUpload'])->whereNumber('id')->whereIn('kind', ['photo', 'logo'])->name('admin.agentImageUpload');

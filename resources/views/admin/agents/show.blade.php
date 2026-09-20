@@ -180,22 +180,21 @@
 
         <div class="rounded-2xl bg-white p-4 shadow-sm sm:p-5">
             <div class="text-xs font-semibold uppercase tracking-wide text-slate-400">Campaigns Sent</div>
-            <div class="mt-2 flex flex-wrap items-baseline gap-x-2">
-                <span class="text-2xl font-semibold text-slate-900 sm:text-3xl">{{ number_format($campaignCount) }}</span>
+
+            {{-- the count links to every one of this agent's campaigns, grouped by flyer --}}
+            <a href="{{ route('admin.agentCampaigns', $agent->id) }}" class="group mt-2 flex flex-wrap items-baseline gap-x-2" title="See all of this agent's campaigns">
+                <span class="text-2xl font-semibold text-[#214e9b] group-hover:underline sm:text-3xl">{{ number_format($campaignCount) }}</span>
 
                 {{-- requested or in progress, not finished - so a zero here is never a mystery --}}
                 @if($campaignsInQueue > 0)
                     <span class="text-xs font-semibold text-amber-600">+ {{ number_format($campaignsInQueue) }} in queue / in progress</span>
                 @endif
-            </div>
+            </a>
         </div>
 
         <div class="rounded-2xl bg-white p-4 shadow-sm sm:p-5">
             <div class="text-xs font-semibold uppercase tracking-wide text-slate-400">Remaining Credits</div>
-            <div class="mt-2 flex items-baseline gap-2">
-                <span class="text-2xl font-semibold text-slate-900 sm:text-3xl">{{ number_format($agent->remCreds ?? 0) }}</span>
-                <a href="#account" class="text-xs font-semibold text-[#214e9b] hover:underline">Edit</a>
-            </div>
+            <div class="mt-2 text-2xl font-semibold text-slate-900 sm:text-3xl">{{ number_format($agent->remCreds ?? 0) }}</div>
         </div>
 
         <div class="rounded-2xl bg-white p-4 shadow-sm sm:p-5">
