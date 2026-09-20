@@ -21,6 +21,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
 
 class adminController extends Controller
@@ -1509,6 +1510,89 @@ class adminController extends Controller
             ->update(['xLastDeliveryDate' => $completed->format('Y-m-d H:i:s')]);
 
         return ' Flyer last sent updated to ' . $completed->format('M j, Y') . '.';
+    }
+
+    /**
+     * QUICK EMAIL: send a copy of this flyer's email, with its current email
+     * subject, to the Test email address in the admin Settings.
+     */
+    public function flyerQuickEmail($flyerId)
+    {
+        $to = AdminSetting::trialEmail();
+
+        if ($to === '') {
+            return redirect()->route('admin.flyerCamps', $flyerId)
+                ->withErrors(['There is no email address in Settings yet. Add the Test email address there, or use Custom Email.']);
+        }
+
+        return $this->sendFlyerEmail($flyerId, $to, $this->currentEmailSubject($flyerId));
+    }
+
+    /**
+     * CUSTOM EMAIL: the same flyer email, sent to an address and with a subject
+     * the admin has typed in (both are prefilled with the Settings address and
+     * the current subject, and only sent once submitted).
+     */
+    public function flyerCustomEmail(Request $request, $flyerId)
+    {
+        $validated = $request->validate([
+            'to'      => ['required', 'email', 'max:255'],
+            'subject' => ['required', 'string', 'max:255'],
+        ], [
+            'to.required'      => 'Enter the email address to send to.',
+            'to.email'         => 'That is not a valid email address.',
+            'subject.required' => 'Enter an email subject.',
+        ]);
+
+        return $this->sendFlyerEmail($flyerId, $validated['to'], $validated['subject']);
+    }
+
+    /**
+     * The subject a flyer's email currently has: the newest campaign's, or - when
+     * none has one - the flyer's address, so a copy is never sent without a subject.
+     */
+    private function currentEmailSubject($flyerId): string
+    {
+        $subject = Propdelivnow::where('propflyer_id', $flyerId)
+            ->whereNotNull('emSubject')
+            ->where('emSubject', '!=', '')
+            ->orderByDesc('emRequest')
+            ->value('emSubject');
+
+        return $subject ?: (string) Propflyer::whereKey($flyerId)->value('xFullStreet');
+    }
+
+    /**
+     * Render the flyer as its EMAIL (the same templates as the on-screen flyer, in
+     * their email mode - absolute image / "view online" links, no editing hooks)
+     * and send it to one address with the given subject. Nothing is charged, no
+     * campaign is created, and nobody is emailed but $to.
+     */
+    private function sendFlyerEmail($flyerId, string $to, string $subject)
+    {
+        abort_unless(Propflyer::whereKey($flyerId)->exists(), 404, 'This flyer has been deleted.');
+
+        $back = redirect()->route('admin.flyerCamps', $flyerId);
+
+        try {
+            // the flyer with everything its template reads ($propInfo, needs $flyerId)
+            include app_path('queries/flyerdetails.php');
+
+            $html = view('admin.flyer.emailBody', [
+                'propInfo' => $propInfo,
+                'subject'  => $subject,
+            ])->render();
+
+            Mail::html($html, function ($message) use ($to, $subject) {
+                $message->to($to)->subject($subject);
+            });
+        } catch (\Throwable $e) {
+            report($e);
+
+            return $back->withErrors(['The email could not be sent: ' . $e->getMessage()]);
+        }
+
+        return $back->with('status', "Sent a copy of this flyer email to {$to} with the subject \"{$subject}\".");
     }
 
     /**

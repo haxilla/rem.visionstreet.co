@@ -84,6 +84,8 @@ $sendDetails = Propflyer::select(
 )->find($propInfo->id);
 
 $data = [
+    // the subject Quick Email will send (and Custom Email starts from) - same lookup the send uses
+    'emailSubject'         => $this->currentEmailSubject($propInfo->id),
     'pendingRequests'      => $pendingRequests,
     'busyAreas'            => $busyAreas,
     'agent'                => $agent,

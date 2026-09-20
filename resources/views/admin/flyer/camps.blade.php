@@ -152,11 +152,72 @@ if ($propInfo->created_at) {
                     </span>
                 </div>
 
-                <a href="/admin/flyerEdit/{{ $propInfo->id }}"
-                   class="rounded-lg bg-[#214e9b] px-3.5 py-1.5 text-sm font-semibold text-white hover:bg-[#1b3f80]">
-                    Edit Flyer
-                </a>
+                @php
+                    $emailTo      = $data['trialEmail'] ?? '';
+                    $emailSubject = $data['emailSubject'] ?? '';
+                    $emailOpen    = $errors->has('to') || $errors->has('subject');
+                    $quickConfirm = 'Send a copy of this flyer email to ' . $emailTo . ' with the subject "' . $emailSubject . '"?';
+                    $btnOutline   = 'rounded-lg border border-[#214e9b] bg-white px-3.5 py-1.5 text-sm font-semibold text-[#214e9b] hover:bg-slate-50';
+                @endphp
 
+                <div class="flex flex-wrap items-center gap-2">
+
+                    {{-- QUICK EMAIL: a copy of this flyer email, with its current subject, to the Test
+                         email address in Settings --}}
+                    <form method="POST" action="{{ route('admin.flyerQuickEmail', $propInfo->id) }}"
+                          onsubmit="if (!confirm({{ \Illuminate\Support\Js::from($quickConfirm) }})) { return false; } setTimeout(() => this.querySelector('button').disabled = true, 0);">
+                        @csrf
+                        <button type="submit" @disabled($emailTo === '')
+                                title="{{ $emailTo !== '' ? 'Send a copy to ' . $emailTo : 'Add the Test email address in Settings first' }}"
+                                class="{{ $btnOutline }} disabled:cursor-not-allowed disabled:opacity-40">
+                            Quick Email
+                        </button>
+                    </form>
+
+                    {{-- CUSTOM EMAIL: opens a small form to edit the address and subject first --}}
+                    <button type="button" data-email-toggle aria-expanded="{{ $emailOpen ? 'true' : 'false' }}" class="{{ $btnOutline }}">
+                        Custom Email
+                    </button>
+
+                    <a href="/admin/flyerEdit/{{ $propInfo->id }}"
+                       class="rounded-lg bg-[#214e9b] px-3.5 py-1.5 text-sm font-semibold text-white hover:bg-[#1b3f80]">
+                        Edit Flyer
+                    </a>
+
+                </div>
+
+            </div>
+
+            {{-- the Custom Email form: the address and subject can be changed before it is sent --}}
+            <div data-email-panel @unless($emailOpen) hidden @endunless class="mt-3 rounded-xl bg-slate-50 p-3 ring-1 ring-slate-200">
+                <form method="POST" action="{{ route('admin.flyerCustomEmail', $propInfo->id) }}"
+                      onsubmit="setTimeout(() => this.querySelector('button[type=submit]').disabled = true, 0);"
+                      class="flex flex-col gap-3 md:flex-row md:items-end">
+                    @csrf
+
+                    <label class="{{ $eyebrow }} md:w-64">
+                        Send to
+                        <input type="email" name="to" required maxlength="255"
+                               value="{{ old('to', $emailTo) }}" placeholder="name@example.com"
+                               class="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-normal normal-case tracking-normal text-slate-900">
+                    </label>
+
+                    <label class="{{ $eyebrow }} flex-1">
+                        Subject
+                        <input type="text" name="subject" required maxlength="255"
+                               value="{{ old('subject', $emailSubject) }}"
+                               class="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-normal normal-case tracking-normal text-slate-900">
+                    </label>
+
+                    <button type="submit"
+                            class="rounded-lg bg-[#214e9b] px-4 py-2 text-sm font-semibold text-white hover:bg-[#1b3f80] disabled:opacity-50">
+                        Send Email
+                    </button>
+                </form>
+
+                <p class="mt-2 text-xs text-slate-500">
+                    Sends a copy of this flyer's email to just that address. No credit is used and no campaign is created.
+                </p>
             </div>
 
             {{-- status: a coloured dot per stage (only the stages that have campaigns), then the flyer's facts --}}
@@ -566,6 +627,20 @@ document.addEventListener('DOMContentLoaded', () => {
         wrapper.style.height =
             (activeFlyer.offsetHeight * scale) + 'px';
     }
+
+    // "Custom Email" in the header opens / closes its form.
+    document.addEventListener('click', function (event) {
+        const button = event.target.closest('[data-email-toggle]');
+
+        if (!button) return;
+
+        const panel = document.querySelector('[data-email-panel]');
+
+        if (!panel) return;
+
+        panel.hidden = !panel.hidden;
+        button.setAttribute('aria-expanded', panel.hidden ? 'false' : 'true');
+    });
 
     // The button at the right of a completed-campaign row opens / closes its details.
     document.addEventListener('click', function (event) {
