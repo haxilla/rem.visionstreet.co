@@ -211,106 +211,109 @@
                     </p>
                 </div>
 
-                <div class="grid gap-4 p-5 sm:grid-cols-2 sm:p-6">
+                <div class="divide-y divide-slate-100 px-5 sm:px-6">
 
                     @foreach([
-                        'photo' => ['title' => 'Photo', 'data' => $photo, 'fit' => 'object-cover object-top', 'canAdd' => true],
-                        'logo'  => ['title' => 'Logo',  'data' => $logo,  'fit' => 'object-contain',          'canAdd' => $hasOffice],
+                        'photo' => ['title' => 'Photo', 'data' => $photo, 'canAdd' => true],
+                        'logo'  => ['title' => 'Logo',  'data' => $logo,  'canAdd' => $hasOffice],
                     ] as $kind => $spec)
 
                         @php $img = $spec['data']; @endphp
 
-                        <div class="flex flex-col rounded-2xl border border-slate-200 p-4">
+                        <div class="flex items-center gap-4 py-4">
 
-                            <div class="flex items-center justify-between gap-2">
-                                <h3 class="text-sm font-semibold text-slate-900">{{ $spec['title'] }}</h3>
-
-                                @if(!$img['file'])
-                                    <span class="rounded-full bg-amber-50 px-2.5 py-0.5 text-xs font-semibold text-amber-700 ring-1 ring-amber-200">None</span>
-                                @elseif($img['found'])
-                                    <span class="rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-semibold text-emerald-700 ring-1 ring-emerald-200">On file</span>
-                                @else
-                                    <span class="rounded-full bg-red-50 px-2.5 py-0.5 text-xs font-semibold text-red-700 ring-1 ring-red-200">File missing</span>
-                                @endif
-                            </div>
-
-                            {{-- preview --}}
-                            <div class="mt-3 flex h-44 items-center justify-center overflow-hidden rounded-xl bg-slate-50 ring-1 ring-slate-200">
+                            {{-- Thumbnail at a FIXED size, so an oversized or oddly-shaped upload
+                                 can never stretch the card. A photo fills a small square (cropped
+                                 from the top, never squashed); a logo is shown whole, inside a
+                                 small box. --}}
+                            <div class="flex shrink-0 items-center justify-center overflow-hidden rounded-xl bg-slate-50 ring-1 ring-slate-200
+                                        {{ $kind === 'photo' ? 'h-24 w-24' : 'h-20 w-32' }}">
                                 @if($img['url'])
-                                    <img src="{{ $img['url'] }}" alt="{{ $displayName }} {{ strtolower($spec['title']) }}"
-                                         class="max-h-full max-w-full {{ $spec['fit'] === 'object-contain' ? 'object-contain p-2' : 'h-full w-full object-cover object-top' }}">
+                                    <img src="{{ $img['url'] }}"
+                                         alt="{{ $displayName }} {{ strtolower($spec['title']) }}"
+                                         class="{{ $kind === 'photo' ? 'h-full w-full object-cover object-top' : 'max-h-full max-w-full object-contain p-1.5' }}">
                                 @else
-                                    <div class="px-4 text-center text-slate-400">
-                                        <svg class="mx-auto h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-                                            @if($kind === 'photo')
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.5 20.118a7.5 7.5 0 0115 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.5-1.632z"/>
-                                            @else
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 19.5h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5z"/>
-                                            @endif
-                                        </svg>
-                                        <div class="mt-1 text-xs font-semibold">
-                                            @if($img['file'])
-                                                File not found on this server
-                                            @else
-                                                No {{ strtolower($spec['title']) }} on file
-                                            @endif
-                                        </div>
-                                    </div>
+                                    <svg class="h-8 w-8 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                                        @if($kind === 'photo')
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.5 20.118a7.5 7.5 0 0115 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.5-1.632z"/>
+                                        @else
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 19.5h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5z"/>
+                                        @endif
+                                    </svg>
                                 @endif
                             </div>
 
-                            @if($img['file'])
-                                <div class="mt-2 break-all text-xs text-slate-400">
-                                    {{ $img['file'] }}
-                                    @if($img['legacy'])
-                                        <span class="text-slate-500">(old folder)</span>
+                            <div class="min-w-0 flex-1">
+
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <h3 class="text-sm font-semibold text-slate-900">{{ $spec['title'] }}</h3>
+
+                                    @if(!$img['file'])
+                                        <span class="rounded-full bg-amber-50 px-2.5 py-0.5 text-xs font-semibold text-amber-700 ring-1 ring-amber-200">None</span>
+                                    @elseif($img['found'])
+                                        <span class="rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-semibold text-emerald-700 ring-1 ring-emerald-200">On file</span>
+                                    @else
+                                        <span class="rounded-full bg-red-50 px-2.5 py-0.5 text-xs font-semibold text-red-700 ring-1 ring-red-200">File missing</span>
                                     @endif
                                 </div>
-                            @endif
 
-                            @unless($spec['canAdd'])
-                                <p class="mt-2 rounded-lg bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-700">
-                                    This agent has no office record, so a logo can't be added yet.
-                                </p>
-                            @endunless
+                                <div class="mt-0.5 break-all text-xs text-slate-400">
+                                    @if(!$img['file'])
+                                        No {{ strtolower($spec['title']) }} on file
+                                    @elseif(!$img['found'])
+                                        Not found on this server: {{ $img['file'] }}
+                                    @else
+                                        {{ $img['file'] }}
+                                        @if($img['legacy'])
+                                            <span class="text-slate-500">(old folder)</span>
+                                        @endif
+                                    @endif
+                                </div>
 
-                            {{-- actions: add / change, and clear --}}
-                            <div class="mt-auto flex flex-wrap items-center gap-2 pt-3">
+                                @unless($spec['canAdd'])
+                                    <p class="mt-1 text-xs font-semibold text-amber-700">
+                                        No office record, so a logo can't be added yet.
+                                    </p>
+                                @endunless
 
-                                <form method="POST"
-                                      action="{{ route('admin.agentImageUpload', [$agent->id, $kind]) }}"
-                                      enctype="multipart/form-data"
-                                      data-upload-form>
-                                    @csrf
-                                    <input type="file"
-                                           name="image"
-                                           id="{{ $kind }}File"
-                                           accept="image/jpeg,image/png,image/gif,image/webp"
-                                           data-auto-upload
-                                           class="sr-only"
-                                           @disabled(!$spec['canAdd'])>
+                                {{-- actions: add / change, and clear --}}
+                                <div class="mt-2 flex flex-wrap items-center gap-2">
 
-                                    <label for="{{ $kind }}File"
-                                           class="inline-block rounded-lg px-3.5 py-2 text-xs font-semibold
-                                                  {{ $spec['canAdd']
-                                                        ? 'cursor-pointer bg-[#214e9b] text-white hover:bg-[#1b3f80]'
-                                                        : 'cursor-not-allowed bg-slate-200 text-slate-400' }}">
-                                        {{ $img['file'] ? 'Change ' . strtolower($spec['title']) : 'Add ' . strtolower($spec['title']) }}
-                                    </label>
-                                </form>
-
-                                @if($img['file'])
                                     <form method="POST"
-                                          action="{{ route('admin.agentImageClear', [$agent->id, $kind]) }}"
-                                          onsubmit="return confirm('Remove this {{ strtolower($spec['title']) }}?');">
+                                          action="{{ route('admin.agentImageUpload', [$agent->id, $kind]) }}"
+                                          enctype="multipart/form-data"
+                                          data-upload-form>
                                         @csrf
-                                        <button type="submit"
-                                                class="rounded-lg border border-red-200 px-3.5 py-2 text-xs font-semibold text-red-600 hover:bg-red-50">
-                                            Clear
-                                        </button>
-                                    </form>
-                                @endif
+                                        <input type="file"
+                                               name="image"
+                                               id="{{ $kind }}File"
+                                               accept="image/jpeg,image/png,image/gif,image/webp"
+                                               data-auto-upload
+                                               class="sr-only"
+                                               @disabled(!$spec['canAdd'])>
 
+                                        <label for="{{ $kind }}File"
+                                               class="inline-block rounded-lg px-3 py-1.5 text-xs font-semibold
+                                                      {{ $spec['canAdd']
+                                                            ? 'cursor-pointer bg-[#214e9b] text-white hover:bg-[#1b3f80]'
+                                                            : 'cursor-not-allowed bg-slate-200 text-slate-400' }}">
+                                            {{ $img['file'] ? 'Change' : 'Add' }}
+                                        </label>
+                                    </form>
+
+                                    @if($img['file'])
+                                        <form method="POST"
+                                              action="{{ route('admin.agentImageClear', [$agent->id, $kind]) }}"
+                                              onsubmit="return confirm('Remove this {{ strtolower($spec['title']) }}?');">
+                                            @csrf
+                                            <button type="submit"
+                                                    class="rounded-lg border border-red-200 px-3 py-1.5 text-xs font-semibold text-red-600 hover:bg-red-50">
+                                                Clear
+                                            </button>
+                                        </form>
+                                    @endif
+
+                                </div>
                             </div>
                         </div>
 
