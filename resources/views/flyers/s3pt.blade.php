@@ -51,16 +51,11 @@ data-flyerbackground="{{$propInfo->theStyle
             <div class="headline_text"
             data-headlinetext="{{$propInfo->theStyle->headline_text}}"
             style="font-weight:bold;font-size:12pt;">
-               {{ $propInfo->xFullStreet}}
+               @include('flyers.flyerParts.noAutoLink', ['text' => $propInfo->xFullStreet])
             </div>
             <div class="headline_text"
             style="font-weight:normal;font-size:10pt;">
-               {{$propInfo->xCity}}, {{$propInfo->state}}
-               @if($propInfo->xZip)
-                {{$propInfo->xZip}}
-               @elseif($propInfo->xxZip)
-                {{$propInfo->xxZip}}
-               @endif
+               @include('flyers.flyerParts.noAutoLink', ['text' => $propInfo->xCity . ', ' . $propInfo->state . ' ' . ($propInfo->xZip ?: $propInfo->xxZip)])
             </div>
             <div class="headline_text"
             style="font-size:12pt;font-weight:bold;">

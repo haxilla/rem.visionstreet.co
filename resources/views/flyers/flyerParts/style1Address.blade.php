@@ -33,7 +33,7 @@
       style="font-weight:bold;
       font-size:12pt;"
     @endif>
-    {{ $propInfo['xFullStreet'] }}
+    @include('flyers.flyerParts.noAutoLink', ['text' => $propInfo['xFullStreet']])
   </div>
   <div
     @if($display=='screen')
@@ -41,12 +41,7 @@
     @else
       style="font-size:10pt;"
     @endif>
-      {{ $propInfo->xCity}}, {{ $propInfo->state}}
-      @if($propInfo->xZip)
-        {{ $propInfo->xZip}}
-      @else
-        {{ $propInfo->xxZip}}
-      @endif
+      @include('flyers.flyerParts.noAutoLink', ['text' => $propInfo->xCity . ', ' . $propInfo->state . ' ' . ($propInfo->xZip ?: $propInfo->xxZip)])
   </div>
   <div
     @if($display=='screen' && $totalPhotos > 7)

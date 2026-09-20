@@ -16,6 +16,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    {{-- Apple Mail / iOS: don't turn the street address into a link (Gmail's own address
+         detection is handled in the flyer templates - flyerParts/noAutoLink) --}}
+    <meta name="format-detection" content="address=no">
     <title>{{ $subject }}</title>
 </head>
 <body style="margin:0;padding:0;background-color:#ffffff;">

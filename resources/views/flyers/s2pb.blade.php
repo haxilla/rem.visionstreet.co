@@ -20,7 +20,7 @@ data-template="{{$propInfo->theStyle->template}}"
 data-flyerbackground="{{$propInfo->theStyle
 ->flyer_background}}">
    <div>
-      <table style="width:100%;">
+      <table style="width:100%;border-spacing:0;border-collapse:collapse;" cellspacing="0">
          <tr style="margin:0;padding:0;width:100%;">
             <td style="width:40%;margin:0;padding:0;">
                <div style="margin-left:20px;"
@@ -46,25 +46,21 @@ data-flyerbackground="{{$propInfo->theStyle
                xFullStreet @if($display=='screen') clickable @endif"
                @if($display=='screen') data-modal-trigger="address" @endif
                style="font-size:12pt;font-weight:bold;">
-                  {{$propInfo->xFullStreet}}
+                  @include('flyers.flyerParts.noAutoLink', ['text' => $propInfo->xFullStreet])
                </div>
                <div class="headline_text"
                style="font-size:10pt;">
                   <span class="xCity @if($display=='screen') clickable @endif"
                   @if($display=='screen') data-modal-trigger="address" @endif>
-                     {{$propInfo->xCity}},
+                     @include('flyers.flyerParts.noAutoLink', ['text' => $propInfo->xCity . ','])
                   </span>
                   <span class="xState @if($display=='screen') clickable @endif"
                   @if($display=='screen') data-modal-trigger="address" @endif>
-                     {{$propInfo->state}}
+                     @include('flyers.flyerParts.noAutoLink', ['text' => $propInfo->state])
                   </span>
                   <span class="xZip @if($display=='screen') clickable @endif"
                   @if($display=='screen') data-modal-trigger="address" @endif>
-                    @if($propInfo->xZip)
-                     {{$propInfo->xZip}}
-                    @elseif($propInfo->xxZip)
-                     {{$propInfo->xxZip}}
-                    @endif
+                     @include('flyers.flyerParts.noAutoLink', ['text' => $propInfo->xZip ?: $propInfo->xxZip])
                   </span>
                </div>
                <div class="headline_text

@@ -1583,8 +1583,18 @@ class adminController extends Controller
                 'subject'  => $subject,
             ])->render();
 
-            Mail::html($html, function ($message) use ($to, $subject) {
-                $message->to($to)->subject($subject);
+            // A plain-text version travels with the HTML one (an HTML-only message is a
+            // small mark against it with mail filters, Gmail's included).
+            $address = trim($propInfo->xCity . ', ' . $propInfo->state . ' ' . ($propInfo->xZip ?: $propInfo->xxZip));
+
+            $text = $subject . "\n\n"
+                . $propInfo->xFullStreet . "\n"
+                . $address . "\n"
+                . ($propInfo->xListPrice ? '$' . number_format($propInfo->xListPrice) . "\n" : '')
+                . ($propInfo->url_slug ? "\nView this flyer online: " . url('/homedetails/' . $propInfo->url_slug) . "\n" : '');
+
+            Mail::html($html, function ($message) use ($to, $subject, $text) {
+                $message->to($to)->subject($subject)->text($text);
             });
         } catch (\Throwable $e) {
             report($e);

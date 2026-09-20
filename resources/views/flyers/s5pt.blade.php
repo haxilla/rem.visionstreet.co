@@ -27,7 +27,7 @@ data-template="{{$propInfo->theStyle->template}}"
 data-flyerbackground="{{$propInfo->theStyle
 ->flyer_background}}">
    <!-- header table -->
-  <table style="width:100%;">
+  <table style="width:100%;border-spacing:0;border-collapse:collapse;" cellspacing="0">
     <tr>
       <td style="margin:0;padding:0;width:40%;">
         <div style="margin-left:20px;"
@@ -52,16 +52,11 @@ data-flyerbackground="{{$propInfo->theStyle
       @if($display=='screen') clickable @endif"
       @if($display=='screen') data-modal-trigger="address" @endif>
         <div style="font-size:12pt;font-weight:bold;">
-           {{ $propInfo->xFullStreet}}
+           @include('flyers.flyerParts.noAutoLink', ['text' => $propInfo->xFullStreet])
         </div>
         <div style="font-size:10pt;
         font-weight:normal;">
-           {{ $propInfo->xCity}}, {{ $propInfo->state }}
-           @if($propInfo->xZip)
-              {{ $propInfo->xZip}}
-           @else
-              {{ $propInfo->xxZip }}
-           @endif
+           @include('flyers.flyerParts.noAutoLink', ['text' => $propInfo->xCity . ', ' . $propInfo->state . ' ' . ($propInfo->xZip ?: $propInfo->xxZip)])
         </div>
         <div style="font-size:12pt;font-weight:bold;">
            ${{ number_format($propInfo->xListPrice)}}

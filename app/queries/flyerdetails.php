@@ -11,7 +11,7 @@ $propInfo=Propflyer::select(
    'xListPrice','xCity','xState','state','xZip','xxZip','xHeadline',
    'xMlsNum','xBeds','xxBeds','xBaths','xxBaths',
    'xSqft','xxSqft','xYrBuilt','xxYrBuilt','xVirtualTour',
-   'xMlsLink','xxHeadline','created_at','creationDate')
+   'xMlsLink','xxHeadline','created_at','creationDate','url_slug')
 ->where('id','=',"$flyerId")
 ->with(['theRemarks'=>function($q){
    $q->select('propflyer_id','xb1','xb2','xb3','xb4',
