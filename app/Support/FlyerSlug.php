@@ -62,15 +62,31 @@ class FlyerSlug
         }
     }
 
+    /** The four parts of an address as the slug will use them (each '' when missing or unusable). */
+    private static function parts(array $parts): array
+    {
+        $zip = preg_replace('/\D/', '', (string) (($parts['xZip'] ?? '') ?: ($parts['xxZip'] ?? '')));
+
+        return [
+            'street' => self::text($parts['xFullStreet'] ?? ''),
+            'city'   => self::text($parts['xCity'] ?? ''),
+            'state'  => self::stateCode($parts['state'] ?? '') ?: self::stateCode($parts['xState'] ?? ''),
+            'zip'    => strlen($zip) >= 5 ? substr($zip, 0, 5) : '',
+        ];
+    }
+
+    /** Which of 'street', 'city', 'state', 'zip' this address is missing (or has an unusable value for). */
+    public static function missing(array $parts): array
+    {
+        return array_keys(array_filter(self::parts($parts), fn ($value) => $value === ''));
+    }
+
     /** What the slug would be for these address parts (an array with the column names as keys), or null if incomplete. */
     public static function build(array $parts): ?string
     {
-        $street = self::text($parts['xFullStreet'] ?? '');
-        $city   = self::text($parts['xCity'] ?? '');
-        $state  = self::stateCode($parts['state'] ?? '') ?: self::stateCode($parts['xState'] ?? '');
-        $zip    = substr(preg_replace('/\D/', '', (string) (($parts['xZip'] ?? '') ?: ($parts['xxZip'] ?? ''))), 0, 5);
+        ['street' => $street, 'city' => $city, 'state' => $state, 'zip' => $zip] = self::parts($parts);
 
-        if ($street === '' || $city === '' || $state === '' || strlen($zip) < 5) {
+        if (self::missing($parts)) {
             return null;
         }
 
