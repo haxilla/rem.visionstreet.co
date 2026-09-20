@@ -37,7 +37,7 @@ $propInfo=Propflyer::select(
 ->with(['theMeta'=>function($q){
    $q->select('propflyer_id','zipDir','mlsDir');}])
 ->with(['theStats'=>function($q){
-   $q->select('propflyer_id','xWebViews');}])
+   $q->select('propflyer_id','xWebViews','xLastDeliveryDate');}])
 ->first();
 
 /*

@@ -61,6 +61,11 @@ $addableAreas = collect($data['emailCounts'] ?? [])
 // created_at is only reliably populated for flyers created through this
 // app - anything imported from the legacy pre-Laravel system has it
 // null, with the real date only in the legacy creationDate column.
+// The flyer's last delivery (propflyerstats.xLastDeliveryDate - set by the mailer,
+// and raised by the Edit dates form). Legacy rows can hold NULL or a zero date.
+$lastSent = optional($propInfo->theStats)->xLastDeliveryDate;
+$lastSent = ($lastSent && $lastSent->year > 1970) ? $lastSent : null;
+
 $createdDate = null;
 if ($propInfo->created_at) {
     $createdDate = $propInfo->created_at->format('n/j/Y');
@@ -160,6 +165,10 @@ if ($propInfo->created_at) {
                     <span class="rounded-full bg-blue-100 px-3 py-1 text-blue-700">{{ $inProgressCampaigns->count() }} in progress</span>
                 @endif
                 <span class="rounded-full bg-emerald-100 px-3 py-1 text-emerald-700">{{ $completedCampaigns->count() }} completed</span>
+
+                <span class="rounded-full bg-slate-100 px-3 py-1 text-slate-600">
+                    {{ $lastSent ? 'Last sent ' . $lastSent->format('M j, Y') : 'Never sent' }}
+                </span>
 
                 <span class="rounded-full bg-slate-100 px-3 py-1 text-slate-600">
                     {{ number_format(optional($propInfo->theStats)->xWebViews ?? 0) }} flyer views
