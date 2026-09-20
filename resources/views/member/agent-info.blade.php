@@ -8,7 +8,7 @@
     The agent's own profile: everything they may edit (name, designations, contact details,
     brokerage and address, licence details) and their photo and logo. Saved by
     memberController::agentInfoSave / agentImageUpload / agentImageClear.
-    Not editable here: the sign-in email, credits and start date.
+    Not on this page: the sign-in email and password (Account Info), credits and start date.
 
     Layout is plain CSS (.ai-*) so it shows correctly whether or not the site stylesheet
     has been rebuilt since the last deploy.
@@ -63,10 +63,6 @@
     .ai-field input, .ai-field select { width: 100%; height: 42px; border: 1px solid #d5dbe6; border-radius: 12px; background: #fff;
                        padding: 0 12px; font-size: 15px; color: #0f172a; outline: none; }
     .ai-field input:focus, .ai-field select:focus { border-color: #123f91; box-shadow: 0 0 0 3px rgba(18,63,145,.12); }
-    .ai-tag     { padding: 2px 7px; border-radius: 999px; background: #e8f0ff; color: #123f91; font-size: 10.5px; font-weight: 800; letter-spacing: .02em; }
-    .ai-note    { font-size: 12.5px; color: #64748b; margin-top: 5px; line-height: 1.45; }
-    .ai-static  { min-height: 42px; display: flex; align-items: center; padding: 0 12px; border-radius: 12px; background: #f3f5fa;
-                  font-size: 15px; color: #334155; word-break: break-all; }
     .ai-foot    { display: flex; justify-content: flex-end; padding: 14px 22px; border-top: 1px solid #eef1f6; background: #fafbfd; }
 
     @media (max-width: 720px) {
@@ -132,7 +128,7 @@
                         </div>
 
                         <div style="min-width:0">
-                            <h3>{{ $spec['title'] }} <span class="ai-tag">On your flyers</span></h3>
+                            <h3>{{ $spec['title'] }}</h3>
 
                             @if(!$spec['can'])
                                 <small>Add your brokerage or office address below and save it first &mdash; then you can add a logo.</small>
@@ -172,7 +168,7 @@
 
         <div class="ai-card-h">
             <h2>Your details</h2>
-            <p>Fields marked <span class="ai-tag">On your flyers</span> are shown to everyone who receives them.</p>
+            <p>Keep this up to date - it is what appears on your flyers.</p>
         </div>
 
         <div class="ai-card-b">
@@ -181,17 +177,17 @@
                 <h3>About you</h3>
                 <div class="ai-grid">
                     <div class="ai-field">
-                        <label for="agtFirst">First name <span class="ai-tag">On your flyers</span></label>
+                        <label for="agtFirst">First name</label>
                         <input type="text" id="agtFirst" name="agtFirst" maxlength="48" autocomplete="given-name"
                                value="{{ old('agtFirst', $firstName) }}">
                     </div>
                     <div class="ai-field">
-                        <label for="agtLast">Last name <span class="ai-tag">On your flyers</span></label>
+                        <label for="agtLast">Last name</label>
                         <input type="text" id="agtLast" name="agtLast" maxlength="48" autocomplete="family-name"
                                value="{{ old('agtLast', $lastName) }}">
                     </div>
                     <div class="ai-field full">
-                        <label for="agtDesigs">Designations <span class="ai-tag">On your flyers</span></label>
+                        <label for="agtDesigs">Designations</label>
                         <input type="text" id="agtDesigs" name="agtDesigs" maxlength="100"
                                placeholder="e.g. REALTOR&reg;, ABR, CRS"
                                value="{{ old('agtDesigs', $agent->agtDesigs) }}">
@@ -202,19 +198,13 @@
             <div class="ai-section">
                 <h3>Contact</h3>
                 <div class="ai-grid">
-                    <div class="ai-field full">
-                        <label>Sign-in email</label>
-                        <div class="ai-static">{{ $agent->xxAgtUname ?: '—' }}</div>
-                        <div class="ai-note">This is what you sign in with, so it can't be changed here. To change it, contact support.</div>
-                    </div>
-
                     <div class="ai-field">
                         <label for="agtEmail">Contact email</label>
                         <input type="email" id="agtEmail" name="agtEmail" maxlength="100" autocomplete="email"
                                value="{{ old('agtEmail', $agent->agtEmail) }}">
                     </div>
                     <div class="ai-field">
-                        <label for="agtMainPhone">Main phone <span class="ai-tag">On your flyers</span></label>
+                        <label for="agtMainPhone">Main phone</label>
                         <input type="tel" id="agtMainPhone" name="agtMainPhone" maxlength="30" autocomplete="tel"
                                value="{{ old('agtMainPhone', $agent->agtMainPhone) }}">
                     </div>
@@ -245,22 +235,22 @@
                 <h3>Brokerage &amp; address</h3>
                 <div class="ai-grid">
                     <div class="ai-field full">
-                        <label for="officeName">Brokerage <span class="ai-tag">On your flyers</span></label>
+                        <label for="officeName">Brokerage</label>
                         <input type="text" id="officeName" name="officeName" maxlength="150" autocomplete="organization"
                                value="{{ $officeInput('officeName') }}">
                     </div>
                     <div class="ai-field full">
-                        <label for="officeAddress1">Street address <span class="ai-tag">On your flyers</span></label>
+                        <label for="officeAddress1">Street address</label>
                         <input type="text" id="officeAddress1" name="officeAddress1" maxlength="150" autocomplete="address-line1"
                                value="{{ $officeInput('officeAddress1') }}">
                     </div>
                     <div class="ai-field">
-                        <label for="officeCity">City <span class="ai-tag">On your flyers</span></label>
+                        <label for="officeCity">City</label>
                         <input type="text" id="officeCity" name="officeCity" maxlength="100" autocomplete="address-level2"
                                value="{{ $officeInput('officeCity') }}">
                     </div>
                     <div class="ai-field">
-                        <label for="officeState">State <span class="ai-tag">On your flyers</span></label>
+                        <label for="officeState">State</label>
                         <select id="officeState" name="officeState" autocomplete="address-level1">
                             <option value="">&mdash;</option>
                             @foreach($states as $abbr => $stateName)
@@ -273,7 +263,7 @@
                         </select>
                     </div>
                     <div class="ai-field">
-                        <label for="officeZip">ZIP <span class="ai-tag">On your flyers</span></label>
+                        <label for="officeZip">ZIP</label>
                         <input type="text" id="officeZip" name="officeZip" maxlength="10" autocomplete="postal-code"
                                value="{{ $officeInput('officeZip') }}">
                     </div>
