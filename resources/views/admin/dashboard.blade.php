@@ -4,321 +4,42 @@
 
 @include('admin.layout.nav')
 
-{{-- Column layout for the campaign lists, as PLAIN CSS on purpose. Whether a row is
-     visible at all depends on this (the wide row and the stacked card swap at 1280px),
-     so it must not rely on Tailwind classes that only exist after a stylesheet rebuild.
-     Wide screens: Area | Address (takes the rest) | Agent | Emails | Date, with the date
-     column wide enough for "Sep 19, 2026 3:18 PM" on one line. Narrower: stacked cards. --}}
-<style>
-    .camp-wide   { display: none; }
-    .camp-narrow { display: block; }
+@php
+    /*
+        One card per flyer per stage (its requested areas open in a dropdown); the
+        grouping and everything on the cards is built in app/admin/dashboard.php.
 
-    @media (min-width: 1280px) {
-        .camp-wide {
-            display: grid;
-            grid-template-columns: 10rem minmax(0, 1fr) 14rem 6rem 12rem;
-            align-items: center;
-            column-gap: 1rem;
-        }
+        Stages:
+        - Waiting: requested, the request time has passed, delivery not started
+          (Unauthorized = at least one area still to authorize; Authorized = all are)
+        - In Progress: started, not finished
+        - Completed: finished - the 10 most recently finished flyers
+    */
 
-        .camp-narrow { display: none; }
-    }
-</style>
+    $waitingUnauthorized = $data['waitingUnauthorized'] ?? collect();
+    $waitingAuthorized   = $data['waitingAuthorized'] ?? collect();
+    $inProgress          = $data['inProgress'] ?? collect();
+    $completed           = $data['completed'] ?? collect();
+
+    $waitingAll = $waitingUnauthorized->concat($waitingAuthorized);
+
+    // "12 flyers · 34 areas · 152,300 contacts" for a list of flyer groups
+    $summary = function ($groups) {
+        $areas    = $groups->sum(fn ($g) => $g['areas']->count());
+        $contacts = $groups->sum('contacts');
+
+        return number_format($groups->count()) . ' ' . ($groups->count() === 1 ? 'flyer' : 'flyers')
+            . ' · ' . number_format($areas) . ' ' . ($areas === 1 ? 'area' : 'areas')
+            . ($contacts > 0 ? ' · ' . number_format($contacts) . ' contacts' : '');
+    };
+
+    $oldestWaiting = $waitingAll->pluck('requested')->filter()->sort()->first();
+
+    $empty = 'rounded-2xl border border-dashed border-slate-300 p-8 text-center text-sm text-slate-500';
+@endphp
 
 <main class="min-h-screen bg-[#f4f7fb] pt-24">
     <div class="px-4 py-6 sm:px-6 lg:px-10 lg:py-8">
-
-            @php
-                /*
-                    This page now displays individual propdelivnow campaigns.
-
-                    Status rules:
-                    - Waiting: emRequest <= now AND emStart is empty
-                    - In Progress: emStart filled AND emFinished empty
-                    - Complete: emRequest, emStart, emFinished all filled
-
-                    Authorization:
-                    Update the field list inside campaignAuthorized() if your actual authorization
-                    column is named differently.
-                */
-
-                $waitingFlyerCamps    = $data['waitingFlyerCamps'] ?? collect();
-                $inProgressFlyerCamps = $data['inProgressFlyerCamps'] ?? collect();
-                $completeFlyerCamps   = $data['completeFlyerCamps'] ?? collect();
-
-                $directCampaigns      = $data['campaigns'] ?? collect();
-
-                $campaignValue = function ($campaign, $keys, $default = null) {
-                    foreach ((array) $keys as $key) {
-                        if (is_array($campaign) && array_key_exists($key, $campaign)) {
-                            return $campaign[$key];
-                        }
-
-                        if (is_object($campaign) && isset($campaign->{$key})) {
-                            return $campaign->{$key};
-                        }
-                    }
-
-                    return $default;
-                };
-
-                $campaignFlyer = function ($campaign) use ($campaignValue) {
-                    return $campaignValue($campaign, ['flyer', 'theFlyer'], null);
-                };
-
-                $campaignAuthorized = function ($campaign) use ($campaignValue) {
-                    $value = $campaignValue($campaign, [
-                        'emAuthorized',
-                        'campAuthorized',
-                        'authorized',
-                        'isAuthorized',
-                        'xAuthorized',
-                        'emAuth',
-                        'auth'
-                    ], null);
-
-                    return in_array($value, [1, '1', true, 'true', 'TRUE', 'yes', 'YES', 'Y', 'y'], true);
-                };
-
-                $campaignDate = function ($campaign, $keys) use ($campaignValue) {
-                    return $campaignValue($campaign, $keys, null);
-                };
-
-                $formatDate = function ($date) {
-                    if (!$date) {
-                        return 'N/A';
-                    }
-
-                    try {
-                        return \Carbon\Carbon::parse($date)->format('M j, Y g:i A');
-                    } catch (\Exception $e) {
-                        return $date;
-                    }
-                };
-
-                // (The column layout for the campaign lists is the .camp-wide / .camp-narrow
-                // CSS at the top of this file - defined once, used by the rows and headings.)
-
-                // Readable names for the area codes stored on each campaign (azphxne -> Phoenix Northeast)
-                $areaLabels = [];
-                foreach (include app_path('flyers/campaignAreas.php') as $areaInfo) {
-                    $areaLabels[$areaInfo['db']] = $areaInfo['label'];
-                }
-
-                $isEmptyDate = function ($date) {
-                    return empty($date) || $date === '0000-00-00' || $date === '0000-00-00 00:00:00';
-                };
-
-                $allCampaigns = collect();
-
-                $addCampaigns = function ($items) use (&$allCampaigns) {
-                    if (!$items) {
-                        return;
-                    }
-
-                    foreach (collect($items) as $key => $item) {
-                        if ($item instanceof \Illuminate\Support\Collection) {
-                            foreach ($item as $campaign) {
-                                $allCampaigns->push($campaign);
-                            }
-                        } elseif (is_array($item) && isset($item[0])) {
-                            foreach ($item as $campaign) {
-                                $allCampaigns->push($campaign);
-                            }
-                        } else {
-                            $allCampaigns->push($item);
-                        }
-                    }
-                };
-
-                $addCampaigns($directCampaigns);
-                $addCampaigns($waitingFlyerCamps);
-                $addCampaigns($inProgressFlyerCamps);
-                $addCampaigns($completeFlyerCamps);
-
-                $now = now();
-
-                $waitingCampaigns = $allCampaigns->filter(function ($campaign) use ($campaignDate, $isEmptyDate, $now) {
-                    $emRequest = $campaignDate($campaign, ['emRequest']);
-                    $emStart   = $campaignDate($campaign, ['emStart']);
-
-                    if ($isEmptyDate($emRequest) || !$isEmptyDate($emStart)) {
-                        return false;
-                    }
-
-                    try {
-                        return \Carbon\Carbon::parse($emRequest)->lte($now);
-                    } catch (\Exception $e) {
-                        return false;
-                    }
-                })->values();
-
-                $waitingAuthorized = $waitingCampaigns->filter(function ($campaign) use ($campaignAuthorized) {
-                    return $campaignAuthorized($campaign);
-                })->values();
-
-                $waitingUnauthorized = $waitingCampaigns->filter(function ($campaign) use ($campaignAuthorized) {
-                    return !$campaignAuthorized($campaign);
-                })->values();
-
-                $inProgressCampaigns = $allCampaigns->filter(function ($campaign) use ($campaignDate, $isEmptyDate) {
-                    $emStart    = $campaignDate($campaign, ['emStart']);
-                    $emFinished = $campaignDate($campaign, ['emFinished', 'emComplete']);
-
-                    return !$isEmptyDate($emStart) && $isEmptyDate($emFinished);
-                })->values();
-
-                $completedCampaigns = $allCampaigns->filter(function ($campaign) use ($campaignDate, $isEmptyDate) {
-                    $emRequest  = $campaignDate($campaign, ['emRequest']);
-                    $emStart    = $campaignDate($campaign, ['emStart']);
-                    $emFinished = $campaignDate($campaign, ['emFinished', 'emComplete']);
-
-                    return !$isEmptyDate($emRequest) && !$isEmptyDate($emStart) && !$isEmptyDate($emFinished);
-                })->sortByDesc(function ($campaign) use ($campaignDate) {
-                    return $campaignDate($campaign, ['emFinished', 'emComplete']);
-                })->take(10)->values();
-
-                $getThumbUrl = function ($campaign) use ($campaignFlyer) {
-                    $flyer = $campaignFlyer($campaign);
-
-                    if (!$flyer) {
-                        return null;
-                    }
-
-                    $photo = $flyer?->thePhotos?->first();
-                    $meta  = $flyer?->theMeta;
-
-                    if ($photo && $meta && $meta->zipDir && $meta->mlsDir && $photo->photoName) {
-                        return "https://realtyrepublic.com/hqphotos/{$meta->zipDir}/{$meta->mlsDir}/{$photo->photoName}";
-                    }
-
-                    return null;
-                };
-
-                $getAddress = function ($campaign) use ($campaignValue, $campaignFlyer) {
-                    $directAddress = $campaignValue($campaign, ['address', 'xFullStreet', 'fullAddress'], null);
-
-                    if ($directAddress) {
-                        return $directAddress;
-                    }
-
-                    $flyer = $campaignFlyer($campaign);
-
-                    return $flyer?->xFullStreet ?? 'No Address';
-                };
-
-                $getFlyerId = function ($campaign) use ($campaignValue, $campaignFlyer) {
-                    $directId = $campaignValue($campaign, ['flyer_id', 'propflyer_id', 'ufid', 'flyerId'], null);
-
-                    if ($directId) {
-                        return $directId;
-                    }
-
-                    $flyer = $campaignFlyer($campaign);
-
-                    return $flyer?->id ?? null;
-                };
-
-                $getAgent = function ($campaign) use ($campaignFlyer) {
-                    $flyer = $campaignFlyer($campaign);
-
-                    return $flyer?->theAgent ?? null;
-                };
-
-                $renderCampaignCard = function ($campaign, $status) use (
-                    $data,
-                    $campaignValue,
-                    $campaignDate,
-                    $campaignAuthorized,
-                    $formatDate,
-                    $getThumbUrl,
-                    $getAddress,
-                    $getFlyerId,
-                    $getAgent,
-                    $areaLabels
-                ) {
-                    $thumbUrl   = $getThumbUrl($campaign);
-                    $address    = $getAddress($campaign);
-                    $flyerId    = $getFlyerId($campaign);
-                    $agent      = $getAgent($campaign);
-
-                    $subject    = $campaignValue($campaign, ['emSubject'], 'N/A');
-                    $label      = $campaignValue($campaign, ['campLabel'], 'N/A');
-                    $emails     = $campaignValue($campaign, ['emailCount', 'emCount', 'totalEmails', 'countEmails'], null);
-                    $area       = $campaignValue($campaign, ['emArea'], 'N/A');
-                    $areaKey    = strtolower(trim($area));
-                    $emailCount = $data['emailCounts'][$areaKey] ?? 0;
-                    $areaName   = $areaLabels[$areaKey] ?? $area;
-                    $agentName  = $agent?->agtFullName ?? 'N/A';
-
-                    $emRequest  = $campaignDate($campaign, ['emRequest']);
-                    $emStart    = $campaignDate($campaign, ['emStart']);
-                    $emFinished = $campaignDate($campaign, ['emFinished', 'emComplete']);
-
-                    $authorized = $campaignAuthorized($campaign);
-
-                    // the date this list is about: when it started / finished / was requested
-                    $listDate = $status === 'progress'
-                        ? $formatDate($emStart)
-                        : ($status === 'completed' ? $formatDate($emFinished) : $formatDate($emRequest));
-                @endphp
-
-                <div class="border-b border-slate-200 px-3 py-3 hover:bg-slate-50">
-
-                    {{-- WIDE (1280px and up): one line per campaign, columns set by .camp-wide.
-                         The date never wraps (whitespace-nowrap, in a column wide enough for
-                         it); anything that is clipped shows in full on hover. --}}
-                    <div class="camp-wide text-sm">
-
-                        <div class="truncate font-medium text-slate-700" title="{{ $areaName }}">
-                            {{ $areaName }}
-                        </div>
-
-                        <div class="min-w-0 truncate">
-                            <a href="/admin/flyerCamps/{{ $flyerId }}" class="text-blue-600 hover:underline" title="{{ $address }}">{{ $address }}</a>
-                        </div>
-
-                        <div class="truncate text-slate-700" title="{{ $agentName }}">
-                            {{ $agentName }}
-                        </div>
-
-                        <div class="text-right tabular-nums text-slate-700">
-                            {{ number_format($emailCount) }}
-                        </div>
-
-                        <div class="whitespace-nowrap text-right tabular-nums text-slate-600">
-                            {{ $listDate }}
-                        </div>
-
-                    </div>
-
-                    {{-- NARROWER: a stacked card - address and date on the first line (the
-                         date can't wrap), the details underneath --}}
-                    <div class="camp-narrow text-sm">
-
-                        <div class="flex items-start justify-between gap-3">
-                            <a href="/admin/flyerCamps/{{ $flyerId }}" class="min-w-0 break-words font-medium text-blue-600 hover:underline">
-                                {{ $address }}
-                            </a>
-
-                            <span class="shrink-0 whitespace-nowrap text-xs tabular-nums text-slate-500">
-                                {{ $listDate }}
-                            </span>
-                        </div>
-
-                        <div class="mt-1 flex flex-wrap gap-x-3 gap-y-0.5 text-xs text-slate-500">
-                            <span class="font-medium text-slate-600">{{ $areaName }}</span>
-                            <span>Agent: {{ $agentName }}</span>
-                            <span>{{ $emails ? number_format($emails) : '-' }} emails</span>
-                        </div>
-
-                    </div>
-
-                </div>
-
-                @php
-                };
-            @endphp
 
             <div>
 
@@ -333,7 +54,7 @@
                             </h1>
 
                             <p class="mt-2 text-[14px] text-slate-600">
-                                Individual campaign status by authorization, delivery progress, and recent completions.
+                                Each flyer's campaign request by authorization, delivery progress, and recent completions. Open a card to see its areas.
                             </p>
                         </div>
 
@@ -351,7 +72,7 @@
                                     >
                                         Waiting
                                         <span class="ml-2 rounded-full bg-white/20 px-2 py-0.5 text-xs">
-                                            {{ $waitingCampaigns->count() }}
+                                            {{ $waitingAll->count() }}
                                         </span>
                                     </button>
 
@@ -362,7 +83,7 @@
                                     >
                                         In Progress
                                         <span class="ml-2 rounded-full bg-white/50 px-2 py-0.5 text-xs">
-                                            {{ $inProgressCampaigns->count() }}
+                                            {{ $inProgress->count() }}
                                         </span>
                                     </button>
 
@@ -373,7 +94,7 @@
                                     >
                                         Completed
                                         <span class="ml-2 rounded-full bg-white/50 px-2 py-0.5 text-xs">
-                                            {{ $completedCampaigns->count() }}
+                                            {{ $completed->count() }}
                                         </span>
                                     </button>
 
@@ -386,20 +107,15 @@
                                 {{-- WAITING --}}
                                 <div class="campaign-panel" id="tab-waiting">
 
-                                    <div class="mb-5 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                                        <div>
-                                            <h2 class="text-xl font-semibold text-slate-900">
-                                                Waiting Campaigns
-                                            </h2>
+                                    <div class="mb-5">
+                                        <h2 class="text-xl font-semibold text-slate-900">Waiting Campaigns</h2>
 
-                                            <p class="mt-1 text-sm text-slate-500">
-                                                Requested campaigns where the request time has passed and delivery has not started.
-                                            </p>
-                                        </div>
-
-                                        <span class="w-fit rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-700">
-                                            {{ $waitingCampaigns->count() }} waiting
-                                        </span>
+                                        <p class="mt-1 text-sm text-slate-500">
+                                            {{ $summary($waitingAll) }}
+                                            @if($oldestWaiting)
+                                                &middot; oldest request {{ $oldestWaiting->diffForHumans() }}
+                                            @endif
+                                        </p>
                                     </div>
 
                                     {{-- WAITING SUB MENU --}}
@@ -426,36 +142,24 @@
 
                                     {{-- UNAUTHORIZED WAITING --}}
                                     <div class="waiting-panel" id="waiting-unauthorized">
-
-                                        @include('admin.campaignColumnHeader', ['dateLabel' => 'Requested'])
-
-                                        <div>
-                                            @forelse($waitingUnauthorized as $campaign)
-                                                @php $renderCampaignCard($campaign, 'waiting'); @endphp
+                                        <div class="space-y-3">
+                                            @forelse($waitingUnauthorized as $group)
+                                                @include('admin.dashRow', ['group' => $group, 'stage' => 'waiting', 'tone' => 'amber'])
                                             @empty
-                                                <div class="rounded-2xl border border-dashed border-slate-300 p-8 text-center text-sm text-slate-500">
-                                                    No unauthorized waiting campaigns found.
-                                                </div>
+                                                <div class="{{ $empty }}">No unauthorized waiting campaigns found.</div>
                                             @endforelse
                                         </div>
-
                                     </div>
 
                                     {{-- AUTHORIZED WAITING --}}
                                     <div class="waiting-panel hidden" id="waiting-authorized">
-
-                                        @include('admin.campaignColumnHeader', ['dateLabel' => 'Requested'])
-
-                                        <div>
-                                            @forelse($waitingAuthorized as $campaign)
-                                                @php $renderCampaignCard($campaign, 'waiting'); @endphp
+                                        <div class="space-y-3">
+                                            @forelse($waitingAuthorized as $group)
+                                                @include('admin.dashRow', ['group' => $group, 'stage' => 'waiting', 'tone' => 'indigo'])
                                             @empty
-                                                <div class="rounded-2xl border border-dashed border-slate-300 p-8 text-center text-sm text-slate-500">
-                                                    No authorized waiting campaigns found.
-                                                </div>
+                                                <div class="{{ $empty }}">No authorized waiting campaigns found.</div>
                                             @endforelse
                                         </div>
-
                                     </div>
 
                                 </div>
@@ -463,34 +167,17 @@
                                 {{-- IN PROGRESS --}}
                                 <div class="campaign-panel hidden" id="tab-progress">
 
-                                    <div class="mb-5 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                                        <div>
-                                            <h2 class="text-xl font-semibold text-slate-900">
-                                                In Progress Campaigns
-                                            </h2>
-
-                                            <p class="mt-1 text-sm text-slate-500">
-                                                Campaigns that have started delivery but have not finished.
-                                            </p>
-                                        </div>
-
-                                        <span class="w-fit rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">
-                                            {{ $inProgressCampaigns->count() }} in progress
-                                        </span>
+                                    <div class="mb-5">
+                                        <h2 class="text-xl font-semibold text-slate-900">In Progress Campaigns</h2>
+                                        <p class="mt-1 text-sm text-slate-500">{{ $summary($inProgress) }}</p>
                                     </div>
 
-                                    @include('admin.campaignColumnHeader', ['dateLabel' => 'Started'])
-
-                                    <div>
-
-                                        @forelse($inProgressCampaigns as $campaign)
-                                            @php $renderCampaignCard($campaign, 'progress'); @endphp
+                                    <div class="space-y-3">
+                                        @forelse($inProgress as $group)
+                                            @include('admin.dashRow', ['group' => $group, 'stage' => 'progress', 'tone' => 'blue'])
                                         @empty
-                                            <div class="rounded-2xl border border-dashed border-slate-300 p-8 text-center text-sm text-slate-500">
-                                                No in progress campaigns found.
-                                            </div>
+                                            <div class="{{ $empty }}">No in progress campaigns found.</div>
                                         @endforelse
-
                                     </div>
 
                                 </div>
@@ -498,34 +185,17 @@
                                 {{-- COMPLETED --}}
                                 <div class="campaign-panel hidden" id="tab-completed">
 
-                                    <div class="mb-5 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                                        <div>
-                                            <h2 class="text-xl font-semibold text-slate-900">
-                                                Recently Completed Campaigns
-                                            </h2>
-
-                                            <p class="mt-1 text-sm text-slate-500">
-                                                Last 10 completed campaigns, sorted by finish time.
-                                            </p>
-                                        </div>
-
-                                        <span class="w-fit rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
-                                            Last {{ $completedCampaigns->count() }}
-                                        </span>
+                                    <div class="mb-5">
+                                        <h2 class="text-xl font-semibold text-slate-900">Recently Completed Campaigns</h2>
+                                        <p class="mt-1 text-sm text-slate-500">Last {{ $completed->count() }} flyers to finish &middot; {{ $summary($completed) }}</p>
                                     </div>
 
-                                    @include('admin.campaignColumnHeader', ['dateLabel' => 'Finished'])
-
-                                    <div>
-
-                                        @forelse($completedCampaigns as $campaign)
-                                            @php $renderCampaignCard($campaign, 'completed'); @endphp
+                                    <div class="space-y-3">
+                                        @forelse($completed as $group)
+                                            @include('admin.dashRow', ['group' => $group, 'stage' => 'completed', 'tone' => 'emerald'])
                                         @empty
-                                            <div class="rounded-2xl border border-dashed border-slate-300 p-8 text-center text-sm text-slate-500">
-                                                No completed campaigns found.
-                                            </div>
+                                            <div class="{{ $empty }}">No completed campaigns found.</div>
                                         @endforelse
-
                                     </div>
 
                                 </div>
