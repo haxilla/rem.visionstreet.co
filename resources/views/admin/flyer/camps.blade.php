@@ -81,8 +81,8 @@ if ($propInfo->created_at) {
         $place = trim(($propInfo->xCity ?? '') . ', ' . ($propInfo->xState ?: ($propInfo->state ?? '')) . ' ' . ($propInfo->xZip ?? ''), ' ,');
 
         $card      = 'bg-white rounded-2xl shadow-sm ring-1 ring-slate-200/70';
-        $cardHead  = 'flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 px-5 py-4';
-        $eyebrow   = 'text-xs font-semibold uppercase tracking-wide text-slate-500';
+        $cardHead  = 'flex flex-wrap items-center justify-between gap-3 bg-gradient-to-r from-[#1b2f63] via-[#223a75] to-[#2a4486] px-5 py-4 text-white';
+        $eyebrow   = 'text-xs font-bold uppercase tracking-wider text-[#214e9b]';
     @endphp
 
     <div class="max-w-6xl lg:max-w-[1400px] mx-auto px-3 sm:px-4 lg:px-6 py-6">
@@ -183,7 +183,7 @@ if ($propInfo->created_at) {
         <div class="{{ $card }} overflow-hidden mb-6 lg:col-start-1">
 
             <div class="{{ $cardHead }}">
-                <h2 class="font-semibold text-slate-900">Send Request</h2>
+                <h2 class="text-base font-bold text-white">Send Request</h2>
 
                 @if($awaitingApproval->isNotEmpty())
                     <span class="rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-800">Awaiting approval</span>
@@ -195,9 +195,9 @@ if ($propInfo->created_at) {
             </div>
 
             {{-- AGENT + SEND DETAILS --}}
-            <div class="grid gap-x-8 gap-y-5 px-5 py-5 md:grid-cols-2 text-sm">
+            <div class="grid gap-4 px-5 py-5 md:grid-cols-2 text-sm">
 
-                <div>
+                <div class="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
                     <div class="{{ $eyebrow }} mb-1">Agent</div>
                     <div class="font-semibold text-slate-900">{{ $agent->agtFullName ?? 'Unknown agent' }}</div>
                     @if($agent?->agtEmail)
@@ -209,7 +209,7 @@ if ($propInfo->created_at) {
                     <div class="mt-1 text-slate-500">Credits remaining: {{ number_format($agent->remCreds ?? 0) }}</div>
                 </div>
 
-                <div>
+                <div class="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
                     <div class="{{ $eyebrow }} mb-1">Requested</div>
                     <div class="text-slate-900">
                         {{ $pendingRequests->isNotEmpty() ? \Carbon\Carbon::parse($pendingRequests->first()->emRequest)->format('M j, Y g:i A') : '-' }}
@@ -219,7 +219,7 @@ if ($propInfo->created_at) {
                     <div class="text-slate-900">{{ $pendingRequests->first()->emSubject ?? $subject ?: 'No subject' }}</div>
                 </div>
 
-                <div>
+                <div class="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
                     <div class="{{ $eyebrow }} mb-1">Open Houses</div>
                     @forelse($openHouses as $line)
                         <div class="text-slate-900">{{ $line }}</div>
@@ -228,7 +228,7 @@ if ($propInfo->created_at) {
                     @endforelse
                 </div>
 
-                <div>
+                <div class="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
                     <div class="{{ $eyebrow }} mb-1">Agent Bonus / Price Reduced</div>
 
                     @if($sendDetails?->agentBonusAmount)
@@ -258,9 +258,9 @@ if ($propInfo->created_at) {
 
             {{-- REQUESTED AREAS: waiting to be approved, or approved and waiting to send --}}
             <div class="border-t border-slate-200">
-                <div class="{{ $eyebrow }} px-5 pt-4">Requested Areas ({{ $pendingRequests->count() }})</div>
+                <div class="{{ $eyebrow }} border-y border-slate-200 bg-white px-5 py-3">Requested Areas ({{ $pendingRequests->count() }})</div>
 
-                <div class="divide-y divide-slate-100">
+                <div class="space-y-3 bg-slate-100 p-3 sm:p-4">
                     @forelse($pendingRequests as $req)
                         @include('admin.flyer.campRow', [
                             'stage'      => (int) $req->authorized === 1 ? 'approved' : 'awaiting',
@@ -274,7 +274,7 @@ if ($propInfo->created_at) {
                             'completed'  => $req->emComplete,
                         ])
                     @empty
-                        <div class="px-5 py-6 text-sm text-slate-500">This flyer has no pending send request.</div>
+                        <div class="rounded-xl bg-white px-5 py-6 text-sm text-slate-500 ring-1 ring-slate-200">This flyer has no pending send request.</div>
                     @endforelse
                 </div>
             </div>
@@ -417,10 +417,10 @@ if ($propInfo->created_at) {
         <div class="{{ $card }} overflow-hidden mb-6 lg:col-start-1">
 
             <div class="{{ $cardHead }}">
-                <h2 class="font-semibold text-slate-900">In Progress ({{ $inProgressCampaigns->count() }})</h2>
+                <h2 class="text-base font-bold text-white">In Progress ({{ $inProgressCampaigns->count() }})</h2>
             </div>
 
-            <div class="divide-y divide-slate-100">
+            <div class="space-y-3 bg-slate-100 p-3 sm:p-4">
 
                 @forelse($inProgressCampaigns as $camp)
                     @include('admin.flyer.campRow', [
@@ -434,7 +434,7 @@ if ($propInfo->created_at) {
                         'completed'  => null,
                     ])
                 @empty
-                    <div class="px-5 py-8 text-center text-sm text-slate-500">No campaigns are in progress.</div>
+                    <div class="rounded-xl bg-white px-5 py-8 text-center text-sm text-slate-500 ring-1 ring-slate-200">No campaigns are in progress.</div>
                 @endforelse
 
             </div>
@@ -445,12 +445,12 @@ if ($propInfo->created_at) {
         <div class="{{ $card }} overflow-hidden lg:col-start-1">
 
             <div class="{{ $cardHead }}">
-                <h2 class="font-semibold text-slate-900">Completed Campaigns ({{ $completedCampaigns->count() }})</h2>
+                <h2 class="text-base font-bold text-white">Completed Campaigns ({{ $completedCampaigns->count() }})</h2>
 
-                <span class="text-sm text-slate-500">{{ number_format($completedCampaigns->sum('totalEmails')) }} emails sent</span>
+                <span class="text-sm font-medium text-blue-100">{{ number_format($completedCampaigns->sum('totalEmails')) }} emails sent</span>
             </div>
 
-            <div class="divide-y divide-slate-100">
+            <div class="space-y-3 bg-slate-100 p-3 sm:p-4">
 
                 @forelse($completedCampaigns as $camp)
                     @include('admin.flyer.campRow', [
@@ -465,7 +465,7 @@ if ($propInfo->created_at) {
                         'completed'  => $camp['emComplete'],
                     ])
                 @empty
-                    <div class="px-5 py-8 text-center text-sm text-slate-500">No completed campaigns found.</div>
+                    <div class="rounded-xl bg-white px-5 py-8 text-center text-sm text-slate-500 ring-1 ring-slate-200">No completed campaigns found.</div>
                 @endforelse
 
             </div>
