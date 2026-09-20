@@ -18,14 +18,17 @@
     $sentCount  = $campaigns->where('status', 'completed')->count();
     $queueCount = $campaigns->count() - $sentCount;
 
+    // pill = the status badge, accent = the stripe down the card's left edge,
+    // bar = the colour the progress bar fills with
     $statuses = [
-        'completed'  => ['label' => 'Completed',                 'class' => 'bg-emerald-100 text-emerald-700'],
-        'delivering' => ['label' => 'In Progress',               'class' => 'bg-blue-100 text-blue-700'],
-        'approved'   => ['label' => 'Approved, waiting to send', 'class' => 'bg-indigo-100 text-indigo-700'],
-        'pending'    => ['label' => 'Awaiting approval',         'class' => 'bg-amber-100 text-amber-700'],
+        'completed'  => ['label' => 'Completed',                 'pill' => 'bg-emerald-100 text-emerald-700', 'accent' => 'border-l-emerald-500', 'bar' => 'bg-emerald-500'],
+        'delivering' => ['label' => 'In Progress',               'pill' => 'bg-blue-100 text-blue-700',       'accent' => 'border-l-blue-500',    'bar' => 'bg-blue-500'],
+        'approved'   => ['label' => 'Approved, waiting to send', 'pill' => 'bg-indigo-100 text-indigo-700',   'accent' => 'border-l-indigo-500',  'bar' => 'bg-indigo-500'],
+        'pending'    => ['label' => 'Awaiting approval',         'pill' => 'bg-amber-100 text-amber-700',     'accent' => 'border-l-amber-400',   'bar' => 'bg-amber-400'],
     ];
 
-    $time = fn ($d) => $d ? $d->format('M j, Y g:i A') : '—';
+    $day  = fn ($d) => $d ? $d->format('M j, Y') : null;
+    $at   = fn ($d) => $d ? $d->format('g:i A') : null;
     $num  = fn ($n) => is_numeric($n) ? number_format($n) : '—';
 
     $card = 'rounded-[24px] bg-white shadow-[0_12px_35px_rgba(15,23,42,0.06)]';
@@ -34,7 +37,7 @@
 <main class="min-h-screen bg-[#f4f7fb] pt-24">
 <div class="mx-auto max-w-[1100px] px-4 py-6 sm:px-6 lg:px-10 lg:py-8">
 
-    {{-- HEADER --}}
+    {{-- ===================== PAGE HEADER ===================== --}}
     <div class="{{ $card }} px-5 py-6 sm:px-8 sm:py-7">
 
         <div class="text-[12px] font-semibold uppercase tracking-[0.22em] text-[#214e9b]/70">
@@ -73,24 +76,25 @@
         </div>
     </div>
 
-    {{-- FLYERS, EACH WITH ITS CAMPAIGNS UNDERNEATH --}}
-    <div class="mt-6 space-y-6">
+    {{-- ===================== ONE CARD PER FLYER ===================== --}}
+    <div class="mt-6 space-y-8">
 
         @forelse($groups as $group)
 
-            <section class="{{ $card }} overflow-hidden">
+            <section class="overflow-hidden rounded-[24px] bg-white shadow-[0_12px_35px_rgba(15,23,42,0.10)] ring-1 ring-slate-200">
 
-                {{-- flyer: thumbnail, address, and its totals --}}
-                <div class="border-b border-slate-100 bg-slate-50 px-5 py-4 sm:px-6">
+                {{-- THE PROPERTY: a dark band (the site's navy), so it stands well clear of
+                     the campaigns listed below it --}}
+                <div class="bg-gradient-to-r from-[#1b2f63] via-[#223a75] to-[#2a4486] px-5 py-5 text-white sm:px-6">
                     <div class="flex items-start gap-4">
 
                         {{-- default photo, at a fixed size --}}
-                        <div class="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-white ring-1 ring-slate-200 sm:h-20 sm:w-20">
+                        <div class="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-white/10 ring-2 ring-white/60 sm:h-20 sm:w-20">
                             @if($group['thumb'])
                                 <img src="{{ $group['thumb'] }}" alt="{{ $group['title'] }}" loading="lazy"
                                      class="h-full w-full object-cover">
                             @else
-                                <svg class="h-7 w-7 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                                <svg class="h-7 w-7 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M3 9.75L12 3l9 6.75V21a.75.75 0 01-.75.75H3.75A.75.75 0 013 21V9.75z"/>
                                 </svg>
                             @endif
@@ -98,91 +102,116 @@
 
                         <div class="min-w-0 flex-1">
 
-                            <div class="flex flex-wrap items-start justify-between gap-x-4 gap-y-1">
+                            <div class="flex flex-wrap items-start justify-between gap-x-4 gap-y-2">
                                 <div class="min-w-0">
-                                    <h2 class="break-words text-base font-semibold text-slate-900 sm:text-lg">
+                                    <h2 class="break-words text-lg font-bold leading-snug text-white sm:text-xl">
                                         {{ $group['title'] }}
                                     </h2>
 
                                     @if($group['place'] !== '')
-                                        <p class="text-sm text-slate-500">{{ $group['place'] }}</p>
+                                        <p class="text-sm text-blue-100">{{ $group['place'] }}</p>
                                     @endif
                                 </div>
 
                                 @if($group['deleted'])
-                                    <span class="rounded-full bg-red-50 px-3 py-1 text-xs font-semibold text-red-700 ring-1 ring-red-200">Flyer deleted</span>
+                                    <span class="rounded-full bg-red-500 px-3 py-1 text-xs font-semibold text-white">Flyer deleted</span>
                                 @else
-                                    <a href="/admin/flyerCamps/{{ $group['flyerId'] }}" class="text-xs font-semibold text-[#214e9b] hover:underline">
+                                    <a href="/admin/flyerCamps/{{ $group['flyerId'] }}"
+                                       class="rounded-lg bg-white/15 px-3 py-1.5 text-xs font-semibold text-white ring-1 ring-white/30 hover:bg-white/25">
                                         Open flyer →
                                     </a>
                                 @endif
                             </div>
 
                             {{-- totals for this flyer --}}
-                            <dl class="mt-2 flex flex-wrap gap-x-6 gap-y-1 text-sm">
-                                <div class="flex items-baseline gap-1.5">
-                                    <dd class="font-semibold text-slate-900">{{ $group['campaigns']->count() }}</dd>
-                                    <dt class="text-slate-500">{{ $group['campaigns']->count() === 1 ? 'campaign' : 'campaigns' }}</dt>
-                                </div>
+                            <div class="mt-3 flex flex-wrap gap-2 text-xs">
+                                <span class="rounded-full bg-white/15 px-3 py-1 font-medium text-blue-50 ring-1 ring-white/20">
+                                    <strong class="font-bold text-white">{{ $group['campaigns']->count() }}</strong>
+                                    {{ $group['campaigns']->count() === 1 ? 'campaign' : 'campaigns' }}
+                                </span>
 
-                                <div class="flex items-baseline gap-1.5">
-                                    <dd class="font-semibold text-slate-900">{{ number_format($group['emailsSent']) }}</dd>
-                                    <dt class="text-slate-500">emails sent</dt>
-                                </div>
+                                <span class="rounded-full bg-white/15 px-3 py-1 font-medium text-blue-50 ring-1 ring-white/20">
+                                    <strong class="font-bold text-white">{{ number_format($group['emailsSent']) }}</strong>
+                                    emails sent
+                                </span>
 
-                                <div class="flex items-baseline gap-1.5">
-                                    <dd class="font-semibold text-slate-900">{{ $group['hits'] === null ? '—' : number_format($group['hits']) }}</dd>
-                                    <dt class="text-slate-500">flyer hits</dt>
-                                </div>
-                            </dl>
+                                <span class="rounded-full bg-white/15 px-3 py-1 font-medium text-blue-50 ring-1 ring-white/20">
+                                    <strong class="font-bold text-white">{{ $group['hits'] === null ? '—' : number_format($group['hits']) }}</strong>
+                                    flyer hits
+                                </span>
+                            </div>
 
                         </div>
                     </div>
                 </div>
 
-                {{-- this flyer's campaigns --}}
-                <div class="divide-y divide-slate-100">
+                {{-- ITS CAMPAIGNS: each one its own card on a soft grey ground, with a
+                     status-coloured stripe and a progress bar --}}
+                <div class="space-y-3 bg-slate-100 p-3 sm:p-4">
+
                     @foreach($group['campaigns'] as $c)
-                        <div class="px-5 py-4 sm:px-6">
+
+                        @php
+                            $st    = $statuses[$c['status']];
+                            $steps = [
+                                ['Requested', $c['requested']],
+                                ['Started',   $c['started']],
+                                ['Completed', $c['completed']],
+                            ];
+                        @endphp
+
+                        <div class="rounded-xl border-l-4 bg-white p-4 shadow-sm ring-1 ring-slate-200 {{ $st['accent'] }}">
 
                             <div class="flex flex-wrap items-start justify-between gap-x-4 gap-y-2">
+
                                 <div class="min-w-0 flex-1 basis-56">
-                                    <div class="break-words text-sm font-semibold text-slate-900">
-                                        {{ $c['area'] }}
+                                    <div class="flex flex-wrap items-center gap-x-1 gap-y-1">
+                                        <span class="break-words text-base font-bold text-slate-900">{{ $c['area'] }}</span>
                                         @include('admin.flyer.campSource', ['adminAdded' => $c['admin_added']])
                                     </div>
 
-                                    <div class="mt-0.5 break-words text-sm text-slate-600">
+                                    <div class="mt-1 break-words text-sm text-slate-600">
                                         {{ $c['subject'] ?: 'No subject' }}
                                     </div>
                                 </div>
 
-                                <span class="shrink-0 rounded-full px-3 py-1 text-xs font-bold {{ $statuses[$c['status']]['class'] }}">
-                                    {{ $statuses[$c['status']]['label'] }}
-                                </span>
+                                <div class="flex shrink-0 flex-col items-start gap-1.5 sm:items-end">
+                                    <span class="rounded-full px-3 py-1 text-xs font-bold {{ $st['pill'] }}">
+                                        {{ $st['label'] }}
+                                    </span>
+                                    <span class="text-xs font-semibold text-slate-500">
+                                        {{ $num($c['emails']) }} {{ $c['emails'] == 1 ? 'email' : 'emails' }}
+                                    </span>
+                                </div>
+
                             </div>
 
-                            <dl class="mt-3 grid grid-cols-2 gap-x-4 gap-y-3 text-sm sm:grid-cols-4">
-                                <div>
-                                    <dt class="text-xs font-semibold uppercase tracking-wide text-slate-400">Requested</dt>
-                                    <dd class="font-medium text-slate-700">{{ $time($c['requested']) }}</dd>
-                                </div>
-                                <div>
-                                    <dt class="text-xs font-semibold uppercase tracking-wide text-slate-400">Started</dt>
-                                    <dd class="font-medium text-slate-700">{{ $time($c['started']) }}</dd>
-                                </div>
-                                <div>
-                                    <dt class="text-xs font-semibold uppercase tracking-wide text-slate-400">Completed</dt>
-                                    <dd class="font-medium text-slate-700">{{ $time($c['completed']) }}</dd>
-                                </div>
-                                <div>
-                                    <dt class="text-xs font-semibold uppercase tracking-wide text-slate-400">Emails</dt>
-                                    <dd class="font-medium text-slate-700">{{ $num($c['emails']) }}</dd>
-                                </div>
-                            </dl>
+                            {{-- progress: Requested -> Started -> Completed. A step fills in (in the
+                                 status colour) once it has happened; the rest stay grey. --}}
+                            <div class="mt-4 grid grid-cols-3 gap-2 sm:gap-3">
+                                @foreach($steps as [$stepLabel, $stepDate])
+                                    <div>
+                                        <div class="h-1.5 rounded-full {{ $stepDate ? $st['bar'] : 'bg-slate-200' }}"></div>
+
+                                        <div class="mt-1.5 text-[11px] font-semibold uppercase tracking-wide {{ $stepDate ? 'text-slate-500' : 'text-slate-300' }}">
+                                            {{ $stepLabel }}
+                                        </div>
+
+                                        <div class="text-xs font-semibold {{ $stepDate ? 'text-slate-800' : 'text-slate-300' }}">
+                                            {{ $day($stepDate) ?? '—' }}
+                                        </div>
+
+                                        @if($stepDate)
+                                            <div class="text-[11px] text-slate-400">{{ $at($stepDate) }}</div>
+                                        @endif
+                                    </div>
+                                @endforeach
+                            </div>
 
                         </div>
+
                     @endforeach
+
                 </div>
 
             </section>
