@@ -113,17 +113,37 @@
         return '—';
     };
 
+    // The thumbnail: the flyer's cover photo. Each upload is stored as several rows (the original,
+    // a 500px copy and a 1000px copy), and for older flyers the original's FILE may no longer be on
+    // the server - which is what a flyer itself never uses (it draws the 500px copy). So prefer the
+    // 500px copy, then 1000px, then the original, and use the first one whose file really exists;
+    // with none, the card shows "No Photo" instead of a broken image.
     $photoUrl = function ($flyer) {
-        $photo = optional($flyer->thePhotos)->first();
+        $meta = $flyer->theMeta;
 
-        if (!$photo || !$flyer->theMeta) {
+        if (!$meta || empty($meta->zipDir) || empty($meta->mlsDir)) {
             return null;
         }
 
-        return '/hqphotos/'
-            . $flyer->theMeta->zipDir . '/'
-            . $flyer->theMeta->mlsDir . '/'
-            . $photo->photoName;
+        $candidates = collect($flyer->thePhotos)->sortBy(fn ($photo) => match ((int) $photo->resized) {
+            500     => 0,
+            1000    => 1,
+            default => 2,
+        });
+
+        foreach ($candidates as $photo) {
+            if (empty($photo->photoName)) {
+                continue;
+            }
+
+            $relative = 'hqphotos/' . $meta->zipDir . '/' . $meta->mlsDir . '/' . basename($photo->photoName);
+
+            if (is_file(public_path($relative))) {
+                return '/' . $relative;
+            }
+        }
+
+        return null;
     };
 
     $money = fn($v) => ($v === null || $v === '') ? 'Price N/A' : '$' . number_format((float)$v);
