@@ -56,6 +56,24 @@ class AgentSlug
     ];
 
     /**
+     * What Propagent's saved hook calls: assigns a slug ONLY while the Settings switch "Give agents
+     * their web address automatically" is on (off by default). ensure() itself - used by the backfill
+     * command, which is run on purpose - doesn't look at the switch.
+     */
+    public static function ensureOnSave($agentId): ?string
+    {
+        try {
+            if (!\App\Models\Core\AdminSetting::agentSlugsAuto()) {
+                return null;
+            }
+        } catch (\Throwable $e) {
+            return null;   // settings unreadable: better no slug than a wrong one
+        }
+
+        return self::ensure($agentId);
+    }
+
+    /**
      * Give the agent a slug if they have none and have a name to make one from. Returns the slug
      * the agent has afterwards, or null when they have none. Never throws: a slug problem must not
      * stop an agent's record from saving.

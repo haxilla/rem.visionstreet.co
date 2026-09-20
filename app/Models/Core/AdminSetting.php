@@ -43,6 +43,12 @@ class AdminSetting extends Model
                 'type'        => 'toggle',
                 'default'     => '1',
             ],
+            'agent_slugs_auto' => [
+                'label'       => 'Give agents their web address automatically',
+                'description' => 'When on, an agent gets their own web address (like /DebraLee) the first time their record is saved with a name. Keep this OFF while duplicate accounts are being merged: the account saved first would get the plain name (DebraLee) and the other a number (DebraLee2), whichever is the right one. It only affects automatic assignment - the "php artisan agents:backfill-slugs" command works whatever this is set to.',
+                'type'        => 'toggle',
+                'default'     => '0',
+            ],
             'trial_email' => [
                 'label'         => 'Test email address',
                 'description'   => 'Where the agent\'s copy of a send goes while trial mode is on.',
@@ -81,6 +87,16 @@ class AdminSetting extends Model
     public static function confirmAgentDeletion(): bool
     {
         return static::read('confirm_agent_deletion', '1') !== '0';
+    }
+
+    /**
+     * Whether an agent is given their web address slug automatically when their record is saved
+     * (App\Models\Core\Propagent's saved hook). OFF unless explicitly switched on, so nothing gets one
+     * as a side effect of an edit - a missing row means off.
+     */
+    public static function agentSlugsAuto(): bool
+    {
+        return static::read('agent_slugs_auto', '0') === '1';
     }
 
     /** The address trial-mode agent copies go to ('' when not set). */

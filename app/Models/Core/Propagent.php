@@ -27,7 +27,7 @@ class Propagent extends Authenticatable
                 return;
             }
 
-            $slug = \App\Support\AgentSlug::ensure($agent->getKey());
+            $slug = \App\Support\AgentSlug::ensureOnSave($agent->getKey());
 
             if ($slug) {
                 $agent->setAttribute($column, $slug);
