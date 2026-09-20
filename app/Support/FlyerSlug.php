@@ -189,20 +189,18 @@ class FlyerSlug
     }
 
     /**
-     * Word by word, so an address typed half in capitals is tidied too: "9290 E THOMPSON PEAK Parkway"
-     * becomes "9290 E Thompson Peak Parkway", and "27043 N 117TH PL" / "27043 n 117th pl" both become
-     * "27043 N 117th Pl". A word that is ALL capitals or ALL lowercase gets a leading capital; a word
-     * with capitals of its own (McDowell, DeSoto) is left as typed. Single letters (N, E) and the
-     * compass pairs NE, NW, SE, SW stay capitals; numbers are untouched.
+     * Zillow's capitalisation, whatever way the address was typed: every word has ONE leading
+     * capital and the rest lowercase - "27043 N 117TH PL", "27043 n 117th pl" and
+     * "9290 E THOMPSON PEAK Parkway" become "27043 N 117th Pl" and "9290 E Thompson Peak Parkway".
+     * No word is left all-caps or all-lowercase, and none keeps capitals of its own (McDowell
+     * becomes Mcdowell, as it does on Zillow). The exceptions are single letters (N, E, S, W) and
+     * the compass pairs NE, NW, SE, SW, which stay capitals; numbers are untouched. (The state is
+     * always the two capitals, AZ.)
      */
     private static function tidyCase(string $text): string
     {
         return preg_replace_callback('/[A-Za-z0-9]+/', function ($m) {
             $word = $m[0];
-
-            if ($word !== strtoupper($word) && $word !== strtolower($word)) {
-                return $word;
-            }
 
             if (strlen($word) === 1 || in_array(strtoupper($word), ['NE', 'NW', 'SE', 'SW'], true)) {
                 return strtoupper($word);
