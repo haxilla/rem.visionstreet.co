@@ -99,6 +99,10 @@ Route::post('/admin/agentOffice/{id}',
 Route::post('/admin/agentDelete/{id}',
 [adminController::class, 'agentDelete'])->whereNumber('id')->name('admin.agentDelete');
 
+//backdate the receiving account's start date to the earliest one in the duplicate group (POST only)
+Route::post('/admin/agentMergeStartDate/{id}',
+[adminController::class, 'agentMergeStartDate'])->whereNumber('id')->name('admin.agentMergeStartDate');
+
 //move a duplicate account's order + campaign history into another account on the same email (POST only)
 Route::post('/admin/agentMoveRecords/{id}',
 [adminController::class, 'agentMoveRecords'])->whereNumber('id')->name('admin.agentMoveRecords');

@@ -706,6 +706,7 @@ class adminController extends Controller
             'agent'         => $agent,
             'accounts'      => $rows,
             'confirmDelete' => AdminSetting::confirmAgentDeletion(),
+            'earliest'      => $this->earliestStart($accounts),
         ]);
     }
 
@@ -841,6 +842,8 @@ class adminController extends Controller
             $message .= " Skipped {$skipped} (already in that account, not in these accounts, or being delivered right now).";
         }
 
+        $message .= $this->startDateHint($accounts, $dest);
+
         return $back()->with('status', $message);
     }
 
@@ -916,6 +919,101 @@ class adminController extends Controller
         return redirect()->back()->with('status',
             "Moved {$counts['allorders']} order(s) and " . ($counts['propdelivnow'] + $counts['propdelivs'])
             . " campaign record(s) from #{$source->id} into #{$dest->id} {$name}."
+            . $this->startDateHint($accounts, $dest)
+        );
+    }
+
+    /** [Y-m-d, account id] of the earliest start date among these accounts, or null when none has one. */
+    private function earliestStart($accounts): ?array
+    {
+        $best = null;
+
+        foreach ($accounts as $account) {
+            if (!$account->startDate) {
+                continue;
+            }
+
+            $date = \Illuminate\Support\Carbon::parse($account->startDate)->format('Y-m-d');
+
+            if ($best === null || $date < $best[0]) {
+                $best = [$date, (int) $account->id];
+            }
+        }
+
+        return $best;
+    }
+
+    /** A sentence pointing out that the receiving account started later than another one (so it needs backdating). */
+    private function startDateHint($accounts, $dest): string
+    {
+        $earliest = $this->earliestStart($accounts);
+
+        if (!$earliest) {
+            return '';
+        }
+
+        $current = $dest->startDate ? \Illuminate\Support\Carbon::parse($dest->startDate)->format('Y-m-d') : null;
+
+        if ($current !== null && $current <= $earliest[0]) {
+            return '';
+        }
+
+        return ' Its start date ' . ($current ? \Illuminate\Support\Carbon::parse($current)->format('m/d/Y') : '(none)')
+            . " is later than #{$earliest[1]}'s " . \Illuminate\Support\Carbon::parse($earliest[0])->format('m/d/Y')
+            . ' - use "Backdate start date" to match the original.';
+    }
+
+    /**
+     * Backdate the receiving account's start date to the EARLIEST one in the group (POST only).
+     * When a newer duplicate is kept, it has to carry the original account's start date. The date
+     * is worked out here from the accounts themselves, never taken from the page, and only ever
+     * moves earlier.
+     */
+    public function agentMergeStartDate(Request $request, $id)
+    {
+        $agent    = Propagent::findOrFail($id);
+        $accounts = AgentPasswords::accountsForEmail($agent->xxAgtUname);
+        $fail     = fn (string $message) => redirect()->back()->withErrors(['merge' => $message]);
+
+        $data = $request->validate(['destination' => ['required', 'integer']], [
+            'destination.required' => 'Choose the account whose start date should change first.',
+        ]);
+
+        $dest = $accounts->firstWhere('id', (int) $data['destination']);
+
+        if ($accounts->count() < 2 || !$dest) {
+            return $fail('Choose an account that uses this login email.');
+        }
+
+        $earliest = $this->earliestStart($accounts);
+
+        if (!$earliest) {
+            return $fail('None of these accounts has a start date to copy.');
+        }
+
+        $current = $dest->startDate ? \Illuminate\Support\Carbon::parse($dest->startDate)->format('Y-m-d') : null;
+
+        if ($current !== null && $current <= $earliest[0]) {
+            return redirect()->back()->with('status', "#{$dest->id} already has the earliest start date in this group.");
+        }
+
+        AgentTime::apply($dest);
+
+        $dest->startDate = $earliest[0];
+        $dest->save();
+
+        Log::info('Admin backdated a start date while merging duplicate accounts', [
+            'admin_id' => Auth::guard('admin')->id(),
+            'agent_id' => $dest->id,
+            'before'   => $current,
+            'after'    => $earliest[0],
+            'from'     => $earliest[1],
+            'ip'       => $request->ip(),
+        ]);
+
+        return redirect()->back()->with('status',
+            "Start date for #{$dest->id} set to " . \Illuminate\Support\Carbon::parse($earliest[0])->format('m/d/Y')
+            . " (the earliest in this group, from #{$earliest[1]})."
         );
     }
 

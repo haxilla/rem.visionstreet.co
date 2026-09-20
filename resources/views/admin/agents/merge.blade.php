@@ -90,6 +90,26 @@
 
                 <span id="selectedCount" class="text-sm text-slate-500">0 flyers ticked</span>
             </div>
+
+            {{-- A newer duplicate that is kept has to carry the ORIGINAL account's start date. The date is
+                 worked out on the server from the accounts themselves; it only ever moves earlier. --}}
+            @if($earliest)
+                <div class="mt-4 border-t border-slate-100 pt-4">
+                    <div class="text-sm text-slate-600">
+                        Earliest start date in this group:
+                        <span class="font-semibold text-slate-900">{{ \Carbon\Carbon::parse($earliest[0])->format('m/d/Y') }}</span>
+                        (account #{{ $earliest[1] }}).
+                    </div>
+
+                    <button type="submit"
+                            formaction="{{ route('admin.agentMergeStartDate', $agent->id) }}"
+                            formnovalidate
+                            data-needs-dest="1"
+                            class="mt-2 rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40">
+                        Backdate start date of the account chosen above
+                    </button>
+                </div>
+            @endif
         </div>
 
         {{-- ONE BLOCK PER ACCOUNT --}}
