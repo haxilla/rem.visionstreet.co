@@ -62,6 +62,38 @@ class FlyerSlug
         }
     }
 
+    /**
+     * The flyers a BACKFILL looks at: no slug yet AND either a real last-sent date
+     * (propflyerstats.xLastDeliveryDate) or at least one email request (emRequest in
+     * propdelivnow or the propdelivs archive). Every other flyer - blank drafts and flyers
+     * that never went anywhere - is left out of the run entirely, not even counted. (New flyers
+     * are unaffected: Propflyer's saved hook gives any flyer a slug once its address is complete.)
+     * Legacy zero-dates count as none.
+     */
+    public static function backfillCandidates()
+    {
+        $since = '1971-01-01';
+
+        return Propflyer::withTrashed()
+            ->where(function ($query) {
+                $query->whereNull('url_slug')->orWhere('url_slug', '');
+            })
+            ->where(function ($query) use ($since) {
+                $query->whereIn('id', \App\Models\Core\Propflyerstat::query()
+                        ->select('propflyer_id')
+                        ->whereNotNull('xLastDeliveryDate')
+                        ->where('xLastDeliveryDate', '>=', $since))
+                    ->orWhereIn('id', \App\Models\Core\Propdelivnow::query()
+                        ->select('propflyer_id')
+                        ->whereNotNull('emRequest')
+                        ->where('emRequest', '>=', $since))
+                    ->orWhereIn('id', \App\Models\Core\Propdeliv::query()
+                        ->select('propflyer_id')
+                        ->whereNotNull('emRequest')
+                        ->where('emRequest', '>=', $since));
+            });
+    }
+
     /** The four parts of an address as the slug will use them (each '' when missing or unusable). */
     private static function parts(array $parts): array
     {

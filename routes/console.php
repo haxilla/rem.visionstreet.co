@@ -10,8 +10,10 @@ Artisan::command('inspire', function () {
 /*
 | php artisan flyers:backfill-slugs [--dry-run] [--limit=N]
 |
-| Gives every flyer that has NO url_slug one (Zillow style, e.g. 27043-N-117th-Pl-Scottsdale-AZ-85262),
-| using the same builder new flyers use (App\Support\FlyerSlug). Flyers that already have a slug are
+| Gives the flyers that have NO url_slug one (Zillow style, e.g. 27043-N-117th-Pl-Scottsdale-AZ-85262),
+| using the same builder new flyers use (App\Support\FlyerSlug). Only flyers with a last-sent date or an
+| email request are looked at (FlyerSlug::backfillCandidates) - every other flyer is left out of the run
+| completely. Flyers that already have a slug are
 | never touched, so it is safe to run more than once. A flyer without a complete address (street,
 | city, state, 5-digit zip) can't have one; those are counted by what is missing, with a few examples,
 | so it is clear whether the data or the rule needs attention. --dry-run shows what it WOULD do and
@@ -22,15 +24,12 @@ Artisan::command('flyers:backfill-slugs {--dry-run : Show what would be done, ch
     $dryRun = (bool) $this->option('dry-run');
     $limit  = (int) $this->option('limit');
 
-    $query = \App\Models\Core\Propflyer::withTrashed()
-        ->where(function ($q) {
-            $q->whereNull('url_slug')->orWhere('url_slug', '');
-        })
-        ->orderBy('id');
+    // only flyers that have a last-sent date or an email request; the rest aren't part of the run
+    $query = \App\Support\FlyerSlug::backfillCandidates()->orderBy('id');
 
     $total = (clone $query)->count();
 
-    $this->info(($dryRun ? '[dry run] ' : '') . number_format($total) . ' flyer(s) have no url_slug' . ($limit > 0 ? " (stopping after {$limit} are assigned)" : '') . '.');
+    $this->info(($dryRun ? '[dry run] ' : '') . number_format($total) . ' flyer(s) with a last-sent date or an email request have no url_slug' . ($limit > 0 ? " (stopping after {$limit} are assigned)" : '') . '.');
 
     $assigned = 0;
     $skipped  = 0;

@@ -39,11 +39,9 @@ $after    = (int) request('after', 0);
 $assigned = (int) request('assigned', 0);
 $skipped  = (int) request('skipped', 0);
 
-$rows = Propflyer::withTrashed()
+// only flyers with a last-sent date or an email request (see FlyerSlug::backfillCandidates)
+$rows = FlyerSlug::backfillCandidates()
     ->where('id', '>', $after)
-    ->where(function ($query) {
-        $query->whereNull('url_slug')->orWhere('url_slug', '');
-    })
     ->orderBy('id')
     ->limit($batchSize)
     ->get(['id']);
