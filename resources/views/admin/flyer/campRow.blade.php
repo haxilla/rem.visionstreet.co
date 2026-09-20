@@ -52,7 +52,7 @@
             <span class="text-xs font-semibold tabular-nums text-slate-500" title="Campaign ID">#{{ $cid }}</span>
             <span class="break-words text-lg font-bold text-slate-900">{{ $area }}</span>
 
-            @include('admin.flyer.campSource', ['adminAdded' => $adminAdded ?? false])
+            @include('admin.flyer.campSource', ['adminAdded' => $adminAdded ?? false, 'slot' => $slot ?? null])
 
             @if(isset($emails) && is_numeric($emails))
                 <span class="text-sm font-medium text-slate-600">

@@ -30,6 +30,7 @@ $completeFlyerCamps[$propInfo->id] = Propdelivnow::where('propflyer_id', $propIn
             'address'      => $propInfo->xFullStreet ?? 'N/A',
             'campLabel'    => $item->campLabel,
             'admin_added'  => $item->isAdminAdded(),
+            'slot'         => $item->campaignSlot(),
             'propflyer_id' => $item->propflyer_id,
             'emSubject'    => $item->emSubject,
             'emArea'       => $item->emArea,

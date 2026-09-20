@@ -74,6 +74,7 @@ $toRow = function ($c) use ($parseDate, $areaLabels, $emailCounts) {
         'subject'     => $c->emSubject,
         'authorized'  => (int) $c->authorized === 1,
         'admin_added' => $c->isAdminAdded(),
+        'slot'        => $c->campaignSlot(),
         'requested'   => $parseDate($c->emRequest),
         'started'     => $parseDate($c->emStart),
         'completed'   => $completed,

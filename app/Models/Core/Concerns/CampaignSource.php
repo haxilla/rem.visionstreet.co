@@ -11,6 +11,12 @@ namespace App\Models\Core\Concerns;
  */
 trait CampaignSource
 {
+    /** 1 or 2 when this was one of the agent's two picks (campLabel 'area1' / 'area2'), else null. */
+    public function campaignSlot(): ?int
+    {
+        return preg_match('/^area([12])$/i', (string) ($this->campLabel ?? ''), $m) ? (int) $m[1] : null;
+    }
+
     public function isAdminAdded(): bool
     {
         return (int) ($this->free ?? 0) === 1

@@ -167,7 +167,7 @@
                                 <div class="min-w-0 flex-1 basis-56">
                                     <div class="flex flex-wrap items-center gap-x-1 gap-y-1">
                                         <span class="break-words text-base font-bold text-slate-900">{{ $c['area'] }}</span>
-                                        @include('admin.flyer.campSource', ['adminAdded' => $c['admin_added']])
+                                        @include('admin.flyer.campSource', ['adminAdded' => $c['admin_added'], 'slot' => $c['slot'] ?? null])
                                     </div>
 
                                     <div class="mt-1 break-words text-sm text-slate-600">

@@ -330,6 +330,7 @@ if ($propInfo->created_at) {
                             'stage'      => (int) $req->authorized === 1 ? 'approved' : 'awaiting',
                             'area'       => $areaLabel($req),
                             'adminAdded' => $req->isAdminAdded(),
+                            'slot'       => $req->campaignSlot(),
                             'subject'    => $req->emSubject,
                             'emails'     => $req->totalEmails ?? ($data['emailCounts'][$req->emArea] ?? null),
                             'cid'        => $req->cid,
@@ -428,6 +429,7 @@ if ($propInfo->created_at) {
                         'stage'      => 'progress',
                         'area'       => $areaName($camp['emArea']),
                         'adminAdded' => $camp['admin_added'] ?? false,
+                        'slot'       => $camp['slot'] ?? null,
                         'subject'    => $camp['emSubject'],
                         'cid'        => $camp['cid'],
                         'requested'  => $camp['emRequest'],
@@ -470,6 +472,7 @@ if ($propInfo->created_at) {
                     @include('admin.flyer.campDone', [
                         'area'       => $areaName($camp['emArea']),
                         'adminAdded' => $camp['admin_added'] ?? false,
+                        'slot'       => $camp['slot'] ?? null,
                         'subject'    => $camp['emSubject'],
                         'emails'     => $camp['totalEmails'],
                         'cid'        => $camp['cid'],
@@ -531,7 +534,7 @@ if ($propInfo->created_at) {
     .done-row     { flex-wrap:nowrap; }
     .done-area    { width:9rem; max-width:none; }
     .done-subject { flex:1 1 0; order:0; }
-    .done-src     { width:4.5rem; }
+    .done-src     { width:6.5rem; }
     .done-date    { width:6.75rem; margin-left:0; text-align:right; }
     .done-head    { display:flex; }
 }

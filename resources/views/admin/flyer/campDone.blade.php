@@ -40,9 +40,9 @@
 
         <span class="done-src">
             @if($adminAdded ?? false)
-                <span class="rounded-full bg-violet-100 px-2 py-0.5 text-[11px] font-semibold text-violet-700">Admin</span>
+                <span class="whitespace-nowrap rounded-full bg-violet-100 px-2 py-0.5 text-[11px] font-semibold text-violet-700">Admin</span>
             @else
-                <span class="rounded-full bg-sky-100 px-2 py-0.5 text-[11px] font-semibold text-sky-700">Agent</span>
+                <span class="whitespace-nowrap rounded-full bg-sky-100 px-2 py-0.5 text-[11px] font-semibold text-sky-700">Agent@if(!empty($slot)) &middot; Area {{ $slot }}@endif</span>
             @endif
         </span>
 
@@ -67,7 +67,7 @@
             </div>
             <div>
                 <span class="text-[11px] font-bold uppercase tracking-wide text-slate-500">Source</span>
-                <span class="font-semibold text-slate-900">{{ ($adminAdded ?? false) ? 'Admin added · Free' : 'Agent sent' }}</span>
+                <span class="font-semibold text-slate-900">{{ ($adminAdded ?? false) ? 'Admin added · Free' : 'Agent sent' . (!empty($slot) ? ' · Area ' . $slot : '') }}</span>
             </div>
             <div>
                 <span class="text-[11px] font-bold uppercase tracking-wide text-slate-500">Requested</span>

@@ -149,7 +149,7 @@
                         <div class="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
                             <span class="text-xs font-semibold tabular-nums text-slate-500" title="Campaign ID">#{{ $area['cid'] }}</span>
                             <span class="font-semibold text-slate-900">{{ $area['area'] }}</span>
-                            @include('admin.flyer.campSource', ['adminAdded' => $area['admin_added']])
+                            @include('admin.flyer.campSource', ['adminAdded' => $area['admin_added'], 'slot' => $area['slot'] ?? null])
                             @if($area['contacts'] !== null)
                                 <span class="text-xs text-slate-500">{{ number_format($area['contacts']) }} contacts</span>
                             @endif

@@ -62,6 +62,7 @@ class AgentCampaigns
                     'started'     => $started,
                     'completed'   => $completed,
                     'admin_added' => $c->isAdminAdded(),
+                    'slot'        => $c->campaignSlot(),
                     'sort'        => (int) optional($completed ?? $started ?? $requested)->timestamp,
                 ];
             })
