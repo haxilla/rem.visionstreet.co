@@ -10,8 +10,6 @@
      dates | areas button, all vertically centred, so nothing can wrap onto a row of its
      own. Narrow: the thumbnail and details on top, the dates and button underneath. --}}
 <style>
-    .dash-sum { list-style: none; display: block; }
-    .dash-sum::-webkit-details-marker { display: none; }
 
     .dash-card {
         display: grid;
@@ -232,6 +230,27 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
+
+    // The "N areas" button on a campaign card opens / closes that card's list of areas.
+    document.addEventListener('click', function (event) {
+        const button = event.target.closest('[data-areas-toggle]');
+
+        if (!button) return;
+
+        const card = button.closest('[data-dash-card]');
+        const panel = card ? card.querySelector('[data-areas-panel]') : null;
+
+        if (!panel) return;
+
+        const opening = panel.hidden;
+
+        panel.hidden = !opening;
+        button.setAttribute('aria-expanded', opening ? 'true' : 'false');
+
+        const chevron = button.querySelector('[data-areas-chevron]');
+
+        if (chevron) chevron.style.transform = opening ? 'rotate(180deg)' : '';
+    });
 
     const buttons = document.querySelectorAll('.campaign-tab-btn');
     const panels = document.querySelectorAll('.campaign-panel');

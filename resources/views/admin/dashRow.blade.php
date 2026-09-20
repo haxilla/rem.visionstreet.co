@@ -26,14 +26,15 @@
     $quiet     = $chip . ' bg-slate-100 text-slate-700';
 @endphp
 
-<div class="rounded-xl border-l-[6px] bg-white shadow-sm ring-1 ring-slate-200 {{ $accent }}">
-    <details class="group">
+<div class="rounded-xl border-l-[6px] bg-white shadow-sm ring-1 ring-slate-200 {{ $accent }}" data-dash-card>
+    <div>
 
-        <summary class="dash-sum cursor-pointer">
+        <div>
             <div class="dash-card">
 
-                {{-- THUMBNAIL --}}
-                <div class="dc-thumb flex items-center justify-center overflow-hidden rounded-lg bg-slate-100 ring-1 ring-slate-200">
+                {{-- THUMBNAIL: opens the campaign review (the flyer's campaign page) --}}
+                <a @unless($group['deleted']) href="/admin/flyerCamps/{{ $group['flyer_id'] }}" title="Open campaign review" @endunless
+                   class="dc-thumb flex items-center justify-center overflow-hidden rounded-lg bg-slate-100 ring-1 ring-slate-200 hover:ring-2 hover:ring-[#214e9b]">
                     @if($group['thumb'])
                         <img src="{{ $group['thumb'] }}" alt="" loading="lazy" class="h-full w-full object-cover">
                     @else
@@ -41,7 +42,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" d="M3 9.75L12 3l9 6.75V21a.75.75 0 01-.75.75H3.75A.75.75 0 013 21V9.75z"/>
                         </svg>
                     @endif
-                </div>
+                </a>
 
                 {{-- ADDRESS / AGENT + FACTS / SUBJECT --}}
                 <div class="dc-main">
@@ -122,22 +123,24 @@
                     @endif
                 </div>
 
-                {{-- THE AREAS DROPDOWN BUTTON --}}
+                {{-- THE AREAS DROPDOWN BUTTON: the only thing on the card that opens the areas
+                     (script at the bottom of admin/dashboard.blade.php) --}}
                 <div class="dc-toggle">
-                    <span class="inline-flex items-center gap-1.5 whitespace-nowrap rounded-lg border border-slate-300 bg-white px-2.5 py-1 text-xs font-semibold text-[#214e9b] hover:bg-slate-50">
+                    <button type="button" data-areas-toggle aria-expanded="false"
+                            class="inline-flex cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-lg border border-slate-300 bg-white px-2.5 py-1 text-xs font-semibold text-[#214e9b] hover:bg-slate-50">
                         {{ $areaCount }} {{ $areaCount === 1 ? 'area' : 'areas' }}
                         @if($group['contacts'] > 0)
                             <span class="font-medium text-slate-500">&middot; {{ number_format($group['contacts']) }} contacts</span>
                         @endif
-                        <svg class="h-3 w-3 transition-transform group-open:rotate-180" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2 4l4 4 4-4"/></svg>
-                    </span>
+                        <svg class="h-3 w-3 transition-transform" data-areas-chevron viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2 4l4 4 4-4"/></svg>
+                    </button>
                 </div>
 
             </div>
-        </summary>
+        </div>
 
         {{-- THE AREAS REQUESTED --}}
-        <div class="border-t border-slate-200 bg-slate-50 px-3 py-3 sm:px-4">
+        <div class="border-t border-slate-200 bg-slate-50 px-3 py-3 sm:px-4" data-areas-panel hidden>
 
             <div class="divide-y divide-slate-200 rounded-lg bg-white ring-1 ring-slate-200">
                 @foreach($group['areas'] as $area)
@@ -181,5 +184,5 @@
 
         </div>
 
-    </details>
+    </div>
 </div>
