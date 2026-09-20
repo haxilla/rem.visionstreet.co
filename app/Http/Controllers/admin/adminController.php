@@ -88,13 +88,21 @@ class adminController extends Controller
         // the phone list and the table both carry each agent, so ids can repeat
         $ids = array_values(array_unique(array_map('intval', $validated['ids'])));
 
-        $deleted = Propagent::whereIn('id', $ids)->whereNull('startDate')->delete();
+        // Only agents on the "No Start Date" list: no start date AND no credits.
+        // (Agents who have credits are on their own review-only tab; this check
+        // is here so a stale page or a hand-made request can't delete them.)
+        $deleted = Propagent::whereIn('id', $ids)
+            ->whereNull('startDate')
+            ->where(function ($query) {
+                $query->whereNull('remCreds')->orWhere('remCreds', '<=', 0);
+            })
+            ->delete();
         $skipped = count($ids) - $deleted;
 
         $message = 'Deleted ' . $deleted . ($deleted === 1 ? ' agent.' : ' agents.');
 
         if ($skipped > 0) {
-            $message .= " Skipped {$skipped} (they have a start date, or were already gone).";
+            $message .= " Skipped {$skipped} (they have a start date or credits, or were already gone).";
         }
 
         return redirect()->back()->with('status', $message);

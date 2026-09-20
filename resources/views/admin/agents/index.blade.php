@@ -8,7 +8,12 @@
     $activeAgents  = $data['activeAgents'] ?? collect();
     $noStartAgents = $data['noStartAgents'] ?? collect();
 
-    $currentTab = request()->has('nostart_page') ? 'nostart' : 'active';
+    $noStartCreditAgents = $data['noStartCreditAgents'] ?? collect();
+
+    // which of the three lists is showing (each has its own page parameter)
+    $currentTab = request()->has('nostartcredits_page')
+        ? 'nostartcredits'
+        : (request()->has('nostart_page') ? 'nostart' : 'active');
 
     // admin Settings > "Confirm agent deletion": does Delete ask first?
     $confirmDelete = $data['confirmDelete'] ?? true;
@@ -95,6 +100,17 @@
 
                         <span class="ml-2 rounded-full bg-white/20 px-2 py-0.5 text-xs">
                             {{ method_exists($noStartAgents, 'total') ? $noStartAgents->total() : 0 }}
+                        </span>
+                    </a>
+
+                    <a
+                        href="{{ request()->url() }}?nostartcredits_page=1"
+                        class="{{ $currentTab === 'nostartcredits' ? 'bg-[#214e9b] text-white shadow' : 'bg-slate-200 text-slate-700' }} rounded-t-xl px-4 py-3 text-sm font-semibold sm:px-5"
+                    >
+                        No Start Date + Credits
+
+                        <span class="ml-2 rounded-full bg-white/20 px-2 py-0.5 text-xs">
+                            {{ method_exists($noStartCreditAgents, 'total') ? $noStartCreditAgents->total() : 0 }}
                         </span>
                     </a>
 
@@ -292,6 +308,10 @@
                         </div>
                     @endif
 
+                @elseif($currentTab === 'nostartcredits')
+
+                    @include('admin.agents.noStartCreditsPanel', ['agents' => $noStartCreditAgents])
+
                 @else
 
                     {{-- NO START DATE HEADER --}}
@@ -302,7 +322,8 @@
                             </h2>
 
                             <p class="mt-1 text-sm text-slate-500">
-                                Agent records without a start date. These can be reviewed or deleted.
+                                Agent records without a start date and without credits. These can be reviewed or deleted.
+                                (Agents without a start date who do have credits are on the "No Start Date + Credits" tab.)
                             </p>
                         </div>
 
