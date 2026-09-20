@@ -117,7 +117,7 @@
                                     formaction="{{ route('admin.agentDeleteDuplicate', $acct['id']) }}"
                                     formnovalidate
                                     name="from" value="merge"
-                                    @if($confirmDelete ?? true) onclick="return confirm('Delete account #{{ $acct['id'] }} {{ e($acct['name']) }}? This cannot be undone.')" @endif
+                                    @if($confirmDelete ?? true) onclick="return confirm({{ \Illuminate\Support\Js::from('Delete account #' . $acct['id'] . ' ' . $acct['name'] . '? This cannot be undone.') }})" @endif
                                     class="rounded-lg border border-red-200 px-3 py-1.5 text-xs font-semibold text-red-600 hover:bg-red-50">
                                 Delete account
                             </button>

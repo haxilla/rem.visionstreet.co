@@ -107,7 +107,7 @@
                                     @if($row['can_delete'])
                                         <form method="POST" action="{{ route('admin.agentDeleteDuplicate', $row['id']) }}"
                                               class="mt-1.5"
-                                              @if($confirmDelete ?? true) onsubmit="return confirm('Delete account #{{ $row['id'] }} {{ e($row['name']) }}? This cannot be undone.')" @endif>
+                                              @if($confirmDelete ?? true) onsubmit="return confirm({{ \Illuminate\Support\Js::from('Delete account #' . $row['id'] . ' ' . $row['name'] . '? This cannot be undone.') }})" @endif>
                                             @csrf
                                             <input type="hidden" name="from" value="tab">
                                             <button type="submit" class="rounded-lg border border-red-200 px-2.5 py-1 text-xs font-semibold text-red-600 hover:bg-red-50">
