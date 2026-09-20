@@ -651,6 +651,44 @@
                         </p>
                     @endunless
 
+                    {{-- The agent has lost access to their login email, so the emailed link can't reach them --}}
+                    <details class="rounded-lg border border-slate-200 px-3 py-2 text-sm" @if($errors->has("loginEmail") || $errors->has("new_email")) open @endif>
+                        <summary class="cursor-pointer text-xs font-semibold text-slate-700">
+                            Agent can't get into their login email? Change it
+                        </summary>
+
+                        <form method="POST" action="{{ route('admin.agentLoginEmail', $agent->id) }}" class="mt-3 space-y-3">
+                            @csrf
+
+                            <p class="rounded-lg bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-700">
+                                Confirm who this is first (phone call, MLS ID, licence, office). Whoever owns the new
+                                email gets this account: its password is cleared, they're emailed a link to create a
+                                new one, and the old address is told about the change.
+                            </p>
+
+                            <div>
+                                <label for="new_email" class="mb-1 block text-xs font-semibold text-slate-600">New login email</label>
+                                <input type="email" id="new_email" name="new_email" required maxlength="100"
+                                       placeholder="agent@example.com"
+                                       value="{{ old('new_email') }}"
+                                       class="w-full rounded-lg border border-slate-300 px-2.5 py-1.5 text-sm {{ $focusRing }}">
+                            </div>
+
+                            @if(($sameEmailAccounts ?? collect())->isNotEmpty())
+                                <label class="flex items-start gap-2 text-xs text-slate-600">
+                                    <input type="checkbox" name="all_accounts" value="1" checked class="mt-0.5">
+                                    <span>Also move the {{ $sameEmailAccounts->count() }} other {{ \Illuminate\Support\Str::plural('account', $sameEmailAccounts->count()) }} that use this email (recommended - they share one password).</span>
+                                </label>
+                            @endif
+
+                            <button type="submit"
+                                    onclick="return confirm('Change the login email for this agent and send the new address a password link?')"
+                                    class="rounded-lg bg-[#214e9b] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[#1b3f80]">
+                                Change email and send link
+                            </button>
+                        </form>
+                    </details>
+
                     <div class="flex flex-wrap gap-2 border-t border-slate-100 pt-4">
 
                         <form method="POST" action="{{ route('admin.agentPasswordReset', $agent->id) }}">

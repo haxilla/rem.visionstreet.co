@@ -84,6 +84,10 @@ Route::post('/admin/agentStartDate/{id}',
 Route::post('/admin/agentPasswordReset/{id}',
 [adminController::class, 'agentPasswordReset'])->whereNumber('id')->name('admin.agentPasswordReset');
 
+//move an agent's login to a new email (for an agent who lost access to the old one); POST only, admin-only
+Route::post('/admin/agentLoginEmail/{id}',
+[adminController::class, 'agentLoginEmail'])->whereNumber('id')->name('admin.agentLoginEmail');
+
 Route::post('/admin/agentLoginBlock/{id}',
 [adminController::class, 'agentLoginBlock'])->whereNumber('id')->name('admin.agentLoginBlock');
 

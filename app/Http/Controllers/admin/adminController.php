@@ -412,6 +412,107 @@ class adminController extends Controller
     }
 
     /**
+     * Move an agent's login to a NEW email - for the agent who no longer has access
+     * to the email they registered with (so the emailed password link can never reach
+     * them). The admin is the identity check here (phone, MLS ID, licence...), so this
+     * hands the account to whoever owns the new address.
+     *
+     * Because control of the old mailbox is exactly what's in doubt, the account is
+     * treated as recovered, not just edited: its password is cleared, it goes back to
+     * "no new-site password yet", any unused links are cancelled, a link to create a
+     * password goes to the NEW address, and the OLD address is told (best effort) in
+     * case somebody other than the agent asked for this. Who / what / when goes to the log.
+     *
+     * "All accounts" moves every account that shares the login email (they always get
+     * one password together), so they don't end up split across two emails.
+     */
+    public function agentLoginEmail(Request $request, $id)
+    {
+        $agent = Propagent::findOrFail($id);
+
+        $data = $request->validate([
+            'new_email' => ['required', 'email', 'max:100'],
+        ]);
+
+        $new = trim($data['new_email']);
+        $old = trim((string) $agent->xxAgtUname);
+
+        $back = fn () => redirect()->route('admin.agentView', $agent->id);
+
+        if (strcasecmp($new, $old) === 0) {
+            return $back()->withErrors(['loginEmail' => 'That is already this account\'s login email.']);
+        }
+
+        $group = AgentPasswords::accountsForEmail($old);
+
+        if ($group->where('id', $agent->id)->isEmpty()) {
+            $group->push($agent);
+        }
+
+        $targets = $request->boolean('all_accounts') ? $group : collect([$agent]);
+
+        // An email already used by some OTHER account would put these accounts in that
+        // person's picker (and give them the same password). Not without a human deciding.
+        $clash = AgentPasswords::accountsForEmail($new)->reject(fn ($a) => $targets->contains('id', $a->id));
+
+        if ($clash->isNotEmpty()) {
+            $who = $clash->map(fn ($a) => '#' . $a->id . ' ' . ($a->agtFullName ?: 'No name'))->implode(', ');
+
+            return $back()->withErrors(['loginEmail' => "{$new} is already the login email of another account ({$who}). Pick a different email, or sort that out first."]);
+        }
+
+        DB::transaction(function () use ($targets, $new) {
+            foreach ($targets as $account) {
+                AgentTime::apply($account);
+
+                $account->xxAgtUname = $new;
+                $account->password   = null;
+
+                if (AgentPasswords::columnAvailable($account)) {
+                    $account->passwordResetAt = null;
+                }
+
+                $account->save();
+
+                AgentPasswords::voidAll($account->id);
+            }
+        });
+
+        Log::info('Admin changed an agent login email', [
+            'admin_id' => Auth::guard('admin')->id(),
+            'agents'   => $targets->pluck('id')->all(),
+            'from'     => $old,
+            'to'       => $new,
+            'ip'       => $request->ip(),
+        ]);
+
+        // Tell the old address, if it can be told.
+        if (filter_var($old, FILTER_VALIDATE_EMAIL)) {
+            try {
+                \Illuminate\Support\Facades\Mail::to($old)->send(
+                    new \App\Mail\AgentLoginEmailChangedMail($agent, $old, AgentPasswords::maskEmail($new))
+                );
+            } catch (\Throwable $e) {
+                Log::warning('Login-email-changed notice failed for agent ' . $agent->id . ': ' . $e->getMessage());
+            }
+        }
+
+        $agent->refresh();
+        $count  = $targets->count();
+        $result = AgentPasswords::sendLink($agent, 'admin', $request->ip());
+
+        $status = "Login email changed to {$new} for {$count} " . ($count === 1 ? 'account' : 'accounts')
+            . ' and the old password cleared.';
+
+        if ($result === 'sent') {
+            return $back()->with('status', $status . ' A link to create a new password was emailed to ' . $new . '.');
+        }
+
+        return $back()->with('status', $status)
+            ->withErrors(['loginEmail' => 'The password link was NOT sent (' . $result . '). Use "Send password reset email" to try again.']);
+    }
+
+    /**
      * Block / unblock an agent's login. The flag is propagents.loginBlocked
      * (added by hand with raw SQL). It is enforced at sign-in
      * (guestController::memberLogin) and on every request in the member

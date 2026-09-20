@@ -15,6 +15,10 @@ return [
 
     'name' => env('APP_NAME', 'Laravel'),
 
+    // Where agents who can't reach their login email are told to write (shown on the
+    // "Create your password" page). Optional: leave SUPPORT_EMAIL out and no address is shown.
+    'support_email' => env('SUPPORT_EMAIL'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Environment

@@ -24,7 +24,16 @@
         </button>
     </form>
 
-    <p class="mt-6 text-center text-[14px]">
+    <p class="mt-6 rounded-xl bg-slate-50 px-4 py-3 text-[13px] leading-relaxed text-slate-500">
+        <span class="font-semibold text-slate-600">No longer have access to that email?</span>
+        Contact RealtyEmails support
+        @if(config('app.support_email'))
+            at <a href="mailto:{{ config('app.support_email') }}" class="font-semibold text-brand-blue hover:underline">{{ config('app.support_email') }}</a>
+        @endif
+        and we'll confirm who you are and move your account to a new email.
+    </p>
+
+    <p class="mt-5 text-center text-[14px]">
         <a href="{{ route('member.login') }}" class="font-semibold text-brand-blue hover:underline">&larr; Back to sign in</a>
     </p>
 @endsection
