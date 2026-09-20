@@ -29,52 +29,115 @@
     $confirmDelete = $data['confirmDelete'] ?? true;
 @endphp
 
+{{--
+    Layout for this page is PLAIN CSS on purpose (the .ag-* rules below): it shows correctly
+    whether or not the site stylesheet has been rebuilt since the last deploy, the same reason
+    the dashboard's campaign rows use it. The rows / tables inside the tabs keep their existing
+    classes; the rules here only tighten their spacing.
+--}}
+<style>
+    .ag-wrap    { max-width: 1400px; margin: 0 auto; }
+
+    /* title + search on one line */
+    .ag-top     { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+    .ag-title   { display: flex; align-items: baseline; gap: 10px; min-width: 0; }
+    .ag-title h1 { margin: 0; font-size: 22px; line-height: 1.2; font-weight: 650; letter-spacing: -.01em; color: #0f172a; }
+    .ag-title span { font-size: 13px; color: #64748b; white-space: nowrap; }
+
+    .ag-search  { position: relative; flex: 1 1 320px; max-width: 480px; }
+    .ag-search input { width: 100%; height: 40px; border: 1px solid #d5dbe6; border-radius: 12px; background: #fff;
+                       padding: 0 14px 0 38px; font-size: 14px; color: #0f172a; outline: none;
+                       box-shadow: 0 1px 2px rgba(15,23,42,.04); }
+    .ag-search input:focus { border-color: #214e9b; box-shadow: 0 0 0 3px rgba(33,78,155,.12); }
+    .ag-search svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px;
+                     color: #94a3b8; pointer-events: none; }
+
+    /* one calm card holds the tabs and the list */
+    .ag-card    { background: #fff; border-radius: 18px; box-shadow: 0 8px 28px rgba(15,23,42,.06); overflow: hidden; }
+    .ag-tabs    { display: flex; gap: 2px; padding: 0 10px; border-bottom: 1px solid #e8edf5; overflow-x: auto;
+                  white-space: nowrap; scrollbar-width: none; }
+    .ag-tabs::-webkit-scrollbar { display: none; }
+    .ag-tab     { display: inline-flex; align-items: center; gap: 8px; padding: 13px 12px; margin-bottom: -1px;
+                  font-size: 13px; font-weight: 600; color: #64748b; text-decoration: none;
+                  border-bottom: 2px solid transparent; transition: color .12s, border-color .12s; }
+    .ag-tab:hover { color: #0f172a; }
+    .ag-tab.is-on { color: #214e9b; border-bottom-color: #214e9b; }
+    .ag-count   { padding: 3px 7px; border-radius: 999px; background: #eef2f8; color: #475569;
+                  font-size: 11px; font-weight: 700; line-height: 1; }
+    .ag-tab.is-on .ag-count { background: #214e9b; color: #fff; }
+    .ag-tab.is-warn .ag-count { background: #fef3c7; color: #92400e; }
+    .ag-tab.is-warn.is-on { color: #b45309; border-bottom-color: #d97706; }
+    .ag-tab.is-warn.is-on .ag-count { background: #d97706; color: #fff; }
+
+    .ag-body    { padding: 14px 16px 16px; }
+
+    /* status / error messages: slim */
+    .ag-alert   { margin-bottom: 12px; padding: 10px 14px; border-radius: 12px; font-size: 13px; font-weight: 600; border: 1px solid; }
+    .ag-alert.ok  { background: #ecfdf5; border-color: #a7f3d0; color: #047857; }
+    .ag-alert.bad { background: #fef2f2; border-color: #fecaca; color: #b91c1c; }
+
+    /* the tab's own heading + help line, tightened */
+    .ag-body > .mb-5 { margin-bottom: 10px; }
+    /* the active tab already names the list, so its heading is kept for screen readers only
+       and the one-line description under it is what shows */
+    .ag-body h2 { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden;
+                  clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+    .ag-body h2 + p { margin-top: 0; font-size: 12.5px; color: #64748b; }
+
+    /* denser tables (the markup inside keeps its classes) */
+    .ag-body table thead th { padding: 9px 14px; font-size: 11px; }
+    .ag-body table tbody td { padding: 9px 14px; }
+    .ag-body > .overflow-x-auto { border-radius: 12px; }
+    #bulkDeleteForm { padding: 8px 14px; border-radius: 12px; }
+
+    @media (max-width: 640px) {
+        .ag-body { padding: 10px; }
+        .ag-search { max-width: none; flex-basis: 100%; }
+    }
+</style>
+
+@php
+    $pagerTotal = fn ($p) => method_exists($p, 'total') ? $p->total() : 0;
+
+    // Every agent is in exactly one of these three lists, so together they are all of them.
+    $totalAgents = $pagerTotal($activeAgents) + $pagerTotal($noStartAgents) + $pagerTotal($noStartCreditAgents);
+
+    $tabs = [
+        ['key' => 'active',         'label' => 'With Start Date',        'query' => '',                       'count' => $pagerTotal($activeAgents)],
+        ['key' => 'nostart',        'label' => 'No Start Date',          'query' => '?nostart_page=1',        'count' => $pagerTotal($noStartAgents)],
+        ['key' => 'nostartcredits', 'label' => 'No Start Date + Credits', 'query' => '?nostartcredits_page=1', 'count' => $pagerTotal($noStartCreditAgents)],
+        ['key' => 'nophoto',        'label' => 'No Photo',               'query' => '?nophoto_page=1',        'count' => $pagerTotal($noPhotoAgents)],
+        ['key' => 'nologo',         'label' => 'No Logo',                'query' => '?nologo_page=1',         'count' => $pagerTotal($noLogoAgents)],
+    ];
+
+    // Only while some login email still has more than one account.
+    if ($hasDuplicates) {
+        $tabs[] = ['key' => 'duplicates', 'label' => 'Duplicate Logins', 'query' => '?duplicates=1', 'count' => $data['dupCount'] ?? 0, 'warn' => true];
+    }
+@endphp
+
 {{-- MAIN --}}
 <main class="min-h-screen bg-[#f4f7fb] pt-24">
-    <div class="px-4 py-6 sm:px-6 lg:px-10 lg:py-8">
+    <div class="ag-wrap px-4 py-4 sm:px-6 lg:px-8">
 
-        {{-- HEADER --}}
-        <div class="rounded-[24px] bg-white px-5 py-6 shadow-[0_12px_35px_rgba(15,23,42,0.06)] sm:px-8 sm:py-7">
-            <div class="text-[12px] font-semibold uppercase tracking-[0.22em] text-[#214e9b]/70">
-                Admin
+        {{-- TITLE + SEARCH: one slim line --}}
+        <div class="ag-top">
+            <div class="ag-title">
+                <h1>Agents</h1>
+                <span>{{ number_format($totalAgents) }} accounts</span>
             </div>
 
-            <h1 class="mt-2 text-2xl font-semibold text-slate-900 sm:text-[32px]">
-                Agents
-            </h1>
+            <div class="ag-search">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>
+                </svg>
 
-            <p class="mt-2 text-[14px] text-slate-600">
-                View and manage agent accounts in the Realty Emails system.
-            </p>
-        </div>
-
-        @if(session('status'))
-            <div class="mt-6 rounded-2xl border border-emerald-300 bg-emerald-50 px-5 py-4 text-sm font-semibold text-emerald-700">
-                {{ session('status') }}
-            </div>
-        @endif
-
-        @if($errors->any())
-            <div class="mt-6 rounded-2xl border border-red-200 bg-red-50 px-5 py-4 text-sm font-semibold text-red-700">
-                @foreach($errors->all() as $error)
-                    <div>{{ $error }}</div>
-                @endforeach
-            </div>
-        @endif
-
-        {{-- SEARCH AGENTS --}}
-        <div class="mt-6 rounded-[24px] bg-white p-4 shadow-[0_12px_35px_rgba(15,23,42,0.06)] sm:mt-8 sm:p-6">
-            <label class="block text-sm font-semibold text-slate-700">
-                Search Agents
-            </label>
-
-            <div class="relative mt-2">
                 <input
                     id="agentSearch"
                     type="text"
-                    placeholder="Search by name, email, username, or ID..."
+                    placeholder="Search by name, email, username or ID"
+                    aria-label="Search agents"
                     autocomplete="off"
-                    class="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm focus:border-[#214e9b] focus:outline-none focus:ring-2 focus:ring-[#214e9b]/20"
                 >
 
                 <div
@@ -84,86 +147,34 @@
             </div>
         </div>
 
-        {{-- AGENTS TABS --}}
-        <div class="mt-6 rounded-[24px] bg-white shadow-[0_12px_35px_rgba(15,23,42,0.06)] overflow-hidden sm:mt-10">
+        @if(session('status'))
+            <div class="ag-alert ok">{{ session('status') }}</div>
+        @endif
 
-            {{-- TAB BUTTONS --}}
-            <div class="border-b border-slate-200 bg-slate-50 px-4 pt-5 sm:px-6">
-                <div class="flex flex-wrap gap-2">
-
-                    <a
-                        href="{{ request()->url() }}"
-                        class="{{ $currentTab === 'active' ? 'bg-[#214e9b] text-white shadow' : 'bg-slate-200 text-slate-700' }} rounded-t-xl px-4 py-3 text-sm font-semibold sm:px-5"
-                    >
-                        With Start Date
-
-                        <span class="ml-2 rounded-full bg-white/20 px-2 py-0.5 text-xs">
-                            {{ method_exists($activeAgents, 'total') ? $activeAgents->total() : 0 }}
-                        </span>
-                    </a>
-
-                    <a
-                        href="{{ request()->url() }}?nostart_page=1"
-                        class="{{ $currentTab === 'nostart' ? 'bg-[#214e9b] text-white shadow' : 'bg-slate-200 text-slate-700' }} rounded-t-xl px-4 py-3 text-sm font-semibold sm:px-5"
-                    >
-                        No Start Date
-
-                        <span class="ml-2 rounded-full bg-white/20 px-2 py-0.5 text-xs">
-                            {{ method_exists($noStartAgents, 'total') ? $noStartAgents->total() : 0 }}
-                        </span>
-                    </a>
-
-                    <a
-                        href="{{ request()->url() }}?nostartcredits_page=1"
-                        class="{{ $currentTab === 'nostartcredits' ? 'bg-[#214e9b] text-white shadow' : 'bg-slate-200 text-slate-700' }} rounded-t-xl px-4 py-3 text-sm font-semibold sm:px-5"
-                    >
-                        No Start Date + Credits
-
-                        <span class="ml-2 rounded-full bg-white/20 px-2 py-0.5 text-xs">
-                            {{ method_exists($noStartCreditAgents, 'total') ? $noStartCreditAgents->total() : 0 }}
-                        </span>
-                    </a>
-
-                    <a
-                        href="{{ request()->url() }}?nophoto_page=1"
-                        class="{{ $currentTab === 'nophoto' ? 'bg-[#214e9b] text-white shadow' : 'bg-slate-200 text-slate-700' }} rounded-t-xl px-4 py-3 text-sm font-semibold sm:px-5"
-                    >
-                        No Photo
-
-                        <span class="ml-2 rounded-full bg-white/20 px-2 py-0.5 text-xs">
-                            {{ method_exists($noPhotoAgents, 'total') ? $noPhotoAgents->total() : 0 }}
-                        </span>
-                    </a>
-
-                    <a
-                        href="{{ request()->url() }}?nologo_page=1"
-                        class="{{ $currentTab === 'nologo' ? 'bg-[#214e9b] text-white shadow' : 'bg-slate-200 text-slate-700' }} rounded-t-xl px-4 py-3 text-sm font-semibold sm:px-5"
-                    >
-                        No Logo
-
-                        <span class="ml-2 rounded-full bg-white/20 px-2 py-0.5 text-xs">
-                            {{ method_exists($noLogoAgents, 'total') ? $noLogoAgents->total() : 0 }}
-                        </span>
-                    </a>
-
-                    @if($hasDuplicates)
-                    <a
-                        href="{{ request()->url() }}?duplicates=1"
-                        class="{{ $currentTab === 'duplicates' ? 'bg-[#214e9b] text-white shadow' : 'bg-slate-200 text-slate-700' }} rounded-t-xl px-4 py-3 text-sm font-semibold sm:px-5"
-                    >
-                        Duplicate Logins
-
-                        <span class="ml-2 rounded-full bg-white/20 px-2 py-0.5 text-xs">
-                            {{ $data['dupCount'] ?? 0 }}
-                        </span>
-                    </a>
-                    @endif
-
-                </div>
+        @if($errors->any())
+            <div class="ag-alert bad">
+                @foreach($errors->all() as $error)
+                    <div>{{ $error }}</div>
+                @endforeach
             </div>
+        @endif
+
+        {{-- TABS + LIST --}}
+        <div class="ag-card">
+
+            <nav class="ag-tabs" aria-label="Agent lists">
+                @foreach($tabs as $tab)
+                    <a href="{{ request()->url() }}{{ $tab['query'] }}"
+                       class="ag-tab {{ $currentTab === $tab['key'] ? 'is-on' : '' }} {{ !empty($tab['warn']) ? 'is-warn' : '' }}"
+                       @if($currentTab === $tab['key']) aria-current="page" @endif>
+                        {{ $tab['label'] }}
+                        <span class="ag-count">{{ number_format($tab['count']) }}</span>
+                    </a>
+                @endforeach
+            </nav>
 
             {{-- TAB CONTENT --}}
-            <div class="p-4 sm:p-6">
+            <div class="ag-body">
 
                 @if($currentTab === 'active')
 
@@ -178,12 +189,6 @@
                                 Agent accounts that currently have a start date.
                             </p>
                         </div>
-
-                        @if(method_exists($activeAgents, 'total'))
-                            <span class="rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">
-                                {{ $activeAgents->total() }} agents
-                            </span>
-                        @endif
                     </div>
 
                     {{-- ACTIVE AGENTS: MOBILE CARDS --}}
@@ -408,12 +413,6 @@
                                 (Agents without a start date who do have credits are on the "No Start Date + Credits" tab.)
                             </p>
                         </div>
-
-                        @if(method_exists($noStartAgents, 'total'))
-                            <span class="rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700">
-                                {{ $noStartAgents->total() }} records
-                            </span>
-                        @endif
                     </div>
 
                     {{-- BULK DELETE BAR. The checkboxes in the phone cards and the table below

@@ -36,12 +36,6 @@
             </p>
         @endif
     </div>
-
-    @if(method_exists($agents, 'total'))
-        <span class="rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-700">
-            {{ $agents->total() }} records
-        </span>
-    @endif
 </div>
 
 {{-- MOBILE CARDS --}}
