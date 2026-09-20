@@ -76,9 +76,9 @@ $lastSent = ($lastSent && $lastSent->year > 1970) ? $lastSent : null;
 // null, with the real date only in the legacy creationDate column.
 $createdDate = null;
 if ($propInfo->created_at) {
-    $createdDate = $propInfo->created_at->format('n/j/Y');
+    $createdDate = $propInfo->created_at->format('M j, Y');
 } elseif ($propInfo->creationDate) {
-    $createdDate = \Carbon\Carbon::parse($propInfo->creationDate)->format('n/j/Y');
+    $createdDate = \Carbon\Carbon::parse($propInfo->creationDate)->format('M j, Y');
 }
 @endphp
 
