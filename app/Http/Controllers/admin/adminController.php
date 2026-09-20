@@ -1244,8 +1244,8 @@ class adminController extends Controller
             ->update(['authorized' => 1]);
 
         $message = $approved
-            ? "Approved {$approved} " . ($approved === 1 ? 'area' : 'areas') . '.'
-            : 'Nothing was waiting for approval on this flyer.';
+            ? "Authorized {$approved} " . ($approved === 1 ? 'area' : 'areas') . '.'
+            : 'Nothing was waiting to be authorized on this flyer.';
 
         return redirect()->route('admin.flyerCamps', $flyerId)->with('status', $message);
     }
@@ -1267,10 +1267,40 @@ class adminController extends Controller
             ->update(['authorized' => 0]);
 
         $message = $unapproved
-            ? "Unapproved {$unapproved} " . ($unapproved === 1 ? 'area' : 'areas') . '. ' . ($unapproved === 1 ? 'It is' : 'They are') . ' waiting for approval again.'
-            : 'Nothing approved and waiting to send on this flyer.';
+            ? "Unauthorized {$unapproved} " . ($unapproved === 1 ? 'area' : 'areas') . '. ' . ($unapproved === 1 ? 'It is' : 'They are') . ' waiting to be authorized again.'
+            : 'Nothing authorized and waiting to send on this flyer.';
 
         return redirect()->route('admin.flyerCamps', $flyerId)->with('status', $message);
+    }
+
+    /**
+     * Authorize or unauthorize ONE waiting campaign (the toggle on its status
+     * badge). The wanted state is posted (1 / 0) rather than flipped, so a
+     * double click or a stale page can't flip it the wrong way. A campaign the
+     * mail system has already started or finished is left alone.
+     */
+    public function campaignAuthorize(Request $request, $cid)
+    {
+        $validated = $request->validate([
+            'authorized' => ['required', 'in:0,1'],
+        ]);
+
+        $campaign = Propdelivnow::findOrFail($cid);
+        $back     = redirect()->route('admin.flyerCamps', $campaign->propflyer_id);
+
+        if ($campaign->emStart || $campaign->emComplete) {
+            return $back->withErrors(['That campaign has already started, so it can no longer be authorized or unauthorized.']);
+        }
+
+        // The save stamps updated_at - in the flyer's agent's timezone.
+        AgentTime::apply(Propagent::find($campaign->propagent_id));
+
+        $campaign->authorized = (int) $validated['authorized'];
+        $campaign->save();
+
+        $name = $campaign->emArea_display ?: $campaign->emArea;
+
+        return $back->with('status', $name . ($campaign->authorized ? ' is authorized.' : ' is no longer authorized.'));
     }
 
     /**
@@ -1332,7 +1362,7 @@ class adminController extends Controller
 
         return redirect()->route('admin.flyerCamps', $flyer->id)->with(
             'status',
-            "Added {$area['label']} (" . number_format($totalEmails) . ' contacts) at no charge. It is waiting for approval with this flyer\'s other areas.'
+            "Added {$area['label']} (" . number_format($totalEmails) . ' contacts) at no charge. It is waiting to be authorized with this flyer\'s other areas.'
         );
     }
 

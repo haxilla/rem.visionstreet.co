@@ -24,7 +24,7 @@ $campaigns =
 
 $subject = $campaigns->first()['emSubject'] ?? '';
 
-// ---- approval screen ----
+// ---- authorization screen ----
 $pendingRequests = $data['pendingRequests'] ?? collect();
 $awaitingApproval = $pendingRequests->filter(fn ($c) => (int) $c->authorized !== 1);
 $approvedWaiting  = $pendingRequests->filter(fn ($c) => (int) $c->authorized === 1);
@@ -151,10 +151,10 @@ if ($propInfo->created_at) {
 
             <div class="mt-4 flex flex-wrap gap-2 text-xs font-semibold">
                 @if($awaitingApproval->isNotEmpty())
-                    <span class="rounded-full bg-amber-100 px-3 py-1 text-amber-800">{{ $awaitingApproval->count() }} awaiting approval</span>
+                    <span class="rounded-full bg-amber-100 px-3 py-1 text-amber-800">{{ $awaitingApproval->count() }} not authorized</span>
                 @endif
                 @if($approvedWaiting->isNotEmpty())
-                    <span class="rounded-full bg-indigo-100 px-3 py-1 text-indigo-700">{{ $approvedWaiting->count() }} approved, waiting to send</span>
+                    <span class="rounded-full bg-indigo-100 px-3 py-1 text-indigo-700">{{ $approvedWaiting->count() }} authorized, waiting to send</span>
                 @endif
                 @if($inProgressCampaigns->isNotEmpty())
                     <span class="rounded-full bg-blue-100 px-3 py-1 text-blue-700">{{ $inProgressCampaigns->count() }} in progress</span>
@@ -186,9 +186,9 @@ if ($propInfo->created_at) {
                 <h2 class="text-base font-bold text-white">Send Request</h2>
 
                 @if($awaitingApproval->isNotEmpty())
-                    <span class="rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-800">Awaiting approval</span>
+                    <span class="rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-800">Not authorized</span>
                 @elseif($pendingRequests->isNotEmpty())
-                    <span class="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">Approved</span>
+                    <span class="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">Authorized</span>
                 @else
                     <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">No pending request</span>
                 @endif
@@ -256,7 +256,7 @@ if ($propInfo->created_at) {
 
             </div>
 
-            {{-- REQUESTED AREAS: waiting to be approved, or approved and waiting to send --}}
+            {{-- REQUESTED AREAS: waiting to be authorized, or authorized and waiting to send --}}
             <div class="border-t border-slate-200">
                 <div class="{{ $eyebrow }} border-y border-slate-200 bg-white px-5 py-3">Requested Areas ({{ $pendingRequests->count() }})</div>
 
@@ -287,7 +287,7 @@ if ($propInfo->created_at) {
                     <div class="{{ $eyebrow }}">Add a Free Area</div>
 
                     <p class="mb-3 mt-1 text-sm text-slate-500">
-                        No credit is charged to the agent. The area is added as unapproved and is approved together with this flyer's other waiting areas.
+                        No credit is charged to the agent. The area is added as not authorized; authorize it below, alone or with this flyer's other waiting areas.
                     </p>
 
                     <form method="POST"
@@ -317,41 +317,38 @@ if ($propInfo->created_at) {
                     @endif
                 </div>
 
-                {{-- APPROVE / UNAPPROVE --}}
-                @if($awaitingApproval->isNotEmpty() || $approvedWaiting->isNotEmpty())
+                {{-- AUTHORIZE ALL / UNAUTHORIZE ALL --}}
+                @if($pendingRequests->isNotEmpty())
                     <div class="border-t border-slate-200 pt-5">
-                        <div class="{{ $eyebrow }}">Approval</div>
+                        <div class="{{ $eyebrow }}">Authorization</div>
 
                         <p class="mb-3 mt-1 text-sm text-slate-500">
-                            Approving marks every waiting area ready for the mail system to send (add any free areas first).
-                            Unapproving takes approved areas that have not started back to awaiting approval; areas already in progress are not affected.
+                            Authorizing makes an area ready for the mail system to send (add any free areas first).
+                            Use these to change every waiting area at once, or the toggle on an area's badge to change just that one.
+                            Areas already in progress are not affected.
                         </p>
 
                         <div class="flex flex-wrap gap-3">
 
-                            @if($awaitingApproval->isNotEmpty())
-                                <form method="POST"
-                                      action="{{ route('admin.campaignApprove', $propInfo->id) }}"
-                                      onsubmit="return confirm('Approve {{ $awaitingApproval->count() }} area(s) for {{ addslashes($propInfo->xFullStreet ?? 'this flyer') }}?');">
-                                    @csrf
-                                    <button type="submit"
-                                            class="rounded-xl bg-emerald-600 px-5 py-3 font-semibold text-white hover:bg-emerald-700">
-                                        Approve {{ $awaitingApproval->count() }} {{ $awaitingApproval->count() === 1 ? 'Area' : 'Areas' }}
-                                    </button>
-                                </form>
-                            @endif
+                            <form method="POST"
+                                  action="{{ route('admin.campaignApprove', $propInfo->id) }}"
+                                  onsubmit="return confirm('Authorize {{ $awaitingApproval->count() }} area(s) for {{ addslashes($propInfo->xFullStreet ?? 'this flyer') }}?');">
+                                @csrf
+                                <button type="submit" @disabled($awaitingApproval->isEmpty())
+                                        class="rounded-xl bg-emerald-600 px-5 py-3 font-semibold text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-emerald-600">
+                                    Authorize All
+                                </button>
+                            </form>
 
-                            @if($approvedWaiting->isNotEmpty())
-                                <form method="POST"
-                                      action="{{ route('admin.campaignUnapprove', $propInfo->id) }}"
-                                      onsubmit="return confirm('Unapprove {{ $approvedWaiting->count() }} area(s) for {{ addslashes($propInfo->xFullStreet ?? 'this flyer') }}? They will not be sent until approved again.');">
-                                    @csrf
-                                    <button type="submit"
-                                            class="rounded-xl border border-red-300 bg-white px-5 py-3 font-semibold text-red-600 hover:bg-red-50">
-                                        Unapprove {{ $approvedWaiting->count() }} {{ $approvedWaiting->count() === 1 ? 'Area' : 'Areas' }}
-                                    </button>
-                                </form>
-                            @endif
+                            <form method="POST"
+                                  action="{{ route('admin.campaignUnapprove', $propInfo->id) }}"
+                                  onsubmit="return confirm('Unauthorize {{ $approvedWaiting->count() }} area(s) for {{ addslashes($propInfo->xFullStreet ?? 'this flyer') }}? They will not be sent until authorized again.');">
+                                @csrf
+                                <button type="submit" @disabled($approvedWaiting->isEmpty())
+                                        class="rounded-xl border border-red-300 bg-white px-5 py-3 font-semibold text-red-600 hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-white">
+                                    Unauthorize All
+                                </button>
+                            </form>
 
                         </div>
                     </div>
@@ -413,7 +410,7 @@ if ($propInfo->created_at) {
 
         {{-- IN PROGRESS: campaigns that have started but not finished. Campaigns still
              WAITING to start are listed once, under "Requested Areas" in the Send Request
-             card (that is where they are approved), so they are not repeated here. --}}
+             card (that is where they are authorized), so they are not repeated here. --}}
         <div class="{{ $card }} overflow-hidden mb-6 lg:col-start-1">
 
             <div class="{{ $cardHead }}">

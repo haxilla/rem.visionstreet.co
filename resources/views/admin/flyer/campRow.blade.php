@@ -8,8 +8,8 @@
 @php
     // pill = the status badge, accent = the stripe, bar = the timeline fill
     $stages = [
-        'awaiting' => ['label' => 'Awaiting approval',         'pill' => 'bg-amber-100 text-amber-800',     'accent' => 'border-l-amber-400',   'bar' => 'bg-amber-400'],
-        'approved' => ['label' => 'Approved, waiting to send', 'pill' => 'bg-indigo-100 text-indigo-700',   'accent' => 'border-l-indigo-500',  'bar' => 'bg-indigo-500'],
+        'awaiting' => ['label' => 'Not authorized',            'pill' => 'bg-amber-100 text-amber-800',     'accent' => 'border-l-amber-400',   'bar' => 'bg-amber-400'],
+        'approved' => ['label' => 'Authorized',                'pill' => 'bg-indigo-100 text-indigo-700',   'accent' => 'border-l-indigo-500',  'bar' => 'bg-indigo-500'],
         'progress' => ['label' => 'In progress',               'pill' => 'bg-blue-100 text-blue-700',       'accent' => 'border-l-blue-500',    'bar' => 'bg-blue-500'],
         'complete' => ['label' => 'Completed',                 'pill' => 'bg-emerald-100 text-emerald-700', 'accent' => 'border-l-emerald-500', 'bar' => 'bg-emerald-500'],
     ];
@@ -54,7 +54,25 @@
             @endif
         </div>
 
-        <span class="shrink-0 rounded-full px-3 py-1 text-xs font-bold {{ $st['pill'] }}">{{ $st['label'] }}</span>
+        @if(in_array($stage, ['awaiting', 'approved'], true))
+            {{-- waiting to start: the badge is a toggle that authorizes / unauthorizes just this campaign --}}
+            @php $isOn = $stage === 'approved'; @endphp
+            <form method="POST" action="{{ route('admin.campaignAuthorize', $cid) }}" class="shrink-0">
+                @csrf
+                <input type="hidden" name="authorized" value="{{ $isOn ? 0 : 1 }}">
+
+                <button type="submit"
+                        title="{{ $isOn ? 'Click to unauthorize this area' : 'Click to authorize this area' }}"
+                        class="inline-flex items-center gap-2 rounded-full py-1 pl-3 pr-1.5 text-xs font-bold ring-1 ring-black/5 {{ $st['pill'] }}">
+                    {{ $st['label'] }}
+                    <span class="relative inline-block h-5 w-9 rounded-full transition-colors {{ $isOn ? 'bg-indigo-600' : 'bg-slate-400' }}">
+                        <span class="absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-all {{ $isOn ? 'left-[18px]' : 'left-0.5' }}"></span>
+                    </span>
+                </button>
+            </form>
+        @else
+            <span class="shrink-0 rounded-full px-3 py-1 text-xs font-bold {{ $st['pill'] }}">{{ $st['label'] }}</span>
+        @endif
 
     </div>
 

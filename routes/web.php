@@ -158,6 +158,8 @@ Route::get('/admin/flyerCamps/{flyerId}', [adminController::class, 'flyerCamps']
 //campaign approval (POST only - changes data, so it must carry a CSRF token)
 Route::post('/admin/campaignApprove/{flyerId}', [adminController::class, 'campaignApprove'])
     ->whereNumber('flyerId')->name('admin.campaignApprove');
+Route::post('/admin/campaignAuthorize/{cid}', [adminController::class, 'campaignAuthorize'])
+    ->whereNumber('cid')->name('admin.campaignAuthorize');
 Route::post('/admin/campaignUnapprove/{flyerId}', [adminController::class, 'campaignUnapprove'])
     ->whereNumber('flyerId')->name('admin.campaignUnapprove');
 Route::post('/admin/campaignAddArea/{flyerId}', [adminController::class, 'campaignAddArea'])
