@@ -189,17 +189,27 @@ class FlyerSlug
     }
 
     /**
-     * "27043 N 117TH PL" and "27043 n 117th pl" both become "27043 N 117th Pl"; anything the agent
-     * typed in mixed case is left as typed. Compass abbreviations (NE, NW, SE, SW) stay capitals.
+     * Word by word, so an address typed half in capitals is tidied too: "9290 E THOMPSON PEAK Parkway"
+     * becomes "9290 E Thompson Peak Parkway", and "27043 N 117TH PL" / "27043 n 117th pl" both become
+     * "27043 N 117th Pl". A word that is ALL capitals or ALL lowercase gets a leading capital; a word
+     * with capitals of its own (McDowell, DeSoto) is left as typed. Single letters (N, E) and the
+     * compass pairs NE, NW, SE, SW stay capitals; numbers are untouched.
      */
     private static function tidyCase(string $text): string
     {
-        if ($text === strtoupper($text) || $text === strtolower($text)) {
-            $text = ucwords(strtolower($text));
-            $text = preg_replace_callback('/\b(Ne|Nw|Se|Sw)\b/', fn ($m) => strtoupper($m[1]), $text);
-        }
+        return preg_replace_callback('/[A-Za-z0-9]+/', function ($m) {
+            $word = $m[0];
 
-        return $text;
+            if ($word !== strtoupper($word) && $word !== strtolower($word)) {
+                return $word;
+            }
+
+            if (strlen($word) === 1 || in_array(strtoupper($word), ['NE', 'NW', 'SE', 'SW'], true)) {
+                return strtoupper($word);
+            }
+
+            return ucfirst(strtolower($word));
+        }, $text);
     }
 
     /** "AZ", "az" and "Arizona" all give "AZ"; anything that isn't a state (a stray "N0", say) gives ''. */
