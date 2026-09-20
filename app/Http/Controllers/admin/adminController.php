@@ -150,7 +150,7 @@ class adminController extends Controller
         ]);
 
         return redirect(session('admin_agents_list_url', url('/admin/agents')))
-            ->with('status', "Deleted agent #{$agent->id} {$name}.");
+            ->with('status', "Deleted account #{$agent->id} {$name}.");
     }
 
     public function agentView($id)
