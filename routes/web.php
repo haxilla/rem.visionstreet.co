@@ -89,6 +89,10 @@ Route::get('/admin/agentMerge/{id}',
 Route::post('/admin/agentMerge/{id}',
 [adminController::class, 'agentMergeSave'])->whereNumber('id')->name('admin.agentMergeSave');
 
+//delete an agent from their own page - only one with no start date and no credits (POST only; re-checked in the controller)
+Route::post('/admin/agentDelete/{id}',
+[adminController::class, 'agentDelete'])->whereNumber('id')->name('admin.agentDelete');
+
 //move a duplicate account's order + campaign history into another account on the same email (POST only)
 Route::post('/admin/agentMoveRecords/{id}',
 [adminController::class, 'agentMoveRecords'])->whereNumber('id')->name('admin.agentMoveRecords');

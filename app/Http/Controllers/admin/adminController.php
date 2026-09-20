@@ -113,6 +113,46 @@ class adminController extends Controller
         return redirect()->back()->with('status', $message);
     }
 
+    /**
+     * Delete one agent from their own page (POST only): only an agent with NO start date
+     * and NO credits - the same rule as the "No Start Date" list's bulk delete, checked
+     * here again so a stale page or a hand-made request can't delete anyone else. (A
+     * duplicate account is deleted from the Duplicate Logins tools, see agentDeleteDuplicate.)
+     *
+     * Like the bulk delete this removes the agent's row (Propagent isn't soft-deleting);
+     * their unused password links go too. It does not touch their flyers.
+     */
+    public function agentDelete(Request $request, $id)
+    {
+        $agent = Propagent::findOrFail($id);
+
+        if (!is_null($agent->startDate) || (int) ($agent->remCreds ?? 0) > 0) {
+            return redirect()->route('admin.agentView', $agent->id)
+                ->withErrors(['deleteAgent' => 'Not deleted: only an agent with no start date and no credits can be deleted.']);
+        }
+
+        $name = $agent->agtFullName ?: trim(($agent->agtFirst ?? '') . ' ' . ($agent->agtLast ?? '')) ?: 'No name';
+
+        $agent->delete();
+
+        try {
+            \App\Models\Core\AgentPasswordReset::where('propagent_id', $agent->id)->delete();
+        } catch (\Throwable $e) {
+            Log::warning('Could not clear password links for deleted agent ' . $agent->id . ': ' . $e->getMessage());
+        }
+
+        Log::info('Admin deleted an agent', [
+            'admin_id' => Auth::guard('admin')->id(),
+            'agent_id' => $agent->id,
+            'name'     => $name,
+            'email'    => $agent->xxAgtUname,
+            'ip'       => $request->ip(),
+        ]);
+
+        return redirect(session('admin_agents_list_url', url('/admin/agents')))
+            ->with('status', "Deleted agent #{$agent->id} {$name}.");
+    }
+
     public function agentView($id)
     {
 

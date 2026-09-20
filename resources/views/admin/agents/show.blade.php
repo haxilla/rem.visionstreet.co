@@ -162,6 +162,21 @@
                 <a href="/admin/agentLogin/{{ $agent->id }}" class="rounded-lg bg-[#16213e] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#22315a]">
                     Log in as this agent
                 </a>
+
+                {{-- The ONLY delete on an agent's page, and only for an agent who never started
+                     (no start date) and has no credits - the same rule as the "No Start Date" list.
+                     (A duplicate account is deleted from the Duplicate Logins tools instead.) --}}
+                @if(is_null($agent->startDate) && (int) ($agent->remCreds ?? 0) <= 0)
+                    <form method="POST" action="{{ route('admin.agentDelete', $agent->id) }}"
+                          @if(\App\Models\Core\AdminSetting::confirmAgentDeletion())
+                              onsubmit="return confirm({{ \Illuminate\Support\Js::from('Delete ' . $displayName . ' (ID ' . $agent->id . ')?' . ($flyerCount > 0 ? ' They have ' . $flyerCount . ' ' . ($flyerCount === 1 ? 'flyer' : 'flyers') . ' that will be left without an owner.' : '') . ' This cannot be undone.') }})"
+                          @endif>
+                        @csrf
+                        <button type="submit" class="rounded-lg border border-red-200 px-4 py-2.5 text-sm font-semibold text-red-600 hover:bg-red-50">
+                            Delete agent
+                        </button>
+                    </form>
+                @endif
             </div>
 
         </div>
