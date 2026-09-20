@@ -301,7 +301,7 @@
                                 >
                                 Keep me signed in
                             </label>
-                            <a href="#" class="text-[13px] font-semibold text-brand-blue hover:underline">
+                            <a href="{{ route('member.password.forgot') }}" class="text-[13px] font-semibold text-brand-blue hover:underline">
                                 Forgot password?
                             </a>
                         </div>

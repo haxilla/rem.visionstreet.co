@@ -25,6 +25,17 @@ Route::get('/member/login',
 Route::post('/member/login',
 [guestController::class, 'memberLogin'])->middleware('throttle:5,1')->name('member.login.submit');
 
+//member password: "forgot password" and the emailed one-time "set your new password" link
+//(guest pages - no login needed; defined before the /member/{segments} catch-all below)
+Route::get('/member/password/forgot',
+[guestController::class, 'passwordForgotForm'])->name('member.password.forgot');
+Route::post('/member/password/forgot',
+[guestController::class, 'passwordForgot'])->middleware('throttle:5,1')->name('member.password.forgot.send');
+Route::get('/member/password/set/{token}',
+[guestController::class, 'passwordSetForm'])->where('token', '[A-Za-z0-9]{64}')->name('member.password.set');
+Route::post('/member/password/set/{token}',
+[guestController::class, 'passwordSet'])->where('token', '[A-Za-z0-9]{64}')->middleware('throttle:10,1')->name('member.password.set.save');
+
 //bouncebox - retired, views/app files moved to 0ld
 //Route::post('/admin/bounces/group-delete', [bounceboxController::class, 'groupDelete'])
 //    ->name('admin.bounces.groupDelete');

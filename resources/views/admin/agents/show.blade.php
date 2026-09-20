@@ -31,6 +31,11 @@
     $blockAvailable = array_key_exists('loginBlocked', $agent->getAttributes());
     $isBlocked      = $blockAvailable && (int) $agent->loginBlocked === 1;
 
+    // passwordResetAt (added by hand with raw SQL) is when the agent set their new password
+    // on this site; empty = still to do, and they're emailed a link at their next sign-in.
+    $resetAvailable = array_key_exists('passwordResetAt', $agent->getAttributes());
+    $resetDone      = $resetAvailable && filled($agent->passwordResetAt);
+
     // Only real web links become links (never javascript: and the like).
     $webLink = fn ($u) => (is_string($u) && preg_match('#^https?://#i', $u) && filter_var($u, FILTER_VALIDATE_URL)) ? $u : null;
 
@@ -129,6 +134,12 @@
                                 No usable password
                             </span>
                         @endunless
+
+                        @if($resetAvailable && !$resetDone)
+                            <span class="rounded-full bg-amber-50 px-3 py-1 text-amber-700 ring-1 ring-amber-200">
+                                Hasn't reset password yet
+                            </span>
+                        @endif
 
                         @if(!$photo['file'])
                             <span class="rounded-full bg-slate-100 px-3 py-1 text-slate-600">No photo</span>
@@ -550,6 +561,19 @@
                     </div>
 
                     <div class="{{ $row }}">
+                        <dt class="{{ $label }}">New-site password</dt>
+                        <dd class="text-right font-medium {{ !$resetAvailable ? 'text-slate-400' : ($resetDone ? 'text-emerald-600' : 'text-amber-600') }}">
+                            @if(!$resetAvailable)
+                                Not available yet
+                            @elseif($resetDone)
+                                Reset {{ $time($agent->passwordResetAt) }}
+                            @else
+                                Not reset yet
+                            @endif
+                        </dd>
+                    </div>
+
+                    <div class="{{ $row }}">
                         <dt class="{{ $label }}">Login access</dt>
                         <dd class="text-right font-medium {{ !$blockAvailable ? 'text-slate-400' : ($isBlocked ? 'text-red-600' : 'text-emerald-600') }}">
                             @if(!$blockAvailable)
@@ -584,6 +608,20 @@
                         </p>
                     @endif
 
+                    @if($resetAvailable && !$resetDone)
+                        <p class="rounded-lg bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-700">
+                            This agent hasn't created a new password on this site. At their next sign-in they aren't
+                            let in - they're emailed a one-time link to set one. You can send that link now.
+                        </p>
+                    @endif
+
+                    @unless($resetAvailable)
+                        <p class="rounded-lg bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-700">
+                            Password-reset tracking isn't on until the <code>passwordResetAt</code> column has been added
+                            to the database.
+                        </p>
+                    @endunless
+
                     @unless($blockAvailable)
                         <p class="rounded-lg bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-700">
                             Blocking isn't available until the <code>loginBlocked</code> column has been added to the
@@ -616,7 +654,9 @@
                     </div>
 
                     <p class="text-xs text-slate-500">
-                        Email sending isn't set up yet, so "Send password reset email" doesn't send anything for now.
+                        "Send password reset email" emails the agent a one-time link (good for {{ \App\Support\AgentPasswords::LINK_MINUTES }} minutes) at
+                        <span class="break-all font-semibold">{{ $agent->xxAgtUname ?: 'no email on file' }}</span>.
+                        The agent chooses their own password; you never see or set it.
                     </p>
 
                 </div>

@@ -1,0 +1,206 @@
+<?php
+
+namespace App\Support;
+
+use App\Mail\AgentPasswordResetMail;
+use App\Models\Core\AgentPasswordReset;
+use App\Models\Core\Propagent;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rules\Password;
+
+/**
+ * The forced password reset for agents arriving from the old system.
+ *
+ * Who has reset: propagents.passwordResetAt (added by hand with raw SQL).
+ * NULL = has not reset yet, so at sign-in they are NOT let in - even with the
+ * right old password - and are emailed a one-time link instead. Following the
+ * link (which proves they control the login email) is how they set a new
+ * password and get a date in that column. Until the column exists nobody is
+ * forced, the same way loginBlocked is handled.
+ */
+class AgentPasswords
+{
+    /** How long an emailed link works. */
+    public const LINK_MINUTES = 60;
+
+    /** Per agent: at most this many links an hour, and never twice within a minute. */
+    private const MAX_PER_HOUR    = 5;
+    private const MIN_GAP_SECONDS = 60;
+
+    private const DB_FORMAT = 'Y-m-d H:i:s';
+
+    /** True once the passwordResetAt column has been added to propagents. */
+    public static function columnAvailable($agent): bool
+    {
+        return array_key_exists('passwordResetAt', $agent->getAttributes());
+    }
+
+    /** Must this agent set a new password before they can sign in? */
+    public static function resetRequired($agent): bool
+    {
+        return static::columnAvailable($agent) && blank($agent->passwordResetAt);
+    }
+
+    /**
+     * The minimum standard for a new password: 12+ characters with upper and
+     * lower case, a number and a symbol, and not one that has appeared in a
+     * known data breach (checked with Have I Been Pwned by sending only the
+     * first 5 characters of the password's hash - the password never leaves).
+     */
+    public static function rule(): Password
+    {
+        return Password::min(12)->mixedCase()->numbers()->symbols()->uncompromised(3);
+    }
+
+    /** Human-readable version of rule(), shown next to the field. */
+    public static function requirements(): array
+    {
+        return [
+            'At least 12 characters',
+            'An uppercase and a lowercase letter',
+            'A number',
+            'A symbol (for example ! @ # $ %)',
+        ];
+    }
+
+    /**
+     * Extra checks the generic rule can't do: not the password they had before
+     * (the hashed one or the old-system plain-text one) and nothing built from
+     * their email name or their own name. Returns the problem, or null if fine.
+     */
+    public static function personalProblem($agent, string $new): ?string
+    {
+        if (filled($agent->password) && Hash::check($new, $agent->password)) {
+            return 'Please choose a password you have not used before.';
+        }
+
+        if (filled($agent->agtPswd) && hash_equals((string) $agent->agtPswd, $new)) {
+            return 'Please choose a password you have not used before.';
+        }
+
+        $lower = mb_strtolower($new);
+
+        $parts = [
+            Str::before((string) $agent->xxAgtUname, '@'),
+            $agent->agtFirst,
+            $agent->agtLast,
+        ];
+
+        foreach ($parts as $part) {
+            $part = mb_strtolower(trim((string) $part));
+
+            if (mb_strlen($part) >= 4 && str_contains($lower, $part)) {
+                return 'Your password can\'t contain your name or email name.';
+            }
+        }
+
+        return null;
+    }
+
+    /** "chris.visionstreet@gmail.com" -> "c•••••••••••••••@gmail.com" */
+    public static function maskEmail(string $email): string
+    {
+        [$name, $domain] = array_pad(explode('@', $email, 2), 2, '');
+
+        return mb_substr($name, 0, 1) . str_repeat('•', max(3, min(mb_strlen($name) - 1, 8))) . '@' . $domain;
+    }
+
+    /**
+     * Email the agent a fresh one-time link (any earlier unused link stops
+     * working). $source is 'login', 'forgot' or 'admin' - admins are exempt from
+     * the per-agent limits.
+     *
+     * Returns: sent | limited | blocked | noemail | failed
+     */
+    public static function sendLink(Propagent $agent, string $source, ?string $ip = null): string
+    {
+        $email = trim((string) $agent->xxAgtUname);
+
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return 'noemail';
+        }
+
+        // A blocked agent gets nothing, however the link was asked for.
+        if ((int) ($agent->loginBlocked ?? 0) === 1) {
+            return 'blocked';
+        }
+
+        $now = Carbon::now('UTC');
+
+        if ($source !== 'admin') {
+            $recent = AgentPasswordReset::where('propagent_id', $agent->id)
+                ->where('created_at', '>=', $now->copy()->subHour()->format(self::DB_FORMAT))
+                ->orderByDesc('id')
+                ->pluck('created_at');
+
+            if ($recent->count() >= self::MAX_PER_HOUR) {
+                return 'limited';
+            }
+
+            if ($recent->isNotEmpty()
+                && Carbon::parse($recent->first(), 'UTC')->gt($now->copy()->subSeconds(self::MIN_GAP_SECONDS))) {
+                return 'limited';
+            }
+        }
+
+        $token = Str::random(64);
+
+        // Only the newest link works.
+        AgentPasswordReset::where('propagent_id', $agent->id)
+            ->whereNull('used_at')
+            ->update(['used_at' => $now->format(self::DB_FORMAT)]);
+
+        $row = AgentPasswordReset::create([
+            'propagent_id' => $agent->id,
+            'token_hash'   => hash('sha256', $token),
+            'source'       => $source,
+            'requested_ip' => $ip,
+            'expires_at'   => $now->copy()->addMinutes(self::LINK_MINUTES)->format(self::DB_FORMAT),
+            'created_at'   => $now->format(self::DB_FORMAT),
+        ]);
+
+        try {
+            Mail::to($email)->send(new AgentPasswordResetMail(
+                $agent,
+                rtrim((string) config('app.url'), '/') . '/member/password/set/' . $token,
+                self::LINK_MINUTES,
+            ));
+        } catch (\Throwable $e) {
+            // Don't leave a live link nobody received.
+            $row->delete();
+            Log::error('Password reset email failed for agent ' . $agent->id . ': ' . $e->getMessage());
+
+            return 'failed';
+        }
+
+        return 'sent';
+    }
+
+    /** The link's row if it exists, hasn't been used and hasn't expired. */
+    public static function findValid(string $token): ?AgentPasswordReset
+    {
+        $row = AgentPasswordReset::where('token_hash', hash('sha256', $token))->first();
+
+        if (!$row || $row->used_at !== null) {
+            return null;
+        }
+
+        if (Carbon::parse($row->expires_at, 'UTC')->lte(Carbon::now('UTC'))) {
+            return null;
+        }
+
+        return $row;
+    }
+
+    /** Every unused link for the agent stops working (used after a successful reset). */
+    public static function voidAll(int $agentId): void
+    {
+        AgentPasswordReset::where('propagent_id', $agentId)
+            ->whereNull('used_at')
+            ->update(['used_at' => Carbon::now('UTC')->format(self::DB_FORMAT)]);
+    }
+}

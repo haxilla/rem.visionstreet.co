@@ -70,7 +70,7 @@
                         Password
                     </label>
 
-                    <a href="/forgot-password" class="text-[12px] font-semibold text-[#3559b6] transition hover:text-[#1f3f8f]">
+                    <a href="{{ route('member.password.forgot') }}" class="text-[12px] font-semibold text-[#3559b6] transition hover:text-[#1f3f8f]">
                         Forgot Password?
                     </a>
                 </div>

@@ -9,6 +9,7 @@ use App\Models\Core\Propdelivnow;
 use App\Models\Core\Propflyer;
 use App\Support\AgentCampaigns;
 use App\Support\AgentImages;
+use App\Support\AgentPasswords;
 use App\Support\AgentTime;
 use App\Support\ImageOptimizer;
 use Illuminate\Http\Request;
@@ -375,20 +376,39 @@ class adminController extends Controller
     }
 
     /**
-     * "Send password reset email" - a stand-in for now. There is no email
-     * sending set up yet, so this sends NOTHING and says so plainly; the
-     * button, route and CSRF-protected POST already exist so only the
-     * sending itself needs adding here later.
+     * "Send password reset email": emails the agent a fresh one-time link, to
+     * the login address on file (see AgentPasswords). It never shows or sets a
+     * password - the agent chooses their own. Any earlier unused link stops
+     * working. Admins are not held to the per-agent send limits.
      */
-    public function agentPasswordReset($id)
+    public function agentPasswordReset(Request $request, $id)
     {
         $agent = Propagent::findOrFail($id);
+        $to    = $agent->xxAgtUname;
 
-        // TODO: when email sending exists, create a reset token / link for
-        // $agent (login username = $agent->xxAgtUname) and email it here.
+        try {
+            $result = AgentPasswords::sendLink($agent, 'admin', $request->ip());
+        } catch (\Throwable $e) {
+            // Most likely the agent_password_resets table hasn't been created yet.
+            Log::error('Admin password reset failed for agent ' . $agent->id . ': ' . $e->getMessage());
+
+            return redirect()->route('admin.agentView', $agent->id)
+                ->withErrors(['passwordReset' => 'Could not send - has the agent_password_resets table been created in the database?']);
+        }
+
+        if ($result === 'sent') {
+            return redirect()->route('admin.agentView', $agent->id)
+                ->with('status', "Password link emailed to {$to}. It works once and expires in " . AgentPasswords::LINK_MINUTES . ' minutes.');
+        }
+
+        $why = [
+            'noemail' => 'this agent has no valid login email on file.',
+            'blocked' => 'this agent\'s login is blocked - unblock it first.',
+            'failed'  => 'the email could not be sent (see the log).',
+        ][$result] ?? 'nothing was sent.';
 
         return redirect()->route('admin.agentView', $agent->id)
-            ->with('status', 'Password reset email is not set up yet - nothing was sent.');
+            ->withErrors(['passwordReset' => 'Not sent: ' . $why]);
     }
 
     /**
