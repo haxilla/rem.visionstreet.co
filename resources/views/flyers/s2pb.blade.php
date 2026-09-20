@@ -46,21 +46,21 @@ data-flyerbackground="{{$propInfo->theStyle
                xFullStreet @if($display=='screen') clickable @endif"
                @if($display=='screen') data-modal-trigger="address" @endif
                style="font-size:12pt;font-weight:bold;">
-                  @include('flyers.flyerParts.noAutoLink', ['text' => $propInfo->xFullStreet])
+                  @include('flyers.flyerParts.noAutoLink', ['color' => '#'.$propInfo->theStyle->headline_text, 'text' => $propInfo->xFullStreet])
                </div>
                <div class="headline_text"
                style="font-size:10pt;">
                   <span class="xCity @if($display=='screen') clickable @endif"
                   @if($display=='screen') data-modal-trigger="address" @endif>
-                     @include('flyers.flyerParts.noAutoLink', ['text' => $propInfo->xCity . ','])
+                     @include('flyers.flyerParts.noAutoLink', ['color' => '#'.$propInfo->theStyle->headline_text, 'text' => $propInfo->xCity . ','])
                   </span>
                   <span class="xState @if($display=='screen') clickable @endif"
                   @if($display=='screen') data-modal-trigger="address" @endif>
-                     @include('flyers.flyerParts.noAutoLink', ['text' => $propInfo->state])
+                     @include('flyers.flyerParts.noAutoLink', ['color' => '#'.$propInfo->theStyle->headline_text, 'text' => $propInfo->state])
                   </span>
                   <span class="xZip @if($display=='screen') clickable @endif"
                   @if($display=='screen') data-modal-trigger="address" @endif>
-                     @include('flyers.flyerParts.noAutoLink', ['text' => $propInfo->xZip ?: $propInfo->xxZip])
+                     @include('flyers.flyerParts.noAutoLink', ['color' => '#'.$propInfo->theStyle->headline_text, 'text' => $propInfo->xZip ?: $propInfo->xxZip])
                   </span>
                </div>
                <div class="headline_text

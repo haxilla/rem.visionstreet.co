@@ -52,11 +52,11 @@ data-flyerbackground="{{$propInfo->theStyle
       @if($display=='screen') clickable @endif"
       @if($display=='screen') data-modal-trigger="address" @endif>
         <div style="font-size:12pt;font-weight:bold;">
-           @include('flyers.flyerParts.noAutoLink', ['text' => $propInfo->xFullStreet])
+           @include('flyers.flyerParts.noAutoLink', ['color' => '#'.$propInfo->theStyle->headline_text, 'text' => $propInfo->xFullStreet])
         </div>
         <div style="font-size:10pt;
         font-weight:normal;">
-           @include('flyers.flyerParts.noAutoLink', ['text' => $propInfo->xCity . ', ' . $propInfo->state . ' ' . ($propInfo->xZip ?: $propInfo->xxZip)])
+           @include('flyers.flyerParts.noAutoLink', ['color' => '#'.$propInfo->theStyle->headline_text, 'text' => $propInfo->xCity . ', ' . $propInfo->state . ' ' . ($propInfo->xZip ?: $propInfo->xxZip)])
         </div>
         <div style="font-size:12pt;font-weight:bold;">
            ${{ number_format($propInfo->xListPrice)}}
