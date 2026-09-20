@@ -102,7 +102,7 @@ Artisan::command('flyers:backfill-slugs {--dry-run : Show what would be done, ch
 | Run agents:tidy-names first so an ALL-CAPS name doesn't become the slug's spelling, and the
 | agent_slug column must exist (the old agtURL renamed - see the SQL this prints when it doesn't).
 */
-Artisan::command('agents:backfill-slugs {--dry-run : Show what would be done, change nothing} {--limit=0 : Stop after assigning this many slugs (0 = all)} {--all : Every agent without a slug, not only those who have sent something} {--duplicates : List every name shared by more than one agent (also saved as a CSV)}', function () {
+Artisan::command('agents:backfill-slugs {--dry-run : Show what would be done, change nothing} {--limit=0 : Stop after assigning this many slugs (0 = all)} {--all : Every agent without a slug, not only those who have sent something} {--duplicates : List every name shared by more than one agent, on screen}', function () {
     if (!\App\Support\AgentSlug::columnExists()) {
         $this->error('propagents has no agent_slug column yet. Run this SQL first (it renames the old agtURL, which never worked, and clears it), then this command again:');
         $this->line('');
@@ -192,45 +192,40 @@ Artisan::command('agents:backfill-slugs {--dry-run : Show what would be done, ch
     $this->newLine();
     $this->info(($dryRun ? 'Would assign ' : 'Assigned ') . number_format($assigned) . ' slug(s), ' . number_format($numbered) . ' of them numbered for a duplicate name.');
 
-    // names shared by more than one agent, the biggest groups first
+    // names shared by more than one agent
     $shared = array_filter($groups, fn ($members) => count($members) > 1);
-    uasort($shared, fn ($a, $b) => count($b) <=> count($a));
+
+    // a group where two agents have the same email is almost certainly one person with two accounts
+    $sameEmail = array_filter($shared, function ($members) {
+        $emails = array_filter(array_map(fn ($m) => strtolower($m['email']), $members));
+
+        return count($emails) !== count(array_unique($emails));
+    });
+
+    // those groups first (they are the ones to merge), then the biggest
+    uksort($shared, function ($a, $b) use ($shared, $sameEmail) {
+        return [isset($sameEmail[$b]), count($shared[$b])] <=> [isset($sameEmail[$a]), count($shared[$a])];
+    });
 
     if ($shared) {
-        // a group where two agents have the same email is almost certainly one person with two accounts
-        $sameEmail = array_filter($shared, function ($members) {
-            $emails = array_filter(array_map(fn ($m) => strtolower($m['email']), $members));
-
-            return count($emails) !== count(array_unique($emails));
-        });
-
         $this->comment(number_format(count($shared)) . ' name(s) are shared by more than one agent ('
             . number_format(count($sameEmail)) . ' of them include two accounts with the SAME email - likely one person twice).'
             . ($duplicates ? '' : ' Run again with --duplicates to list them.'));
     }
 
     if ($duplicates && $shared) {
-        $csvPath = storage_path('app/agent-slug-duplicates.csv');
-        $csv     = fopen($csvPath, 'w');
-        fputcsv($csv, ['name shared', 'agents sharing it', 'same email?', 'agent id', 'slug it would get', 'agent name', 'email', 'phone']);
-
         foreach ($shared as $base => $members) {
-            $same = isset($sameEmail[$base]) ? 'YES' : '';
+            $same = isset($sameEmail[$base]);
 
             $this->newLine();
-            $this->line('<options=bold>' . $members[0]['slug'] . '</>  (' . count($members) . ' agents' . ($same ? ', same email on at least two - likely one person' : '') . ')');
+            $this->line('<options=bold>' . $members[0]['slug'] . '</>  (' . count($members) . ' agents' . ($same ? ' - SAME EMAIL on at least two, likely one person' : '') . ')');
 
             foreach ($members as $member) {
                 $this->line(sprintf('    #%-6d %-24s %-28s %-34s %s', $member['id'], $member['slug'], mb_substr($member['name'], 0, 28), mb_substr($member['email'], 0, 34), $member['phone']));
-
-                fputcsv($csv, [$members[0]['slug'], count($members), $same, $member['id'], $member['slug'], $member['name'], $member['email'], $member['phone']]);
             }
         }
 
-        fclose($csv);
-
         $this->newLine();
-        $this->info('Saved the same list to ' . $csvPath);
     }
 
     if ($skipped) {
