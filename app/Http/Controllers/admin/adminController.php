@@ -1274,6 +1274,57 @@ class adminController extends Controller
     }
 
     /**
+     * Set the email subject on every campaign of this flyer that has not
+     * been completed yet (waiting and in progress), from the Email Subject
+     * card. Completed campaigns keep the subject they were actually sent
+     * with; a single one can still be corrected from its own card
+     * (campaignSubject()).
+     */
+    public function flyerSubject(Request $request, $flyerId)
+    {
+        $validated = $request->validate([
+            'subject' => ['required', 'string', 'max:255'],
+        ]);
+
+        abort_unless(Propflyer::whereKey($flyerId)->exists(), 404, 'This flyer has been deleted.');
+
+        // The update stamps updated_at - in the flyer's agent's timezone.
+        AgentTime::apply(Propagent::find(Propflyer::whereKey($flyerId)->value('propagent_id')));
+
+        $updated = Propdelivnow::where('propflyer_id', $flyerId)
+            ->whereNull('emComplete')
+            ->update(['emSubject' => $validated['subject']]);
+
+        $message = $updated
+            ? "Subject updated on {$updated} " . ($updated === 1 ? 'campaign' : 'campaigns') . '.'
+            : 'There are no waiting or in-progress campaigns to update.';
+
+        return redirect()->route('admin.flyerCamps', $flyerId)->with('status', $message);
+    }
+
+    /**
+     * Set the email subject on ONE campaign (its own Edit panel), whatever
+     * its stage. Blank clears it, like the agent's own send form allows.
+     */
+    public function campaignSubject(Request $request, $cid)
+    {
+        $validated = $request->validate([
+            'subject' => ['nullable', 'string', 'max:255'],
+        ]);
+
+        $campaign = Propdelivnow::findOrFail($cid);
+
+        // The save stamps updated_at - in the flyer's agent's timezone.
+        AgentTime::apply(Propagent::find($campaign->propagent_id));
+
+        $campaign->emSubject = $validated['subject'] ?? null;
+        $campaign->save();
+
+        return redirect()->route('admin.flyerCamps', $campaign->propflyer_id)
+            ->with('status', 'Subject updated.');
+    }
+
+    /**
      * Authorize or unauthorize ONE waiting campaign (the toggle on its status
      * badge). The wanted state is posted (1 / 0) rather than flipped, so a
      * double click or a stale page can't flip it the wrong way. A campaign the

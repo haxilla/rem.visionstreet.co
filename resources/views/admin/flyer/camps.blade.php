@@ -266,7 +266,7 @@ if ($propInfo->created_at) {
                             'stage'      => (int) $req->authorized === 1 ? 'approved' : 'awaiting',
                             'area'       => $areaLabel($req),
                             'adminAdded' => $req->isAdminAdded(),
-                            'subject'    => null,
+                            'subject'    => $req->emSubject,
                             'emails'     => $req->totalEmails ?? ($data['emailCounts'][$req->emArea] ?? null),
                             'cid'        => $req->cid,
                             'requested'  => $req->emRequest,
@@ -361,22 +361,36 @@ if ($propInfo->created_at) {
         {{-- SUBJECT --}}
         <div class="{{ $card }} p-5 mb-6 lg:col-start-1">
 
-            <label class="{{ $eyebrow }} mb-2 block">Email Subject</label>
+            <form method="POST" action="{{ route('admin.flyerSubject', $propInfo->id) }}">
+                @csrf
 
-            <div class="flex flex-col gap-3 md:flex-row">
+                <label for="flyer-subject" class="{{ $eyebrow }} mb-1 block">Email Subject</label>
 
-                <input
-                    type="text"
-                    value="{{ $subject }}"
-                    class="flex-1 rounded-xl border border-slate-300 px-4 py-3"
-                >
+                <p class="mb-3 text-sm text-slate-500">
+                    Applies to every campaign on this flyer that is waiting or in progress. Completed campaigns
+                    keep the subject they were sent with; change a single campaign with Edit on its card.
+                </p>
 
-                <button
-                    class="rounded-xl bg-[#214e9b] px-5 py-3 font-semibold text-white hover:bg-[#1b3f80]">
-                    Save Subject
-                </button>
+                <div class="flex flex-col gap-3 md:flex-row">
 
-            </div>
+                    <input
+                        id="flyer-subject"
+                        type="text"
+                        name="subject"
+                        maxlength="255"
+                        required
+                        value="{{ old('subject', $subject) }}"
+                        class="flex-1 rounded-xl border border-slate-300 px-4 py-3"
+                    >
+
+                    <button type="submit"
+                        class="rounded-xl bg-[#214e9b] px-5 py-3 font-semibold text-white hover:bg-[#1b3f80]">
+                        Save Subject
+                    </button>
+
+                </div>
+
+            </form>
 
         </div>
 

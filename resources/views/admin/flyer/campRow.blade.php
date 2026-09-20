@@ -1,17 +1,19 @@
-{{-- One campaign on the admin flyer page, the same layout at every stage. It is its
-     own white card with a stripe down the left edge in the stage's colour, so each
-     campaign stands apart from the next: area + source tag on the left, a status pill
-     on the right, the subject, then a Requested -> Started -> Completed timeline
-     and the "Edit dates" control.
+{{-- One campaign on the admin flyer page, the same compact card at every stage: a
+     stripe down the left edge in the stage's colour, the area + source tag + contact
+     count with the status on the right, the subject, and ONE line of dates that opens
+     the Edit panel (subject + dates).
+     Only the dates that can exist for the stage are shown: a campaign waiting to be
+     authorized / sent has only been requested, an in-progress one has also started,
+     and only a completed one has all three.
      Needs $stage ('awaiting' | 'approved' | 'progress' | 'complete'), $area, $cid,
      $requested, $started, $completed. Optional: $adminAdded, $emails, $subject. --}}
 @php
-    // pill = the status badge, accent = the stripe, bar = the timeline fill
+    // pill = the status badge, accent = the stripe
     $stages = [
-        'awaiting' => ['label' => 'Not authorized',            'pill' => 'bg-amber-100 text-amber-800',     'accent' => 'border-l-amber-400',   'bar' => 'bg-amber-400'],
-        'approved' => ['label' => 'Authorized',                'pill' => 'bg-indigo-100 text-indigo-700',   'accent' => 'border-l-indigo-500',  'bar' => 'bg-indigo-500'],
-        'progress' => ['label' => 'In progress',               'pill' => 'bg-blue-100 text-blue-700',       'accent' => 'border-l-blue-500',    'bar' => 'bg-blue-500'],
-        'complete' => ['label' => 'Completed',                 'pill' => 'bg-emerald-100 text-emerald-700', 'accent' => 'border-l-emerald-500', 'bar' => 'bg-emerald-500'],
+        'awaiting' => ['label' => 'Not authorized',            'pill' => 'bg-amber-100 text-amber-800',     'accent' => 'border-l-amber-400'],
+        'approved' => ['label' => 'Authorized',                'pill' => 'bg-indigo-100 text-indigo-700',   'accent' => 'border-l-indigo-500'],
+        'progress' => ['label' => 'In progress',               'pill' => 'bg-blue-100 text-blue-700',       'accent' => 'border-l-blue-500'],
+        'complete' => ['label' => 'Completed',                 'pill' => 'bg-emerald-100 text-emerald-700', 'accent' => 'border-l-emerald-500'],
     ];
     $st = $stages[$stage];
 
@@ -30,27 +32,31 @@
         return $date->year > 1970 ? $date : null;
     };
 
-    $steps = [
-        ['Requested', $when($requested)],
-        ['Started',   $when($started)],
-        ['Completed', $when($completed)],
-    ];
+    // the dates to show for this stage
+    $shown = [['Requested', $when($requested)]];
+
+    if (in_array($stage, ['progress', 'complete'], true)) {
+        $shown[] = ['Started', $when($started)];
+    }
+
+    if ($stage === 'complete') {
+        $shown[] = ['Completed', $when($completed)];
+    }
 @endphp
 
-<div class="rounded-xl border-l-[6px] bg-white p-4 shadow-sm ring-1 ring-slate-200 sm:p-5 {{ $st['accent'] }}">
+<div class="rounded-xl border-l-[6px] bg-white px-4 py-3 shadow-sm ring-1 ring-slate-200 {{ $st['accent'] }}">
 
-    <div class="flex flex-wrap items-start justify-between gap-x-4 gap-y-2">
+    <div class="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
 
-        <div class="min-w-0 flex-1 basis-56">
-            <div class="flex flex-wrap items-center gap-x-1 gap-y-1">
-                <span class="break-words text-lg font-bold text-slate-900">{{ $area }}</span>
-                @include('admin.flyer.campSource', ['adminAdded' => $adminAdded ?? false])
-            </div>
+        <div class="flex min-w-0 flex-1 basis-56 flex-wrap items-center gap-x-2 gap-y-1">
+            <span class="break-words text-lg font-bold text-slate-900">{{ $area }}</span>
+
+            @include('admin.flyer.campSource', ['adminAdded' => $adminAdded ?? false])
 
             @if(isset($emails) && is_numeric($emails))
-                <div class="mt-0.5 text-sm font-medium text-slate-600">
+                <span class="text-sm font-medium text-slate-600">
                     {{ number_format($emails) }} {{ (int) $emails === 1 ? 'contact' : 'contacts' }}
-                </div>
+                </span>
             @endif
         </div>
 
@@ -77,32 +83,32 @@
     </div>
 
     @if(!empty($subject))
-        <div class="mt-3 break-words text-sm text-slate-700">
+        <div class="mt-1 break-words text-sm text-slate-700">
             <span class="font-semibold text-slate-900">Subject:</span> {{ $subject }}
         </div>
     @endif
 
-    {{-- progress: a step fills in (in the stage colour) once it has happened --}}
-    <div class="mt-4 grid grid-cols-3 gap-3 rounded-lg bg-slate-50 p-3 ring-1 ring-slate-200">
-        @foreach($steps as [$stepLabel, $stepDate])
-            <div>
-                <div class="h-1.5 rounded-full {{ $stepDate ? $st['bar'] : 'bg-slate-200' }}"></div>
+    {{-- the dates, on one line; the line itself opens the Edit panel --}}
+    <details class="group mt-2 border-t border-slate-100 pt-2">
+        <summary class="flex cursor-pointer list-none flex-wrap items-center justify-between gap-x-4 gap-y-1 [&::-webkit-details-marker]:hidden">
 
-                <div class="mt-2 text-[11px] font-bold uppercase tracking-wide {{ $stepDate ? 'text-slate-600' : 'text-slate-400' }}">
-                    {{ $stepLabel }}
-                </div>
+            <span class="flex flex-wrap gap-x-5 gap-y-1 text-sm">
+                @foreach($shown as [$dateLabel, $date])
+                    <span>
+                        <span class="text-[11px] font-bold uppercase tracking-wide text-slate-500">{{ $dateLabel }}</span>
+                        <span class="font-semibold {{ $date ? 'text-slate-900' : 'text-slate-400' }}">{{ $date ? $date->format('M j, Y g:i A') : '—' }}</span>
+                    </span>
+                @endforeach
+            </span>
 
-                <div class="text-sm font-semibold {{ $stepDate ? 'text-slate-900' : 'text-slate-400' }}">
-                    {{ $stepDate ? $stepDate->format('M j, Y') : '—' }}
-                </div>
+            <span class="inline-flex items-center gap-1 rounded-lg border border-slate-300 bg-white px-2.5 py-1 text-xs font-semibold text-[#214e9b] hover:bg-slate-50">
+                Edit
+                <svg class="h-3 w-3 transition-transform group-open:rotate-180" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2 4l4 4 4-4"/></svg>
+            </span>
 
-                @if($stepDate)
-                    <div class="text-xs text-slate-500">{{ $stepDate->format('g:i A') }}</div>
-                @endif
-            </div>
-        @endforeach
-    </div>
+        </summary>
 
-    @include('admin.flyer.campDates', ['cid' => $cid, 'requested' => $requested, 'started' => $started, 'completed' => $completed])
+        @include('admin.flyer.campEdit', ['cid' => $cid, 'requested' => $requested, 'started' => $started, 'completed' => $completed, 'subject' => $subject ?? null])
+    </details>
 
 </div>
