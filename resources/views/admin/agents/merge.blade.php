@@ -267,7 +267,7 @@
         rb.addEventListener('click', function (e) {
             if (rb.hasAttribute('data-confirm-records')) {
                 var name = dest.options[dest.selectedIndex].getAttribute('data-name');
-                if (!confirm('Move this account's orders and campaign records into ' + name + '?')) { e.preventDefault(); }
+                if (!confirm("Move this account's orders and campaign records into " + name + "?")) { e.preventDefault(); }
             }
         });
     });
