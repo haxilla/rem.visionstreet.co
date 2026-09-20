@@ -241,10 +241,13 @@
                             </a>
 
                             <div class="flyer-info">
+                                {{-- Waiting cards show when the request was made (not the flyer's created date);
+                                     only if that date is missing does the created date stand in --}}
                                 <div class="text-xs text-slate-400">
-                                    Created: {{ $createdDate($flyer) }}
                                     @if($requestedOn)
-                                        &middot; Requested: {{ $requestedOn }}
+                                        Requested: {{ $requestedOn }}
+                                    @else
+                                        Created: {{ $createdDate($flyer) }}
                                     @endif
                                 </div>
 
