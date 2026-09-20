@@ -8,6 +8,25 @@ if (!empty($agentInfo->agtPhoto)) {
     }
 }
 $officeLogo="{$fromURL}/officeLogos/{$officeInfo->officeID}/{$agentInfo->agtLogo}";
+
+// In an email, Gmail turns the office address and the phone number (and even "AZ" in the
+// office name) into blue map / phone links of its own. Text already inside a link is left
+// alone, so in an email each of those is wrapped in a link of ours, styled as plain text
+// (flyerParts/noAutoLink). They go to the agent's own page (their agent_slug) - or, until they
+// have one, to this flyer's page - the phone dials (tel:) and "Email Me" writes to them.
+// On screen none of this applies.
+$bannerContact = ($display ?? 'screen') === 'email'
+    ? \App\Support\AgentSlug::contactFor($agentInfo->id)
+    : ['slug' => null, 'email' => null];
+
+$bannerHome = ($fromURL ?? '') . ($bannerContact['slug']
+    ? '/' . $bannerContact['slug']
+    : (!empty($propInfo->url_slug) ? '/homedetails/' . $propInfo->url_slug : ''));
+
+$bannerPhone = preg_replace('/[^0-9+]/', '', (string) $agentInfo->agtMainPhone);
+$bannerMail  = $bannerContact['email']
+    ? 'mailto:' . $bannerContact['email'] . '?subject=' . rawurlencode('About ' . ($propInfo->xFullStreet ?? 'your listing'))
+    : null;
 @endphp
 
 <div style="background-color:#f9f9f9;line-height:1.45;color:#333;
@@ -58,34 +77,34 @@ font-family:arial;@if($display=='screen') cursor:pointer;@endif"
           </div>
         </div>
         <div style="font-weight:bold;font-size:10pt;" id="bannerOfficeName">
-          {{ $officeInfo->officeName }}
+          @include('flyers.flyerParts.noAutoLink', ['color' => '#333333', 'href' => $bannerHome, 'text' => $officeInfo->officeName])
         </div>
         <div id="bannerOfficeAddress">
-          {{ $officeInfo->officeAddress1 }}
+          @include('flyers.flyerParts.noAutoLink', ['color' => '#333333', 'href' => $bannerHome, 'text' => $officeInfo->officeAddress1])
           @if($officeInfo->officeAddress2)
-            {{ $officeInfo->officeAddress2 }}
+            @include('flyers.flyerParts.noAutoLink', ['color' => '#333333', 'href' => $bannerHome, 'text' => $officeInfo->officeAddress2])
           @endif
         </div>
         <div>
           <div style="display:inline-block;"
           id="bannerOfficeCity">
-            {{ $officeInfo->officeCity}},
+            @include('flyers.flyerParts.noAutoLink', ['color' => '#333333', 'href' => $bannerHome, 'text' => $officeInfo->officeCity . ','])
           </div>
           <div style="display:inline-block;"
           id="bannerOfficeState">
-            {{ $officeInfo->officeState }}
+            @include('flyers.flyerParts.noAutoLink', ['color' => '#333333', 'href' => $bannerHome, 'text' => $officeInfo->officeState])
           </div>
           <div style="display:inline-block;"
           id="bannerOfficeZip">
-            {{ $officeInfo->officeZip }}
+            @include('flyers.flyerParts.noAutoLink', ['color' => '#333333', 'href' => $bannerHome, 'text' => $officeInfo->officeZip])
           </div>
         </div>
         <div id="bannerAgtMainPhone">
-          {{$agentInfo->agtMainPhone}}
+          @include('flyers.flyerParts.noAutoLink', ['color' => '#333333', 'href' => $bannerPhone !== '' ? 'tel:' . $bannerPhone : $bannerHome, 'text' => $agentInfo->agtMainPhone])
         </div>
         <div>
           <a style="color:#333;font-weight:bold;"
-            href="#">Email Me
+            href="@if($display=='email' && $bannerMail){{ $bannerMail }}@else#@endif">Email Me
           </a>
         </div>
       </div>

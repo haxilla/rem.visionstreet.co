@@ -13,6 +13,27 @@ class Propagent extends Authenticatable
     protected $keyType = 'int';
     protected $guarded=['id'];
 
+    // Every agent gets their web address slug (see App\Support\AgentSlug) as soon as they have
+    // a name, on whichever path saves them. One who already has a slug is left alone; a model
+    // loaded with only some columns can't say whether it has one, so that case asks the database.
+    protected static function booted()
+    {
+        static::saved(function (Propagent $agent) {
+            $attributes = $agent->getAttributes();
+
+            if (array_key_exists('agent_slug', $attributes) && filled($attributes['agent_slug'])) {
+                return;
+            }
+
+            $slug = \App\Support\AgentSlug::ensure($agent->getKey());
+
+            if ($slug) {
+                $agent->setAttribute('agent_slug', $slug);
+                $agent->syncOriginalAttribute('agent_slug');
+            }
+        });
+    }
+
     public function theAgentMeta(){
       return $this->hasOne('App\Models\Core\Propagentmeta','propagent_id','id');
     }

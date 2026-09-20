@@ -88,3 +88,102 @@ Artisan::command('flyers:backfill-slugs {--dry-run : Show what would be done, ch
         }
     }
 })->purpose('Give every flyer without a url_slug its Zillow-style slug');
+
+/*
+| php artisan agents:backfill-slugs [--dry-run] [--limit=N]
+|
+| Gives agents their web address slug (first and last name joined, lowercase: debralee), using the same
+| builder new agents use (App\Support\AgentSlug). Only agents who have SENT something - an email request
+| or a flyer with a last-sent date - are looked at; everyone else is left out of the run. An agent who
+| already has a slug is never touched, so it is safe to run more than once. --dry-run shows what it
+| WOULD do (including which agents would get a number for a duplicate name, e.g. mikesmith2) and writes
+| nothing. --limit=N stops after N slugs have been ASSIGNED.
+|
+| The agent_slug column must exist first; if it doesn't, this prints the SQL that adds it.
+*/
+Artisan::command('agents:backfill-slugs {--dry-run : Show what would be done, change nothing} {--limit=0 : Stop after assigning this many slugs (0 = all)}', function () {
+    if (!\App\Support\AgentSlug::columnExists()) {
+        $this->error('propagents has no agent_slug column yet. Run this SQL first, then this command again:');
+        $this->line('');
+        $this->line('  ALTER TABLE remuserdb.propagents');
+        $this->line('    ADD COLUMN agent_slug VARCHAR(40) NULL,');
+        $this->line('    ADD UNIQUE INDEX propagents_agent_slug_unique (agent_slug);');
+
+        return 1;
+    }
+
+    $dryRun = (bool) $this->option('dry-run');
+    $limit  = (int) $this->option('limit');
+
+    $query = \App\Support\AgentSlug::backfillCandidates()->orderBy('id');
+    $total = (clone $query)->count();
+
+    $this->info(($dryRun ? '[dry run] ' : '') . number_format($total) . ' agent(s) who have sent something have no agent_slug' . ($limit > 0 ? " (stopping after {$limit} are assigned)" : '') . '.');
+
+    $assigned  = 0;
+    $numbered  = 0;     // got a number because the name was already taken
+    $skipped   = 0;
+    $shown     = 0;
+    $samples   = [];
+    $pending   = [];    // dry run: slugs handed out in THIS run, so duplicates within it are seen
+    $processed = 0;
+
+    $query->select('id', 'agtFirst', 'agtLast', 'agtFullName')
+        ->chunkById(500, function ($agents) use ($dryRun, $limit, &$assigned, &$numbered, &$skipped, &$shown, &$samples, &$pending, &$processed) {
+            foreach ($agents as $agent) {
+                if ($limit > 0 && $assigned >= $limit) {
+                    return false;
+                }
+
+                $base = \App\Support\AgentSlug::build($agent->getAttributes());
+
+                if ($base === null) {
+                    $skipped++;
+
+                    if (count($samples) < 10) {
+                        $samples[] = "  #{$agent->id}  first=\"{$agent->agtFirst}\"  last=\"{$agent->agtLast}\"  full=\"{$agent->agtFullName}\"";
+                    }
+
+                    continue;
+                }
+
+                if ($dryRun) {
+                    $slug      = \App\Support\AgentSlug::unique($base, $agent->id, $pending);
+                    $pending[] = $slug;
+                } else {
+                    $slug = \App\Support\AgentSlug::ensure($agent->id);
+
+                    if ($slug === null) {
+                        $skipped++;
+
+                        continue;
+                    }
+                }
+
+                $assigned++;
+
+                if ($slug !== $base) {
+                    $numbered++;
+                }
+
+                if ($shown++ < 20 || $slug !== $base && $shown < 60) {
+                    $this->line("  #{$agent->id}  ->  {$slug}" . ($slug !== $base ? "   (\"{$base}\" was taken)" : ''));
+                }
+
+                if (++$processed % 500 === 0) {
+                    $this->comment('  ... ' . number_format($processed) . ' done');
+                }
+            }
+        });
+
+    $this->newLine();
+    $this->info(($dryRun ? 'Would assign ' : 'Assigned ') . number_format($assigned) . ' slug(s), ' . number_format($numbered) . ' of them numbered for a duplicate name.');
+
+    if ($skipped) {
+        $this->warn(number_format($skipped) . ' agent(s) skipped - no usable name (or fewer than ' . \App\Support\AgentSlug::MIN . ' letters). Examples:');
+
+        foreach ($samples as $sample) {
+            $this->line($sample);
+        }
+    }
+})->purpose('Give agents who have sent something their web address slug');

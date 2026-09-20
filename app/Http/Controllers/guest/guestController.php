@@ -284,7 +284,88 @@ class guestController extends Controller
         ]);
     }
 
+    /**
+     * Single-segment addresses: a public page (/about ...) if there is one - and everything that
+     * worked before still works exactly as it did - and only where that would end in a 404 is the
+     * name looked up as an AGENT'S address (/debralee). So an agent slug can never shadow a page.
+     */
     public function segment(Request $request){
+
+        try {
+            return $this->pageForSegment($request);
+        } catch (\Symfony\Component\HttpKernel\Exception\NotFoundHttpException $notFound) {
+            $agentPage = $this->agentPage($request);
+
+            if ($agentPage !== null) {
+                return $agentPage;
+            }
+
+            throw $notFound;
+        }
+    }
+
+    /**
+     * An agent's own page (agent_slug, see App\Support\AgentSlug): their contact details and the
+     * listings they have finished. Null when the address isn't an agent's, or when the agent_slug
+     * column hasn't been added yet, so the normal 404 shows.
+     */
+    private function agentPage(Request $request)
+    {
+        $segment = (string) $request->route('segment', '');
+
+        if (!preg_match('/^[A-Za-z0-9]{3,}$/', $segment)) {
+            return null;
+        }
+
+        try {
+            $agent = Propagent::with('theAgtOffice')->where('agent_slug', strtolower($segment))->first();
+        } catch (\Throwable $e) {
+            return null;
+        }
+
+        if (!$agent) {
+            return null;
+        }
+
+        // one address per agent: /DebraLee goes to /debralee
+        if ($segment !== strtolower($segment)) {
+            return redirect('/' . strtolower($segment), 301);
+        }
+
+        // Their listings: flyers with a public page that are finished (the wizard's last step)
+        // or have been sent, newest first, with the default photo for the card.
+        $listings = \App\Models\Core\Propflyer::where('propagent_id', $agent->id)
+            ->whereNotNull('url_slug')
+            ->where('url_slug', '!=', '')
+            ->where(function ($query) {
+                $query->where('wizardStep', '>=', 5)
+                    ->orWhereIn('id', \App\Models\Core\Propflyerstat::query()
+                        ->select('propflyer_id')
+                        ->whereNotNull('xLastDeliveryDate')
+                        ->where('xLastDeliveryDate', '>=', '1971-01-01'));
+            })
+            ->with([
+                'thePhotos' => fn ($query) => $query->select('propflyer_id', 'photoName', 'def', 'resized')
+                    ->where('def', 1)->where('resized', 500),
+                'theMeta' => fn ($query) => $query->select('propflyer_id', 'zipDir', 'mlsDir'),
+            ])
+            ->orderByDesc('id')
+            ->limit(60)
+            ->get([
+                'id', 'url_slug', 'xFullStreet', 'xCity', 'state', 'xZip', 'xListPrice',
+                'xBeds', 'xxBeds', 'xBaths', 'xxBaths', 'xSqft', 'xxSqft',
+            ]);
+
+        return response()->view('public.agent', [
+            'agent'    => $agent,
+            'office'   => $agent->theAgtOffice,
+            'photo'    => \App\Support\AgentImages::photo($agent),
+            'logo'     => \App\Support\AgentImages::logo($agent),
+            'listings' => $listings,
+        ]);
+    }
+
+    private function pageForSegment(Request $request){
 
         // Route param: "segments" separates by section
         $segmentsPath = trim((string) $request->route('segment', ''), '/');    
