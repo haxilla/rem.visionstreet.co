@@ -39,32 +39,29 @@
     // Only real web links become links (never javascript: and the like).
     $webLink = fn ($u) => (is_string($u) && preg_match('#^https?://#i', $u) && filter_var($u, FILTER_VALIDATE_URL)) ? $u : null;
 
-    // The agent's address IS their office address - where the flyers and the
-    // agent's own contact form keep it (agtoffices: officeAddress1, city, state,
-    // zip) - so that's the only address shown.
-    $office       = $agent->theAgtOffice;
-    $officeLine1  = trim((string) ($office->officeAddress1 ?? ''));
-    $officeLine2  = trim(
-        ($office->officeCity ?? '')
-        . ((($office->officeCity ?? '') && ($office->officeState ?? '')) ? ', ' : '')
-        . ($office->officeState ?? '') . ' ' . ($office->officeZip ?? '')
-    );
-
-    // [label, value, link type]
-    $contactRows = [
-        ['Email',           $agent->agtEmail,     'mail'],
-        ['Main phone',      $agent->agtMainPhone, 'tel'],
-        ['Mobile',          $agent->agtMobile,    'tel'],
-        ['Home phone',      $agent->agtHomePhone, 'tel'],
-        ['Secondary phone', $agent->agtPhone2,    'tel'],
-        ['Website',         $agent->agtWebsite,   'web'],
+    // The editable fields (see adminController::agentContactSave / agentOfficeSave).
+    // [column, label, input type, max length]
+    $contactFields = [
+        ['agtFirst',     'First name',      'text', 50],
+        ['agtLast',      'Last name',       'text', 50],
+        ['agtFullName',  'Name on flyers',  'text', 100],
+        ['agtEmail',     'Contact email',   'email', 100],
+        ['agtMainPhone', 'Main phone',      'tel',  30],
+        ['agtMobile',    'Mobile',          'tel',  30],
+        ['agtHomePhone', 'Home phone',      'tel',  30],
+        ['agtPhone2',    'Secondary phone', 'tel',  30],
+        ['agtWebsite',   'Website',         'text', 255],
     ];
 
-    $licenseRows = [
-        ['MLS ID',             $agent->agtMlsID],
-        ['Board',              $agent->agtBoard],
-        ['Designations',       $agent->agtDesigs],
-        ['County',             $agent->agtCounty],
+    // The agent's address IS their office address (agtoffices: officeAddress1, city, state, zip),
+    // edited as separate boxes below; these are the licence details next to it.
+    $office = $agent->theAgtOffice;
+
+    $licenseFields = [
+        ['agtMlsID',    'MLS ID'],
+        ['agtBoard',    'Board'],
+        ['agtDesigs',   'Designations'],
+        ['agtCounty',   'County'],
     ];
 
     // shared look for the cards
@@ -75,6 +72,7 @@
     $label      = 'text-slate-500';
     $value      = 'break-words text-right font-medium text-slate-900';
     $focusRing  = 'focus:border-[#214e9b] focus:outline-none focus:ring-2 focus:ring-[#214e9b]/20';
+    $input      = 'w-full rounded-lg border border-slate-300 px-2.5 py-1.5 text-sm sm:w-72 ' . $focusRing;
 @endphp
 
 <main class="min-h-screen bg-[#f4f7fb] pt-24">
@@ -365,72 +363,115 @@
                 </div>
             </section>
 
-            {{-- CONTACT --}}
-            <section class="{{ $card }}">
+            {{-- CONTACT: every field is a text box; "Save contact" writes them (adminController::agentContactSave) --}}
+            <section id="contact" class="{{ $card }}">
 
                 <div class="{{ $cardHead }}">
                     <h2 class="text-base font-semibold text-slate-900 sm:text-lg">Contact</h2>
-                    <p class="mt-0.5 text-sm text-slate-500">How to reach this agent.</p>
+                    <p class="mt-0.5 text-sm text-slate-500">How to reach this agent. Edit any field and save.</p>
                 </div>
 
-                <dl class="{{ $cardBody }} divide-y divide-slate-100">
-                    @foreach($contactRows as [$rowLabel, $rowValue, $type])
-                        <div class="{{ $row }}">
-                            <dt class="{{ $label }}">{{ $rowLabel }}</dt>
-                            <dd class="{{ $value }}">
-                                @if(!$rowValue)
-                                    —
-                                @elseif($type === 'mail')
-                                    <a href="mailto:{{ $rowValue }}" class="text-[#214e9b] hover:underline">{{ $rowValue }}</a>
-                                @elseif($type === 'tel')
-                                    <a href="tel:{{ preg_replace('/[^0-9+]/', '', $rowValue) }}" class="text-[#214e9b] hover:underline">{{ $rowValue }}</a>
-                                @elseif($type === 'web' && $webLink($rowValue))
-                                    <a href="{{ $webLink($rowValue) }}" target="_blank" rel="noopener noreferrer" class="text-[#214e9b] hover:underline">{{ $rowValue }}</a>
-                                @else
-                                    {{ $rowValue }}
-                                @endif
-                            </dd>
-                        </div>
-                    @endforeach
-                </dl>
+                <form method="POST" action="{{ route('admin.agentContactSave', $agent->id) }}" novalidate>
+                    @csrf
+
+                    <div class="{{ $cardBody }} divide-y divide-slate-100">
+                        @foreach($contactFields as [$field, $fieldLabel, $inputType, $max])
+                            <div class="{{ $row }}">
+                                <label for="f_{{ $field }}" class="{{ $label }}">{{ $fieldLabel }}</label>
+                                <input type="{{ $inputType }}" id="f_{{ $field }}" name="{{ $field }}"
+                                       maxlength="{{ $max }}" autocomplete="off"
+                                       value="{{ old($field, $agent->{$field}) }}"
+                                       class="{{ $input }}">
+                            </div>
+                        @endforeach
+                    </div>
+
+                    <div class="flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 px-5 py-4 sm:px-6">
+                        <p class="max-w-md text-xs text-slate-500">
+                            This is the contact email shown on flyers. The email the agent signs in with is separate
+                            &mdash; see Login &amp; Access.
+                        </p>
+                        <button type="submit" class="rounded-lg bg-[#214e9b] px-4 py-2 text-sm font-semibold text-white hover:bg-[#1b3f80]">
+                            Save contact
+                        </button>
+                    </div>
+                </form>
             </section>
 
-            {{-- ADDRESS & OFFICE --}}
-            <section class="{{ $card }}">
+            {{-- ADDRESS & OFFICE: brokerage, street / city / state / ZIP and licence details, all editable --}}
+            <section id="office" class="{{ $card }}">
 
                 <div class="{{ $cardHead }}">
                     <h2 class="text-base font-semibold text-slate-900 sm:text-lg">Address &amp; Office</h2>
-                    <p class="mt-0.5 text-sm text-slate-500">Where the agent is based and how they're licensed.</p>
+                    <p class="mt-0.5 text-sm text-slate-500">Where the agent is based and how they're licensed. Edit any field and save.</p>
                 </div>
 
-                <dl class="{{ $cardBody }} divide-y divide-slate-100">
+                <form method="POST" action="{{ route('admin.agentOfficeSave', $agent->id) }}" novalidate>
+                    @csrf
 
-                    <div class="{{ $row }}">
-                        <dt class="{{ $label }}">Brokerage</dt>
-                        <dd class="{{ $value }}">{{ $office->officeName ?? '—' }}</dd>
-                    </div>
+                    @unless($office)
+                        <p class="mx-5 mt-4 rounded-lg bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-700 sm:mx-6">
+                            This agent has no office record yet. Saving a brokerage or address here creates one.
+                        </p>
+                    @endunless
 
-                    <div class="{{ $row }}">
-                        <dt class="{{ $label }}">Office address</dt>
-                        <dd class="{{ $value }}">
-                            @if($officeLine1 !== '' || $officeLine2 !== '')
-                                {{ $officeLine1 }}
-                                @if($officeLine1 !== '' && $officeLine2 !== '')<br>@endif
-                                {{ $officeLine2 }}
-                            @else
-                                —
-                            @endif
-                        </dd>
-                    </div>
+                    <div class="{{ $cardBody }} divide-y divide-slate-100">
 
-                    @foreach($licenseRows as [$rowLabel, $rowValue])
                         <div class="{{ $row }}">
-                            <dt class="{{ $label }}">{{ $rowLabel }}</dt>
-                            <dd class="{{ $value }}">{{ $rowValue ?: '—' }}</dd>
+                            <label for="f_officeName" class="{{ $label }}">Brokerage</label>
+                            <input type="text" id="f_officeName" name="officeName" maxlength="150" autocomplete="off"
+                                   value="{{ old('officeName', $office->officeName ?? '') }}" class="{{ $input }}">
                         </div>
-                    @endforeach
 
-                </dl>
+                        <div class="{{ $row }}">
+                            <label for="f_officeAddress1" class="{{ $label }}">Street address</label>
+                            <input type="text" id="f_officeAddress1" name="officeAddress1" maxlength="150" autocomplete="off"
+                                   value="{{ old('officeAddress1', $office->officeAddress1 ?? '') }}" class="{{ $input }}">
+                        </div>
+
+                        <div class="{{ $row }}">
+                            <label for="f_officeCity" class="{{ $label }}">City</label>
+                            <input type="text" id="f_officeCity" name="officeCity" maxlength="100" autocomplete="off"
+                                   value="{{ old('officeCity', $office->officeCity ?? '') }}" class="{{ $input }}">
+                        </div>
+
+                        <div class="{{ $row }}">
+                            <label for="f_officeState" class="{{ $label }}">State</label>
+                            <select id="f_officeState" name="officeState" class="{{ $input }}">
+                                <option value="">&mdash;</option>
+                                @php $currentState = old('officeState', $office->officeState ?? ''); @endphp
+                                @foreach(config('usstates') as $abbr => $stateName)
+                                    <option value="{{ $abbr }}" @selected($currentState === $abbr)>{{ $stateName }} ({{ $abbr }})</option>
+                                @endforeach
+                                {{-- a value saved by the old system that isn't a state code stays selectable, so it isn't lost --}}
+                                @if($currentState !== '' && !array_key_exists($currentState, config('usstates')))
+                                    <option value="{{ $currentState }}" selected>{{ $currentState }}</option>
+                                @endif
+                            </select>
+                        </div>
+
+                        <div class="{{ $row }}">
+                            <label for="f_officeZip" class="{{ $label }}">ZIP</label>
+                            <input type="text" id="f_officeZip" name="officeZip" maxlength="10" autocomplete="off"
+                                   value="{{ old('officeZip', $office->officeZip ?? '') }}" class="{{ $input }}">
+                        </div>
+
+                        @foreach($licenseFields as [$field, $fieldLabel])
+                            <div class="{{ $row }}">
+                                <label for="f_{{ $field }}" class="{{ $label }}">{{ $fieldLabel }}</label>
+                                <input type="text" id="f_{{ $field }}" name="{{ $field }}" maxlength="100" autocomplete="off"
+                                       value="{{ old($field, $agent->{$field}) }}" class="{{ $input }}">
+                            </div>
+                        @endforeach
+
+                    </div>
+
+                    <div class="flex justify-end border-t border-slate-100 px-5 py-4 sm:px-6">
+                        <button type="submit" class="rounded-lg bg-[#214e9b] px-4 py-2 text-sm font-semibold text-white hover:bg-[#1b3f80]">
+                            Save address &amp; office
+                        </button>
+                    </div>
+                </form>
             </section>
 
         </div>

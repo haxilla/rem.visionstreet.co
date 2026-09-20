@@ -89,6 +89,12 @@ Route::get('/admin/agentMerge/{id}',
 Route::post('/admin/agentMerge/{id}',
 [adminController::class, 'agentMergeSave'])->whereNumber('id')->name('admin.agentMergeSave');
 
+//edit an agent's contact details and their address / office (POST only; admin-only via the controller)
+Route::post('/admin/agentContact/{id}',
+[adminController::class, 'agentContactSave'])->whereNumber('id')->name('admin.agentContactSave');
+Route::post('/admin/agentOffice/{id}',
+[adminController::class, 'agentOfficeSave'])->whereNumber('id')->name('admin.agentOfficeSave');
+
 //delete an agent from their own page - only one with no start date and no credits (POST only; re-checked in the controller)
 Route::post('/admin/agentDelete/{id}',
 [adminController::class, 'agentDelete'])->whereNumber('id')->name('admin.agentDelete');

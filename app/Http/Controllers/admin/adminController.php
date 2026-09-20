@@ -169,6 +169,118 @@ class adminController extends Controller
             ->with('status', "Deleted account #{$agent->id} {$name}.");
     }
 
+    /**
+     * Save the "Contact" card on an agent's page: names, contact email, phones, website.
+     * (This is the CONTACT email shown on flyers - the login email is separate and is
+     * only changed with the lost-mailbox tool, because it decides who can sign in.)
+     *
+     * A blank box is saved as an empty string, which is safe for both nullable and
+     * NOT NULL legacy columns. Lengths are checked here so a too-long value is a message,
+     * not a database error.
+     */
+    public function agentContactSave(Request $request, $id)
+    {
+        $agent = Propagent::findOrFail($id);
+
+        $data = $request->validate([
+            'agtFirst'     => ['nullable', 'string', 'max:50'],
+            'agtLast'      => ['nullable', 'string', 'max:50'],
+            'agtFullName'  => ['nullable', 'string', 'max:100'],
+            'agtEmail'     => ['nullable', 'email', 'max:100'],
+            'agtMainPhone' => ['nullable', 'string', 'max:30'],
+            'agtMobile'    => ['nullable', 'string', 'max:30'],
+            'agtHomePhone' => ['nullable', 'string', 'max:30'],
+            'agtPhone2'    => ['nullable', 'string', 'max:30'],
+            'agtWebsite'   => ['nullable', 'string', 'max:255'],
+        ]);
+
+        $data = array_map(fn ($value) => trim((string) $value), $data);
+
+        // "www.example.com" -> "https://www.example.com", so it works as a link everywhere
+        if ($data['agtWebsite'] !== '' && !preg_match('#^https?://#i', $data['agtWebsite']) && !preg_match('/\s/', $data['agtWebsite']) && str_contains($data['agtWebsite'], '.')) {
+            $data['agtWebsite'] = 'https://' . $data['agtWebsite'];
+        }
+
+        // the save stamps updated_at - in the agent's timezone
+        AgentTime::apply($agent);
+
+        try {
+            $agent->forceFill($data)->save();
+        } catch (\Throwable $e) {
+            Log::error('Admin contact save failed for agent ' . $agent->id . ': ' . $e->getMessage());
+
+            return redirect()->route('admin.agentView', $agent->id)->withInput()
+                ->withErrors(['contact' => 'Could not save the contact details (a value may be too long for its field).']);
+        }
+
+        return redirect()->to(route('admin.agentView', $agent->id) . '#contact')
+            ->with('status', 'Contact details saved.');
+    }
+
+    /**
+     * Save the "Address & Office" card: brokerage, street / city / state / ZIP (all on the
+     * agent's office record) and the licence details (MLS ID, board, designations, county).
+     * An agent with no office record gets one when a brokerage or address is entered; its
+     * id is the agent's own id, the same fallback the logo folder already uses.
+     */
+    public function agentOfficeSave(Request $request, $id)
+    {
+        $agent  = Propagent::with('theAgtOffice')->findOrFail($id);
+        $states = array_keys(config('usstates'));
+        $office = $agent->theAgtOffice;
+
+        $officeRules = [
+            'officeName'     => ['nullable', 'string', 'max:150'],
+            'officeAddress1' => ['nullable', 'string', 'max:150'],
+            'officeCity'     => ['nullable', 'string', 'max:100'],
+            'officeZip'      => ['nullable', 'string', 'max:10'],
+            // a state the old system saved in some other form is kept as-is rather than rejected
+            'officeState'    => ['nullable', 'string', 'max:30', function ($attribute, $value, $fail) use ($states, $office) {
+                if ($value !== null && $value !== '' && !in_array($value, $states, true) && $value !== ($office->officeState ?? null)) {
+                    $fail('Choose a state from the list.');
+                }
+            }],
+        ];
+
+        $data = $request->validate($officeRules + [
+            'agtMlsID'  => ['nullable', 'string', 'max:100'],
+            'agtBoard'  => ['nullable', 'string', 'max:100'],
+            'agtDesigs' => ['nullable', 'string', 'max:100'],
+            'agtCounty' => ['nullable', 'string', 'max:100'],
+        ]);
+
+        $data = array_map(fn ($value) => trim((string) $value), $data);
+
+        $officeData = array_intersect_key($data, $officeRules);
+        $agentData  = array_diff_key($data, $officeRules);
+
+        AgentTime::apply($agent);
+
+        try {
+            DB::transaction(function () use ($agent, $office, $officeData, $agentData) {
+                $agent->forceFill($agentData)->save();
+
+                if ($office) {
+                    $office->forceFill($officeData)->save();
+                } elseif (array_filter($officeData, fn ($value) => $value !== '') !== []) {
+                    $new = new \App\Models\Core\Agtoffice();
+                    $new->forceFill($officeData + [
+                        'propagent_id' => $agent->id,
+                        'officeID'     => $agent->id,
+                    ])->save();
+                }
+            });
+        } catch (\Throwable $e) {
+            Log::error('Admin office save failed for agent ' . $agent->id . ': ' . $e->getMessage());
+
+            return redirect()->route('admin.agentView', $agent->id)->withInput()
+                ->withErrors(['office' => 'Could not save the address and office (a value may be too long for its field).']);
+        }
+
+        return redirect()->to(route('admin.agentView', $agent->id) . '#office')
+            ->with('status', 'Address and office saved.');
+    }
+
     public function agentView($id)
     {
 
