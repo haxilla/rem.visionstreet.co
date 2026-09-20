@@ -6,7 +6,7 @@
         <div class="flex items-start justify-between gap-4 pr-12">
             <div>
                 <div class="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/65">
-                    Member Access
+                    Agent Login
                 </div>
 
                 <h2 class="mt-1 font-serif text-[34px] leading-none text-white sm:text-[38px]">
