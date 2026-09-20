@@ -148,7 +148,7 @@
         $flyer->dashboard_active_delivery = $flyerCampaigns->contains(fn($c) => empty($c->emComplete));
 
         $flyer->dashboard_is_waiting = $waitingForFlyer->isNotEmpty();
-        $flyer->dashboard_waiting_since = $waitingForFlyer->max('emRequest');
+        $flyer->dashboard_waiting_since = $waitingForFlyer->max('emRequest') ?? $waitingForFlyer->max('campCreated');
         $flyer->dashboard_waiting_areas = $waitingForFlyer
             ->map(fn($c) => $c->emArea_display ?: $c->emArea)
             ->filter()
@@ -241,11 +241,9 @@
                             </a>
 
                             <div class="flyer-info">
-                                @if($requestedOn)
-                                    <div class="text-xs text-slate-400">
-                                        Requested: {{ $requestedOn }}
-                                    </div>
-                                @endif
+                                <div class="text-xs text-slate-400">
+                                    Created: {{ $createdDate($flyer) }}
+                                </div>
 
                                 <a href="/member/flyer/preview?flyerId={{ $flyer->id }}" class="block truncate text-lg font-black text-[#123f91] hover:underline">
                                     {{ $flyer->xFullStreet ?: 'Untitled Flyer' }}
@@ -259,6 +257,12 @@
                                     <span class="rounded-full bg-blue-50 px-3 py-1 text-blue-700">
                                         {{ $money($flyer->xListPrice) }}
                                     </span>
+
+                                    @if($requestedOn)
+                                        <span class="rounded-full bg-slate-100 px-3 py-1 text-slate-600">
+                                            Requested: {{ $requestedOn }}
+                                        </span>
+                                    @endif
 
                                     @if($flyer->dashboard_waiting_areas->isNotEmpty())
                                         <span class="rounded-full bg-slate-100 px-3 py-1 text-slate-600">
