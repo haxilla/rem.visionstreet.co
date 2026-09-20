@@ -41,10 +41,13 @@
 
     // The editable fields (see adminController::agentContactSave / agentOfficeSave).
     // [column, label, input type, max length]
+    // An agent who only has a full name gets it split into first / last as a starting point.
+    [$nameFirst, $nameLast] = \App\Support\AgentNames::forForm($agent);
+
     $contactFields = [
-        ['agtFirst',     'First name',      'text', 50],
-        ['agtLast',      'Last name',       'text', 50],
-        ['agtFullName',  'Name on flyers',  'text', 100],
+        // (the name on flyers is not a field: it is made from the first and last name when saved)
+        ['agtFirst',     'First name',      'text', 48],
+        ['agtLast',      'Last name',       'text', 48],
         ['agtEmail',     'Contact email',   'email', 100],
         ['agtMainPhone', 'Main phone',      'tel',  30],
         ['agtMobile',    'Mobile',          'tel',  30],
@@ -380,7 +383,7 @@
                                 <label for="f_{{ $field }}" class="{{ $label }}">{{ $fieldLabel }}</label>
                                 <input type="{{ $inputType }}" id="f_{{ $field }}" name="{{ $field }}"
                                        maxlength="{{ $max }}" autocomplete="off"
-                                       value="{{ old($field, $agent->{$field}) }}"
+                                       value="{{ old($field, $field === 'agtFirst' ? $nameFirst : ($field === 'agtLast' ? $nameLast : $agent->{$field})) }}"
                                        class="{{ $input }}">
                             </div>
                         @endforeach

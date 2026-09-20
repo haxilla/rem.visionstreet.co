@@ -9,6 +9,7 @@ use App\Models\Core\Propdelivnow;
 use App\Models\Core\Propflyer;
 use App\Support\AgentCampaigns;
 use App\Support\AgentImages;
+use App\Support\AgentNames;
 use App\Support\AgentPasswords;
 use App\Support\AgentTime;
 use App\Support\DuplicateAccounts;
@@ -183,9 +184,9 @@ class adminController extends Controller
         $agent = Propagent::findOrFail($id);
 
         $data = $request->validate([
-            'agtFirst'     => ['nullable', 'string', 'max:50'],
-            'agtLast'      => ['nullable', 'string', 'max:50'],
-            'agtFullName'  => ['nullable', 'string', 'max:100'],
+            // (48 + a space + 48 always fits the 100-character full name)
+            'agtFirst'     => ['nullable', 'string', 'max:48'],
+            'agtLast'      => ['nullable', 'string', 'max:48'],
             'agtEmail'     => ['nullable', 'email', 'max:100'],
             'agtMainPhone' => ['nullable', 'string', 'max:30'],
             'agtMobile'    => ['nullable', 'string', 'max:30'],
@@ -199,6 +200,14 @@ class adminController extends Controller
         // "www.example.com" -> "https://www.example.com", so it works as a link everywhere
         if ($data['agtWebsite'] !== '' && !preg_match('#^https?://#i', $data['agtWebsite']) && !preg_match('/\s/', $data['agtWebsite']) && str_contains($data['agtWebsite'], '.')) {
             $data['agtWebsite'] = 'https://' . $data['agtWebsite'];
+        }
+
+        // The name on flyers and public pages is NOT typed anywhere: it is made from the first
+        // and last name. (With both boxes empty the existing name is left alone, never wiped.)
+        $fullName = AgentNames::combine($data['agtFirst'], $data['agtLast']);
+
+        if ($fullName !== null) {
+            $data['agtFullName'] = $fullName;
         }
 
         // the save stamps updated_at - in the agent's timezone

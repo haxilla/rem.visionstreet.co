@@ -41,7 +41,7 @@ $flyer = Propflyer::select(
 ->with(['theAgent' => function ($query) {
     $query->select(
         'id', 'agtPhoto', 'agtLogo', 'officeID',
-        'agtFullName', 'agtDesigs', 'agtMainPhone'
+        'agtFullName', 'agtFirst', 'agtLast', 'agtDesigs', 'agtMainPhone'
     );
 }])
 ->with(['theOffice' => function ($query) {

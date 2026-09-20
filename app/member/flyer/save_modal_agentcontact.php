@@ -5,7 +5,9 @@ use App\Models\Core\Propagent;
 $agent = Propagent::findOrFail(auth()->id());
 
 $validatedData = $request->validate([
-    'agtFullName'   => 'nullable|string|max:100',
+    // the name on the flyer is made from these two (48 + space + 48 fits the 100-character full name)
+    'agtFirst'      => 'nullable|string|max:48',
+    'agtLast'       => 'nullable|string|max:48',
     'agtDesigs'     => 'nullable|string|max:100',
     'agtMainPhone'  => 'nullable|string|max:30',
     'officeName'     => 'nullable|string|max:150',
@@ -17,7 +19,12 @@ $validatedData = $request->validate([
     'agtLogoFile'   => 'nullable|image|max:5120',
 ]);
 
-$agent->agtFullName  = $validatedData['agtFullName'] ?? null;
+$agent->agtFirst = trim((string) ($validatedData['agtFirst'] ?? ''));
+$agent->agtLast  = trim((string) ($validatedData['agtLast'] ?? ''));
+
+// The name on flyers and public pages is always made from first + last. With both boxes
+// empty the existing name is kept, never wiped.
+$agent->agtFullName = \App\Support\AgentNames::combine($agent->agtFirst, $agent->agtLast) ?? $agent->agtFullName;
 $agent->agtDesigs    = $validatedData['agtDesigs'] ?? null;
 $agent->agtMainPhone = $validatedData['agtMainPhone'] ?? null;
 

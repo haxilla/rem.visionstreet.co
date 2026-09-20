@@ -249,8 +249,14 @@
                 </div>
             </div>
 
-            <label>Full Name</label>
-            <input type="text" name="agtFullName" value="{{ $bannerAgent->agtFullName }}">
+            {{-- The name shown on the flyer is made from these two --}}
+            @php [$bannerFirst, $bannerLast] = \App\Support\AgentNames::forForm($bannerAgent); @endphp
+
+            <label>First Name</label>
+            <input type="text" name="agtFirst" maxlength="48" value="{{ $bannerFirst }}">
+
+            <label>Last Name</label>
+            <input type="text" name="agtLast" maxlength="48" value="{{ $bannerLast }}">
 
             <label>Designations</label>
             <input type="text" name="agtDesigs" value="{{ $bannerAgent->agtDesigs }}">
