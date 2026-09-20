@@ -116,7 +116,10 @@
                                         </form>
                                     @else
                                         <div class="mt-1.5 max-w-[14rem] text-xs font-normal text-slate-500">
-                                            Can't delete: it has {{ implode(', ', $row['reasons']) }}.
+                                            Can't delete yet: it has {{ implode(', ', $row['reasons']) }}.
+                                            @if(in_array('order history', $row['reasons'], true) || in_array('campaign history', $row['reasons'], true))
+                                                <a href="/admin/agentMerge/{{ $row['id'] }}" class="font-semibold text-blue-700 hover:underline">Move it on the merge page</a>
+                                            @endif
                                         </div>
                                     @endif
                                 @endif

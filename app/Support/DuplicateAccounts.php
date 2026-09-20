@@ -18,10 +18,12 @@ use Illuminate\Support\Facades\DB;
 class DuplicateAccounts
 {
     /**
-     * For each account id: how many flyers it holds (deleted ones included) and the
-     * reasons, other than flyers, that it can't be deleted.
+     * For each account id: how many flyers it holds (deleted ones included), how many
+     * orders and campaign records it holds, and the reasons, other than flyers, that it
+     * can't be deleted. (Orders and campaign records can be moved to another account -
+     * see adminController::agentMoveRecords.)
      *
-     * @return array<int, array{flyers:int, reasons:string[]}>
+     * @return array<int, array{flyers:int, orders:int, campaigns:int, reasons:string[]}>
      */
     public static function blockersFor(Collection $accounts): array
     {
@@ -39,11 +41,17 @@ class DuplicateAccounts
             ->all();
 
         $orders = DB::table('allorders')->whereIn('propagent_id', $ids)
-            ->distinct()->pluck('propagent_id')->flip()->all();
+            ->selectRaw('propagent_id, COUNT(*) as total')->groupBy('propagent_id')->pluck('total', 'propagent_id')->all();
 
-        $campaigns = DB::table('remuserdb.propdelivnow')->whereIn('propagent_id', $ids)->distinct()->pluck('propagent_id')
-            ->merge(DB::table('remuserdb.propdelivs')->whereIn('propagent_id', $ids)->distinct()->pluck('propagent_id'))
-            ->flip()->all();
+        // a finished campaign can sit in both campaign tables, so this counts records, not campaigns
+        $campaigns = [];
+
+        foreach (['propdelivnow', 'propdelivs'] as $table) {
+            foreach (DB::table("remuserdb.{$table}")->whereIn('propagent_id', $ids)
+                ->selectRaw('propagent_id, COUNT(*) as total')->groupBy('propagent_id')->pluck('total', 'propagent_id') as $agentId => $n) {
+                $campaigns[$agentId] = ($campaigns[$agentId] ?? 0) + (int) $n;
+            }
+        }
 
         $out = [];
 
@@ -55,15 +63,20 @@ class DuplicateAccounts
                 $reasons[] = 'credits';
             }
 
-            if (isset($orders[$id])) {
+            if (($orders[$id] ?? 0) > 0) {
                 $reasons[] = 'order history';
             }
 
-            if (isset($campaigns[$id])) {
+            if (($campaigns[$id] ?? 0) > 0) {
                 $reasons[] = 'campaign history';
             }
 
-            $out[$id] = ['flyers' => (int) ($flyers[$id] ?? 0), 'reasons' => $reasons];
+            $out[$id] = [
+                'flyers'    => (int) ($flyers[$id] ?? 0),
+                'orders'    => (int) ($orders[$id] ?? 0),
+                'campaigns' => (int) ($campaigns[$id] ?? 0),
+                'reasons'   => $reasons,
+            ];
         }
 
         return $out;

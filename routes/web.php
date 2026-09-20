@@ -89,6 +89,10 @@ Route::get('/admin/agentMerge/{id}',
 Route::post('/admin/agentMerge/{id}',
 [adminController::class, 'agentMergeSave'])->whereNumber('id')->name('admin.agentMergeSave');
 
+//move a duplicate account's order + campaign history into another account on the same email (POST only)
+Route::post('/admin/agentMoveRecords/{id}',
+[adminController::class, 'agentMoveRecords'])->whereNumber('id')->name('admin.agentMoveRecords');
+
 //delete a leftover duplicate account (POST only); the controller refuses unless it's a duplicate with no flyers
 Route::post('/admin/agentDeleteDuplicate/{id}',
 [adminController::class, 'agentDeleteDuplicate'])->whereNumber('id')->name('admin.agentDeleteDuplicate');

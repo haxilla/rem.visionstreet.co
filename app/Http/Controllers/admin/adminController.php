@@ -558,6 +558,8 @@ class adminController extends Controller
                 // the Delete button shows only for an account with no flyers (and nothing else to lose)
                 'can_delete' => DuplicateAccounts::canDelete($b),
                 'reasons'    => $b['reasons'],
+                'orders'     => $b['orders'] ?? 0,
+                'campaigns'  => $b['campaigns'] ?? 0,
                 'flyers'  => $mine->map(function ($flyer) use ($busy) {
                     $photo = $flyer->thePhotos->firstWhere('resized', 500) ?? $flyer->thePhotos->first();
                     $meta  = $flyer->theMeta;
@@ -719,6 +721,81 @@ class adminController extends Controller
         }
 
         return $back()->with('status', $message);
+    }
+
+    /**
+     * Move a duplicate account's ORDER HISTORY and CAMPAIGN HISTORY into another account
+     * on the same login email (POST only) - what stops an empty account being deleted
+     * once its flyers have been moved. {id} is the account they are moved OUT of;
+     * "destination" is the account that receives them.
+     *
+     * Only for an account with no flyers left: campaign records that belong to a flyer
+     * follow that flyer (see agentMergeSave), so what remains here is history with no
+     * live flyer behind it. Refused while one of those campaigns is being delivered.
+     * Credits are not touched - set them on the agent's page.
+     */
+    public function agentMoveRecords(Request $request, $id)
+    {
+        $source   = Propagent::findOrFail($id);
+        $accounts = AgentPasswords::accountsForEmail($source->xxAgtUname);
+        $fail     = fn (string $message) => redirect()->back()->withErrors(['merge' => $message]);
+
+        $data = $request->validate(['destination' => ['required', 'integer']], [
+            'destination.required' => 'Choose the account to move the records into first.',
+        ]);
+
+        $dest = $accounts->firstWhere('id', (int) $data['destination']);
+
+        if ($accounts->count() < 2 || !$dest || (int) $dest->id === (int) $source->id) {
+            return $fail('Choose a different account that uses the same login email.');
+        }
+
+        $blockers = DuplicateAccounts::blockersFor(collect([$source]))[(int) $source->id];
+
+        if ($blockers['flyers'] > 0) {
+            return $fail('Move this account\'s flyers first - its records follow its flyers.');
+        }
+
+        $delivering = DB::table('remuserdb.propdelivnow')
+            ->where('propagent_id', $source->id)
+            ->whereNotNull('emStart')
+            ->whereNull('emComplete')
+            ->exists();
+
+        if ($delivering) {
+            return $fail('One of this account\'s campaigns is being delivered right now. Try again when it has finished.');
+        }
+
+        $counts = [];
+
+        try {
+            DB::transaction(function () use ($source, $dest, &$counts) {
+                foreach (['allorders' => 'allorders', 'propdelivnow' => 'remuserdb.propdelivnow', 'propdelivs' => 'remuserdb.propdelivs'] as $label => $table) {
+                    $counts[$label] = DB::table($table)
+                        ->where('propagent_id', $source->id)
+                        ->update(['propagent_id' => $dest->id]);
+                }
+            });
+        } catch (\Throwable $e) {
+            Log::error('Move records failed, nothing moved: ' . $e->getMessage());
+
+            return $fail('The move failed and nothing was changed. (' . $e->getMessage() . ')');
+        }
+
+        Log::info('Admin moved order/campaign history between duplicate accounts', [
+            'admin_id' => Auth::guard('admin')->id(),
+            'from'     => $source->id,
+            'to'       => $dest->id,
+            'rows'     => $counts,
+            'ip'       => $request->ip(),
+        ]);
+
+        $name = $dest->agtFullName ?: trim(($dest->agtFirst ?? '') . ' ' . ($dest->agtLast ?? '')) ?: 'the account';
+
+        return redirect()->back()->with('status',
+            "Moved {$counts['allorders']} order(s) and " . ($counts['propdelivnow'] + $counts['propdelivs'])
+            . " campaign record(s) from #{$source->id} into #{$dest->id} {$name}."
+        );
     }
 
     /**

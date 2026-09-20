@@ -122,7 +122,26 @@
                                 Delete account
                             </button>
                         @else
-                            <span class="text-xs text-slate-500">Can't delete: it has {{ implode(', ', $acct['reasons']) }}.</span>
+                            <div class="max-w-md text-xs text-slate-500">
+                                <div>Can't delete yet: it has {{ implode(', ', $acct['reasons']) }}.</div>
+
+                                @if($acct['orders'] > 0 || $acct['campaigns'] > 0)
+                                    {{-- orders + campaign records can be moved into the account chosen above --}}
+                                    <button type="submit"
+                                            formaction="{{ route('admin.agentMoveRecords', $acct['id']) }}"
+                                            formnovalidate
+                                            data-needs-dest="1"
+                                            @if($confirmDelete ?? true) data-confirm-records="1" @endif
+                                            class="mt-1.5 rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40">
+                                        Move its {{ $acct['orders'] }} {{ $acct['orders'] === 1 ? 'order' : 'orders' }} and
+                                        {{ $acct['campaigns'] }} campaign {{ $acct['campaigns'] === 1 ? 'record' : 'records' }} into the account chosen above
+                                    </button>
+                                @endif
+
+                                @if(in_array('credits', $acct['reasons'], true))
+                                    <div class="mt-1">Credits: set them on the agent's page.</div>
+                                @endif
+                            </div>
                         @endif
                     @endif
 
@@ -232,6 +251,29 @@
         count.textContent = n + (n === 1 ? ' flyer ticked' : ' flyers ticked');
         btn.disabled = (n === 0 || dest.value === '');
     }
+
+    // "Move its orders and campaign records" buttons need a destination (and not itself)
+    var recordBtns = Array.prototype.slice.call(form.querySelectorAll('[data-needs-dest]'));
+
+    function refreshRecordButtons() {
+        recordBtns.forEach(function (rb) {
+            var own = rb.closest('[data-block]');
+            var self = own ? own.getAttribute('data-block') : null;
+            rb.disabled = (dest.value === '' || dest.value === self);
+        });
+    }
+
+    recordBtns.forEach(function (rb) {
+        rb.addEventListener('click', function (e) {
+            if (rb.hasAttribute('data-confirm-records')) {
+                var name = dest.options[dest.selectedIndex].getAttribute('data-name');
+                if (!confirm('Move this account's orders and campaign records into ' + name + '?')) { e.preventDefault(); }
+            }
+        });
+    });
+
+    dest.addEventListener('change', refreshRecordButtons);
+    refreshRecordButtons();
 
     dest.addEventListener('change', refresh);
     boxes.forEach(function (b) { b.addEventListener('change', refresh); });
