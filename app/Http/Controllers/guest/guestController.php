@@ -74,7 +74,11 @@ class guestController extends Controller
             return redirect('/member/dashboard');
         }
 
-        return view('member.login');
+        include app_path('member/login.php');
+        return view('member.login',
+        [
+            'data'     => $data,
+        ]);
     }
 
 
