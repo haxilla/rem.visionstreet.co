@@ -513,6 +513,249 @@ class adminController extends Controller
     }
 
     /**
+     * MERGE DUPLICATE ACCOUNTS, step 1 of 2 (GET): tick flyers and pick which account
+     * receives them. Only for accounts that share one login email - if the agent has no
+     * duplicate there is nothing to merge and this refuses.
+     *
+     * Every flyer of every account on the email is listed (deleted ones too, marked, so
+     * their campaign history can travel with them); a flyer whose campaign is being
+     * delivered right now can't be moved and is shown disabled.
+     */
+    public function agentMerge($id)
+    {
+        $agent    = Propagent::findOrFail($id);
+        $accounts = AgentPasswords::accountsForEmail($agent->xxAgtUname);
+
+        if ($accounts->count() < 2) {
+            return redirect()->route('admin.agentView', $agent->id)
+                ->withErrors(['merge' => 'No other account uses this login email, so there is nothing to merge.']);
+        }
+
+        $flyers = Propflyer::withTrashed()
+            ->whereIn('propagent_id', $accounts->pluck('id')->all())
+            ->with([
+                'thePhotos' => fn ($query) => $query->where('def', 1),
+                'theMeta',
+                'theStats',
+            ])
+            ->orderByDesc('id')
+            ->get(['id', 'propagent_id', 'xFullStreet', 'xCity', 'state', 'xZip', 'creationDate', 'created_at', 'deleted_at']);
+
+        $busy = $this->flyersBeingDelivered($flyers->pluck('id')->all());
+
+        $rows = $accounts->map(function ($account) use ($flyers, $busy) {
+            $mine = $flyers->where('propagent_id', $account->id)->values();
+
+            return [
+                'id'      => $account->id,
+                'name'    => $account->agtFullName ?: trim(($account->agtFirst ?? '') . ' ' . ($account->agtLast ?? '')) ?: 'No name',
+                'office'  => optional($account->theAgtOffice)->officeName,
+                'start'   => $account->startDate,
+                'credits' => (int) ($account->remCreds ?? 0),
+                'flyers'  => $mine->map(function ($flyer) use ($busy) {
+                    $photo = $flyer->thePhotos->firstWhere('resized', 500) ?? $flyer->thePhotos->first();
+                    $meta  = $flyer->theMeta;
+
+                    return [
+                        'id'        => $flyer->id,
+                        'title'     => $flyer->xFullStreet ?: 'Untitled flyer',
+                        'place'     => trim(($flyer->xCity ?? '') . ' ' . ($flyer->state ?? '') . ' ' . ($flyer->xZip ?? '')),
+                        'created'   => $flyer->creationDate ?: $flyer->created_at,
+                        'last_sent' => optional($flyer->theStats)->xLastDeliveryDate,
+                        'hits'      => (int) optional($flyer->theStats)->xWebViews,
+                        'deleted'   => $flyer->trashed(),
+                        'busy'      => isset($busy[$flyer->id]),
+                        'thumb'     => ($photo && $meta && $meta->zipDir && $meta->mlsDir && $photo->photoName)
+                            ? "/hqphotos/{$meta->zipDir}/{$meta->mlsDir}/{$photo->photoName}"
+                            : null,
+                    ];
+                })->all(),
+            ];
+        });
+
+        return view('admin.agents.merge', ['agent' => $agent, 'accounts' => $rows]);
+    }
+
+    /**
+     * MERGE DUPLICATE ACCOUNTS, step 2 (POST): move the ticked flyers into the chosen
+     * account.
+     *
+     * A flyer is not just one row: its photos, style, meta, remarks, map and campaign
+     * history each carry the agent's id too. So the move finds EVERY table in the database
+     * that has both propflyer_id and propagent_id and changes the agent on all of them
+     * for these flyers, inside one transaction (all or nothing). Agent-level things stay
+     * where they are: credits, start date, photo, logo, office.
+     *
+     * Guarded on the server, not just on the page: only flyers of accounts that share
+     * this login email, never into an account that doesn't, never a flyer already in the
+     * destination, and never a flyer that is being delivered right now.
+     */
+    public function agentMergeSave(Request $request, $id)
+    {
+        $agent    = Propagent::findOrFail($id);
+        $accounts = AgentPasswords::accountsForEmail($agent->xxAgtUname);
+        $back     = fn () => redirect()->route('admin.agentMerge', $agent->id);
+
+        if ($accounts->count() < 2) {
+            return redirect()->route('admin.agentView', $agent->id)
+                ->withErrors(['merge' => 'No other account uses this login email, so there is nothing to merge.']);
+        }
+
+        $data = $request->validate([
+            'destination' => ['required', 'integer'],
+            'flyers'      => ['required', 'array', 'min:1', 'max:1000'],
+            'flyers.*'    => ['integer', 'min:1'],
+        ], [
+            'flyers.required' => 'Tick at least one flyer to move.',
+            'flyers.min'      => 'Tick at least one flyer to move.',
+        ]);
+
+        $dest = $accounts->firstWhere('id', (int) $data['destination']);
+
+        if (!$dest) {
+            return $back()->withErrors(['merge' => 'That account does not use this login email.']);
+        }
+
+        $ids     = array_values(array_unique(array_map('intval', $data['flyers'])));
+        $sources = $accounts->pluck('id')->reject(fn ($accountId) => (int) $accountId === (int) $dest->id)->values()->all();
+
+        $flyers = Propflyer::withTrashed()
+            ->whereIn('id', $ids)
+            ->whereIn('propagent_id', $sources)
+            ->get(['id', 'propagent_id']);
+
+        $notEligible = count($ids) - $flyers->count();
+
+        $busy    = $this->flyersBeingDelivered($flyers->pluck('id')->all());
+        $movable = $flyers->reject(fn ($flyer) => isset($busy[$flyer->id]))->values();
+
+        if ($movable->isEmpty()) {
+            return $back()->withErrors(['merge' => 'Nothing was moved: the ticked flyers are not in the other accounts, or are being delivered right now.']);
+        }
+
+        try {
+            $tables = $this->flyerLinkedTables();
+        } catch (\Throwable $e) {
+            Log::error('Merge: could not list the flyer tables: ' . $e->getMessage());
+
+            return $back()->withErrors(['merge' => 'Could not work out which tables hold flyer data, so nothing was moved.']);
+        }
+
+        $counts     = [];
+        $destOffice = optional($dest->theAgtOffice)->officeID;
+
+        try {
+            DB::transaction(function () use ($movable, $accounts, $dest, $tables, $destOffice, &$counts) {
+                // the moved rows are stamped in the receiving agent's timezone
+                AgentTime::apply($dest);
+
+                foreach ($movable->groupBy('propagent_id') as $sourceId => $group) {
+                    $flyerIds  = $group->pluck('id')->all();
+                    $srcOffice = optional($accounts->firstWhere('id', (int) $sourceId)?->theAgtOffice)->officeID;
+
+                    $counts['propflyers'] = ($counts['propflyers'] ?? 0)
+                        + Propflyer::withTrashed()
+                            ->whereIn('id', $flyerIds)
+                            ->where('propagent_id', $sourceId)
+                            ->update(['propagent_id' => $dest->id]);
+
+                    // a flyer's own office id only mirrors its agent's office: keep it in step
+                    if ($srcOffice && $destOffice && $srcOffice != $destOffice) {
+                        Propflyer::withTrashed()
+                            ->whereIn('id', $flyerIds)
+                            ->where('officeID', $srcOffice)
+                            ->update(['officeID' => $destOffice]);
+                    }
+
+                    foreach ($tables as $table) {
+                        $n = DB::table("remuserdb.{$table}")
+                            ->whereIn('propflyer_id', $flyerIds)
+                            ->where('propagent_id', $sourceId)
+                            ->update(['propagent_id' => $dest->id]);
+
+                        $counts[$table] = ($counts[$table] ?? 0) + $n;
+                    }
+                }
+            });
+        } catch (\Throwable $e) {
+            Log::error('Merge failed, nothing moved: ' . $e->getMessage());
+
+            return $back()->withErrors(['merge' => 'The move failed and nothing was changed. (' . $e->getMessage() . ')']);
+        }
+
+        Log::info('Admin moved flyers between duplicate accounts', [
+            'admin_id'    => Auth::guard('admin')->id(),
+            'to'          => $dest->id,
+            'flyers'      => $movable->pluck('id')->all(),
+            'from'        => $movable->pluck('propagent_id')->unique()->values()->all(),
+            'rows_by_tbl' => $counts,
+            'ip'          => $request->ip(),
+        ]);
+
+        $moved   = $movable->count();
+        $name    = $dest->agtFullName ?: trim(($dest->agtFirst ?? '') . ' ' . ($dest->agtLast ?? '')) ?: 'the account';
+        $message = "Moved {$moved} " . ($moved === 1 ? 'flyer' : 'flyers') . " into #{$dest->id} {$name}.";
+
+        $related = collect($counts)->except('propflyers')->filter()->map(fn ($n, $t) => "{$t} {$n}")->implode(', ');
+
+        if ($related !== '') {
+            $message .= " Their related records moved too ({$related}).";
+        }
+
+        $skipped = $notEligible + ($flyers->count() - $moved);
+
+        if ($skipped > 0) {
+            $message .= " Skipped {$skipped} (already in that account, not in these accounts, or being delivered right now).";
+        }
+
+        return $back()->with('status', $message);
+    }
+
+    /** [flyerId => true] for flyers with a campaign that has started delivering but not finished. */
+    private function flyersBeingDelivered(array $flyerIds): array
+    {
+        if ($flyerIds === []) {
+            return [];
+        }
+
+        return DB::table('remuserdb.propdelivnow')
+            ->whereIn('propflyer_id', $flyerIds)
+            ->whereNotNull('emStart')
+            ->whereNull('emComplete')
+            ->pluck('propflyer_id')
+            ->flip()
+            ->map(fn () => true)
+            ->all();
+    }
+
+    /**
+     * Every table in the database that ties a row to BOTH a flyer and an agent
+     * (columns propflyer_id and propagent_id): photos, style, meta, remarks, map,
+     * campaign history, stats... Found from the database itself so a table that only
+     * the old system knew about isn't left pointing at the old account.
+     *
+     * @return string[]
+     */
+    private function flyerLinkedTables(): array
+    {
+        $rows = DB::select(
+            "SELECT DISTINCT a.TABLE_NAME AS name
+               FROM information_schema.COLUMNS a
+               JOIN information_schema.COLUMNS f
+                 ON f.TABLE_SCHEMA = a.TABLE_SCHEMA AND f.TABLE_NAME = a.TABLE_NAME AND f.COLUMN_NAME = 'propflyer_id'
+               JOIN information_schema.TABLES t
+                 ON t.TABLE_SCHEMA = a.TABLE_SCHEMA AND t.TABLE_NAME = a.TABLE_NAME AND t.TABLE_TYPE = 'BASE TABLE'
+              WHERE a.TABLE_SCHEMA = 'remuserdb' AND a.COLUMN_NAME = 'propagent_id'
+              ORDER BY a.TABLE_NAME"
+        );
+
+        return collect($rows)->pluck('name')
+            ->filter(fn ($name) => preg_match('/^[A-Za-z0-9_]+$/', $name))
+            ->values()
+            ->all();
+    }
+
+    /**
      * Block / unblock an agent's login. The flag is propagents.loginBlocked
      * (added by hand with raw SQL). It is enforced at sign-in
      * (guestController::memberLogin) and on every request in the member

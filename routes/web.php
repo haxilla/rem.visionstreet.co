@@ -82,6 +82,13 @@ Route::post('/admin/agentPasswordReset/{id}',
 Route::post('/admin/agentLoginEmail/{id}',
 [adminController::class, 'agentLoginEmail'])->whereNumber('id')->name('admin.agentLoginEmail');
 
+//merge duplicate accounts (same login email): pick flyers, move them into one account. Only ever
+//available when the agent has a duplicate - the controller refuses otherwise. POST changes data.
+Route::get('/admin/agentMerge/{id}',
+[adminController::class, 'agentMerge'])->whereNumber('id')->name('admin.agentMerge');
+Route::post('/admin/agentMerge/{id}',
+[adminController::class, 'agentMergeSave'])->whereNumber('id')->name('admin.agentMergeSave');
+
 Route::post('/admin/agentLoginBlock/{id}',
 [adminController::class, 'agentLoginBlock'])->whereNumber('id')->name('admin.agentLoginBlock');
 

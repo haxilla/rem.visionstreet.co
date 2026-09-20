@@ -52,6 +52,11 @@
                         Nothing to move
                     </span>
                 @endif
+
+                <a href="/admin/agentMerge/{{ $group['accounts']->first()['id'] }}"
+                   class="rounded-full bg-[#214e9b] px-3 py-0.5 text-white hover:bg-[#1b3f80]">
+                    Move flyers
+                </a>
             </div>
         </div>
 

@@ -624,7 +624,8 @@
                             </p>
                             <p class="mt-0.5">
                                 They get one password together, and signing in opens the one with the most flyers.
-                                Merge them from the
+                                <a href="/admin/agentMerge/{{ $agent->id }}" class="font-semibold text-blue-700 hover:underline">Move flyers between these accounts</a>,
+                                or see them all on the
                                 <a href="/admin/agents?duplicates=1" class="font-semibold text-blue-700 hover:underline">Duplicate Logins</a>
                                 tab.
                             </p>
