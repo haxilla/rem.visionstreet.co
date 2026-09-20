@@ -25,6 +25,12 @@ Route::get('/member/login',
 Route::post('/member/login',
 [guestController::class, 'memberLogin'])->middleware('throttle:5,1')->name('member.login.submit');
 
+//several accounts share one login email: after the password is right, pick which account to open
+Route::get('/member/login/account',
+[guestController::class, 'accountChooseForm'])->name('member.login.account');
+Route::post('/member/login/account',
+[guestController::class, 'accountChoose'])->middleware('throttle:10,1')->name('member.login.account.choose');
+
 //member password: "forgot password" and the emailed one-time "set your new password" link
 //(guest pages - no login needed; defined before the /member/{segments} catch-all below)
 Route::get('/member/password/forgot',

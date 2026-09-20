@@ -4,6 +4,7 @@ namespace App\Http\Controllers\guest;
 use App\Http\Controllers\Controller;
 use App\Mail\AgentPasswordChangedMail;
 use App\Models\Core\Propagent;
+use App\Models\Core\Propflyer;
 use App\Support\AgentPasswords;
 use App\Support\AgentTime;
 use Illuminate\Http\Request;
@@ -95,50 +96,105 @@ class guestController extends Controller
             ])->onlyInput('xxAgtUname');
         }
 
-        $guard = Auth::guard('member');
+        $typed = (string) $credentials['password'];
 
-        // Check the email + password WITHOUT signing in yet: an agent who hasn't
-        // set a new password on this site is not let in, even with the right one.
-        if ($guard->validate($credentials)) {
-            $agent = $guard->getLastAttempted();
+        // Every account on this email whose password matches. Old-system passwords are
+        // never accepted (an account with no new-site password can't match at all) - the
+        // only way in for those agents is the emailed link, so the sign-in never
+        // touches or depends on what they had before. See AgentPasswords::passwordOpens.
+        $matched = AgentPasswords::accountsForEmail($credentials['xxAgtUname'])
+            ->filter(fn ($a) => AgentPasswords::passwordOpens($a, $typed));
 
-            // A blocked agent can't sign in even with the right password
-            // (propagents.loginBlocked; see also EnsureAgentNotBlocked,
-            // which ends sessions that are already open).
-            if ((int) ($agent->loginBlocked ?? 0) === 1) {
-                return back()->withErrors([
-                    'xxAgtUname' => 'Your account has been blocked. Please contact support.',
-                ])->onlyInput('xxAgtUname');
-            }
+        // A blocked agent can't sign in even with the right password
+        // (propagents.loginBlocked; see also EnsureAgentNotBlocked,
+        // which ends sessions that are already open).
+        $open = $matched->reject(fn ($a) => AgentPasswords::isBlocked($a))->values();
 
-            // First visit to the new site: the old password proved who they are
-            // enough to send the link, and the link (to the mailbox on file) is
-            // what lets them set a new one. See AgentPasswords.
-            if (AgentPasswords::resetRequired($agent)) {
-                $result = AgentPasswords::sendLink($agent, 'login', $request->ip());
+        if ($open->isEmpty() && $matched->isNotEmpty()) {
+            return back()->withErrors([
+                'xxAgtUname' => 'Your account has been blocked. Please contact support.',
+            ])->onlyInput('xxAgtUname');
+        }
 
-                if (in_array($result, ['noemail', 'failed'], true)) {
-                    return back()->withErrors([
-                        'xxAgtUname' => 'We could not email you a password link. Please contact support.',
-                    ])->onlyInput('xxAgtUname');
-                }
-
-                return redirect()->route('member.login')->with(
-                    'status',
-                    'For your security you need to create a new password on our new site. We emailed a link to '
-                    . AgentPasswords::maskEmail((string) $agent->xxAgtUname)
-                    . ' - it works once and expires in ' . AgentPasswords::LINK_MINUTES . ' minutes.'
-                );
-            }
-
-            $guard->login($agent);
+        if ($open->count() === 1) {
+            Auth::guard('member')->login($open->first());
             $request->session()->regenerate();
             return redirect()->intended('/member/dashboard');
         }
 
+        // The same email has more than one account: they've proved who they are, now
+        // they pick which account to open (member.login.account).
+        if ($open->count() > 1) {
+            $request->session()->put('login_pending', [
+                'ids'     => $open->pluck('id')->all(),
+                'expires' => now()->addMinutes(10)->timestamp,
+            ]);
+
+            return redirect()->route('member.login.account');
+        }
+
         return back()->withErrors([
-            'xxAgtUname' => 'Invalid credentials.',
+            'xxAgtUname' => 'That email and password did not match. If you haven\'t created a password on our new site yet, use "Create your password" below.',
         ])->onlyInput('xxAgtUname');
+    }
+
+    // ---- Choosing between several accounts that share one email ----
+
+    /** The accounts waiting for a choice (proved by password moments ago), or null. */
+    private function pendingAccounts(Request $request)
+    {
+        $pending = $request->session()->get('login_pending');
+
+        if (!is_array($pending) || ($pending['expires'] ?? 0) < now()->timestamp) {
+            $request->session()->forget('login_pending');
+            return null;
+        }
+
+        // Re-read them: one could have been blocked since.
+        $accounts = Propagent::whereIn('id', $pending['ids'])->orderBy('id')->get()
+            ->reject(fn ($a) => AgentPasswords::isBlocked($a))->values();
+
+        return $accounts->isEmpty() ? null : $accounts;
+    }
+
+    public function accountChooseForm(Request $request)
+    {
+        $accounts = $this->pendingAccounts($request);
+
+        if (!$accounts) {
+            return redirect()->route('member.login');
+        }
+
+        $rows = $accounts->map(fn ($a) => [
+            'id'      => $a->id,
+            'name'    => $a->agtFullName ?: trim(($a->agtFirst ?? '') . ' ' . ($a->agtLast ?? '')) ?: 'Account ' . $a->id,
+            'office'  => optional($a->theAgtOffice)->officeName,
+            'flyers'  => Propflyer::where('propagent_id', $a->id)->count(),
+            'started' => $a->startDate,
+        ]);
+
+        return view('member.password.choose', ['accounts' => $rows]);
+    }
+
+    public function accountChoose(Request $request)
+    {
+        $accounts = $this->pendingAccounts($request);
+
+        if (!$accounts) {
+            return redirect()->route('member.login');
+        }
+
+        $chosen = $accounts->firstWhere('id', (int) $request->input('agent'));
+
+        if (!$chosen) {
+            return back()->withErrors(['agent' => 'Please pick one of the accounts.']);
+        }
+
+        $request->session()->forget('login_pending');
+        Auth::guard('member')->login($chosen);
+        $request->session()->regenerate();
+
+        return redirect()->intended('/member/dashboard');
     }
 
     // ---- Forgot password / set a new password (emailed one-time link) ----
@@ -157,7 +213,11 @@ class guestController extends Controller
         // The answer is the same whether or not the address belongs to an agent,
         // so this page can't be used to find out who has an account.
         try {
-            $agent = Propagent::where('xxAgtUname', $email)->first();
+            // One link per EMAIL, even when it has several accounts (they all get the
+            // password together). Always asked of the same account - the lowest id that
+            // isn't blocked - so the per-agent send limits can't be dodged by alternating.
+            $agent = AgentPasswords::accountsForEmail($email)
+                ->first(fn ($a) => !AgentPasswords::isBlocked($a));
 
             if ($agent) {
                 AgentPasswords::sendLink($agent, 'forgot', $request->ip());
@@ -199,10 +259,24 @@ class guestController extends Controller
             'password' => ['required', 'string', 'max:128', 'confirmed', AgentPasswords::rule()],
         ]);
 
-        $validator->after(function ($v) use ($agent, $request) {
-            if (!$v->errors()->has('password')
-                && ($problem = AgentPasswords::personalProblem($agent, (string) $request->input('password')))) {
-                $v->errors()->add('password', $problem);
+        // The password goes on EVERY account that uses this login email (see
+        // AgentPasswords::accountsForEmail), so it is checked against all of them.
+        $accounts = AgentPasswords::accountsForEmail($agent->xxAgtUname);
+
+        if ($accounts->where('id', $agent->id)->isEmpty()) {
+            $accounts->push($agent);
+        }
+
+        $validator->after(function ($v) use ($accounts, $request) {
+            if ($v->errors()->has('password')) {
+                return;
+            }
+
+            foreach ($accounts as $account) {
+                if ($problem = AgentPasswords::personalProblem($account, (string) $request->input('password'))) {
+                    $v->errors()->add('password', $problem);
+                    return;
+                }
             }
         });
 
@@ -210,20 +284,24 @@ class guestController extends Controller
             return back()->withErrors($validator);
         }
 
-        DB::transaction(function () use ($agent, $request) {
-            // The time the reset is recorded is the agent's own (see AgentTime).
-            AgentTime::apply($agent);
+        DB::transaction(function () use ($accounts, $request) {
+            $hash = Hash::make($request->input('password'));
 
-            $agent->password = Hash::make($request->input('password'));
+            foreach ($accounts as $account) {
+                // The time the reset is recorded is the agent's own (see AgentTime).
+                AgentTime::apply($account);
 
-            // Until the passwordResetAt column exists there is nowhere to record it.
-            if (AgentPasswords::columnAvailable($agent)) {
-                $agent->passwordResetAt = AgentTime::now($agent);
+                $account->password = $hash;
+
+                // Until the passwordResetAt column exists there is nowhere to record it.
+                if (AgentPasswords::columnAvailable($account)) {
+                    $account->passwordResetAt = AgentTime::now($account);
+                }
+
+                $account->save();
+
+                AgentPasswords::voidAll($account->id);
             }
-
-            $agent->save();
-
-            AgentPasswords::voidAll($agent->id);
         });
 
         try {

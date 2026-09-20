@@ -210,8 +210,16 @@
                         </button>
                     </form>
 
+                    {{-- Agents from the old site: old passwords aren't used, they make a new one by email --}}
+                    <div class="mt-5 rounded-xl bg-brand-blue/5 px-4 py-3 text-[13px] leading-relaxed text-slate-600">
+                        <span class="font-semibold text-brand-bluedark">Used RealtyEmails before?</span>
+                        We've moved to a new site, and your old password won't work here.
+                        <a href="{{ route('member.password.forgot') }}" class="font-semibold text-brand-blue hover:underline">Create your password</a>
+                        &mdash; we'll email you a link.
+                    </div>
+
                     {{-- New agents start from the free flyer on the home page --}}
-                    <p class="mt-6 border-t border-slate-100 pt-5 text-center text-[13px] text-slate-500">
+                    <p class="mt-5 border-t border-slate-100 pt-5 text-center text-[13px] text-slate-500">
                         New to RealtyEmails?
                         <a href="/" class="font-semibold text-brand-blue hover:underline">Start with a free flyer</a>
                     </p>

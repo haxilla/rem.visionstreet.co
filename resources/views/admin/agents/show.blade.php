@@ -610,9 +610,31 @@
 
                     @if($resetAvailable && !$resetDone)
                         <p class="rounded-lg bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-700">
-                            This agent hasn't created a new password on this site. At their next sign-in they aren't
-                            let in - they're emailed a one-time link to set one. You can send that link now.
+                            This agent hasn't created a password on this site. Their old password can't be used - they
+                            create one from the "Create your password" link on the login page, or you can send them the
+                            link now.
                         </p>
+                    @endif
+
+                    @if(($sameEmailAccounts ?? collect())->isNotEmpty())
+                        <div class="rounded-lg bg-slate-50 px-3 py-2 text-xs text-slate-600">
+                            <p class="font-semibold text-slate-700">
+                                {{ $sameEmailAccounts->count() }} other {{ \Illuminate\Support\Str::plural('account', $sameEmailAccounts->count()) }}
+                                use this same login email.
+                            </p>
+                            <p class="mt-0.5">
+                                They get one password together, and the agent picks which account to open at sign-in.
+                            </p>
+                            <ul class="mt-1.5 space-y-0.5">
+                                @foreach($sameEmailAccounts as $other)
+                                    <li>
+                                        <a href="{{ route('admin.agentView', $other->id) }}" class="font-semibold text-blue-700 hover:underline">
+                                            #{{ $other->id }} {{ $other->agtFullName ?: 'No name' }}
+                                        </a>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
                     @endif
 
                     @unless($resetAvailable)

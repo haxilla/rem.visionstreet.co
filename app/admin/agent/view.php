@@ -17,3 +17,9 @@ $campaignCount    = $allCampaigns->where('status', 'completed')->count();
 $campaignsInQueue = $allCampaigns->count() - $campaignCount;   // requested or in progress, not finished
 
 $orders = DB::table('allorders')->where('propagent_id', $id)->orderByDesc('payment_date')->get();
+
+// Other accounts that use the same login email (the same email was registered more than
+// once). They get their password together and pick an account at sign-in.
+$sameEmailAccounts = \App\Support\AgentPasswords::accountsForEmail($agent->xxAgtUname)
+    ->where('id', '!=', $agent->id)
+    ->values();

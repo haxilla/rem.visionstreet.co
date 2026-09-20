@@ -6,6 +6,7 @@ use App\Mail\AgentPasswordResetMail;
 use App\Models\Core\AgentPasswordReset;
 use App\Models\Core\Propagent;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -37,6 +38,47 @@ class AgentPasswords
     public static function columnAvailable($agent): bool
     {
         return array_key_exists('passwordResetAt', $agent->getAttributes());
+    }
+
+    /**
+     * Every account that uses this login email. Some agents have several (the same
+     * email was registered more than once over the years). The email - i.e. the
+     * mailbox - is what proves who they are, so one password is set for all of an
+     * email's accounts together, and at sign-in they pick which account to open.
+     * (MySQL compares the email case-insensitively, so "Bob@x.com" = "bob@x.com".)
+     */
+    public static function accountsForEmail(?string $email): Collection
+    {
+        $email = trim((string) $email);
+
+        return $email === '' ? collect() : Propagent::where('xxAgtUname', $email)->orderBy('id')->get();
+    }
+
+    /** Is this account blocked from signing in? */
+    public static function isBlocked($agent): bool
+    {
+        return (int) ($agent->loginBlocked ?? 0) === 1;
+    }
+
+    /**
+     * Does this typed password open this account? OLD-SYSTEM PASSWORDS ARE NEVER
+     * ACCEPTED: an account that hasn't set a password on this site (passwordResetAt
+     * empty) can't sign in whatever is stored for it, so a leaked old password is
+     * worth nothing here. Only the emailed link (proof of the mailbox) gets an
+     * agent from "old site" to "has a password".
+     */
+    public static function passwordOpens($agent, string $typed): bool
+    {
+        if (static::resetRequired($agent) || blank($agent->password)) {
+            return false;
+        }
+
+        try {
+            return Hash::check($typed, $agent->password);
+        } catch (\Throwable $e) {
+            // a stored value that isn't a valid hash simply doesn't match
+            return false;
+        }
     }
 
     /** Must this agent set a new password before they can sign in? */

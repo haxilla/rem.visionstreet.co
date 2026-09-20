@@ -1,10 +1,12 @@
 @extends('member.password.layout')
-@section('title', 'Forgot password')
+@section('title', 'Create your password')
 
 @section('content')
-    <h1 class="font-display text-[32px] font-bold leading-none tracking-tight text-brand-bluedark">Forgot your password?</h1>
+    <h1 class="font-display text-[32px] font-bold leading-none tracking-tight text-brand-bluedark">Create your password</h1>
     <p class="mt-3 text-[14px] leading-relaxed text-slate-500">
-        Enter the email you sign in with and we'll email you a link to create a new one.
+        Enter the email you use with RealtyEmails and we'll email you a link to set a password.
+        This is for agents on our new site for the first time, and for anyone who forgot their password.
+        Passwords from the old site can't be used.
     </p>
 
     <form method="POST" action="{{ route('member.password.forgot.send') }}" class="mt-6 space-y-5">
