@@ -75,35 +75,46 @@ data-flyerbackground="{{$propInfo->theStyle
                </div>
             </td>
          </tr>
-         <tr>
-           <td colspan="2" style="padding:0;margin:0;">
-             <div style="
-             background:#{{$propInfo->theStyle->headline_bar_bg}};
-             color:#{{$propInfo->theStyle->headline_bar_text}};
-             padding:7px;
-             text-align:center;
-             font-size:13pt;
-             font-weight:bold;
-             max-height:65px;
-             overflow:hidden;
-             @if($propInfo->theStyle->headline_bar_bg=='ffffff'
-             || $propInfo->theStyle->headline_bar_bg=='eeeeee'
-             || $propInfo->theStyle->headline_bar_bg=='ffffcc')
-                border-left:1px solid #ebebeb;
-                border-right:1px solid #ebebeb;
-             @endif
-             position:relative;"
-             class="xHeadline clickable
-             headline_bar_bg headline_bar_text"
-             data-headlinebarbg="{{$propInfo->theStyle->headline_bar_bg}}"
-             data-headlinebartext="{{$propInfo->theStyle->headline_bar_text}}"
-             @if($display=='screen') data-modal-trigger="headlinetext" @endif>
-                <div>
-                   {!! $theHeadline!!}
-                </div>
-             </div>
-           </td>
-         </tr>
+          <tr>
+            {{-- THE HEADLINE BAR. The coloured cell IS the bar: padding sits on a table cell
+                 (Outlook ignores padding on a div), so the text has the same 14px all the way
+                 round and the bar grows to fit however long the headline is (up to 255
+                 characters are allowed).
+
+                 It used to be a div with max-height:65px + overflow:hidden. A headline of 3+
+                 lines spilled into the bottom padding and was sliced off at the box's edge -
+                 and email programs that ignore max-height showed the whole thing, so screen and
+                 email didn't match. Nothing here can behave differently between them: inline
+                 styles, a bgcolor attribute, an explicit px line-height (mso-line-height-rule so
+                 Outlook obeys it), and no max-height / overflow / position.
+
+                 The classes and data- attributes stay ON THIS CELL: colorswatch.js and the
+                 Design step find the bar through .headline_bar_bg / .headline_bar_text. --}}
+            <td colspan="2"
+                align="center"
+                bgcolor="#{{$propInfo->theStyle->headline_bar_bg}}"
+                class="xHeadline clickable headline_bar_bg headline_bar_text"
+                data-headlinebarbg="{{$propInfo->theStyle->headline_bar_bg}}"
+                data-headlinebartext="{{$propInfo->theStyle->headline_bar_text}}"
+                @if($display=='screen') data-modal-trigger="headlinetext" @endif
+                style="background:#{{$propInfo->theStyle->headline_bar_bg}};
+                color:#{{$propInfo->theStyle->headline_bar_text}};
+                padding:14px;
+                margin:0;
+                text-align:center;
+                font-family:arial,helvetica,sans-serif;
+                font-size:13pt;
+                font-weight:bold;
+                line-height:22px;
+                mso-line-height-rule:exactly;
+                word-wrap:break-word;
+                @if($propInfo->theStyle->headline_bar_bg=='ffffff'
+                || $propInfo->theStyle->headline_bar_bg=='eeeeee'
+                || $propInfo->theStyle->headline_bar_bg=='ffffcc')
+                   border-left:1px solid #ebebeb;
+                   border-right:1px solid #ebebeb;
+                @endif">{!! $theHeadline !!}</td>
+          </tr>
       </table>
       <!-- bottom frame table -->
       <table style="width:100%;border:1px solid #ebebeb;
