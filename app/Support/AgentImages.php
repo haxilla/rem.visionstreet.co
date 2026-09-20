@@ -57,7 +57,22 @@ class AgentImages
             return ['file' => $file, 'url' => asset("agentPhotos/{$oldFolder}/{$file}"), 'found' => true, 'legacy' => true];
         }
 
+        // The old system's stand-in photo. Its name is stored on many agents, but the file itself was never
+        // in their folders - one shared silhouette (public/images/agentsample.gif) covers all of them.
+        if (self::isPlaceholderName($file)) {
+            return ['file' => $file, 'url' => asset('images/' . self::PLACEHOLDER), 'found' => true, 'legacy' => false, 'placeholder' => true];
+        }
+
         return ['file' => $file, 'url' => null, 'found' => false, 'legacy' => false];
+    }
+
+    /** The file name the old system stored for "no photo yet". */
+    public const PLACEHOLDER = 'agentsample.gif';
+
+    /** Whether this stored photo name is the stand-in AND the shared silhouette is on the server. */
+    public static function isPlaceholderName(string $file): bool
+    {
+        return strtolower($file) === self::PLACEHOLDER && is_file(public_path('images/' . self::PLACEHOLDER));
     }
 
     /** @return array{file:?string, url:?string, found:bool, legacy:bool} */

@@ -5,6 +5,9 @@ if (!empty($agentInfo->agtPhoto)) {
     $agentPhotoPath = public_path("agentPhotos/{$agentInfo->photoToken()}/{$agentInfo->agtPhoto}");
     if (file_exists($agentPhotoPath)) {
         $agentImg = "{$fromURL}/agentPhotos/{$agentInfo->photoToken()}/{$agentInfo->agtPhoto}";
+    } elseif (\App\Support\AgentImages::isPlaceholderName(basename((string) $agentInfo->agtPhoto))) {
+        // the old system's stand-in ("agentsample.gif"): one shared silhouette, sized for this banner (4:5)
+        $agentImg = "{$fromURL}/images/" . \App\Support\AgentImages::PLACEHOLDER;
     }
 }
 $officeLogo="{$fromURL}/officeLogos/{$officeInfo->officeID}/{$agentInfo->agtLogo}";
