@@ -33,8 +33,17 @@ if ($request->hasFile('agtPhotoFile')) {
         @unlink("{$dir}/{$agent->agtPhoto}");
     }
 
-    $filename = $agent->id . 'agtphoto-' . strtoupper(bin2hex(random_bytes(16))) . '.' . $file->extension();
-    $file->move($dir, $filename);
+    // Shrink and re-encode first: the flyer is emailed, so every recipient
+    // downloads this image (see App\Support\ImageOptimizer).
+    try {
+        [$bytes, $extension] = \App\Support\ImageOptimizer::optimize($file->getRealPath(), \App\Support\ImageOptimizer::PHOTO_BOX, false);
+    } catch (\RuntimeException $e) {
+        throw \Illuminate\Validation\ValidationException::withMessages(['agtPhotoFile' => $e->getMessage()]);
+    }
+
+    $filename = $agent->id . 'agtphoto-' . strtoupper(bin2hex(random_bytes(16))) . '.' . $extension;
+    file_put_contents("{$dir}/{$filename}", $bytes);
+    @chmod("{$dir}/{$filename}", 0644);
     $agent->agtPhoto = $filename;
 }
 
@@ -61,8 +70,15 @@ if ($office && $request->hasFile('agtLogoFile')) {
         @unlink("{$dir}/{$agent->agtLogo}");
     }
 
-    $filename = $agent->id . 'agtlogo-' . strtoupper(bin2hex(random_bytes(16))) . '.' . $file->extension();
-    $file->move($dir, $filename);
+    try {
+        [$bytes, $extension] = \App\Support\ImageOptimizer::optimize($file->getRealPath(), \App\Support\ImageOptimizer::LOGO_BOX, true);
+    } catch (\RuntimeException $e) {
+        throw \Illuminate\Validation\ValidationException::withMessages(['agtLogoFile' => $e->getMessage()]);
+    }
+
+    $filename = $agent->id . 'agtlogo-' . strtoupper(bin2hex(random_bytes(16))) . '.' . $extension;
+    file_put_contents("{$dir}/{$filename}", $bytes);
+    @chmod("{$dir}/{$filename}", 0644);
     $agent->agtLogo = $filename;
 }
 

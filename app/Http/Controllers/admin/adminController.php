@@ -9,6 +9,7 @@ use App\Models\Core\Propdelivnow;
 use App\Models\Core\Propflyer;
 use App\Support\AgentImages;
 use App\Support\AgentTime;
+use App\Support\ImageOptimizer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -137,7 +138,7 @@ class adminController extends Controller
     {
         $agent = Propagent::with('theAgtOffice')->findOrFail($id);
 
-        [$column, $prefix, $label, $dir] = $this->imageSpec($agent, $kind);
+        [$column, $prefix, $label, $dir, $box] = $this->imageSpec($agent, $kind);
 
         if ($dir === null) {
             return redirect()->route('admin.agentView', $agent->id)->withErrors([
@@ -161,9 +162,24 @@ class adminController extends Controller
 
         $previous = basename((string) $agent->{$column});
         $file     = $request->file('image');
-        $filename = $agent->id . $prefix . '-' . strtoupper(bin2hex(random_bytes(16))) . '.' . $file->extension();
+        $original = (int) $file->getSize();
 
-        $file->move($dir, $filename);
+        // Shrink and re-encode before storing: the flyer is emailed, so every
+        // recipient downloads this image (see App\Support\ImageOptimizer).
+        try {
+            [$bytes, $extension] = ImageOptimizer::optimize($file->getRealPath(), $box, $kind === 'logo');
+        } catch (\RuntimeException $e) {
+            return redirect()->route('admin.agentView', $agent->id)->withErrors(['image' => $e->getMessage()]);
+        }
+
+        $filename = $agent->id . $prefix . '-' . strtoupper(bin2hex(random_bytes(16))) . '.' . $extension;
+
+        if (@file_put_contents("{$dir}/{$filename}", $bytes) === false) {
+            return redirect()->route('admin.agentView', $agent->id)
+                ->withErrors(['image' => "The {$label} couldn't be saved - the server folder isn't writable."]);
+        }
+
+        @chmod("{$dir}/{$filename}", 0644);
 
         // remove the old file - only from this same folder (an older copy in a
         // legacy folder is left alone)
@@ -179,8 +195,11 @@ class adminController extends Controller
 
         $name = $agent->agtFullName ?: ($agent->xxAgtUname ?: 'this agent');
 
-        return redirect()->route('admin.agentView', $agent->id)
-            ->with('status', ($previous !== '' ? 'Changed' : 'Added') . " the {$label} for {$name}.");
+        return redirect()->route('admin.agentView', $agent->id)->with(
+            'status',
+            ($previous !== '' ? 'Changed' : 'Added') . " the {$label} for {$name}"
+                . ' (' . ImageOptimizer::humanSize($original) . ' → ' . ImageOptimizer::humanSize(strlen($bytes)) . ').'
+        );
     }
 
     /** Clear an agent's photo or logo: forget the file name and delete the file. */
@@ -209,12 +228,12 @@ class adminController extends Controller
             ->with('status', ucfirst($label) . " cleared for {$name}.");
     }
 
-    /** [database column, file-name prefix, label, folder on disk (null = none possible)] */
+    /** [database column, file-name prefix, label, folder on disk (null = none possible), max size box] */
     private function imageSpec(Propagent $agent, string $kind): array
     {
         return $kind === 'photo'
-            ? ['agtPhoto', 'agtphoto', 'photo', AgentImages::photoDir($agent)]
-            : ['agtLogo',  'agtlogo',  'logo',  AgentImages::logoDir($agent)];
+            ? ['agtPhoto', 'agtphoto', 'photo', AgentImages::photoDir($agent), ImageOptimizer::PHOTO_BOX]
+            : ['agtLogo',  'agtlogo',  'logo',  AgentImages::logoDir($agent),  ImageOptimizer::LOGO_BOX];
     }
 
     /**

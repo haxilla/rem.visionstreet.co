@@ -95,8 +95,10 @@ font-family:arial;@if($display=='screen') cursor:pointer;@endif"
       <div>
         <div>
           @if($agentInfo->agtLogo)
+          {{-- capped to its cell, so an oversized logo can't stretch the flyer --}}
           <img
-              src="{{ $officeLogo }}">
+              src="{{ $officeLogo }}"
+              style="max-width:100%;height:auto;">
           @endif
         </div>
       </div>

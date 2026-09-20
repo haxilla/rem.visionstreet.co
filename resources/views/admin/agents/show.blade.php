@@ -208,6 +208,7 @@
                     <h2 class="text-base font-semibold text-slate-900 sm:text-lg">Photo &amp; Logo</h2>
                     <p class="mt-0.5 text-sm text-slate-500">
                         Shown on this agent's flyers. Choose a file to add or change one (JPG, PNG, GIF or WebP, up to 5 MB).
+                        Images are resized and compressed automatically.
                     </p>
                 </div>
 
