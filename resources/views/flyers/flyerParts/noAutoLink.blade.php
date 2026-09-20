@@ -5,11 +5,14 @@
      What does stop it: text that is ALREADY inside a link isn't linked a second time. So in an
      email ($display == 'email') the text goes in a link to the flyer's own page, styled to
      look like plain text - the header's text colour ($color, else inherited) and no underline.
-     On screen, and when the flyer has no url_slug yet, the text prints exactly as before.
+     The link goes to the flyer's own page when it has a url_slug, else to the site (a slug is
+     only set by the one-off backfill script, so newer flyers often have none - the wrapper must
+     not depend on one). On screen the text prints exactly as before.
      Needs $text; optional $color (e.g. '#ffffff'); reads $display, $fromURL and $propInfo
      from the template that includes it. --}}
 @php
     $__t    = trim(preg_replace('/\s+/', ' ', (string) ($text ?? '')));
     $__slug = $propInfo->url_slug ?? null;
+    $__href = ($fromURL ?? '') . ($__slug ? '/homedetails/' . $__slug : '');
 @endphp
-@if(($display ?? 'screen') === 'email' && $__t !== '' && $__slug)<a href="{{ $fromURL ?? '' }}/homedetails/{{ $__slug }}" target="_blank" style="color:{{ $color ?? 'inherit' }};text-decoration:none;font-weight:inherit;">{{ $__t }}</a>@else{{ $__t }}@endif
+@if(($display ?? 'screen') === 'email' && $__t !== '')<a href="{{ $__href }}" target="_blank" style="color:{{ $color ?? 'inherit' }};text-decoration:none;font-weight:inherit;">{{ $__t }}</a>@else{{ $__t }}@endif
