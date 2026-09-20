@@ -451,11 +451,23 @@ if ($propInfo->created_at) {
                 <span class="text-sm font-medium text-blue-100">{{ number_format($completedCampaigns->sum('totalEmails')) }} emails sent</span>
             </div>
 
-            <div class="space-y-3 bg-slate-100 p-3 sm:p-4">
+            <div class="done-list">
+            {{-- column headings (wide screens only), then one slim row per completed campaign --}}
+            @if($completedCampaigns->isNotEmpty())
+                <div class="done-row done-head border-b border-slate-200 bg-slate-50 text-[11px] font-bold uppercase tracking-wide text-slate-500">
+                    <span class="done-id">ID</span>
+                    <span class="done-area">Area</span>
+                    <span class="done-subject">Subject</span>
+                    <span class="done-src">By</span>
+                    <span class="done-date">Completed</span>
+                    <span class="done-toggle"></span>
+                </div>
+            @endif
+
+            <div class="divide-y divide-slate-200">
 
                 @forelse($completedCampaigns as $camp)
-                    @include('admin.flyer.campRow', [
-                        'stage'      => 'complete',
+                    @include('admin.flyer.campDone', [
                         'area'       => $areaName($camp['emArea']),
                         'adminAdded' => $camp['admin_added'] ?? false,
                         'subject'    => $camp['emSubject'],
@@ -466,10 +478,11 @@ if ($propInfo->created_at) {
                         'completed'  => $camp['emComplete'],
                     ])
                 @empty
-                    <div class="rounded-xl bg-white px-5 py-8 text-center text-sm text-slate-500 ring-1 ring-slate-200">No completed campaigns found.</div>
+                    <div class="px-5 py-8 text-center text-sm text-slate-500">No completed campaigns found.</div>
                 @endforelse
 
             </div>
+            </div>{{-- /done-list --}}
 
         </div>
 
@@ -496,6 +509,31 @@ if ($propInfo->created_at) {
 
 .flyer-panel.active{
     display:block;
+}
+
+/* The completed-campaigns rows (admin/flyer/campDone), as PLAIN CSS so where things sit
+   doesn't depend on a stylesheet rebuild. Narrow: id, area, by and date on the first
+   line, the subject on its own line under them. Wide: one line - ID | Area | Subject
+   (takes the rest, cut off with "…") | By | Completed | the details button. */
+.done-list    { container-type:inline-size; }
+.done-row     { display:flex; flex-wrap:wrap; align-items:center; gap:.25rem .75rem; padding:.6rem 1rem; }
+.done-id      { flex:none; width:3.75rem; }
+.done-area    { flex:none; max-width:9rem; }
+.done-subject { flex:1 1 100%; order:9; min-width:0; }
+.done-src     { flex:none; }
+.done-date    { flex:none; margin-left:auto; }
+.done-toggle  { flex:none; width:1.75rem; }
+.done-head    { display:none; }
+
+/* "wide" is judged by the width of the LIST (the left column, which is narrow whenever the
+   flyer sits beside it), not the window */
+@container (min-width: 600px) {
+    .done-row     { flex-wrap:nowrap; }
+    .done-area    { width:9rem; max-width:none; }
+    .done-subject { flex:1 1 0; order:0; }
+    .done-src     { width:4.5rem; }
+    .done-date    { width:6.75rem; margin-left:0; text-align:right; }
+    .done-head    { display:flex; }
 }
 </style>
 
@@ -525,6 +563,27 @@ document.addEventListener('DOMContentLoaded', () => {
         wrapper.style.height =
             (activeFlyer.offsetHeight * scale) + 'px';
     }
+
+    // The button at the right of a completed-campaign row opens / closes its details.
+    document.addEventListener('click', function (event) {
+        const button = event.target.closest('[data-row-toggle]');
+
+        if (!button) return;
+
+        const card = button.closest('[data-row-card]');
+        const panel = card ? card.querySelector('[data-row-panel]') : null;
+
+        if (!panel) return;
+
+        const opening = panel.hidden;
+
+        panel.hidden = !opening;
+        button.setAttribute('aria-expanded', opening ? 'true' : 'false');
+
+        const chevron = button.querySelector('[data-row-chevron]');
+
+        if (chevron) chevron.style.transform = opening ? 'rotate(180deg)' : '';
+    });
 
     scaleFlyer();
     window.addEventListener('resize', scaleFlyer);
