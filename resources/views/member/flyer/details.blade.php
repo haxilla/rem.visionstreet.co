@@ -409,7 +409,16 @@
                 <div id="flyer-scale-wrapper">
 
                     <div id="flyer-live">
-                        @include('member.flyer.previewPane', ['propInfo' => $propInfo])
+                        {{-- The preview is a bonus: if it can't be drawn for any reason, the
+                             form beside it must still load and save. --}}
+                        @php
+                            try {
+                                echo view('member.flyer.previewPane', ['propInfo' => $propInfo])->render();
+                            } catch (\Throwable $e) {
+                                report($e);
+                                echo '<div style="padding:24px;text-align:center;color:#64748b;font:14px/1.4 sans-serif;">The flyer preview isn\'t available right now.</div>';
+                            }
+                        @endphp
                     </div>
 
                 </div>

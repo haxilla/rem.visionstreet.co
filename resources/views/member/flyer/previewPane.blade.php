@@ -6,6 +6,18 @@
     $propInfo carrying the agent's UNSAVED form values.
 --}}
 @php
+    // A flyer that has never had Details saved has NO remarks / map record yet (they
+    // are created on the first save), and the flyer templates read them unconditionally
+    // (countBullets.php: "array offset on null"). Use empty, unsaved stand-ins so a brand
+    // new flyer draws as a flyer with no highlights yet. Nothing here is ever saved.
+    if (!$propInfo->theRemarks) {
+        $propInfo->setRelation('theRemarks', new \App\Models\Core\Propremark());
+    }
+
+    if (!$propInfo->theMap) {
+        $propInfo->setRelation('theMap', new \App\Models\Core\Propmapping());
+    }
+
     include(app_path() . '/flyers/variables.php');
 
     $previewTemplateView = 'flyers.s' . strtolower($propInfo->theStyle?->template ?: '1pc');
