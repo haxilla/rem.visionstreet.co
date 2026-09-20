@@ -34,13 +34,54 @@ class AgentProfile
         'agtWebsite'   => ['Website',         'text',  255],
     ];
 
-    /** Licence details: column => label (all up to 100 characters). */
+    /**
+     * Licence details: column => label (all up to 100 characters). agtBoard holds the agent's MLS - the
+     * Multiple Listing Service they belong to (ARMLS is the Arizona Regional Multiple Listing Service) -
+     * not a "board"; the column keeps its old name, the label is "MLS". agtMlsID is their ID within it.
+     */
     public const LICENSE = [
         'agtMlsID'  => 'MLS ID',
-        'agtBoard'  => 'Board',
+        'agtBoard'  => 'MLS',
         'agtDesigs' => 'Designations',
         'agtCounty' => 'County',
     ];
+
+    /** The MLSs an agent can choose (stored value => what the dropdown shows). Only ARMLS for now; add more here. */
+    public const MLS_OPTIONS = [
+        'ARMLS' => 'ARMLS (Arizona Regional Multiple Listing Service)',
+    ];
+
+    /** "armls" / "Armls" -> "ARMLS": a choice matched without regard to case gives its stored form; anything else comes back trimmed as it is. */
+    public static function canonicalMls(?string $value): string
+    {
+        $value = trim((string) $value);
+
+        foreach (array_keys(self::MLS_OPTIONS) as $option) {
+            if (strcasecmp($value, $option) === 0) {
+                return $option;
+            }
+        }
+
+        return $value;
+    }
+
+    /**
+     * The options for the MLS dropdown: the list above, plus - first - the agent's own saved value when it is
+     * something else (typed freely in the old system), so opening the form and saving never wipes it.
+     *
+     * @return array<string,string> stored value => label
+     */
+    public static function mlsChoices(?string $saved): array
+    {
+        $choices = self::MLS_OPTIONS;
+        $saved   = self::canonicalMls($saved);
+
+        if ($saved !== '' && !isset($choices[$saved])) {
+            $choices = [$saved => $saved . ' (current value)'] + $choices;
+        }
+
+        return $choices;
+    }
 
     /** Office record columns. */
     public const OFFICE = ['officeName', 'officeAddress1', 'officeCity', 'officeState', 'officeZip'];
@@ -56,9 +97,23 @@ class AgentProfile
         return $rules;
     }
 
-    public static function licenseRules(): array
+    /** @param Propagent|null $agent the agent being edited (the value they already have saved is always accepted, even if it isn't in the MLS list) */
+    public static function licenseRules(?Propagent $agent = null): array
     {
-        return array_map(fn () => ['nullable', 'string', 'max:100'], self::LICENSE);
+        $rules = array_map(fn () => ['nullable', 'string', 'max:100'], self::LICENSE);
+
+        // the MLS is a choice, not free text
+        $saved = self::canonicalMls($agent->agtBoard ?? null);
+
+        $rules['agtBoard'] = ['nullable', 'string', 'max:100', function ($attribute, $value, $fail) use ($saved) {
+            $value = self::canonicalMls($value);
+
+            if ($value !== '' && !isset(self::MLS_OPTIONS[$value]) && $value !== $saved) {
+                $fail('Choose an MLS from the list.');
+            }
+        }];
+
+        return $rules;
     }
 
     /** @param Agtoffice|null $office the agent's current office record (its saved state is always accepted) */
@@ -124,6 +179,11 @@ class AgentProfile
 
         $officeData  = array_intersect_key($data, array_flip(self::OFFICE));
         $licenseData = array_intersect_key($data, self::LICENSE);
+
+        // "armls" is saved as "ARMLS"
+        if (isset($licenseData['agtBoard'])) {
+            $licenseData['agtBoard'] = self::canonicalMls($licenseData['agtBoard']);
+        }
 
         AgentTime::apply($agent);
 

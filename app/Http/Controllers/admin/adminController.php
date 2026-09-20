@@ -213,7 +213,7 @@ class adminController extends Controller
     {
         $agent = Propagent::with('theAgtOffice')->findOrFail($id);
 
-        $data = $request->validate(AgentProfile::officeRules($agent->theAgtOffice) + AgentProfile::licenseRules());
+        $data = $request->validate(AgentProfile::officeRules($agent->theAgtOffice) + AgentProfile::licenseRules($agent));
 
         try {
             AgentProfile::saveOffice($agent, $data);

@@ -306,7 +306,7 @@
                 </span>
                 <div>
                     <h2>License</h2>
-                    <p>Your MLS and association details.</p>
+                    <p>Your MLS details.</p>
                 </div>
             </header>
 
@@ -318,9 +318,15 @@
                                value="{{ old('agtMlsID', $agent->agtMlsID) }}">
                     </div>
                     <div class="ai-field">
-                        <label for="agtBoard">Board</label>
-                        <input type="text" id="agtBoard" name="agtBoard" maxlength="100"
-                               value="{{ old('agtBoard', $agent->agtBoard) }}">
+                        <label for="agtBoard">MLS</label>
+                        {{-- a choice, not free text; a value saved by the old system that isn't in the list stays selectable --}}
+                        @php $mlsNow = \App\Support\AgentProfile::canonicalMls(old('agtBoard', $agent->agtBoard)); @endphp
+                        <select id="agtBoard" name="agtBoard">
+                            <option value="">Select your MLS</option>
+                            @foreach(\App\Support\AgentProfile::mlsChoices($agent->agtBoard) as $mlsValue => $mlsText)
+                                <option value="{{ $mlsValue }}" @selected($mlsNow === $mlsValue)>{{ $mlsText }}</option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
             </div>

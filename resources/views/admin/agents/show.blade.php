@@ -62,7 +62,7 @@
 
     $licenseFields = [
         ['agtMlsID',    'MLS ID'],
-        ['agtBoard',    'Board'],
+        ['agtBoard',    'MLS'],
         ['agtDesigs',   'Designations'],
     ];
 
@@ -468,8 +468,21 @@
                         @foreach($licenseFields as [$field, $fieldLabel])
                             <div class="{{ $row }}">
                                 <label for="f_{{ $field }}" class="{{ $label }}">{{ $fieldLabel }}</label>
-                                <input type="text" id="f_{{ $field }}" name="{{ $field }}" maxlength="100" autocomplete="off"
-                                       value="{{ old($field, $agent->{$field}) }}" class="{{ $input }}">
+
+                                @if($field === 'agtBoard')
+                                    {{-- the MLS (Multiple Listing Service) is a choice, not free text; a value the old system
+                                         saved that isn't in the list stays selectable so it is never lost --}}
+                                    @php $mlsNow = \App\Support\AgentProfile::canonicalMls(old($field, $agent->agtBoard)); @endphp
+                                    <select id="f_{{ $field }}" name="{{ $field }}" class="{{ $input }}">
+                                        <option value="">Select an MLS</option>
+                                        @foreach(\App\Support\AgentProfile::mlsChoices($agent->agtBoard) as $mlsValue => $mlsText)
+                                            <option value="{{ $mlsValue }}" @selected($mlsNow === $mlsValue)>{{ $mlsText }}</option>
+                                        @endforeach
+                                    </select>
+                                @else
+                                    <input type="text" id="f_{{ $field }}" name="{{ $field }}" maxlength="100" autocomplete="off"
+                                           value="{{ old($field, $agent->{$field}) }}" class="{{ $input }}">
+                                @endif
                             </div>
                         @endforeach
 
