@@ -17,6 +17,7 @@
     // which list is showing (each has its own page parameter)
     $currentTab = match (true) {
         // the tab only exists while some login email still has more than one account
+        request()->has('duplicateNames')       => 'duplicateNames',
         request()->has('duplicates') && $hasDuplicates => 'duplicates',
         request()->has('nologo_page')          => 'nologo',
         request()->has('nophoto_page')         => 'nophoto',
@@ -115,6 +116,10 @@
     if ($hasDuplicates) {
         $tabs[] = ['key' => 'duplicates', 'label' => 'Duplicate Logins', 'query' => '?duplicates=1', 'count' => $data['dupCount'] ?? 0, 'warn' => true];
     }
+
+    // Always there: names can be shared by different people, so this tab never empties. It needs a scan
+    // of every agent, so its count only shows once it has been opened.
+    $tabs[] = ['key' => 'duplicateNames', 'label' => 'Duplicate Names', 'query' => '?duplicateNames=1', 'count' => $data['nameDupCount'] ?? null, 'warn' => true];
 @endphp
 
 {{-- MAIN --}}
@@ -169,7 +174,9 @@
                        class="ag-tab {{ $currentTab === $tab['key'] ? 'is-on' : '' }} {{ !empty($tab['warn']) ? 'is-warn' : '' }}"
                        @if($currentTab === $tab['key']) aria-current="page" @endif>
                         {{ $tab['label'] }}
-                        <span class="ag-count">{{ number_format($tab['count']) }}</span>
+                        @if(($tab['count'] ?? null) !== null)
+                            <span class="ag-count">{{ number_format($tab['count']) }}</span>
+                        @endif
                     </a>
                 @endforeach
             </nav>
@@ -390,6 +397,15 @@
                         'emptyText'     => 'Every agent with a start date has a logo.',
                         'showStartDate' => true,
                         'showCredits'   => true,
+                    ])
+
+                @elseif($currentTab === 'duplicateNames')
+
+                    @include('admin.agents.duplicateNames', [
+                        'groups'        => $data['nameDupGroups'] ?? collect(),
+                        'total'         => $data['nameDupCount'] ?? 0,
+                        'likely'        => $data['nameDupLikely'] ?? 0,
+                        'confirmDelete' => $confirmDelete,
                     ])
 
                 @elseif($currentTab === 'duplicates')

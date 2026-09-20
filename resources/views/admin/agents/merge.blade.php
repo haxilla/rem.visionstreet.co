@@ -21,6 +21,13 @@
     $mdy = fn ($d) => $d ? \Carbon\Carbon::parse($d)->format('m/d/Y') : '—';
     $email = $agent->xxAgtUname;
     $card  = 'rounded-[24px] bg-white shadow-[0_12px_35px_rgba(15,23,42,0.06)]';
+
+    // ?by=name: the accounts share a NAME, not a login email - which can be two different people, so
+    // the page shows what tells them apart and every action needs a "same person" tick
+    $byName  = $byName ?? false;
+    $backUrl = $byName
+        ? '/admin/agents?duplicateNames=1' . (!empty($nameKey) ? '#' . \App\Support\AgentNameDuplicates::anchor($nameKey) : '')
+        : '/admin/agents?duplicates=1#' . \App\Support\AgentPasswords::groupAnchor($email);
 @endphp
 
 <main class="min-h-screen bg-[#f4f7fb] pt-24">
@@ -32,9 +39,21 @@
 
         <h1 class="mt-2 text-2xl font-semibold text-slate-900 sm:text-[30px]">Merge duplicate accounts</h1>
 
-        <p class="mt-2 break-all text-sm text-slate-600">
-            Accounts using <span class="font-semibold text-slate-900">{{ $email }}</span>
-        </p>
+        @if($byName)
+            <p class="mt-2 text-sm text-slate-600">
+                Accounts named <span class="font-semibold text-slate-900">{{ $agent->agtFullName ?: trim(($agent->agtFirst ?? '') . ' ' . ($agent->agtLast ?? '')) }}</span>
+            </p>
+
+            <div class="mt-3 max-w-3xl rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+                These accounts share a <strong>name</strong>, not a login. They may be one person with two accounts, or two
+                different people who happen to have the same name. Check the emails, phone numbers and offices below before
+                moving anything. An account's login stays with that account, so the agent signs in with the one you keep.
+            </div>
+        @else
+            <p class="mt-2 break-all text-sm text-slate-600">
+                Accounts using <span class="font-semibold text-slate-900">{{ $email }}</span>
+            </p>
+        @endif
 
         <p class="mt-2 max-w-3xl text-sm text-slate-500">
             Tick the flyers to move and choose the account that should receive them. Each flyer's photos, style,
@@ -43,8 +62,8 @@
         </p>
 
         <div class="mt-4 flex flex-wrap gap-2">
-            <a href="/admin/agents?duplicates=1#{{ \App\Support\AgentPasswords::groupAnchor($email) }}" class="rounded-lg border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-100">
-                Back to Duplicate Logins
+            <a href="{{ $backUrl }}" class="rounded-lg border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-100">
+                {{ $byName ? 'Back to Duplicate Names' : 'Back to Duplicate Logins' }}
             </a>
         </div>
     </div>
@@ -65,6 +84,11 @@
 
     <form method="POST" action="{{ route('admin.agentMergeSave', $agent->id) }}" id="mergeForm" class="mt-6 space-y-6">
         @csrf
+
+        {{-- every button on this page (move, backdate, move records, delete) works on the same group --}}
+        @if($byName)
+            <input type="hidden" name="by" value="name">
+        @endif
 
         {{-- DESTINATION --}}
         <div class="{{ $card }} px-5 py-5 sm:px-8">
@@ -90,6 +114,19 @@
 
                 <span id="selectedCount" class="text-sm text-slate-500">0 flyers ticked</span>
             </div>
+
+            {{-- by name: two accounts of one name can be two people. Nothing on this page acts without this tick
+                 (and the server refuses without it, too). --}}
+            @if($byName)
+                <label class="mt-4 flex max-w-3xl items-start gap-3 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-800">
+                    <input type="checkbox" name="confirm_same_person" value="1" id="confirmSamePerson"
+                           class="mt-0.5 h-5 w-5 shrink-0 rounded border-slate-300" @checked(old('confirm_same_person'))>
+                    <span>
+                        <span class="font-semibold">I have checked that these accounts belong to the same person.</span>
+                        <span class="text-slate-500">Required before moving flyers, moving records, backdating a start date or deleting an account.</span>
+                    </span>
+                </label>
+            @endif
 
             {{-- A newer duplicate that is kept has to carry the ORIGINAL account's start date. The date is
                  worked out on the server from the accounts themselves; it only ever moves earlier. --}}
@@ -128,6 +165,18 @@
                             &middot; {{ $acct['credits'] }} credits
                             &middot; start {{ $mdy($acct['start']) }}
                         </p>
+
+                        {{-- what tells two people of one name apart --}}
+                        @if($byName)
+                            <p class="mt-1 break-all text-sm text-slate-600">
+                                <span class="text-slate-400">Login</span> {{ $acct['login'] ?: '—' }}
+                                &middot; <span class="text-slate-400">Email</span> {{ $acct['email'] ?: '—' }}
+                                &middot; <span class="text-slate-400">Phone</span> {{ $acct['phone'] ?: '—' }}
+                                @if($acct['place'] !== '')
+                                    &middot; <span class="text-slate-400">Location</span> {{ $acct['place'] }}
+                                @endif
+                            </p>
+                        @endif
                     </div>
 
                     {{-- Delete only shows once the account has no flyers left (deleted ones count) --}}
@@ -313,6 +362,16 @@
     });
 
     form.addEventListener('submit', function (e) {
+        // by name: no button on this page does anything until "same person" is ticked
+        var samePerson = document.getElementById('confirmSamePerson');
+
+        if (samePerson && !samePerson.checked) {
+            e.preventDefault();
+            alert('Tick the box confirming these accounts belong to the same person first.');
+            samePerson.focus();
+            return;
+        }
+
         // a "Delete account" button submits this same form to its own address - not a move
         if (e.submitter && e.submitter.hasAttribute('formaction')) { return; }
 

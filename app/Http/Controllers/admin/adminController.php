@@ -10,6 +10,7 @@ use App\Models\Core\Propflyer;
 use App\Models\Core\Propflyerstat;
 use App\Support\AgentCampaigns;
 use App\Support\AgentImages;
+use App\Support\AgentNameDuplicates;
 use App\Support\AgentNames;
 use App\Support\AgentPasswords;
 use App\Support\AgentProfile;
@@ -637,23 +638,59 @@ class adminController extends Controller
             ->withErrors(['loginEmail' => 'The password link was NOT sent (' . $result . '). Use "Send password reset email" to try again.']);
     }
 
+    /** Are the merge tools working on accounts that share a NAME (by=name) rather than a login email? */
+    private function byName(Request $request): bool
+    {
+        return $request->input('by') === 'name';
+    }
+
+    /**
+     * The accounts the merge tools treat as "the same agent": those on this agent's login email
+     * (the default) or, with by=name, those that share this agent's name - the exact match the
+     * "Duplicate Names" tab lists (App\Support\AgentNameDuplicates).
+     */
+    private function mergeGroup(Propagent $agent, Request $request)
+    {
+        return $this->byName($request)
+            ? AgentNameDuplicates::accountsFor($agent)
+            : AgentPasswords::accountsForEmail($agent->xxAgtUname);
+    }
+
+    /**
+     * Two accounts with one NAME can be two different people (unlike two on one login email), so
+     * every by-name action needs the admin's explicit "these are the same person". Checked here on
+     * the server, not just on the page.
+     */
+    private function nameMergeNotConfirmed(Request $request): bool
+    {
+        return $this->byName($request) && !$request->boolean('confirm_same_person');
+    }
+
+    /** How the merge tools name the thing the accounts share, for their messages. */
+    private function sharedWord(Request $request): string
+    {
+        return $this->byName($request) ? 'has this name' : 'uses this login email';
+    }
+
     /**
      * MERGE DUPLICATE ACCOUNTS, step 1 of 2 (GET): tick flyers and pick which account
-     * receives them. Only for accounts that share one login email - if the agent has no
-     * duplicate there is nothing to merge and this refuses.
+     * receives them. Only for accounts that share one login email - or, with ?by=name, one name
+     * (the "Duplicate Names" tab) - if the agent has no duplicate there is nothing to merge and
+     * this refuses.
      *
-     * Every flyer of every account on the email is listed (deleted ones too, marked, so
+     * Every flyer of every account in the group is listed (deleted ones too, marked, so
      * their campaign history can travel with them); a flyer whose campaign is being
      * delivered right now can't be moved and is shown disabled.
      */
-    public function agentMerge($id)
+    public function agentMerge(Request $request, $id)
     {
         $agent    = Propagent::findOrFail($id);
-        $accounts = AgentPasswords::accountsForEmail($agent->xxAgtUname);
+        $byName   = $this->byName($request);
+        $accounts = $this->mergeGroup($agent, $request);
 
         if ($accounts->count() < 2) {
             return redirect()->route('admin.agentView', $agent->id)
-                ->withErrors(['merge' => 'No other account uses this login email, so there is nothing to merge.']);
+                ->withErrors(['merge' => 'No other account ' . $this->sharedWord($request) . ', so there is nothing to merge.']);
         }
 
         $flyers = Propflyer::withTrashed()
@@ -677,6 +714,11 @@ class adminController extends Controller
                 'id'      => $account->id,
                 'name'    => $account->agtFullName ?: trim(($account->agtFirst ?? '') . ' ' . ($account->agtLast ?? '')) ?: 'No name',
                 'office'  => optional($account->theAgtOffice)->officeName,
+                // what tells two people of one name apart (shown on a by-name merge)
+                'login'   => $account->xxAgtUname,
+                'email'   => $account->agtEmail,
+                'phone'   => $account->agtMainPhone,
+                'place'   => trim(($account->agtCity ?? '') . ' ' . ($account->agtState ?? '')),
                 'start'   => $account->startDate,
                 'credits' => (int) ($account->remCreds ?? 0),
                 // the Delete button shows only for an account with no flyers (and nothing else to lose)
@@ -707,6 +749,8 @@ class adminController extends Controller
 
         return view('admin.agents.merge', [
             'agent'         => $agent,
+            'byName'        => $byName,
+            'nameKey'       => $byName ? AgentNameDuplicates::key($agent) : null,
             'accounts'      => $rows,
             'confirmDelete' => AdminSetting::confirmAgentDeletion(),
             'earliest'      => $this->earliestStart($accounts),
@@ -730,12 +774,16 @@ class adminController extends Controller
     public function agentMergeSave(Request $request, $id)
     {
         $agent    = Propagent::findOrFail($id);
-        $accounts = AgentPasswords::accountsForEmail($agent->xxAgtUname);
-        $back     = fn () => redirect()->route('admin.agentMerge', $agent->id);
+        $accounts = $this->mergeGroup($agent, $request);
+        $back     = fn () => redirect()->route('admin.agentMerge', [$agent->id] + ($this->byName($request) ? ['by' => 'name'] : []));
 
         if ($accounts->count() < 2) {
             return redirect()->route('admin.agentView', $agent->id)
-                ->withErrors(['merge' => 'No other account uses this login email, so there is nothing to merge.']);
+                ->withErrors(['merge' => 'No other account ' . $this->sharedWord($request) . ', so there is nothing to merge.']);
+        }
+
+        if ($this->nameMergeNotConfirmed($request)) {
+            return $back()->withErrors(['merge' => 'Tick the box confirming these accounts belong to the same person first - a shared name alone is not enough.']);
         }
 
         $data = $request->validate([
@@ -750,7 +798,7 @@ class adminController extends Controller
         $dest = $accounts->firstWhere('id', (int) $data['destination']);
 
         if (!$dest) {
-            return $back()->withErrors(['merge' => 'That account does not use this login email.']);
+            return $back()->withErrors(['merge' => 'That account does not share ' . ($this->byName($request) ? 'this name.' : 'this login email.')]);
         }
 
         $ids     = array_values(array_unique(array_map('intval', $data['flyers'])));
@@ -822,6 +870,7 @@ class adminController extends Controller
 
         Log::info('Admin moved flyers between duplicate accounts', [
             'admin_id'    => Auth::guard('admin')->id(),
+            'matched_by'  => $this->byName($request) ? 'name (admin confirmed same person)' : 'login email',
             'to'          => $dest->id,
             'flyers'      => $movable->pluck('id')->all(),
             'from'        => $movable->pluck('propagent_id')->unique()->values()->all(),
@@ -864,8 +913,12 @@ class adminController extends Controller
     public function agentMoveRecords(Request $request, $id)
     {
         $source   = Propagent::findOrFail($id);
-        $accounts = AgentPasswords::accountsForEmail($source->xxAgtUname);
+        $accounts = $this->mergeGroup($source, $request);
         $fail     = fn (string $message) => redirect()->back()->withErrors(['merge' => $message]);
+
+        if ($this->nameMergeNotConfirmed($request)) {
+            return $fail('Tick the box confirming these accounts belong to the same person first - a shared name alone is not enough.');
+        }
 
         $data = $request->validate(['destination' => ['required', 'integer']], [
             'destination.required' => 'Choose the account to move the records into first.',
@@ -874,7 +927,7 @@ class adminController extends Controller
         $dest = $accounts->firstWhere('id', (int) $data['destination']);
 
         if ($accounts->count() < 2 || !$dest || (int) $dest->id === (int) $source->id) {
-            return $fail('Choose a different account that uses the same login email.');
+            return $fail('Choose a different account that ' . ($this->byName($request) ? 'has the same name.' : 'uses the same login email.'));
         }
 
         $blockers = DuplicateAccounts::blockersFor(collect([$source]))[(int) $source->id];
@@ -975,8 +1028,12 @@ class adminController extends Controller
     public function agentMergeStartDate(Request $request, $id)
     {
         $agent    = Propagent::findOrFail($id);
-        $accounts = AgentPasswords::accountsForEmail($agent->xxAgtUname);
+        $accounts = $this->mergeGroup($agent, $request);
         $fail     = fn (string $message) => redirect()->back()->withErrors(['merge' => $message]);
+
+        if ($this->nameMergeNotConfirmed($request)) {
+            return $fail('Tick the box confirming these accounts belong to the same person first - a shared name alone is not enough.');
+        }
 
         $data = $request->validate(['destination' => ['required', 'integer']], [
             'destination.required' => 'Choose the account whose start date should change first.',
@@ -985,7 +1042,7 @@ class adminController extends Controller
         $dest = $accounts->firstWhere('id', (int) $data['destination']);
 
         if ($accounts->count() < 2 || !$dest) {
-            return $fail('Choose an account that uses this login email.');
+            return $fail('Choose an account that ' . ($this->byName($request) ? 'has this name.' : 'uses this login email.'));
         }
 
         $earliest = $this->earliestStart($accounts);
@@ -1036,15 +1093,22 @@ class adminController extends Controller
     public function agentDeleteDuplicate(Request $request, $id)
     {
         $agent  = Propagent::findOrFail($id);
-        $others = AgentPasswords::accountsForEmail($agent->xxAgtUname)
+        $others = $this->mergeGroup($agent, $request)
             ->reject(fn ($account) => (int) $account->id === (int) $agent->id)
             ->values();
 
         $fail = fn (string $message) => redirect()->back()->withErrors(['deleteAccount' => $message]);
 
-        if ($others->isEmpty()) {
-            return $fail('Not deleted: no other account uses this login email, so this is the agent\'s only account.');
+        if ($this->nameMergeNotConfirmed($request)) {
+            return $fail('Not deleted: confirm these accounts belong to the same person first - a shared name alone is not enough. (Deleting also removes this account\'s login.)');
         }
+
+        if ($others->isEmpty()) {
+            return $fail('Not deleted: no other account ' . $this->sharedWord($request) . ', so this is the agent\'s only account.');
+        }
+
+        // worked out before the delete: where a by-name delete returns to
+        $nameKey = $this->byName($request) ? AgentNameDuplicates::key($agent) : null;
 
         $blockers = DuplicateAccounts::blockersFor(collect([$agent]))[(int) $agent->id];
 
@@ -1070,6 +1134,7 @@ class adminController extends Controller
 
         Log::info('Admin deleted a duplicate agent account', [
             'admin_id' => Auth::guard('admin')->id(),
+            'matched_by' => $this->byName($request) ? 'name (admin confirmed same person)' : 'login email',
             'agent_id' => $agent->id,
             'name'     => $name,
             'email'    => $agent->xxAgtUname,
@@ -1080,7 +1145,11 @@ class adminController extends Controller
 
         // Where next: still duplicates left on this email -> stay in the tool; otherwise the list.
         // The list link carries the group's anchor, so the page scrolls back to where you were.
-        if ($others->count() >= 2 && $request->input('from') === 'merge') {
+        if ($this->byName($request)) {
+            $to = ($others->count() >= 2 && $request->input('from') === 'merge')
+                ? route('admin.agentMerge', [$others->first()->id, 'by' => 'name'])
+                : url('/admin/agents?duplicateNames=1') . ($nameKey ? '#' . AgentNameDuplicates::anchor($nameKey) : '');
+        } elseif ($others->count() >= 2 && $request->input('from') === 'merge') {
             $to = route('admin.agentMerge', $others->first()->id);
         } else {
             $to = url('/admin/agents?duplicates=1') . '#' . AgentPasswords::groupAnchor($agent->xxAgtUname);
