@@ -34,11 +34,33 @@
     // Only real web links become links (never javascript: and the like).
     $webLink = fn ($u) => (is_string($u) && preg_match('#^https?://#i', $u) && filter_var($u, FILTER_VALIDATE_URL)) ? $u : null;
 
-    $addressLine1 = trim(($agent->agtAddress1 ?? '') . ' ' . ($agent->agtAddress2 ?? ''));
+    // The agent's OWN street address: any street-type column on their row
+    // (agtAddress1 / agtAddress2, or agtAddress, agtStreet... - the column names
+    // aren't used anywhere else in the app), in name order. City / state / zip
+    // are handled separately below.
+    $agentStreet = collect(array_keys($agent->getAttributes()))
+        ->filter(fn ($key) => preg_match('/^agt(Add|Addr|Address|Street)/i', $key)
+            && !preg_match('/mail|city|state|zip/i', $key))
+        ->sort()
+        ->map(fn ($key) => trim((string) $agent->{$key}))
+        ->filter()
+        ->implode(' ');
+
+    $addressLine1 = $agentStreet;
     $addressLine2 = trim(
         ($agent->agtCity ?? '')
         . (($agent->agtCity && $agent->agtState) ? ', ' : '')
         . ($agent->agtState ?? '') . ' ' . ($agent->agtZip ?? '')
+    );
+
+    // The OFFICE address - where the flyers and the agent's own contact form keep
+    // the street address (agtoffices: officeAddress1, city, state, zip).
+    $office       = $agent->theAgtOffice;
+    $officeLine1  = trim((string) ($office->officeAddress1 ?? ''));
+    $officeLine2  = trim(
+        ($office->officeCity ?? '')
+        . ((($office->officeCity ?? '') && ($office->officeState ?? '')) ? ', ' : '')
+        . ($office->officeState ?? '') . ' ' . ($office->officeZip ?? '')
     );
 
     // [label, value, link type]
@@ -376,6 +398,19 @@
                         </dd>
                     </div>
 
+                    <div class="{{ $row }}">
+                        <dt class="{{ $label }}">Office address</dt>
+                        <dd class="{{ $value }}">
+                            @if($officeLine1 !== '' || $officeLine2 !== '')
+                                {{ $officeLine1 }}
+                                @if($officeLine1 !== '' && $officeLine2 !== '')<br>@endif
+                                {{ $officeLine2 }}
+                            @else
+                                —
+                            @endif
+                        </dd>
+                    </div>
+
                     @foreach($licenseRows as [$rowLabel, $rowValue])
                         <div class="{{ $row }}">
                             <dt class="{{ $label }}">{{ $rowLabel }}</dt>
@@ -436,8 +471,8 @@
                     @endif
 
                     {{-- REMAINING CREDITS: the current balance in an editable field; change it
-                         and Save to set the new balance. Purchased credits below is a
-                         purchase record and stays read-only. --}}
+                         and Save to set the new balance. Priority credits (pCreds) below
+                         is a separate balance and stays read-only here. --}}
                     <div class="{{ $row }}">
                         <dt class="{{ $label }}">Remaining credits</dt>
                         <dd class="font-medium text-slate-900">
@@ -463,7 +498,7 @@
                     </div>
 
                     <div class="{{ $row }}">
-                        <dt class="{{ $label }}">Purchased credits</dt>
+                        <dt class="{{ $label }}">Priority credits</dt>
                         <dd class="{{ $value }}">{{ number_format($agent->pCreds ?? 0) }}</dd>
                     </div>
 

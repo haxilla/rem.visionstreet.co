@@ -238,8 +238,8 @@ class adminController extends Controller
 
     /**
      * Set an agent's remaining credits (remCreds) to the number typed in the
-     * field on the agent page. "Purchased credits" (pCreds) is a record of
-     * purchases and is left alone - an admin correction isn't a purchase.
+     * field on the agent page. "Priority credits" (pCreds) is a separate
+     * balance and is left alone by this.
      *
      * The typed number simply becomes the balance. Logged (who, which agent,
      * before and after), since there is no other record of who changed one.
