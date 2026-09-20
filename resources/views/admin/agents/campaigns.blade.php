@@ -80,30 +80,63 @@
 
             <section class="{{ $card }} overflow-hidden">
 
-                {{-- flyer address --}}
-                <div class="flex flex-wrap items-start justify-between gap-3 border-b border-slate-100 bg-slate-50 px-5 py-4 sm:px-6">
-                    <div class="min-w-0">
-                        <h2 class="break-words text-base font-semibold text-slate-900 sm:text-lg">
-                            {{ $group['title'] }}
-                        </h2>
+                {{-- flyer: thumbnail, address, and its totals --}}
+                <div class="border-b border-slate-100 bg-slate-50 px-5 py-4 sm:px-6">
+                    <div class="flex items-start gap-4">
 
-                        @if($group['place'] !== '')
-                            <p class="text-sm text-slate-500">{{ $group['place'] }}</p>
-                        @endif
-                    </div>
+                        {{-- default photo, at a fixed size --}}
+                        <div class="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-white ring-1 ring-slate-200 sm:h-20 sm:w-20">
+                            @if($group['thumb'])
+                                <img src="{{ $group['thumb'] }}" alt="{{ $group['title'] }}" loading="lazy"
+                                     class="h-full w-full object-cover">
+                            @else
+                                <svg class="h-7 w-7 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 9.75L12 3l9 6.75V21a.75.75 0 01-.75.75H3.75A.75.75 0 013 21V9.75z"/>
+                                </svg>
+                            @endif
+                        </div>
 
-                    <div class="flex flex-wrap items-center gap-2 text-xs font-semibold">
-                        <span class="rounded-full bg-white px-3 py-1 text-slate-600 ring-1 ring-slate-200">
-                            {{ $group['campaigns']->count() }} {{ $group['campaigns']->count() === 1 ? 'campaign' : 'campaigns' }}
-                        </span>
+                        <div class="min-w-0 flex-1">
 
-                        @if($group['deleted'])
-                            <span class="rounded-full bg-red-50 px-3 py-1 text-red-700 ring-1 ring-red-200">Flyer deleted</span>
-                        @else
-                            <a href="/admin/flyerCamps/{{ $group['flyerId'] }}" class="text-[#214e9b] hover:underline">
-                                Open flyer →
-                            </a>
-                        @endif
+                            <div class="flex flex-wrap items-start justify-between gap-x-4 gap-y-1">
+                                <div class="min-w-0">
+                                    <h2 class="break-words text-base font-semibold text-slate-900 sm:text-lg">
+                                        {{ $group['title'] }}
+                                    </h2>
+
+                                    @if($group['place'] !== '')
+                                        <p class="text-sm text-slate-500">{{ $group['place'] }}</p>
+                                    @endif
+                                </div>
+
+                                @if($group['deleted'])
+                                    <span class="rounded-full bg-red-50 px-3 py-1 text-xs font-semibold text-red-700 ring-1 ring-red-200">Flyer deleted</span>
+                                @else
+                                    <a href="/admin/flyerCamps/{{ $group['flyerId'] }}" class="text-xs font-semibold text-[#214e9b] hover:underline">
+                                        Open flyer →
+                                    </a>
+                                @endif
+                            </div>
+
+                            {{-- totals for this flyer --}}
+                            <dl class="mt-2 flex flex-wrap gap-x-6 gap-y-1 text-sm">
+                                <div class="flex items-baseline gap-1.5">
+                                    <dd class="font-semibold text-slate-900">{{ $group['campaigns']->count() }}</dd>
+                                    <dt class="text-slate-500">{{ $group['campaigns']->count() === 1 ? 'campaign' : 'campaigns' }}</dt>
+                                </div>
+
+                                <div class="flex items-baseline gap-1.5">
+                                    <dd class="font-semibold text-slate-900">{{ number_format($group['emailsSent']) }}</dd>
+                                    <dt class="text-slate-500">emails sent</dt>
+                                </div>
+
+                                <div class="flex items-baseline gap-1.5">
+                                    <dd class="font-semibold text-slate-900">{{ $group['hits'] === null ? '—' : number_format($group['hits']) }}</dd>
+                                    <dt class="text-slate-500">flyer hits</dt>
+                                </div>
+                            </dl>
+
+                        </div>
                     </div>
                 </div>
 

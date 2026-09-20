@@ -137,8 +137,14 @@ class adminController extends Controller
         $agent     = Propagent::findOrFail($id);
         $campaigns = AgentCampaigns::forAgent($agent->id);
 
-        // withTrashed: a soft-deleted flyer keeps its campaign history
+        // withTrashed: a soft-deleted flyer keeps its campaign history. Its default
+        // photo (for the thumbnail), photo folder and view counter come along.
         $flyers = Propflyer::withTrashed()
+            ->with([
+                'thePhotos' => fn ($query) => $query->where('def', 1),
+                'theMeta',
+                'theStats',
+            ])
             ->whereIn('id', $campaigns->pluck('flyer_id')->unique()->all())
             ->get(['id', 'xFullStreet', 'xCity', 'state', 'xZip', 'deleted_at'])
             ->keyBy('id');
@@ -146,13 +152,26 @@ class adminController extends Controller
         $groups = $campaigns->groupBy('flyer_id')->map(function ($items, $flyerId) use ($flyers) {
             $flyer = $flyers->get($flyerId);
 
+            // thumbnail: the default photo - the 500px copy when there is one
+            $photo = $flyer ? ($flyer->thePhotos->firstWhere('resized', 500) ?? $flyer->thePhotos->first()) : null;
+            $meta  = $flyer?->theMeta;
+
+            $thumb = ($photo && $meta && $meta->zipDir && $meta->mlsDir && $photo->photoName)
+                ? "/hqphotos/{$meta->zipDir}/{$meta->mlsDir}/{$photo->photoName}"
+                : null;
+
             return [
-                'flyerId'   => $flyerId,
-                'title'     => $flyer ? ($flyer->xFullStreet ?: 'Untitled flyer') : 'Flyer no longer exists',
-                'place'     => $flyer ? trim(($flyer->xCity ?? '') . ' ' . ($flyer->state ?? '') . ' ' . ($flyer->xZip ?? '')) : '',
-                'deleted'   => !$flyer || $flyer->trashed(),
-                'campaigns' => $items->sortByDesc('sort')->values(),
-                'latest'    => $items->max('sort'),
+                'flyerId'    => $flyerId,
+                'title'      => $flyer ? ($flyer->xFullStreet ?: 'Untitled flyer') : 'Flyer no longer exists',
+                'place'      => $flyer ? trim(($flyer->xCity ?? '') . ' ' . ($flyer->state ?? '') . ' ' . ($flyer->xZip ?? '')) : '',
+                'deleted'    => !$flyer || $flyer->trashed(),
+                'thumb'      => $thumb,
+                // emails actually delivered = the recipients of this flyer's FINISHED campaigns
+                'emailsSent' => (int) $items->where('status', 'completed')->sum(fn ($r) => (int) $r['emails']),
+                // total flyer hits (page views) - null when the flyer no longer exists
+                'hits'       => $flyer ? (int) optional($flyer->theStats)->xWebViews : null,
+                'campaigns'  => $items->sortByDesc('sort')->values(),
+                'latest'     => $items->max('sort'),
             ];
         })->sortByDesc('latest')->values();
 
