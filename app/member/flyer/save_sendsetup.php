@@ -10,6 +10,8 @@ $validatedData = $request->validate([
     'emSubject'         => 'nullable|string|max:255',
     'areas'             => 'nullable|array|max:2',
     'areas.*'           => 'string|in:phoenix_metro,northeast_valley,southeast_valley,west_valley,northern_az,southern_az',
+    // the order the agent clicked the areas in, e.g. "west_valley,phoenix_metro" (from the form's script)
+    'areaOrder'         => 'nullable|string|max:255',
     'openHouseDate1'    => 'nullable|date',
     'openHouseTime1'    => 'nullable|date_format:H:i',
     'openHouseEndTime1' => 'nullable|date_format:H:i',
@@ -59,6 +61,17 @@ $agent = auth()->user();
 // The same area twice in one submission must not create two requests.
 $selectedAreas = array_values(array_unique($validatedData['areas'] ?? []));
 
+// Area 1 is the area the agent clicked FIRST, Area 2 the second (campLabel area1 /
+// area2 below). The checkboxes post in page order, not click order, so the form's
+// script also sends the click order; it is only used to put the chosen areas in
+// that order - anything in it that wasn't actually chosen is ignored, and without
+// it the posted order is kept.
+$clickOrder = array_filter(explode(',', (string) ($validatedData['areaOrder'] ?? '')));
+$selectedAreas = array_values(array_unique(array_merge(
+    array_intersect($clickOrder, $selectedAreas),
+    $selectedAreas
+)));
+
 // Trial mode (admin Settings): sends are tests, so no credit is needed
 // and none is ever charged. Requests are still created normally so the
 // whole flow (including admin approval) can be exercised.
@@ -68,8 +81,27 @@ $queued           = false;   // the flyer is now (or already was) waiting for de
 $alreadyQueued    = false;   // refused: it's already waiting and different areas were asked for
 $notEnoughCredits = false;
 $busy             = false;   // another submission for this flyer is mid-flight
+$needTwoAreas     = false;   // refused: a send needs exactly 2 areas
 
-if (!empty($selectedAreas)) {
+// A send must be to exactly 2 areas. Two areas cost ONE credit - the same as one
+// area would - so an agent saves nothing by choosing fewer, and nothing is queued
+// (and no credit taken) until they pick 2. (A flyer that already has a request
+// waiting is handled below; an agent with no credit is told that instead, since
+// picking areas wouldn't help them.)
+$pendingExists = Propdelivnow::where('propflyer_id', $flyer->id)
+    ->whereNull('emStart')
+    ->whereNull('emComplete')
+    ->exists();
+
+if (!$pendingExists && count($selectedAreas) !== 2) {
+    if (!$trialMode && ($agent->remCreds ?? 0) < 1) {
+        $notEnoughCredits = true;
+    } else {
+        $needTwoAreas = true;
+    }
+}
+
+if (!$needTwoAreas && !$notEnoughCredits && !empty($selectedAreas)) {
 
     // One submission at a time per flyer. A double-click (or a refresh
     // re-POST) sends two identical requests at once; without this both see
@@ -199,6 +231,15 @@ if ($busy) {
 } elseif ($notEnoughCredits) {
 
     session()->flash('sendsetup_error', 'You need at least 1 credit to request a send.');
+    session()->save();
+    redirect('/member/flyer/sendsetup?flyerId=' . $flyer->id)->send();
+
+} elseif ($needTwoAreas) {
+
+    // Back to the form with what they typed kept, and the "choose 2 areas" popup
+    // (sendsetup.blade.php shows it when this is flashed).
+    session()->flash('sendsetup_need_two_areas', true);
+    session()->flashInput($request->input());
     session()->save();
     redirect('/member/flyer/sendsetup?flyerId=' . $flyer->id)->send();
 

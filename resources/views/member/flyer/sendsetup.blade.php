@@ -162,11 +162,18 @@
         </div>
 
         {{-- AREAS --}}
-        <div class="wz-card">
+        <div class="wz-card" id="areas-card">
 
             <div class="wz-label">
                 Areas
-                <span class="wz-label-hint">(choose up to 2 areas to send this flyer to)</span>
+                <span class="wz-label-hint">(choose 2 areas to send this flyer to)</span>
+            </div>
+
+            {{-- The credit rule, stated up front - and again in the popup if they try to go on without 2 --}}
+            <div class="mb-3 rounded-lg bg-blue-50 px-3 py-2 text-sm text-blue-900 ring-1 ring-blue-200">
+                <span class="font-black">You must choose 2 areas.</span>
+                Two areas cost only <span class="font-black">ONE credit</span> &mdash; you do not save a credit by choosing just one.
+                The area you click first is Area 1 and the second is Area 2.
             </div>
 
             @if($creditsBlocked)
@@ -194,11 +201,16 @@
                                 @checked(in_array($value, $oldAreas))
                                 @if($areasLocked) disabled data-locked="1" @endif>
                             {{ $label }}
+                            {{-- 1 or 2: the order this area was picked in (filled in by the script below) --}}
+                            <span class="area-order ml-1.5 inline-flex h-5 w-5 items-center justify-center rounded-full bg-white text-xs font-black text-[#123f91]" hidden></span>
                         </label>
                     @endif
                 @endforeach
 
             </div>
+
+            {{-- the order the areas were clicked in, sent with the form (see the script below) --}}
+            <input type="hidden" name="areaOrder" id="areaOrder" value="{{ old('areaOrder') }}">
 
         </div>
 
@@ -323,9 +335,78 @@
 
 @include('public.layout.footer')
 
+{{-- "Choose 2 areas" popup: shown when they try to submit without exactly 2 areas (checked
+     by the script below, and again by save_sendsetup.php, which flashes
+     sendsetup_need_two_areas if the form was posted without them). Same look as the
+     "added to the delivery queue" popup on the dashboard. --}}
+<div id="twoAreasModal"
+     class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/50 p-4"
+     role="dialog" aria-modal="true" aria-labelledby="twoAreasModalTitle" hidden>
+
+    <div class="w-full max-w-md rounded-2xl bg-white p-6 text-center shadow-xl">
+
+        <div class="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-amber-100 text-2xl font-black text-amber-600">
+            !
+        </div>
+
+        <h2 id="twoAreasModalTitle" class="text-xl font-black text-slate-900">
+            Please choose 2 areas
+        </h2>
+
+        <p class="mt-2 text-sm text-slate-600">
+            You must choose <span class="font-black text-slate-900">2 areas</span> before you can submit this flyer for delivery.
+            <span id="twoAreasCount" class="block pt-1 font-semibold text-slate-800"></span>
+        </p>
+
+        <div class="mt-3 rounded-lg bg-blue-50 px-3 py-2 text-sm font-semibold text-blue-900 ring-1 ring-blue-200">
+            Two areas cost only <span class="font-black">ONE credit</span>.
+            You do <span class="font-black">not</span> save a credit by choosing only one area.
+        </div>
+
+        <button type="button" id="twoAreasClose" class="wz-btn wz-btn-primary mt-5">
+            OK, I'll choose my areas
+        </button>
+
+    </div>
+</div>
+
 <script>
 (function () {
     var boxes = document.querySelectorAll('#area-badges input[type="checkbox"]');
+    var orderField = document.getElementById('areaOrder');
+
+    // The order the areas were clicked in: the first is Area 1, the second Area 2.
+    // Restored from the form after a bounce (e.g. the "choose 2 areas" popup).
+    var picked = [];
+
+    (orderField.value || '').split(',').forEach(function (key) {
+        var box = document.querySelector('#area-badges input[value="' + key + '"]');
+        if (box && box.checked && picked.indexOf(key) === -1) picked.push(key);
+    });
+
+    boxes.forEach(function (b) {
+        if (b.checked && picked.indexOf(b.value) === -1) picked.push(b.value);
+    });
+
+    function syncOrder() {
+        // drop anything no longer ticked
+        picked = picked.filter(function (key) {
+            var box = document.querySelector('#area-badges input[value="' + key + '"]');
+            return box && box.checked;
+        });
+
+        orderField.value = picked.join(',');
+
+        boxes.forEach(function (b) {
+            var chip = b.parentNode.querySelector('.area-order');
+            var n = picked.indexOf(b.value) + 1;
+
+            if (!chip) return;
+
+            chip.hidden = n === 0;
+            chip.textContent = n === 0 ? '' : String(n);
+        });
+    }
 
     function syncMax() {
         var checkedCount = Array.prototype.filter.call(boxes, function (b) { return b.checked; }).length;
@@ -335,8 +416,51 @@
         });
     }
 
-    boxes.forEach(function (b) { b.addEventListener('change', syncMax); });
+    boxes.forEach(function (b) {
+        b.addEventListener('change', function () {
+            if (b.checked && picked.indexOf(b.value) === -1) picked.push(b.value);
+
+            syncOrder();
+            syncMax();
+        });
+    });
+
+    syncOrder();
     syncMax();
+
+    // ---- the "choose 2 areas" popup ----
+    var modal = document.getElementById('twoAreasModal');
+    var modalClose = document.getElementById('twoAreasClose');
+    var modalCount = document.getElementById('twoAreasCount');
+    var areasLocked = {{ $areasLocked ? 'true' : 'false' }};   // no credits / already queued: there are no areas to pick
+
+    function showTwoAreasModal() {
+        var n = picked.length;
+
+        modalCount.textContent = n === 0
+            ? 'You have not chosen any areas yet.'
+            : 'You have chosen ' + n + ' of 2 areas.';
+
+        modal.hidden = false;
+        document.body.style.overflow = 'hidden';
+        modalClose.focus();
+    }
+
+    function hideTwoAreasModal() {
+        modal.hidden = true;
+        document.body.style.overflow = '';
+
+        var card = document.getElementById('areas-card');
+        if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    modalClose.addEventListener('click', hideTwoAreasModal);
+    modal.addEventListener('click', function (e) { if (e.target === modal) hideTwoAreasModal(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !modal.hidden) hideTwoAreasModal(); });
+
+    @if(session('sendsetup_need_two_areas'))
+        showTwoAreasModal();
+    @endif
 
     // Lock the form after the first submit. A second click / Enter press used
     // to send a second identical request, which created duplicate areas.
@@ -347,6 +471,13 @@
     form.addEventListener('submit', function (e) {
         if (submitted) {
             e.preventDefault();
+            return;
+        }
+
+        // exactly 2 areas or no send - say why, and that 2 areas cost the same as 1
+        if (!areasLocked && picked.length !== 2) {
+            e.preventDefault();
+            showTwoAreasModal();
             return;
         }
 
