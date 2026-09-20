@@ -654,9 +654,20 @@ class adminController extends Controller
             return $back()->withErrors(['loginEmail' => "{$new} is already the login email of another account ({$who}). Pick a different email, or sort that out first."]);
         }
 
-        DB::transaction(function () use ($targets, $new) {
+        // The old login email is not thrown away: it is saved under Other Known Emails on each account
+        // (before it is overwritten below), so an agent can still be found by it. If the table isn't
+        // there yet the change still goes ahead - a locked-out agent must not be stuck on it - and the
+        // message says the old address was not saved (it is in the log either way).
+        $keepOld    = AgentKnownEmails::available();
+        $oldSaved   = false;
+
+        DB::transaction(function () use ($targets, $new, $keepOld, &$oldSaved) {
             foreach ($targets as $account) {
                 AgentTime::apply($account);
+
+                if ($keepOld) {
+                    $oldSaved = AgentKnownEmails::save($account->id, $account->xxAgtUname, 'Previous login email (changed by an admin)') || $oldSaved;
+                }
 
                 $account->xxAgtUname = $new;
                 $account->password   = null;
@@ -694,8 +705,14 @@ class adminController extends Controller
         $count  = $targets->count();
         $result = AgentPasswords::sendLink($agent, 'admin', $request->ip());
 
+        // if the new login was one of these accounts' other known emails it is now their login, not an "other"
+        AgentKnownEmails::forget($targets->pluck('id')->all(), $new);
+
         $status = "Login email changed to {$new} for {$count} " . ($count === 1 ? 'account' : 'accounts')
-            . ' and the old password cleared.';
+            . ' and the old password cleared.'
+            . ($oldSaved
+                ? " The old login email ({$old}) is kept under Other Known Emails."
+                : (!$keepOld ? " The old login email ({$old}) was NOT saved: the Other Known Emails table has not been created yet (the SQL is on the agent's page)." : ''));
 
         if ($result === 'sent') {
             return $back()->with('status', $status . ' A link to create a new password was emailed to ' . $new . '.');

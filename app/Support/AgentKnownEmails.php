@@ -107,6 +107,31 @@ SQL;
         return $saved;
     }
 
+    /** Save one email as another known email of an agent. True when it was newly saved; false when it was already listed or isn't an email. Throws if the table is missing. */
+    public static function save($agentId, $email, string $source): bool
+    {
+        $email = self::normalize($email);
+
+        if ($email === null) {
+            return false;
+        }
+
+        return AgentKnownEmail::firstOrCreate(
+            ['propagent_id' => $agentId, 'email' => $email],
+            ['source' => mb_substr($source, 0, 255), 'created_at' => now()]
+        )->wasRecentlyCreated;
+    }
+
+    /** Take an email off an agent's other known emails (it has just become their login, so it is no longer "other"). */
+    public static function forget(array $agentIds, $email): void
+    {
+        $email = self::normalize($email);
+
+        if ($email !== null && $agentIds !== [] && self::available()) {
+            AgentKnownEmail::whereIn('propagent_id', $agentIds)->where('email', $email)->delete();
+        }
+    }
+
     /** One agent's other known emails, oldest first (empty when the table doesn't exist yet). */
     public static function for($agentId): Collection
     {
