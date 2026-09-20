@@ -4,6 +4,27 @@
 
 @include('admin.layout.nav')
 
+{{-- Column layout for the campaign lists, as PLAIN CSS on purpose. Whether a row is
+     visible at all depends on this (the wide row and the stacked card swap at 1280px),
+     so it must not rely on Tailwind classes that only exist after a stylesheet rebuild.
+     Wide screens: Area | Address (takes the rest) | Agent | Emails | Date, with the date
+     column wide enough for "Sep 19, 2026 3:18 PM" on one line. Narrower: stacked cards. --}}
+<style>
+    .camp-wide   { display: none; }
+    .camp-narrow { display: block; }
+
+    @media (min-width: 1280px) {
+        .camp-wide {
+            display: grid;
+            grid-template-columns: 10rem minmax(0, 1fr) 14rem 6rem 12rem;
+            align-items: center;
+            column-gap: 1rem;
+        }
+
+        .camp-narrow { display: none; }
+    }
+</style>
+
 <main class="min-h-screen bg-[#f4f7fb] pt-24">
     <div class="px-4 py-6 sm:px-6 lg:px-10 lg:py-8">
 
@@ -75,11 +96,8 @@
                     }
                 };
 
-                // Column widths for every campaign list, defined ONCE (the rows and all four
-                // heading rows use it): Area | Address (takes the rest) | Agent | Emails | Date.
-                // The wide layout starts at xl (1280px); narrower screens get stacked cards.
-                // The date column is wide enough for "Sep 19, 2026 3:18 PM" on one line.
-                $rowGrid = 'xl:grid xl:grid-cols-[10rem_minmax(0,1fr)_14rem_6rem_12rem] xl:items-center xl:gap-4';
+                // (The column layout for the campaign lists is the .camp-wide / .camp-narrow
+                // CSS at the top of this file - defined once, used by the rows and headings.)
 
                 // Readable names for the area codes stored on each campaign (azphxne -> Phoenix Northeast)
                 $areaLabels = [];
@@ -217,7 +235,6 @@
                     $getAddress,
                     $getFlyerId,
                     $getAgent,
-                    $rowGrid,
                     $areaLabels
                 ) {
                     $thumbUrl   = $getThumbUrl($campaign);
@@ -248,10 +265,10 @@
 
                 <div class="border-b border-slate-200 px-3 py-3 hover:bg-slate-50">
 
-                    {{-- WIDE (xl and up): one line per campaign, columns set by $rowGrid. The
-                         date never wraps (whitespace-nowrap, in a column wide enough for it);
-                         anything that is clipped shows in full on hover. --}}
-                    <div class="hidden {{ $rowGrid }} text-sm">
+                    {{-- WIDE (1280px and up): one line per campaign, columns set by .camp-wide.
+                         The date never wraps (whitespace-nowrap, in a column wide enough for
+                         it); anything that is clipped shows in full on hover. --}}
+                    <div class="camp-wide text-sm">
 
                         <div class="truncate font-medium text-slate-700" title="{{ $areaName }}">
                             {{ $areaName }}
@@ -277,7 +294,7 @@
 
                     {{-- NARROWER: a stacked card - address and date on the first line (the
                          date can't wrap), the details underneath --}}
-                    <div class="text-sm xl:hidden">
+                    <div class="camp-narrow text-sm">
 
                         <div class="flex items-start justify-between gap-3">
                             <a href="/admin/flyerCamps/{{ $flyerId }}" class="min-w-0 break-words font-medium text-blue-600 hover:underline">
@@ -410,7 +427,7 @@
                                     {{-- UNAUTHORIZED WAITING --}}
                                     <div class="waiting-panel" id="waiting-unauthorized">
 
-                                        @include('admin.campaignColumnHeader', ['rowGrid' => $rowGrid, 'dateLabel' => 'Requested'])
+                                        @include('admin.campaignColumnHeader', ['dateLabel' => 'Requested'])
 
                                         <div>
                                             @forelse($waitingUnauthorized as $campaign)
@@ -427,7 +444,7 @@
                                     {{-- AUTHORIZED WAITING --}}
                                     <div class="waiting-panel hidden" id="waiting-authorized">
 
-                                        @include('admin.campaignColumnHeader', ['rowGrid' => $rowGrid, 'dateLabel' => 'Requested'])
+                                        @include('admin.campaignColumnHeader', ['dateLabel' => 'Requested'])
 
                                         <div>
                                             @forelse($waitingAuthorized as $campaign)
@@ -462,7 +479,7 @@
                                         </span>
                                     </div>
 
-                                    @include('admin.campaignColumnHeader', ['rowGrid' => $rowGrid, 'dateLabel' => 'Started'])
+                                    @include('admin.campaignColumnHeader', ['dateLabel' => 'Started'])
 
                                     <div>
 
@@ -497,7 +514,7 @@
                                         </span>
                                     </div>
 
-                                    @include('admin.campaignColumnHeader', ['rowGrid' => $rowGrid, 'dateLabel' => 'Finished'])
+                                    @include('admin.campaignColumnHeader', ['dateLabel' => 'Finished'])
 
                                     <div>
 
