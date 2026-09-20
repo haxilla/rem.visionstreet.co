@@ -243,6 +243,9 @@
                             <div class="flyer-info">
                                 <div class="text-xs text-slate-400">
                                     Created: {{ $createdDate($flyer) }}
+                                    @if($requestedOn)
+                                        &middot; Requested: {{ $requestedOn }}
+                                    @endif
                                 </div>
 
                                 <a href="/member/flyer/preview?flyerId={{ $flyer->id }}" class="block truncate text-lg font-black text-[#123f91] hover:underline">
@@ -257,12 +260,6 @@
                                     <span class="rounded-full bg-blue-50 px-3 py-1 text-blue-700">
                                         {{ $money($flyer->xListPrice) }}
                                     </span>
-
-                                    @if($requestedOn)
-                                        <span class="rounded-full bg-slate-100 px-3 py-1 text-slate-600">
-                                            Requested: {{ $requestedOn }}
-                                        </span>
-                                    @endif
 
                                     @if($flyer->dashboard_waiting_areas->isNotEmpty())
                                         <span class="rounded-full bg-slate-100 px-3 py-1 text-slate-600">
