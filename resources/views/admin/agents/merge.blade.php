@@ -90,6 +90,11 @@
             <input type="hidden" name="by" value="name">
         @endif
 
+        {{-- the account chosen to receive the flyers is also where a deleted account's emails are kept
+             (filled in by the script below; without a choice the server uses the account with the most flyers) --}}
+        <input type="hidden" name="keep" id="keepField" value="">
+
+
         {{-- DESTINATION --}}
         <div class="{{ $card }} px-5 py-5 sm:px-8">
             <label for="destination" class="block text-sm font-semibold text-slate-800">
@@ -175,6 +180,13 @@
                                 @if($acct['place'] !== '')
                                     &middot; <span class="text-slate-400">Location</span> {{ $acct['place'] }}
                                 @endif
+                                @if(!empty($acct['known']))
+                                    &middot; <span class="text-slate-400">Other known emails</span> {{ implode(', ', $acct['known']) }}
+                                @endif
+                            </p>
+
+                            <p class="mt-1 text-xs text-slate-500">
+                                Merging keeps this account's emails: they are saved under "Other Known Emails" on the account that stays.
                             </p>
                         @endif
                     </div>
@@ -340,6 +352,11 @@
             }
         });
     });
+
+    // the chosen account is where a deleted account's emails are kept
+    var keepField = document.getElementById('keepField');
+    dest.addEventListener('change', function () { keepField.value = dest.value; });
+    keepField.value = dest.value;
 
     dest.addEventListener('change', refreshRecordButtons);
     refreshRecordButtons();

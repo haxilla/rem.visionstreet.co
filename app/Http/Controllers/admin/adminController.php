@@ -10,6 +10,7 @@ use App\Models\Core\Propflyer;
 use App\Models\Core\Propflyerstat;
 use App\Support\AgentCampaigns;
 use App\Support\AgentImages;
+use App\Support\AgentKnownEmails;
 use App\Support\AgentNameDuplicates;
 use App\Support\AgentNames;
 use App\Support\AgentPasswords;
@@ -236,8 +237,74 @@ class adminController extends Controller
         $logo      = AgentImages::logo($agent);
         $hasOffice = (bool) $agent->theAgtOffice;
 
-        return view('admin.agents.show', compact('agent', 'flyerCount', 'campaignCount', 'campaignsInQueue', 'orders', 'photo', 'logo', 'hasOffice', 'sameEmailAccounts', 'deleteBlockers'));
+        // the "Other Known Emails" section (empty, and the setup SQL shown, until the table exists)
+        $knownEmails          = AgentKnownEmails::for($agent->id);
+        $knownEmailsAvailable = AgentKnownEmails::available();
 
+        return view('admin.agents.show', compact('agent', 'flyerCount', 'campaignCount', 'campaignsInQueue', 'orders', 'photo', 'logo', 'hasOffice', 'sameEmailAccounts', 'deleteBlockers', 'knownEmails', 'knownEmailsAvailable'));
+
+    }
+
+    /**
+     * Add an "other known email" to an agent by hand (POST): an address this agent is known by
+     * besides their login and contact emails. It is only a record - it is not a login.
+     */
+    public function agentKnownEmailAdd(Request $request, $id)
+    {
+        $agent = Propagent::findOrFail($id);
+        $back  = fn () => redirect()->to(route('admin.agentView', $agent->id) . '#known-emails');
+
+        $data = $request->validate([
+            'email' => ['required', 'email', 'max:255'],
+            'note'  => ['nullable', 'string', 'max:120'],
+        ], [
+            'email.required' => 'Enter the email address to add.',
+            'email.email'    => 'That is not a valid email address.',
+        ]);
+
+        if (!AgentKnownEmails::available()) {
+            return $back()->withErrors(['knownEmail' => 'The "other known emails" table has not been created yet - run the SQL shown in this section first.']);
+        }
+
+        $email = AgentKnownEmails::normalize($data['email']);
+
+        if ($email === null) {
+            return $back()->withErrors(['knownEmail' => 'That is not a valid email address.'])->withInput();
+        }
+
+        if (array_key_exists($email, AgentKnownEmails::emailsOf($agent))) {
+            return $back()->withErrors(['knownEmail' => 'That is already this agent\'s login, contact or username email.'])->withInput();
+        }
+
+        $row = \App\Models\Core\AgentKnownEmail::firstOrCreate(
+            ['propagent_id' => $agent->id, 'email' => $email],
+            ['source' => mb_substr('Added by an admin' . (filled($data['note'] ?? null) ? ': ' . trim($data['note']) : ''), 0, 255), 'created_at' => now()]
+        );
+
+        return $back()->with('status', $row->wasRecentlyCreated ? "Saved {$email} under Other Known Emails." : "{$email} was already listed.");
+    }
+
+    /** Remove one of an agent's "other known emails" (POST). {id} is the agent; "row" is the record. */
+    public function agentKnownEmailRemove(Request $request, $id)
+    {
+        $agent = Propagent::findOrFail($id);
+        $back  = fn () => redirect()->to(route('admin.agentView', $agent->id) . '#known-emails');
+
+        $data = $request->validate(['row' => ['required', 'integer']]);
+
+        if (!AgentKnownEmails::available()) {
+            return $back()->withErrors(['knownEmail' => 'The "other known emails" table has not been created yet.']);
+        }
+
+        $row = \App\Models\Core\AgentKnownEmail::where('propagent_id', $agent->id)->where('id', (int) $data['row'])->first();
+
+        if (!$row) {
+            return $back()->withErrors(['knownEmail' => 'That email is not on this agent.']);
+        }
+
+        $row->delete();
+
+        return $back()->with('status', "Removed {$row->email} from Other Known Emails.");
     }
 
     /**
@@ -705,8 +772,9 @@ class adminController extends Controller
 
         $busy     = $this->flyersBeingDelivered($flyers->pluck('id')->all());
         $blockers = DuplicateAccounts::blockersFor($accounts);
+        $known    = AgentKnownEmails::forMany($accounts->pluck('id')->map(fn ($accountId) => (int) $accountId)->all());
 
-        $rows = $accounts->map(function ($account) use ($flyers, $busy, $blockers) {
+        $rows = $accounts->map(function ($account) use ($flyers, $busy, $blockers, $known) {
             $mine = $flyers->where('propagent_id', $account->id)->values();
             $b    = $blockers[(int) $account->id] ?? ['flyers' => 0, 'reasons' => []];
 
@@ -718,6 +786,7 @@ class adminController extends Controller
                 'login'   => $account->xxAgtUname,
                 'email'   => $account->agtEmail,
                 'phone'   => $account->agtMainPhone,
+                'known'   => $known[(int) $account->id] ?? [],
                 'place'   => trim(($account->agtCity ?? '') . ' ' . ($account->agtState ?? '')),
                 'start'   => $account->startDate,
                 'credits' => (int) ($account->remCreds ?? 0),
@@ -818,6 +887,12 @@ class adminController extends Controller
             return $back()->withErrors(['merge' => 'Nothing was moved: the ticked flyers are not in the other accounts, or are being delivered right now.']);
         }
 
+        // accounts of one NAME can have different emails: those have to be kept, so no by-name merge
+        // runs until the "other known emails" table exists to keep them in
+        if ($this->byName($request) && !AgentKnownEmails::available()) {
+            return $back()->withErrors(['merge' => 'Nothing was moved: the "other known emails" table does not exist yet, so the old accounts\' emails could not be kept. Create it first (the SQL is on any agent\'s page, under Other Known Emails).']);
+        }
+
         try {
             $tables = $this->flyerLinkedTables();
         } catch (\Throwable $e) {
@@ -826,11 +901,12 @@ class adminController extends Controller
             return $back()->withErrors(['merge' => 'Could not work out which tables hold flyer data, so nothing was moved.']);
         }
 
-        $counts     = [];
-        $destOffice = optional($dest->theAgtOffice)->officeID;
+        $counts      = [];
+        $emailsSaved = [];
+        $destOffice  = optional($dest->theAgtOffice)->officeID;
 
         try {
-            DB::transaction(function () use ($movable, $accounts, $dest, $tables, $destOffice, &$counts) {
+            DB::transaction(function () use ($movable, $accounts, $dest, $tables, $destOffice, &$counts, &$emailsSaved) {
                 // the moved rows are stamped in the receiving agent's timezone
                 AgentTime::apply($dest);
 
@@ -859,6 +935,18 @@ class adminController extends Controller
                             ->update(['propagent_id' => $dest->id]);
 
                         $counts[$table] = ($counts[$table] ?? 0) + $n;
+                    }
+
+                    // the account these flyers came from is likely to be deleted next: keep its emails on
+                    // this one (inside the same transaction - if they can't be kept, nothing moves)
+                    $sourceAccount = $accounts->firstWhere('id', (int) $sourceId);
+
+                    if ($sourceAccount && AgentKnownEmails::available()) {
+                        $emailsSaved = array_merge($emailsSaved, AgentKnownEmails::remember(
+                            $dest,
+                            $sourceAccount,
+                            'Merged from #' . $sourceAccount->id . ' ' . ($sourceAccount->agtFullName ?: trim(($sourceAccount->agtFirst ?? '') . ' ' . ($sourceAccount->agtLast ?? '')))
+                        ));
                     }
                 }
             });
@@ -892,6 +980,10 @@ class adminController extends Controller
 
         if ($skipped > 0) {
             $message .= " Skipped {$skipped} (already in that account, not in these accounts, or being delivered right now).";
+        }
+
+        if ($emailsSaved !== []) {
+            $message .= ' Kept the old account\'s email(s) under Other Known Emails: ' . implode(', ', array_unique($emailsSaved)) . '.';
         }
 
         $message .= $this->startDateHint($accounts, $dest);
@@ -946,6 +1038,10 @@ class adminController extends Controller
             return $fail('One of this account\'s campaigns is being delivered right now. Try again when it has finished.');
         }
 
+        if ($this->byName($request) && !AgentKnownEmails::available()) {
+            return $fail('Nothing was moved: the "other known emails" table does not exist yet, so this account\'s emails could not be kept. Create it first (the SQL is on any agent\'s page, under Other Known Emails).');
+        }
+
         $counts = [];
 
         try {
@@ -954,6 +1050,15 @@ class adminController extends Controller
                     $counts[$label] = DB::table($table)
                         ->where('propagent_id', $source->id)
                         ->update(['propagent_id' => $dest->id]);
+                }
+
+                // this account is about to be emptied and deleted: keep its emails on the one receiving its history
+                if (AgentKnownEmails::available()) {
+                    AgentKnownEmails::remember(
+                        $dest,
+                        $source,
+                        'Merged from #' . $source->id . ' ' . ($source->agtFullName ?: trim(($source->agtFirst ?? '') . ' ' . ($source->agtLast ?? '')))
+                    );
                 }
             });
         } catch (\Throwable $e) {
@@ -1122,6 +1227,24 @@ class adminController extends Controller
 
         $name = $agent->agtFullName ?: trim(($agent->agtFirst ?? '') . ' ' . ($agent->agtLast ?? '')) ?: 'No name';
 
+        // The account's emails must not vanish with it: save them on the account that stays - the one
+        // chosen on the merge page (?keep=), else the one with the most flyers. A by-name delete
+        // refuses when they can't be saved; a by-login one goes ahead (it shares that login email).
+        $keeper     = $others->firstWhere('id', (int) $request->input('keep')) ?: $this->primaryAccount($others);
+        $savedMails = [];
+
+        if (AgentKnownEmails::available()) {
+            try {
+                $savedMails = AgentKnownEmails::remember($keeper, $agent, 'Merged from #' . $agent->id . ' ' . $name);
+            } catch (\Throwable $e) {
+                Log::error('Could not keep the emails of duplicate account ' . $agent->id . ': ' . $e->getMessage());
+
+                return $fail('Not deleted: this account\'s emails could not be saved on the account that stays. (' . $e->getMessage() . ')');
+            }
+        } elseif ($this->byName($request)) {
+            return $fail('Not deleted: the "other known emails" table does not exist yet, so this account\'s emails could not be kept. Create it first (the SQL is on any agent\'s page, under Other Known Emails).');
+        }
+
         $agent->delete();
 
         // Tidy the account's unused password links. Best effort: the table comes from the
@@ -1143,6 +1266,10 @@ class adminController extends Controller
 
         $message = "Deleted account #{$agent->id} {$name}.";
 
+        if ($savedMails !== []) {
+            $message .= ' Its email(s) (' . implode(', ', $savedMails) . ') are kept under Other Known Emails on #' . $keeper->id . ' ' . ($keeper->agtFullName ?: trim(($keeper->agtFirst ?? '') . ' ' . ($keeper->agtLast ?? ''))) . '.';
+        }
+
         // Where next: still duplicates left on this email -> stay in the tool; otherwise the list.
         // The list link carries the group's anchor, so the page scrolls back to where you were.
         if ($this->byName($request)) {
@@ -1156,6 +1283,18 @@ class adminController extends Controller
         }
 
         return redirect($to)->with('status', $message);
+    }
+
+    /** Of these accounts, the one to treat as the agent's main one: the most flyers (deleted ones count), then the oldest. */
+    private function primaryAccount($accounts)
+    {
+        $counts = Propflyer::withTrashed()
+            ->whereIn('propagent_id', $accounts->pluck('id')->all())
+            ->selectRaw('propagent_id, COUNT(*) as total')
+            ->groupBy('propagent_id')
+            ->pluck('total', 'propagent_id');
+
+        return $accounts->sortBy(fn ($account) => [-(int) ($counts[$account->id] ?? 0), (int) $account->id])->first();
     }
 
     /** [flyerId => true] for flyers with a campaign that has started delivering but not finished. */

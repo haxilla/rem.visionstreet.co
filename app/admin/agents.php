@@ -221,12 +221,15 @@ if (request()->has('duplicateNames')) {
 
     $nameBlockers = \App\Support\DuplicateAccounts::blockersFor($nameAccounts->values());
 
+    // emails an account is also known by (kept when duplicate accounts were merged into it earlier)
+    $nameKnown = \App\Support\AgentKnownEmails::forMany($nameIds);
+
     // true when two or more of these values are the same (blanks never count)
     $repeats = fn ($values) => collect($values)->filter()->duplicates()->isNotEmpty();
 
-    $nameDupGroups = collect($sharedNames)->map(function ($ids, $key) use ($nameAccounts, $nameStats, $nameBlockers, $repeats) {
+    $nameDupGroups = collect($sharedNames)->map(function ($ids, $key) use ($nameAccounts, $nameStats, $nameBlockers, $nameKnown, $repeats) {
 
-        $rows = collect($ids)->map(function ($id) use ($nameAccounts, $nameStats, $nameBlockers) {
+        $rows = collect($ids)->map(function ($id) use ($nameAccounts, $nameStats, $nameBlockers, $nameKnown) {
             $a = $nameAccounts->get($id);
             $s = $nameStats->get($id);
             $b = $nameBlockers[(int) $id] ?? ['flyers' => 0, 'reasons' => []];
@@ -235,6 +238,7 @@ if (request()->has('duplicateNames')) {
                 'id'         => (int) $id,
                 'name'       => $a->agtFullName ?: (trim(($a->agtFirst ?? '') . ' ' . ($a->agtLast ?? '')) ?: 'No name'),
                 'login'      => $a->xxAgtUname,
+                'known'      => $nameKnown[(int) $id] ?? [],
                 'email'      => $a->agtEmail,
                 'phone'      => $a->agtMainPhone,
                 'office'     => optional($a->theAgtOffice)->officeName,
@@ -250,7 +254,7 @@ if (request()->has('duplicateNames')) {
         })->values();
 
         // what points to ONE person with two accounts
-        $sameEmail  = $repeats($rows->flatMap(fn ($r) => array_unique([mb_strtolower(trim((string) $r['login'])), mb_strtolower(trim((string) $r['email']))])));
+        $sameEmail  = $repeats($rows->flatMap(fn ($r) => array_unique(array_map(fn ($e) => mb_strtolower(trim((string) $e)), array_merge([$r['login'], $r['email']], $r['known'])))));
         $samePhone  = $repeats($rows->map(fn ($r) => strlen($d = preg_replace('/\D/', '', (string) $r['phone'])) >= 7 ? substr($d, -10) : null));
         $sameOffice = $repeats($rows->map(fn ($r) => mb_strtolower(trim((string) $r['office']))));
 

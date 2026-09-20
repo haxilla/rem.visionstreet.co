@@ -99,6 +99,12 @@ Route::post('/admin/agentOffice/{id}',
 Route::post('/admin/agentDelete/{id}',
 [adminController::class, 'agentDelete'])->whereNumber('id')->name('admin.agentDelete');
 
+//an agent's "other known emails": add one by hand / remove one (POST only)
+Route::post('/admin/agentKnownEmailAdd/{id}',
+[adminController::class, 'agentKnownEmailAdd'])->whereNumber('id')->name('admin.agentKnownEmailAdd');
+Route::post('/admin/agentKnownEmailRemove/{id}',
+[adminController::class, 'agentKnownEmailRemove'])->whereNumber('id')->name('admin.agentKnownEmailRemove');
+
 //backdate the receiving account's start date to the earliest one in the duplicate group (POST only)
 Route::post('/admin/agentMergeStartDate/{id}',
 [adminController::class, 'agentMergeStartDate'])->whereNumber('id')->name('admin.agentMergeStartDate');

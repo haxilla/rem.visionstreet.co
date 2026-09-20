@@ -798,6 +798,88 @@
                 </div>
             </section>
 
+            {{-- OTHER KNOWN EMAILS: addresses this agent has used besides the login and contact emails.
+                 Merging a duplicate account into this one saves the deleted account's emails here
+                 automatically (adminController::agentDeleteDuplicate / agentMergeSave); one can also be
+                 added or removed by hand. It is only a record - none of these can sign in - and the
+                 Agents search finds an agent by any of them. --}}
+            <section id="known-emails" class="{{ $card }}">
+
+                <div class="{{ $cardHead }}">
+                    <h2 class="text-base font-semibold text-slate-900 sm:text-lg">Other Known Emails</h2>
+                    <p class="mt-0.5 text-sm text-slate-500">
+                        Addresses this agent has also used, besides the login and contact emails above. Saved here automatically
+                        when a duplicate account is merged into this one. A record only - none of these signs in.
+                    </p>
+                </div>
+
+                @if($errors->has('knownEmail'))
+                    <div class="border-b border-red-100 bg-red-50 px-5 py-3 text-sm font-semibold text-red-700 sm:px-6">
+                        {{ $errors->first('knownEmail') }}
+                    </div>
+                @endif
+
+                @if(!($knownEmailsAvailable ?? false))
+                    <div class="px-5 py-4 sm:px-6">
+                        <p class="text-sm text-slate-600">
+                            The table that holds these has not been created yet. Run this once in MySQL. Until then a merge of accounts
+                            with different emails (Duplicate Names) will refuse, because it could not keep the old email.
+                        </p>
+                        <pre class="mt-3 overflow-x-auto rounded-xl bg-slate-900 p-4 text-xs leading-relaxed text-slate-100">{{ \App\Support\AgentKnownEmails::SETUP_SQL }}</pre>
+                    </div>
+                @else
+                    <div class="{{ $cardBody }} divide-y divide-slate-100">
+                        @forelse($knownEmails as $known)
+                            <div class="flex flex-wrap items-center justify-between gap-3 py-3">
+                                <div class="min-w-0">
+                                    <div class="break-all text-sm font-semibold text-slate-900">{{ $known->email }}</div>
+                                    <div class="text-xs text-slate-500">
+                                        {{ $known->source ?: 'Added' }}
+                                        @if($known->created_at)
+                                            &middot; {{ \Carbon\Carbon::parse($known->created_at)->format('m/d/Y') }}
+                                        @endif
+                                    </div>
+                                </div>
+
+                                <form method="POST" action="{{ route('admin.agentKnownEmailRemove', $agent->id) }}"
+                                      onsubmit="return confirm({{ \Illuminate\Support\Js::from('Remove ' . $known->email . ' from this agent\'s other known emails?') }})">
+                                    @csrf
+                                    <input type="hidden" name="row" value="{{ $known->id }}">
+                                    <button type="submit" class="rounded-lg border border-red-200 px-2.5 py-1 text-xs font-semibold text-red-600 hover:bg-red-50">
+                                        Remove
+                                    </button>
+                                </form>
+                            </div>
+                        @empty
+                            <p class="py-4 text-sm text-slate-500">No other emails saved for this agent.</p>
+                        @endforelse
+                    </div>
+
+                    <form method="POST" action="{{ route('admin.agentKnownEmailAdd', $agent->id) }}"
+                          class="flex flex-col gap-2 border-t border-slate-100 px-5 py-4 sm:flex-row sm:items-end sm:px-6">
+                        @csrf
+
+                        <label class="flex-1 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                            Add an email
+                            <input type="email" name="email" required maxlength="255" value="{{ old('email') }}"
+                                   placeholder="name@example.com"
+                                   class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-normal normal-case tracking-normal text-slate-900">
+                        </label>
+
+                        <label class="flex-1 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                            Note (optional)
+                            <input type="text" name="note" maxlength="120" value="{{ old('note') }}"
+                                   placeholder="e.g. old work email"
+                                   class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-normal normal-case tracking-normal text-slate-900">
+                        </label>
+
+                        <button type="submit" class="rounded-lg bg-[#214e9b] px-4 py-2 text-sm font-semibold text-white hover:bg-[#1b3f80]">
+                            Add
+                        </button>
+                    </form>
+                @endif
+            </section>
+
         </div>
 
     </div>

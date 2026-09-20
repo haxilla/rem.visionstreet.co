@@ -33,6 +33,14 @@ $found = Propagent::query()
             $outer->orWhere('id', (int) $q);
         }
 
+        // an email the agent is known by but no longer uses (kept when accounts were merged): finds the
+        // agent from an old address
+        if (\App\Support\AgentKnownEmails::available()) {
+            $outer->orWhereIn('id', \App\Models\Core\AgentKnownEmail::query()
+                ->select('propagent_id')
+                ->where('email', 'like', '%' . addcslashes($q, '\\%_') . '%'));
+        }
+
         $outer->orWhere(function ($all) use ($words, $fields) {
             foreach ($words as $word) {
                 // % and _ typed by the admin are literal characters, not wildcards
