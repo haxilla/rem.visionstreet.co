@@ -35,13 +35,14 @@ class AgentProfile
     ];
 
     /**
-     * Licence details: column => label (all up to 100 characters). agtBoard holds the agent's MLS - the
-     * Multiple Listing Service they belong to (ARMLS is the Arizona Regional Multiple Listing Service) -
-     * not a "board"; the column keeps its old name, the label is "MLS". agtMlsID is their ID within it.
+     * Licence details: column => label (all up to 100 characters). agtMLS holds the agent's MLS - the
+     * Multiple Listing Service they belong to (ARMLS is the Arizona Regional Multiple Listing Service);
+     * agtMlsID is their ID within it. (agtMLS was called agtBoard by the old system, which is not what it
+     * held - a board is a local Realtor association such as PAR.)
      */
     public const LICENSE = [
         'agtMlsID'  => 'MLS ID',
-        'agtBoard'  => 'MLS',
+        'agtMLS'    => 'MLS',
         'agtDesigs' => 'Designations',
         'agtCounty' => 'County',
     ];
@@ -95,7 +96,7 @@ class AgentProfile
         $rules = array_map(fn () => ['nullable', 'string', 'max:100'], self::LICENSE);
 
         // the MLS is a choice from the list (or left blank), not free text
-        $rules['agtBoard'] = ['nullable', 'string', 'max:100', function ($attribute, $value, $fail) {
+        $rules['agtMLS'] = ['nullable', 'string', 'max:100', function ($attribute, $value, $fail) {
             $value = self::canonicalMls($value);
 
             if ($value !== '' && !isset(self::MLS_OPTIONS[$value])) {
@@ -171,8 +172,8 @@ class AgentProfile
         $licenseData = array_intersect_key($data, self::LICENSE);
 
         // "armls" is saved as "ARMLS"
-        if (isset($licenseData['agtBoard'])) {
-            $licenseData['agtBoard'] = self::canonicalMls($licenseData['agtBoard']);
+        if (isset($licenseData['agtMLS'])) {
+            $licenseData['agtMLS'] = self::canonicalMls($licenseData['agtMLS']);
         }
 
         AgentTime::apply($agent);

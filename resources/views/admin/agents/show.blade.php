@@ -62,7 +62,7 @@
 
     $licenseFields = [
         ['agtMlsID',    'MLS ID'],
-        ['agtBoard',    'MLS'],
+        ['agtMLS',     'MLS'],
         ['agtDesigs',   'Designations'],
     ];
 
@@ -469,9 +469,9 @@
                             <div class="{{ $row }}">
                                 <label for="f_{{ $field }}" class="{{ $label }}">{{ $fieldLabel }}</label>
 
-                                @if($field === 'agtBoard')
+                                @if($field === 'agtMLS')
                                     {{-- the MLS (Multiple Listing Service) is a choice from a short list (AgentProfile::MLS_OPTIONS), not free text --}}
-                                    @php $mlsNow = \App\Support\AgentProfile::canonicalMls(old($field, $agent->agtBoard)); @endphp
+                                    @php $mlsNow = \App\Support\AgentProfile::canonicalMls(old($field, $agent->agtMLS)); @endphp
                                     <select id="f_{{ $field }}" name="{{ $field }}" class="{{ $input }}">
                                         <option value="">Select an MLS</option>
                                         @foreach(\App\Support\AgentProfile::mlsChoices() as $mlsValue => $mlsText)

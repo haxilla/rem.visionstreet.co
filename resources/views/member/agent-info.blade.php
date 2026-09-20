@@ -318,10 +318,10 @@
                                value="{{ old('agtMlsID', $agent->agtMlsID) }}">
                     </div>
                     <div class="ai-field">
-                        <label for="agtBoard">MLS</label>
+                        <label for="agtMLS">MLS</label>
                         {{-- a choice from a short list (AgentProfile::MLS_OPTIONS), not free text --}}
-                        @php $mlsNow = \App\Support\AgentProfile::canonicalMls(old('agtBoard', $agent->agtBoard)); @endphp
-                        <select id="agtBoard" name="agtBoard">
+                        @php $mlsNow = \App\Support\AgentProfile::canonicalMls(old('agtMLS', $agent->agtMLS)); @endphp
+                        <select id="agtMLS" name="agtMLS">
                             <option value="">Select your MLS</option>
                             @foreach(\App\Support\AgentProfile::mlsChoices() as $mlsValue => $mlsText)
                                 <option value="{{ $mlsValue }}" @selected($mlsNow === $mlsValue)>{{ $mlsText }}</option>
