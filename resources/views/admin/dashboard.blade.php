@@ -4,6 +4,43 @@
 
 @include('admin.layout.nav')
 
+{{-- Layout of a dashboard campaign card (admin/dashRow), as PLAIN CSS on purpose: where
+     things sit must not depend on Tailwind classes that only exist after a stylesheet
+     rebuild. Wide: a grid of thumbnail | address + agent + subject (takes the rest) |
+     dates | areas button, all vertically centred, so nothing can wrap onto a row of its
+     own. Narrow: the thumbnail and details on top, the dates and button underneath. --}}
+<style>
+    .dash-sum { list-style: none; display: block; }
+    .dash-sum::-webkit-details-marker { display: none; }
+
+    .dash-card {
+        display: grid;
+        grid-template-columns: 5rem minmax(0, 1fr);
+        gap: 0.6rem 0.9rem;
+        align-items: start;
+        padding: 0.75rem;
+    }
+
+    .dc-thumb   { width: 5rem; height: 3.75rem; }
+    .dc-main    { min-width: 0; }
+    .dc-dates   { grid-column: 1 / -1; }
+    .dc-toggle  { grid-column: 1 / -1; }
+
+    /* the address line and the agent line wrap their items; the subject stays on one line */
+    .dc-line    { display: flex; flex-wrap: wrap; align-items: center; column-gap: 0.5rem; row-gap: 0.25rem; }
+    .dc-subject { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    .dc-pair    { display: flex; gap: 0.5rem; }
+    .dc-label   { width: 5rem; flex: none; font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: #64748b; }
+
+    @media (min-width: 900px) {
+        .dash-card  { grid-template-columns: 6rem minmax(0, 1fr) 16.5rem auto; align-items: center; }
+        .dc-thumb   { width: 6rem; height: 4.5rem; }
+        .dc-dates,
+        .dc-toggle  { grid-column: auto; }
+    }
+</style>
+
 @php
     /*
         One card per flyer per stage (its requested areas open in a dropdown); the
