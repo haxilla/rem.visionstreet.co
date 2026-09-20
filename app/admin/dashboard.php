@@ -8,7 +8,7 @@
 | rows in propdelivnow), each carrying its areas for the dropdown plus what an
 | admin wants to know before acting: who the agent is and their credits, when
 | it was requested, how many contacts, whether it is free/admin-added, the
-| flyer's next open house, bonus / price reduction, and when it last sent.
+| flyer's open house and price reduction, and when it last sent.
 |
 | Stages (same rules the dashboard always had):
 |   waiting     - requested, request time has passed, not started
@@ -119,7 +119,7 @@ $flyers = Propflyer::withTrashed()
     ->whereIn('id', $flyerIds)
     ->get([
         'id', 'xFullStreet', 'xCity', 'state', 'xZip', 'deleted_at',
-        'openHouseDate1', 'openHouseDate2', 'agentBonusAmount', 'reducedAmount',
+        'openHouseDate1', 'openHouseDate2', 'reducedAmount',
     ])
     ->keyBy('id');
 
@@ -142,12 +142,18 @@ $groupByFlyer = function ($rows) use ($flyers, $agents, $lastSent, $parseDate, $
             ? "/hqphotos/{$meta->zipDir}/{$meta->mlsDir}/{$photo->photoName}"
             : null;
 
-        // the next open house that hasn't happened yet
-        $openHouse = collect([$flyer?->openHouseDate1, $flyer?->openHouseDate2])
+        // the flyer's open house: the next one that hasn't happened yet, else the latest
+        // one it had (null when it has none)
+        $openHouses = collect([$flyer?->openHouseDate1, $flyer?->openHouseDate2])
             ->map($parseDate)
-            ->filter(fn ($d) => $d && $d->gte($today))
+            ->filter()
             ->sort()
-            ->first();
+            ->values();
+
+        $openHouse = $openHouses->first(fn ($d) => $d->gte($today)) ?? $openHouses->last();
+
+        // the price reduction as a number (a typed "$10,000" still counts)
+        $reduced = $flyer ? (float) preg_replace('/[^0-9.]/', '', (string) $flyer->reducedAmount) : 0;
 
         $subjects = $items->pluck('subject')->filter()->unique()->values();
         $last     = $parseDate($lastSent->get($flyerId));
@@ -169,10 +175,8 @@ $groupByFlyer = function ($rows) use ($flyers, $agents, $lastSent, $parseDate, $
             'areas'         => $items->sortBy('area')->values(),
             'contacts'      => (int) $items->sum(fn ($r) => (int) $r['contacts']),
             'authorized'    => $items->where('authorized', true)->count(),
-            'admin_added'   => $items->contains('admin_added', true),
             'open_house'    => $openHouse,
-            'bonus'         => $flyer && !empty($flyer->agentBonusAmount),
-            'reduced'       => $flyer && !empty($flyer->reducedAmount),
+            'reduced'       => $reduced > 0 ? $reduced : null,
             'last_sent'     => $last,
         ];
     })->values();

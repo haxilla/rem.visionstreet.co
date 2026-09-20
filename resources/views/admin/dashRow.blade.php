@@ -75,17 +75,11 @@
                         <span class="text-slate-300">&middot;</span>
                         <span>{{ $group['last_sent'] ? 'Last sent ' . $group['last_sent']->format('M j, Y') : 'Never sent' }}</span>
 
-                        @if($group['admin_added'])
-                            <span class="{{ $chip }} bg-violet-100 text-violet-700">Admin added &middot; Free</span>
-                        @endif
                         @if($group['open_house'])
                             <span class="{{ $quiet }}">Open house {{ $group['open_house']->format('M j') }}</span>
                         @endif
-                        @if($group['bonus'])
-                            <span class="{{ $quiet }}">Agent bonus</span>
-                        @endif
                         @if($group['reduced'])
-                            <span class="{{ $quiet }}">Price reduced</span>
+                            <span class="{{ $quiet }}">Reduced ${{ number_format($group['reduced']) }}</span>
                         @endif
                     </div>
 
