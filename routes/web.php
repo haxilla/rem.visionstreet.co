@@ -132,6 +132,11 @@ Route::get('/member/flyer/photos/{flyerId}', [memberController::class, 'flyerPho
 Route::get('/member/campaigns/{flyerId}', [memberController::class, 'flyerCampaigns'])
     ->whereNumber('flyerId')->name('member.flyerCampaigns');
 
+//the agent's own "Account Info" page (plan, credits, username + password reset link, order history)
+Route::get('/member/account', [memberController::class, 'accountInfo'])->name('member.account');
+Route::post('/member/account/password-link', [memberController::class, 'accountPasswordLink'])
+    ->middleware('throttle:5,1')->name('member.account.passwordLink');
+
 //the agent's own "Agent Info" page: edit details, add / change / remove photo and logo (member-only via the controller)
 Route::get('/member/agent-info', [memberController::class, 'agentInfo'])->name('member.agentInfo');
 Route::post('/member/agent-info', [memberController::class, 'agentInfoSave'])->name('member.agentInfo.save');

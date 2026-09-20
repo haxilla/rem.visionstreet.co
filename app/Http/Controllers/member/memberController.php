@@ -9,10 +9,13 @@ use App\Models\Core\Propdelivnow;
 use App\Models\Core\Propflyer;
 use App\Models\Core\Propmapping;
 use App\Models\Core\Propremark;
+use App\Support\AgentCampaigns;
 use App\Support\AgentImages;
 use App\Support\AgentImageStore;
+use App\Support\AgentPasswords;
 use App\Support\AgentProfile;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class memberController extends Controller
@@ -105,6 +108,48 @@ class memberController extends Controller
         }
 
         return redirect('/member/agent-info')->with('status', 'Your agent info was saved.');
+    }
+
+    /**
+     * "Account Info" (/member/account): the agent's plan (type, start date, expiry, credits),
+     * a little activity summary, the sign-in username with a way to email themselves a
+     * password reset link, and their order history.
+     */
+    public function accountInfo()
+    {
+        $agent = Propagent::findOrFail(auth('member')->id());
+
+        $campaigns = AgentCampaigns::forAgent($agent->id)->where('status', 'completed');
+
+        return view('member.account', [
+            'agent'    => $agent,
+            'orders'   => DB::table('allorders')->where('propagent_id', $agent->id)->orderByDesc('payment_date')->get(),
+            'flyers'   => Propflyer::where('propagent_id', $agent->id)->count(),
+            'sent'     => $campaigns->count(),
+            'emails'   => (int) $campaigns->sum(fn ($row) => (int) $row['emails']),
+            'maskedEmail' => AgentPasswords::maskEmail((string) $agent->xxAgtUname),
+        ]);
+    }
+
+    /** Email the agent a password reset link at their sign-in email (same link as "Forgot password"). */
+    public function accountPasswordLink(Request $request)
+    {
+        $agent  = Propagent::findOrFail(auth('member')->id());
+        $result = AgentPasswords::sendLink($agent, 'forgot', $request->ip());
+
+        if ($result === 'sent') {
+            return redirect('/member/account#signin')->with('status',
+                'We emailed a password reset link to ' . AgentPasswords::maskEmail((string) $agent->xxAgtUname)
+                . '. It works once and expires in ' . AgentPasswords::LINK_MINUTES . ' minutes.');
+        }
+
+        if ($result === 'limited') {
+            return redirect('/member/account#signin')->with('status',
+                'A link was just sent - please check your email. You can ask for another in a minute.');
+        }
+
+        return redirect('/member/account#signin')
+            ->withErrors(['passwordLink' => 'We could not send the link. Please contact support.']);
     }
 
     /** Add or change the agent's own photo or logo ($kind is "photo" or "logo"). */

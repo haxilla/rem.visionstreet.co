@@ -119,8 +119,19 @@ class guestController extends Controller
             // Normally exactly one. If the same email still has several accounts (admins
             // merge them from the "Duplicate Logins" tab on the Agents page) the one with
             // the most flyers is opened - see AgentPasswords::primaryAccount.
-            Auth::guard('member')->login(AgentPasswords::primaryAccount($open));
+            $agent = AgentPasswords::primaryAccount($open);
+
+            Auth::guard('member')->login($agent);
             $request->session()->regenerate();
+
+            // "Last sign-in" on the agent's Account Info page (in the agent's own timezone). Best
+            // effort - never lets a problem here stop someone signing in.
+            try {
+                Propagent::whereKey($agent->id)->toBase()->update(['lastLogin' => AgentTime::now($agent)]);
+            } catch (\Throwable $e) {
+                Log::warning('Could not record last sign-in for agent ' . $agent->id . ': ' . $e->getMessage());
+            }
+
             return redirect()->intended('/member/dashboard');
         }
 
