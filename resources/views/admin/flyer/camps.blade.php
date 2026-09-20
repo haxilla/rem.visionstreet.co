@@ -63,7 +63,15 @@ $addableAreas = collect($data['emailCounts'] ?? [])
 // null, with the real date only in the legacy creationDate column.
 // The flyer's last delivery (propflyerstats.xLastDeliveryDate - set by the mailer,
 // and raised by the Edit dates form). Legacy rows can hold NULL or a zero date.
+// It comes back as a plain string (the model's $dates list isn't applied any more).
 $lastSent = optional($propInfo->theStats)->xLastDeliveryDate;
+
+try {
+    $lastSent = $lastSent ? \Carbon\Carbon::parse($lastSent) : null;
+} catch (\Throwable $e) {
+    $lastSent = null;
+}
+
 $lastSent = ($lastSent && $lastSent->year > 1970) ? $lastSent : null;
 
 $createdDate = null;
