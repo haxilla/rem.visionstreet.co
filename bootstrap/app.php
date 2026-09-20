@@ -26,5 +26,18 @@ return Application::configure(basePath: dirname(__DIR__))
         });
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        // Laravel does not log "404 not found" at all, which made an intermittent 404 impossible to
+        // trace. One short line per 404 - what was asked for, how, and from which page - so the log
+        // shows it. (Returning nothing lets the normal 404 page render as before.)
+        $exceptions->render(function (\Symfony\Component\HttpKernel\Exception\NotFoundHttpException $e, Request $request) {
+            \Illuminate\Support\Facades\Log::warning('404 Not Found', [
+                'method'  => $request->method(),
+                'url'     => $request->fullUrl(),
+                'referer' => $request->headers->get('referer'),
+                'reason'  => $e->getPrevious() ? class_basename($e->getPrevious()) . ': ' . $e->getPrevious()->getMessage() : $e->getMessage(),
+                'ajax'    => $request->ajax(),
+            ]);
+
+            return null;
+        });
     })->create();

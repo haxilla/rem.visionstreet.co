@@ -3,11 +3,12 @@
 // Validate segments & depth
 foreach ($parts as $seg) {
     if (!preg_match('/^[A-Za-z0-9_-]+$/', $seg)) {
-        throw new \InvalidArgumentException("Invalid segment: $seg");}}
+        // an address like /sitemap.xml or /robots.txt is just "not found" - not a server error
+        abort(404, "Invalid segment: $seg");}}
 
 // max parts check
 if (count($parts) > self::MAX_SEGMENTS) {
-    throw new \RuntimeException('Too many path segments (max ' . self::MAX_SEGMENTS . ').');}
+    abort(404, 'Too many path segments (max ' . self::MAX_SEGMENTS . ').');}
 
 //standardize to $renderfrom
 $renderfrom = $parts ? implode('.', $parts) : '';
@@ -52,7 +53,4 @@ foreach ($appCandidates as $p) {
     if (is_file($p))  { include $p; break; }}
 
 if (!$viewName) {
-    throw new 
-    \RuntimeException(
-        "View not found for path: '$renderfrom'"
-    );} 
+    abort(404, "View not found for path: '$renderfrom'");} 
