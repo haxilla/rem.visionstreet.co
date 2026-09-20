@@ -476,11 +476,22 @@
                                     </a>
                                 </div>
 
-                                <label class="mt-4 flex cursor-pointer items-center gap-2 border-t border-slate-100 pt-3 text-sm font-semibold text-slate-700">
-                                    <input type="checkbox" name="ids[]" value="{{ $agent->id }}" form="bulkDeleteForm"
-                                           class="agent-check h-5 w-5 rounded border-slate-300">
-                                    Select for deletion
-                                </label>
+                                @php
+                                    $b       = ($data['noStartBlockers'] ?? [])[(int) $agent->id] ?? ['flyers' => 0, 'orders' => 0, 'campaigns' => 0, 'reasons' => []];
+                                    $canDel  = \App\Support\DuplicateAccounts::canDelete($b);
+                                @endphp
+
+                                @if($canDel)
+                                    <label class="mt-4 flex cursor-pointer items-center gap-2 border-t border-slate-100 pt-3 text-sm font-semibold text-slate-700">
+                                        <input type="checkbox" name="ids[]" value="{{ $agent->id }}" form="bulkDeleteForm"
+                                               class="agent-check h-5 w-5 rounded border-slate-300">
+                                        Select for deletion
+                                    </label>
+                                @else
+                                    <div class="mt-4 border-t border-slate-100 pt-3 text-xs font-semibold text-amber-700">
+                                        Can't be deleted: it has {{ \App\Support\DuplicateAccounts::describe($b) }}.
+                                    </div>
+                                @endif
                             </div>
 
                         @empty
@@ -550,10 +561,19 @@
                                             {{ $agent->agtEmail ?: '—' }}
                                         </td>
 
+                                        @php
+                                            $b      = ($data['noStartBlockers'] ?? [])[(int) $agent->id] ?? ['flyers' => 0, 'orders' => 0, 'campaigns' => 0, 'reasons' => []];
+                                            $canDel = \App\Support\DuplicateAccounts::canDelete($b);
+                                        @endphp
+
                                         <td class="whitespace-nowrap px-6 py-3 text-right">
-                                            <input type="checkbox" name="ids[]" value="{{ $agent->id }}" form="bulkDeleteForm"
-                                                   aria-label="Select {{ $displayName }} for deletion"
-                                                   class="agent-check h-5 w-5 rounded border-slate-300">
+                                            @if($canDel)
+                                                <input type="checkbox" name="ids[]" value="{{ $agent->id }}" form="bulkDeleteForm"
+                                                       aria-label="Select {{ $displayName }} for deletion"
+                                                       class="agent-check h-5 w-5 rounded border-slate-300">
+                                            @else
+                                                <span class="text-xs font-semibold text-amber-700">Has {{ \App\Support\DuplicateAccounts::describe($b) }}</span>
+                                            @endif
                                         </td>
 
                                     </tr>

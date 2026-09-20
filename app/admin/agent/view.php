@@ -23,3 +23,8 @@ $orders = DB::table('allorders')->where('propagent_id', $id)->orderByDesc('payme
 $sameEmailAccounts = \App\Support\AgentPasswords::accountsForEmail($agent->xxAgtUname)
     ->where('id', '!=', $agent->id)
     ->values();
+
+// What would be lost by deleting this account (flyers, orders, campaign records): if there is
+// any, the Delete button doesn't show and the page says why.
+$deleteBlockers = \App\Support\DuplicateAccounts::blockersFor(collect([$agent]))[(int) $agent->id]
+    ?? ['flyers' => 0, 'orders' => 0, 'campaigns' => 0, 'reasons' => []];

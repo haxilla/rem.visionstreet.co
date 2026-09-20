@@ -38,6 +38,12 @@ $noStartAgents = Propagent::select([
 ->orderBy('id', 'desc')
 ->paginate(25, ['*'], 'nostart_page');
 
+// Which of THIS page's no-start-date agents can't be deleted because they still own flyers,
+// orders or campaign records (flagged in the list and skipped by the bulk delete).
+$noStartBlockers = request()->has('nostart_page')
+    ? \App\Support\DuplicateAccounts::blockersFor($noStartAgents->getCollection())
+    : [];
+
 // No start date, but they DO have credits (a balance above zero).
 $noStartCreditAgents = Propagent::select([
     'id',
@@ -193,6 +199,7 @@ if (request()->has('duplicates') && $dupCount > 0) {
 session(['admin_agents_list_url' => request()->fullUrl()]);
 
 $data = [
+    'noStartBlockers' => $noStartBlockers,
     'dupCount' => $dupCount,
     'dupGroups' => $dupGroups,
     'activeAgents' => $activeAgents,

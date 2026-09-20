@@ -96,18 +96,26 @@ class adminController extends Controller
         // Only agents on the "No Start Date" list: no start date AND no credits.
         // (Agents who have credits are on their own review-only tab; this check
         // is here so a stale page or a hand-made request can't delete them.)
-        $deleted = Propagent::whereIn('id', $ids)
+        $candidates = Propagent::whereIn('id', $ids)
             ->whereNull('startDate')
             ->where(function ($query) {
                 $query->whereNull('remCreds')->orWhere('remCreds', '<=', 0);
             })
-            ->delete();
+            ->get();
+
+        // ...and nothing they own that deleting would orphan or destroy: flyers, orders,
+        // campaign records (see DuplicateAccounts). Those are flagged in the list and skipped.
+        $blockers   = DuplicateAccounts::blockersFor($candidates);
+        $deletable  = $candidates->filter(fn ($account) => DuplicateAccounts::canDelete($blockers[(int) $account->id]))
+            ->pluck('id')->all();
+
+        $deleted = $deletable === [] ? 0 : Propagent::whereIn('id', $deletable)->delete();
         $skipped = count($ids) - $deleted;
 
         $message = 'Deleted ' . $deleted . ($deleted === 1 ? ' agent.' : ' agents.');
 
         if ($skipped > 0) {
-            $message .= " Skipped {$skipped} (they have a start date or credits, or were already gone).";
+            $message .= " Skipped {$skipped} (they have a start date, credits, flyers, orders or campaign records, or were already gone).";
         }
 
         return redirect()->back()->with('status', $message);
@@ -129,6 +137,14 @@ class adminController extends Controller
         if (!is_null($agent->startDate) || (int) ($agent->remCreds ?? 0) > 0) {
             return redirect()->route('admin.agentView', $agent->id)
                 ->withErrors(['deleteAgent' => 'Not deleted: only an agent with no start date and no credits can be deleted.']);
+        }
+
+        // ...and only if it owns nothing that deleting would orphan or destroy.
+        $blockers = DuplicateAccounts::blockersFor(collect([$agent]))[(int) $agent->id];
+
+        if (!DuplicateAccounts::canDelete($blockers)) {
+            return redirect()->route('admin.agentView', $agent->id)
+                ->withErrors(['deleteAgent' => 'Not deleted: this account still has ' . DuplicateAccounts::describe($blockers) . '.']);
         }
 
         $name = $agent->agtFullName ?: trim(($agent->agtFirst ?? '') . ' ' . ($agent->agtLast ?? '')) ?: 'No name';
@@ -163,7 +179,7 @@ class adminController extends Controller
         $logo      = AgentImages::logo($agent);
         $hasOffice = (bool) $agent->theAgtOffice;
 
-        return view('admin.agents.show', compact('agent', 'flyerCount', 'campaignCount', 'campaignsInQueue', 'orders', 'photo', 'logo', 'hasOffice', 'sameEmailAccounts'));
+        return view('admin.agents.show', compact('agent', 'flyerCount', 'campaignCount', 'campaignsInQueue', 'orders', 'photo', 'logo', 'hasOffice', 'sameEmailAccounts', 'deleteBlockers'));
 
     }
 

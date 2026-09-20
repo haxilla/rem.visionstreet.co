@@ -167,15 +167,22 @@
                      (no start date) and has no credits - the same rule as the "No Start Date" list.
                      (A duplicate account is deleted from the Duplicate Logins tools instead.) --}}
                 @if(is_null($agent->startDate) && (int) ($agent->remCreds ?? 0) <= 0)
-                    <form method="POST" action="{{ route('admin.agentDelete', $agent->id) }}"
-                          @if(\App\Models\Core\AdminSetting::confirmAgentDeletion())
-                              onsubmit="return confirm({{ \Illuminate\Support\Js::from('Delete the account for ' . $displayName . ' (ID ' . $agent->id . ')?' . ($flyerCount > 0 ? ' They have ' . $flyerCount . ' ' . ($flyerCount === 1 ? 'flyer' : 'flyers') . ' that will be left without an owner.' : '') . ' This cannot be undone.') }})"
-                          @endif>
-                        @csrf
-                        <button type="submit" class="rounded-lg border border-red-200 px-4 py-2.5 text-sm font-semibold text-red-600 hover:bg-red-50">
-                            Delete account
-                        </button>
-                    </form>
+                    @if(\App\Support\DuplicateAccounts::canDelete($deleteBlockers))
+                        <form method="POST" action="{{ route('admin.agentDelete', $agent->id) }}"
+                              @if(\App\Models\Core\AdminSetting::confirmAgentDeletion())
+                                  onsubmit="return confirm({{ \Illuminate\Support\Js::from('Delete the account for ' . $displayName . ' (ID ' . $agent->id . ')? This cannot be undone.') }})"
+                              @endif>
+                            @csrf
+                            <button type="submit" class="rounded-lg border border-red-200 px-4 py-2.5 text-sm font-semibold text-red-600 hover:bg-red-50">
+                                Delete account
+                            </button>
+                        </form>
+                    @else
+                        {{-- Flagged: it has something that deleting would orphan or destroy, so there is no button --}}
+                        <div class="w-full text-xs font-semibold text-amber-700 sm:text-right">
+                            Can't be deleted: it still has {{ \App\Support\DuplicateAccounts::describe($deleteBlockers) }}.
+                        </div>
+                    @endif
                 @endif
             </div>
 

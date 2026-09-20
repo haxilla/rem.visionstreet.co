@@ -82,9 +82,37 @@ class DuplicateAccounts
         return $out;
     }
 
-    /** True when the account has no flyers and nothing else that deleting would destroy. */
+    /**
+     * True when the account has no flyers and nothing else that deleting would destroy.
+     * The same rule guards EVERY account delete (an agent's own page, the No Start Date
+     * bulk delete and the duplicate tools).
+     */
     public static function canDelete(array $blockers): bool
     {
         return $blockers['flyers'] === 0 && $blockers['reasons'] === [];
+    }
+
+    /** What is in the way, in words: "3 flyers, 2 orders, 12 campaign records". Empty when nothing is. */
+    public static function describe(array $blockers): string
+    {
+        $parts = [];
+
+        if (($blockers['flyers'] ?? 0) > 0) {
+            $parts[] = $blockers['flyers'] . ' ' . ($blockers['flyers'] === 1 ? 'flyer' : 'flyers');
+        }
+
+        if (in_array('credits', $blockers['reasons'] ?? [], true)) {
+            $parts[] = 'credits';
+        }
+
+        if (($blockers['orders'] ?? 0) > 0) {
+            $parts[] = $blockers['orders'] . ' ' . ($blockers['orders'] === 1 ? 'order' : 'orders');
+        }
+
+        if (($blockers['campaigns'] ?? 0) > 0) {
+            $parts[] = $blockers['campaigns'] . ' campaign ' . ($blockers['campaigns'] === 1 ? 'record' : 'records');
+        }
+
+        return implode(', ', $parts);
     }
 }
