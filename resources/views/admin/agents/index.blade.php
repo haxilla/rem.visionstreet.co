@@ -9,11 +9,17 @@
     $noStartAgents = $data['noStartAgents'] ?? collect();
 
     $noStartCreditAgents = $data['noStartCreditAgents'] ?? collect();
+    $noPhotoAgents       = $data['noPhotoAgents'] ?? collect();
+    $noLogoAgents        = $data['noLogoAgents'] ?? collect();
 
-    // which of the three lists is showing (each has its own page parameter)
-    $currentTab = request()->has('nostartcredits_page')
-        ? 'nostartcredits'
-        : (request()->has('nostart_page') ? 'nostart' : 'active');
+    // which list is showing (each has its own page parameter)
+    $currentTab = match (true) {
+        request()->has('nologo_page')          => 'nologo',
+        request()->has('nophoto_page')         => 'nophoto',
+        request()->has('nostartcredits_page')  => 'nostartcredits',
+        request()->has('nostart_page')         => 'nostart',
+        default                                => 'active',
+    };
 
     // admin Settings > "Confirm agent deletion": does Delete ask first?
     $confirmDelete = $data['confirmDelete'] ?? true;
@@ -111,6 +117,28 @@
 
                         <span class="ml-2 rounded-full bg-white/20 px-2 py-0.5 text-xs">
                             {{ method_exists($noStartCreditAgents, 'total') ? $noStartCreditAgents->total() : 0 }}
+                        </span>
+                    </a>
+
+                    <a
+                        href="{{ request()->url() }}?nophoto_page=1"
+                        class="{{ $currentTab === 'nophoto' ? 'bg-[#214e9b] text-white shadow' : 'bg-slate-200 text-slate-700' }} rounded-t-xl px-4 py-3 text-sm font-semibold sm:px-5"
+                    >
+                        No Photo
+
+                        <span class="ml-2 rounded-full bg-white/20 px-2 py-0.5 text-xs">
+                            {{ method_exists($noPhotoAgents, 'total') ? $noPhotoAgents->total() : 0 }}
+                        </span>
+                    </a>
+
+                    <a
+                        href="{{ request()->url() }}?nologo_page=1"
+                        class="{{ $currentTab === 'nologo' ? 'bg-[#214e9b] text-white shadow' : 'bg-slate-200 text-slate-700' }} rounded-t-xl px-4 py-3 text-sm font-semibold sm:px-5"
+                    >
+                        No Logo
+
+                        <span class="ml-2 rounded-full bg-white/20 px-2 py-0.5 text-xs">
+                            {{ method_exists($noLogoAgents, 'total') ? $noLogoAgents->total() : 0 }}
                         </span>
                     </a>
 
@@ -310,7 +338,36 @@
 
                 @elseif($currentTab === 'nostartcredits')
 
-                    @include('admin.agents.noStartCreditsPanel', ['agents' => $noStartCreditAgents])
+                    @include('admin.agents.agentReviewPanel', [
+                        'agents'        => $noStartCreditAgents,
+                        'title'         => 'No Start Date, With Credits',
+                        'description'   => 'Agents without a start date who still have credits. Open one to set a start date or adjust the credits.',
+                        'emptyText'     => 'No agents without a start date have credits.',
+                        'showStartDate' => false,
+                        'showCredits'   => true,
+                    ])
+
+                @elseif($currentTab === 'nophoto')
+
+                    @include('admin.agents.agentReviewPanel', [
+                        'agents'        => $noPhotoAgents,
+                        'title'         => 'Agents Without a Photo',
+                        'description'   => 'Agents with a start date who have no photo on file.',
+                        'emptyText'     => 'Every agent with a start date has a photo.',
+                        'showStartDate' => true,
+                        'showCredits'   => true,
+                    ])
+
+                @elseif($currentTab === 'nologo')
+
+                    @include('admin.agents.agentReviewPanel', [
+                        'agents'        => $noLogoAgents,
+                        'title'         => 'Agents Without a Logo',
+                        'description'   => 'Agents with a start date who have no logo on file.',
+                        'emptyText'     => 'Every agent with a start date has a logo.',
+                        'showStartDate' => true,
+                        'showCredits'   => true,
+                    ])
 
                 @else
 

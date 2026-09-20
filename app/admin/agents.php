@@ -53,10 +53,48 @@ $noStartCreditAgents = Propagent::select([
 ->orderBy('id', 'desc')
 ->paginate(25, ['*'], 'nostartcredits_page');
 
+// Agents WITH a start date (the active ones, whose flyers matter) that have no
+// photo / no logo on file. An empty value means none, as elsewhere in the app.
+$noPhotoAgents = Propagent::select([
+    'id',
+    'agtFirst',
+    'agtLast',
+    'agtFullName',
+    'agtUname',
+    'agtEmail',
+    'remCreds',
+    'startDate',
+])
+->whereNotNull('startDate')
+->where(function ($query) {
+    $query->whereNull('agtPhoto')->orWhere('agtPhoto', '');
+})
+->orderBy('startDate', 'desc')
+->paginate(25, ['*'], 'nophoto_page');
+
+$noLogoAgents = Propagent::select([
+    'id',
+    'agtFirst',
+    'agtLast',
+    'agtFullName',
+    'agtUname',
+    'agtEmail',
+    'remCreds',
+    'startDate',
+])
+->whereNotNull('startDate')
+->where(function ($query) {
+    $query->whereNull('agtLogo')->orWhere('agtLogo', '');
+})
+->orderBy('startDate', 'desc')
+->paginate(25, ['*'], 'nologo_page');
+
 $data = [
     'activeAgents' => $activeAgents,
     'noStartAgents' => $noStartAgents,
     'noStartCreditAgents' => $noStartCreditAgents,
+    'noPhotoAgents' => $noPhotoAgents,
+    'noLogoAgents' => $noLogoAgents,
     // admin Settings: does Delete ask "Delete this agent?" first
     'confirmDelete' => \App\Models\Core\AdminSetting::confirmAgentDeletion(),
 ];

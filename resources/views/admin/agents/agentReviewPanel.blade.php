@@ -1,23 +1,40 @@
 {{--
-    Agents with NO start date who DO have credits (remaining balance above 0).
-    Review-only: no delete checkboxes, because these agents have credits on them
-    (the server-side bulk delete refuses them too). Open an agent to give them a
-    start date or adjust their credits. Needs: $agents (a paginator).
+    A review-only agent list: used by the "No Start Date + Credits", "No Photo" and
+    "No Logo" tabs on the Agents page. No delete checkboxes - each row links to the
+    agent to fix things there.
 
-    Also reachable by URL through the /admin/{segments} convention, where $agents
-    doesn't exist - hence the guard below.
+    Needs:
+      $agents         a paginator
+      $title          heading
+      $description    one line under the heading
+      $emptyText      shown when the list is empty
+      $showStartDate  (bool) show each agent's start date
+      $showCredits    (bool) show each agent's credit balance
+
+    Also reachable by URL through the /admin/{segments} convention, where none of
+    those exist - hence the guard below.
 --}}
-@php abort_unless(isset($agents), 404); @endphp
+@php
+    abort_unless(isset($agents, $title), 404);
+
+    $description   = $description ?? '';
+    $emptyText     = $emptyText ?? 'No agents found.';
+    $showStartDate = $showStartDate ?? false;
+    $showCredits   = $showCredits ?? false;
+    $columnCount   = 4 + ($showStartDate ? 1 : 0) + ($showCredits ? 1 : 0);
+@endphp
 
 <div class="mb-5 flex flex-wrap items-center justify-between gap-2">
     <div>
         <h2 class="text-xl font-semibold text-slate-900">
-            No Start Date, With Credits
+            {{ $title }}
         </h2>
 
-        <p class="mt-1 text-sm text-slate-500">
-            Agents without a start date who still have credits. Open one to set a start date or adjust the credits.
-        </p>
+        @if($description !== '')
+            <p class="mt-1 text-sm text-slate-500">
+                {{ $description }}
+            </p>
+        @endif
     </div>
 
     @if(method_exists($agents, 'total'))
@@ -44,20 +61,30 @@
         @endphp
 
         <div class="rounded-2xl border border-slate-200 p-4">
-            <div class="flex items-start justify-between gap-3">
-                <div class="min-w-0">
-                    <a href="/admin/agentView/{{ $agent->id }}" class="block break-words text-sm font-semibold text-slate-900 hover:underline">
-                        {{ $displayName }}
-                    </a>
-                    <div class="break-words text-xs text-slate-500">
-                        {{ $agent->agtEmail ?: '—' }}
-                    </div>
+            <div class="min-w-0">
+                <a href="/admin/agentView/{{ $agent->id }}" class="block break-words text-sm font-semibold text-slate-900 hover:underline">
+                    {{ $displayName }}
+                </a>
+                <div class="break-words text-xs text-slate-500">
+                    {{ $agent->agtEmail ?: '—' }}
                 </div>
-
-                <span class="shrink-0 rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
-                    {{ number_format($agent->remCreds ?? 0) }} {{ ($agent->remCreds ?? 0) == 1 ? 'credit' : 'credits' }}
-                </span>
             </div>
+
+            @if($showStartDate || $showCredits)
+                <div class="mt-2 flex flex-wrap gap-2 text-xs font-semibold">
+                    @if($showStartDate)
+                        <span class="rounded-full bg-slate-100 px-3 py-1 text-slate-600">
+                            Started {{ $agent->startDate ? \Carbon\Carbon::parse($agent->startDate)->format('m/d/Y') : '—' }}
+                        </span>
+                    @endif
+
+                    @if($showCredits)
+                        <span class="rounded-full bg-emerald-50 px-3 py-1 text-emerald-700">
+                            {{ number_format($agent->remCreds ?? 0) }} {{ ($agent->remCreds ?? 0) == 1 ? 'credit' : 'credits' }}
+                        </span>
+                    @endif
+                </div>
+            @endif
 
             <div class="mt-3 flex items-center justify-between gap-3 border-t border-slate-100 pt-3 text-xs">
                 <a href="/admin/agentLogin/{{ $agent->id }}" class="font-semibold text-[#214e9b] hover:underline">
@@ -73,7 +100,7 @@
     @empty
 
         <div class="rounded-2xl border border-dashed border-slate-200 px-4 py-10 text-center text-sm text-slate-500">
-            No agents without a start date have credits.
+            {{ $emptyText }}
         </div>
 
     @endforelse
@@ -89,7 +116,12 @@
                 <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">ID</th>
                 <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Agent</th>
                 <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Email</th>
-                <th class="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wide text-slate-500">Credits</th>
+                @if($showStartDate)
+                    <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Start Date</th>
+                @endif
+                @if($showCredits)
+                    <th class="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wide text-slate-500">Credits</th>
+                @endif
                 <th class="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wide text-slate-500"></th>
             </tr>
         </thead>
@@ -126,9 +158,17 @@
                         {{ $agent->agtEmail ?: '—' }}
                     </td>
 
-                    <td class="whitespace-nowrap px-6 py-3 text-right text-sm font-semibold text-slate-900">
-                        {{ number_format($agent->remCreds ?? 0) }}
-                    </td>
+                    @if($showStartDate)
+                        <td class="whitespace-nowrap px-6 py-3 text-sm text-slate-700">
+                            {{ $agent->startDate ? \Carbon\Carbon::parse($agent->startDate)->format('m/d/Y') : '—' }}
+                        </td>
+                    @endif
+
+                    @if($showCredits)
+                        <td class="whitespace-nowrap px-6 py-3 text-right text-sm font-semibold text-slate-900">
+                            {{ number_format($agent->remCreds ?? 0) }}
+                        </td>
+                    @endif
 
                     <td class="whitespace-nowrap px-6 py-3 text-right text-sm">
                         <a href="/admin/agentView/{{ $agent->id }}" class="font-semibold text-[#214e9b] hover:underline">
@@ -140,8 +180,8 @@
             @empty
 
                 <tr>
-                    <td colspan="5" class="px-6 py-10 text-center text-sm text-slate-500">
-                        No agents without a start date have credits.
+                    <td colspan="{{ $columnCount }}" class="px-6 py-10 text-center text-sm text-slate-500">
+                        {{ $emptyText }}
                     </td>
                 </tr>
 
