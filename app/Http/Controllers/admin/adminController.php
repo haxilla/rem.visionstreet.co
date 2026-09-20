@@ -473,8 +473,20 @@ class adminController extends Controller
         // the save stamps updated_at - in the agent's timezone
         AgentTime::apply($agent);
 
+        $before = $agent->startDate;
+
         $agent->startDate = $validated['startDate'];
         $agent->save();
+
+        // A start date is meant to be the first-purchase date and stay put, so any change to one
+        // is recorded (who, which agent, before and after).
+        Log::info('Admin set an agent start date', [
+            'admin_id' => Auth::guard('admin')->id(),
+            'agent_id' => $agent->id,
+            'before'   => $before ? \Illuminate\Support\Carbon::parse($before)->format('Y-m-d') : null,
+            'after'    => $validated['startDate'],
+            'ip'       => $request->ip(),
+        ]);
 
         $name = $agent->agtFullName ?: ($agent->xxAgtUname ?: 'this agent');
 
