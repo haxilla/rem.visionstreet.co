@@ -58,9 +58,6 @@ $openHouses = array_values(array_filter([$openHouseLine(1), $openHouseLine(2)]))
 $addableAreas = collect($data['emailCounts'] ?? [])
     ->reject(fn ($count, $areaKey) => in_array($areaKey, $data['busyAreas'] ?? [], true));
 
-// created_at is only reliably populated for flyers created through this
-// app - anything imported from the legacy pre-Laravel system has it
-// null, with the real date only in the legacy creationDate column.
 // The flyer's last delivery (propflyerstats.xLastDeliveryDate - set by the mailer,
 // and raised by the Edit dates form). Legacy rows can hold NULL or a zero date.
 // It comes back as a plain string (the model's $dates list isn't applied any more).
@@ -74,6 +71,9 @@ try {
 
 $lastSent = ($lastSent && $lastSent->year > 1970) ? $lastSent : null;
 
+// created_at is only reliably populated for flyers created through this
+// app - anything imported from the legacy pre-Laravel system has it
+// null, with the real date only in the legacy creationDate column.
 $createdDate = null;
 if ($propInfo->created_at) {
     $createdDate = $propInfo->created_at->format('n/j/Y');
@@ -128,62 +128,59 @@ if ($propInfo->created_at) {
             </div>
         @endif
 
-        {{-- HEADER: which property this is, who it belongs to, and where it stands --}}
-        <div class="{{ $card }} p-5 sm:p-6 mb-6">
+        {{-- HEADER: two slim lines - which property and whose it is, then where it stands --}}
+        <div class="{{ $card }} mb-6 px-4 py-3 sm:px-5">
 
-            <a href="/admin/flyers" class="text-sm font-semibold text-[#214e9b] hover:underline">← Back to Flyers</a>
+            <div class="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
 
-            <div class="mt-3 flex flex-wrap items-start justify-between gap-4">
+                <div class="flex min-w-0 flex-wrap items-baseline gap-x-3 gap-y-0.5">
+                    <a href="/admin/flyers" class="text-sm font-semibold text-[#214e9b] hover:underline">← Flyers</a>
 
-                <div class="min-w-0">
-                    <div class="{{ $eyebrow }}">Campaigns</div>
-
-                    <h1 class="mt-1 break-words text-2xl font-semibold leading-tight text-slate-900 sm:text-[28px]">
+                    <h1 class="break-words text-lg font-semibold leading-tight text-slate-900">
                         {{ $propInfo->xFullStreet ?: 'Flyer #' . $propInfo->id }}
                     </h1>
 
-                    <p class="mt-1 text-sm text-slate-600">
+                    <span class="text-sm text-slate-600">
                         @if($place !== '')
-                            {{ $place }}
-                            <span class="mx-1.5 text-slate-300">&middot;</span>
+                            {{ $place }}<span class="mx-1.5 text-slate-300">&middot;</span>
                         @endif
                         Flyer #{{ $propInfo->id }}
                         @if($agent?->agtFullName)
                             <span class="mx-1.5 text-slate-300">&middot;</span>
                             <a href="/admin/agentView/{{ $propInfo->propagent_id }}" class="font-semibold text-[#214e9b] hover:underline">{{ $agent->agtFullName }}</a>
                         @endif
-                    </p>
+                    </span>
                 </div>
 
                 <a href="/admin/flyerEdit/{{ $propInfo->id }}"
-                   class="rounded-lg bg-[#214e9b] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#1b3f80]">
+                   class="rounded-lg bg-[#214e9b] px-3.5 py-1.5 text-sm font-semibold text-white hover:bg-[#1b3f80]">
                     Edit Flyer
                 </a>
 
             </div>
 
-            <div class="mt-4 flex flex-wrap gap-2 text-xs font-semibold">
+            {{-- status: a coloured dot per stage (only the stages that have campaigns), then the flyer's facts --}}
+            <div class="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-slate-100 pt-2 text-xs text-slate-600">
+
                 @if($awaitingApproval->isNotEmpty())
-                    <span class="rounded-full bg-amber-100 px-3 py-1 text-amber-800">{{ $awaitingApproval->count() }} not authorized</span>
+                    <span class="inline-flex items-center gap-1.5 font-semibold text-amber-800"><span class="h-2 w-2 rounded-full bg-amber-400"></span>{{ $awaitingApproval->count() }} not authorized</span>
                 @endif
                 @if($approvedWaiting->isNotEmpty())
-                    <span class="rounded-full bg-indigo-100 px-3 py-1 text-indigo-700">{{ $approvedWaiting->count() }} authorized, waiting to send</span>
+                    <span class="inline-flex items-center gap-1.5 font-semibold text-indigo-700"><span class="h-2 w-2 rounded-full bg-indigo-500"></span>{{ $approvedWaiting->count() }} authorized</span>
                 @endif
                 @if($inProgressCampaigns->isNotEmpty())
-                    <span class="rounded-full bg-blue-100 px-3 py-1 text-blue-700">{{ $inProgressCampaigns->count() }} in progress</span>
+                    <span class="inline-flex items-center gap-1.5 font-semibold text-blue-700"><span class="h-2 w-2 rounded-full bg-blue-500"></span>{{ $inProgressCampaigns->count() }} in progress</span>
                 @endif
-                <span class="rounded-full bg-emerald-100 px-3 py-1 text-emerald-700">{{ $completedCampaigns->count() }} completed</span>
+                <span class="inline-flex items-center gap-1.5 font-semibold text-emerald-700"><span class="h-2 w-2 rounded-full bg-emerald-500"></span>{{ $completedCampaigns->count() }} completed</span>
 
-                <span class="rounded-full bg-slate-100 px-3 py-1 text-slate-600">
-                    {{ $lastSent ? 'Last sent ' . $lastSent->format('M j, Y') : 'Never sent' }}
-                </span>
+                <span class="hidden h-3 border-l border-slate-300 sm:inline-block"></span>
 
-                <span class="rounded-full bg-slate-100 px-3 py-1 text-slate-600">
-                    {{ number_format(optional($propInfo->theStats)->xWebViews ?? 0) }} flyer views
-                </span>
+                <span>Last sent <strong class="font-semibold text-slate-900">{{ $lastSent ? $lastSent->format('M j, Y') : 'Never' }}</strong></span>
+                <span><strong class="font-semibold text-slate-900">{{ number_format(optional($propInfo->theStats)->xWebViews ?? 0) }}</strong> views</span>
                 @if($createdDate)
-                    <span class="rounded-full bg-slate-100 px-3 py-1 text-slate-600">Created {{ $createdDate }}</span>
+                    <span>Created <strong class="font-semibold text-slate-900">{{ $createdDate }}</strong></span>
                 @endif
+
             </div>
 
         </div>
