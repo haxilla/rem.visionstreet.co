@@ -3,12 +3,17 @@
 namespace App\Http\Controllers\member;
 
 use App\Http\Controllers\Controller;
+use App\Models\Core\Propagent;
 use App\Models\Core\Propdeliv;
 use App\Models\Core\Propdelivnow;
 use App\Models\Core\Propflyer;
 use App\Models\Core\Propmapping;
 use App\Models\Core\Propremark;
+use App\Support\AgentImages;
+use App\Support\AgentImageStore;
+use App\Support\AgentProfile;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class memberController extends Controller
 {
@@ -58,6 +63,80 @@ class memberController extends Controller
         
     }
     
+    /**
+     * "Agent Info" (/member/agent-info): everything an agent may edit about themselves -
+     * name, designations, contact details, brokerage / address, licence details - plus
+     * adding, changing and removing their photo and logo. What can't be edited here: the
+     * sign-in email (only support can change who can sign in), credits, start date.
+     */
+    public function agentInfo()
+    {
+        $agent = Propagent::with(['theAgtOffice', 'theAgentCleanup'])->findOrFail(auth('member')->id());
+
+        return view('member.agent-info', [
+            'agent'  => $agent,
+            'office' => $agent->theAgtOffice,
+            'photo'  => AgentImages::photo($agent),
+            'logo'   => AgentImages::logo($agent),
+            'states' => config('usstates'),
+        ]);
+    }
+
+    public function agentInfoSave(Request $request)
+    {
+        $agent = Propagent::with('theAgtOffice')->findOrFail(auth('member')->id());
+
+        $data = $request->validate(
+            AgentProfile::contactRules() + AgentProfile::officeRules($agent->theAgtOffice) + AgentProfile::licenseRules(),
+            [
+                'agtEmail.email'   => 'Please enter a valid contact email address.',
+                'officeState.max'  => 'Choose a state from the list.',
+            ]
+        );
+
+        try {
+            AgentProfile::saveContact($agent, $data);
+            AgentProfile::saveOffice($agent, $data);
+        } catch (\Throwable $e) {
+            Log::error('Agent info save failed for agent ' . $agent->id . ': ' . $e->getMessage());
+
+            return redirect('/member/agent-info')->withInput()
+                ->withErrors(['profile' => 'Sorry, your changes could not be saved. Please check the fields and try again.']);
+        }
+
+        return redirect('/member/agent-info')->with('status', 'Your agent info was saved.');
+    }
+
+    /** Add or change the agent's own photo or logo ($kind is "photo" or "logo"). */
+    public function agentImageUpload(Request $request, $kind)
+    {
+        $agent = Propagent::with('theAgtOffice')->findOrFail(auth('member')->id());
+        $label = $kind === 'photo' ? 'photo' : 'logo';
+
+        $request->validate([
+            'image' => ['required', 'file', 'image', 'mimes:jpg,jpeg,png,gif,webp', 'max:5120'],
+        ], [
+            'image.required' => "Choose a {$label} to upload.",
+            'image.image'    => "Your {$label} must be an image (JPG, PNG, GIF or WebP).",
+            'image.mimes'    => "Your {$label} must be a JPG, PNG, GIF or WebP image.",
+            'image.max'      => "Your {$label} can't be larger than 5 MB.",
+            'image.uploaded' => "Your {$label} couldn't be uploaded - it may be larger than the server allows.",
+        ]);
+
+        $result = AgentImageStore::store($agent, $kind, $request->file('image'));
+
+        return $result['ok']
+            ? redirect('/member/agent-info#images')->with('status', $result['message'])
+            : redirect('/member/agent-info#images')->withErrors(['image' => $result['message']]);
+    }
+
+    public function agentImageClear($kind)
+    {
+        $agent = Propagent::with('theAgtOffice')->findOrFail(auth('member')->id());
+
+        return redirect('/member/agent-info#images')->with('status', AgentImageStore::clear($agent, $kind));
+    }
+
     /**
      * Full campaign history for one of the agent's own flyers
      * (/member/campaigns/{flyerId}, linked from the dashboard's flyer cards).

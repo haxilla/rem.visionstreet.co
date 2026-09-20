@@ -132,6 +132,14 @@ Route::get('/member/flyer/photos/{flyerId}', [memberController::class, 'flyerPho
 Route::get('/member/campaigns/{flyerId}', [memberController::class, 'flyerCampaigns'])
     ->whereNumber('flyerId')->name('member.flyerCampaigns');
 
+//the agent's own "Agent Info" page: edit details, add / change / remove photo and logo (member-only via the controller)
+Route::get('/member/agent-info', [memberController::class, 'agentInfo'])->name('member.agentInfo');
+Route::post('/member/agent-info', [memberController::class, 'agentInfoSave'])->name('member.agentInfo.save');
+Route::post('/member/agent-info/image/{kind}', [memberController::class, 'agentImageUpload'])
+    ->whereIn('kind', ['photo', 'logo'])->name('member.agentInfo.image');
+Route::post('/member/agent-info/image/{kind}/clear', [memberController::class, 'agentImageClear'])
+    ->whereIn('kind', ['photo', 'logo'])->name('member.agentInfo.imageClear');
+
 //live flyer preview for the Details step (renders unsaved form values; never saves)
 Route::post('/member/flyerPreview', [memberController::class, 'flyerPreview'])->name('member.flyerPreview');
 
