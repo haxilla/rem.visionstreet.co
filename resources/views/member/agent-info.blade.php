@@ -23,7 +23,7 @@
     .ai-card-h  { padding: 16px 22px 12px; border-bottom: 1px solid #eef1f6; }
     .ai-card-h h2 { margin: 0; font-size: 16px; font-weight: 800; color: #123f91; }
     .ai-card-h p  { margin: 3px 0 0; font-size: 13px; color: #64748b; }
-    .ai-card-b  { padding: 18px 22px 20px; }
+    .ai-card-b  { padding: 20px 22px 22px; }
 
     .ai-alert   { margin-top: 16px; padding: 11px 16px; border-radius: 14px; font-size: 14px; font-weight: 600; border: 1px solid; }
     .ai-alert.ok  { background: #ecfdf5; border-color: #a7f3d0; color: #047857; }
@@ -56,14 +56,23 @@
     .ai-section { margin: 0 0 22px; }
     .ai-section:last-of-type { margin-bottom: 4px; }
     .ai-section h3 { margin: 0 0 10px; font-size: 13px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #64748b; }
-    .ai-grid    { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 16px; }
+    .ai-grid    { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 18px; }
     .ai-field   { min-width: 0; }
     .ai-field.full { grid-column: 1 / -1; }
     .ai-field label { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; font-size: 13px; font-weight: 700; color: #334155; }
     .ai-field input, .ai-field select { width: 100%; height: 42px; border: 1px solid #d5dbe6; border-radius: 12px; background: #fff;
                        padding: 0 12px; font-size: 15px; color: #0f172a; outline: none; }
     .ai-field input:focus, .ai-field select:focus { border-color: #123f91; box-shadow: 0 0 0 3px rgba(18,63,145,.12); }
-    .ai-foot    { display: flex; justify-content: flex-end; padding: 14px 22px; border-top: 1px solid #eef1f6; background: #fafbfd; }
+    /* a headline band for each topic */
+    .ai-sec-h   { display: flex; align-items: center; gap: 14px; padding: 16px 22px; background: #f4f7fd; border-bottom: 1px solid #e3e9f5; }
+    .ai-sec-h h2 { margin: 0; font-size: 18px; line-height: 1.2; font-weight: 800; color: #0f172a; }
+    .ai-sec-h p  { margin: 3px 0 0; font-size: 13px; color: #64748b; }
+    .ai-icon    { flex: 0 0 auto; width: 40px; height: 40px; border-radius: 12px; background: #123f91; color: #fff;
+                  display: flex; align-items: center; justify-content: center; }
+    .ai-icon svg { width: 20px; height: 20px; }
+    .ai-savebar { position: sticky; bottom: 12px; z-index: 5; margin-top: 18px; display: flex; align-items: center; justify-content: space-between;
+                  gap: 14px; padding: 12px 16px 12px 20px; border-radius: 16px; background: #fff; border: 1px solid rgba(15,23,42,.08);
+                  box-shadow: 0 8px 28px rgba(15,23,42,.12); font-size: 13.5px; color: #475569; }
 
     @media (max-width: 720px) {
         .ai-images { grid-template-columns: 1fr; }
@@ -102,10 +111,15 @@
 
     {{-- ========== PHOTO + LOGO ========== --}}
     <section id="images" class="ai-card">
-        <div class="ai-card-h">
-            <h2>Photo &amp; logo</h2>
-            <p>JPG, PNG, GIF or WebP, up to 5 MB. We resize them for email automatically.</p>
-        </div>
+        <header class="ai-sec-h">
+            <span class="ai-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m21 16-5-5-8 8"/></svg>
+            </span>
+            <div>
+                <h2>Photo &amp; logo</h2>
+                <p>JPG, PNG, GIF or WebP, up to 5 MB. We resize them for email automatically.</p>
+            </div>
+        </header>
 
         <div class="ai-card-b">
             <div class="ai-images">
@@ -162,19 +176,23 @@
         </div>
     </section>
 
-    {{-- ========== DETAILS ========== --}}
-    <form method="POST" action="{{ route('member.agentInfo.save') }}" class="ai-card" novalidate>
+    {{-- ========== DETAILS: one form, one card per topic, one Save ========== --}}
+    <form method="POST" action="{{ route('member.agentInfo.save') }}" novalidate>
         @csrf
 
-        <div class="ai-card-h">
-            <h2>Your details</h2>
-            <p>Keep this up to date - it is what appears on your flyers.</p>
-        </div>
+        {{-- ---- 1. ABOUT YOU ---- --}}
+        <section class="ai-card">
+            <header class="ai-sec-h">
+                <span class="ai-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+                </span>
+                <div>
+                    <h2>About you</h2>
+                    <p>Your name and the titles shown after it.</p>
+                </div>
+            </header>
 
-        <div class="ai-card-b">
-
-            <div class="ai-section">
-                <h3>About you</h3>
+            <div class="ai-card-b">
                 <div class="ai-grid">
                     <div class="ai-field">
                         <label for="agtFirst">First name</label>
@@ -194,27 +212,49 @@
                     </div>
                 </div>
             </div>
+        </section>
 
-            <div class="ai-section">
-                <h3>Contact</h3>
+        {{-- ---- 2. CONTACT ---- --}}
+        <section class="ai-card">
+            <header class="ai-sec-h">
+                <span class="ai-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>
+                </span>
+                <div>
+                    <h2>Contact</h2>
+                    <p>How buyers and other agents reach you.</p>
+                </div>
+            </header>
+
+            <div class="ai-card-b">
                 <div class="ai-grid">
-                    <div class="ai-field">
-                        <label for="agtEmail">Contact email</label>
-                        <input type="email" id="agtEmail" name="agtEmail" maxlength="100" autocomplete="email"
-                               value="{{ old('agtEmail', $agent->agtEmail) }}">
-                    </div>
-                    {{-- The one phone number the flyer's contact banner shows (agtMainPhone). The other
-                         phone fields and the website aren't on the flyer, so they aren't asked for here. --}}
                     <div class="ai-field">
                         <label for="agtMainPhone">Phone</label>
                         <input type="tel" id="agtMainPhone" name="agtMainPhone" maxlength="30" autocomplete="tel"
                                value="{{ old('agtMainPhone', $agent->agtMainPhone) }}">
                     </div>
+                    <div class="ai-field">
+                        <label for="agtEmail">Contact email</label>
+                        <input type="email" id="agtEmail" name="agtEmail" maxlength="100" autocomplete="email"
+                               value="{{ old('agtEmail', $agent->agtEmail) }}">
+                    </div>
                 </div>
             </div>
+        </section>
 
-            <div class="ai-section">
-                <h3>Brokerage &amp; address</h3>
+        {{-- ---- 3. BROKERAGE & ADDRESS (county belongs here) ---- --}}
+        <section class="ai-card">
+            <header class="ai-sec-h">
+                <span class="ai-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-4"/><path d="M9 9v.01M9 12v.01M9 15v.01M9 18v.01"/></svg>
+                </span>
+                <div>
+                    <h2>Brokerage &amp; address</h2>
+                    <p>Your office, as it appears on your flyers.</p>
+                </div>
+            </header>
+
+            <div class="ai-card-b">
                 <div class="ai-grid">
                     <div class="ai-field full">
                         <label for="officeName">Brokerage</label>
@@ -249,11 +289,28 @@
                         <input type="text" id="officeZip" name="officeZip" maxlength="10" autocomplete="postal-code"
                                value="{{ $officeInput('officeZip') }}">
                     </div>
+                    <div class="ai-field">
+                        <label for="agtCounty">County</label>
+                        <input type="text" id="agtCounty" name="agtCounty" maxlength="100"
+                               value="{{ old('agtCounty', $agent->agtCounty) }}">
+                    </div>
                 </div>
             </div>
+        </section>
 
-            <div class="ai-section">
-                <h3>License</h3>
+        {{-- ---- 4. LICENSE ---- --}}
+        <section class="ai-card">
+            <header class="ai-sec-h">
+                <span class="ai-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M6 16c.6-1.4 1.7-2 3-2s2.4.6 3 2"/><path d="M15 10h3M15 13h3"/></svg>
+                </span>
+                <div>
+                    <h2>License</h2>
+                    <p>Your MLS and association details.</p>
+                </div>
+            </header>
+
+            <div class="ai-card-b">
                 <div class="ai-grid">
                     <div class="ai-field">
                         <label for="agtMlsID">MLS ID</label>
@@ -265,18 +322,14 @@
                         <input type="text" id="agtBoard" name="agtBoard" maxlength="100"
                                value="{{ old('agtBoard', $agent->agtBoard) }}">
                     </div>
-                    <div class="ai-field">
-                        <label for="agtCounty">County</label>
-                        <input type="text" id="agtCounty" name="agtCounty" maxlength="100"
-                               value="{{ old('agtCounty', $agent->agtCounty) }}">
-                    </div>
                 </div>
             </div>
+        </section>
 
-        </div>
-
-        <div class="ai-foot">
-            <button type="submit" class="ai-btn primary" style="padding:10px 22px;font-size:14px">Save changes</button>
+        {{-- Save stays in view while you scroll the sections --}}
+        <div class="ai-savebar">
+            <span>Changes show on your flyers right away.</span>
+            <button type="submit" class="ai-btn primary" style="padding:10px 24px;font-size:14px">Save changes</button>
         </div>
     </form>
 

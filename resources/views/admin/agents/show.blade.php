@@ -64,7 +64,6 @@
         ['agtMlsID',    'MLS ID'],
         ['agtBoard',    'Board'],
         ['agtDesigs',   'Designations'],
-        ['agtCounty',   'County'],
     ];
 
     // shared look for the cards
@@ -457,6 +456,13 @@
                             <label for="f_officeZip" class="{{ $label }}">ZIP</label>
                             <input type="text" id="f_officeZip" name="officeZip" maxlength="10" autocomplete="off"
                                    value="{{ old('officeZip', $office->officeZip ?? '') }}" class="{{ $input }}">
+                        </div>
+
+                        {{-- County is part of the address (saved with the licence details, but not one of them) --}}
+                        <div class="{{ $row }}">
+                            <label for="f_agtCounty" class="{{ $label }}">County</label>
+                            <input type="text" id="f_agtCounty" name="agtCounty" maxlength="100" autocomplete="off"
+                                   value="{{ old('agtCounty', $agent->agtCounty) }}" class="{{ $input }}">
                         </div>
 
                         @foreach($licenseFields as [$field, $fieldLabel])
