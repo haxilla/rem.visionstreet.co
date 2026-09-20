@@ -90,7 +90,7 @@ class memberController extends Controller
         $agent = Propagent::with('theAgtOffice')->findOrFail(auth('member')->id());
 
         $data = $request->validate(
-            AgentProfile::contactRules() + AgentProfile::officeRules($agent->theAgtOffice) + AgentProfile::licenseRules($agent),
+            AgentProfile::contactRules() + AgentProfile::officeRules($agent->theAgtOffice) + AgentProfile::licenseRules(),
             [
                 'agtEmail.email'   => 'Please enter a valid contact email address.',
                 'officeState.max'  => 'Choose a state from the list.',

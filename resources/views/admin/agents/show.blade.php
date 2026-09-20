@@ -470,12 +470,11 @@
                                 <label for="f_{{ $field }}" class="{{ $label }}">{{ $fieldLabel }}</label>
 
                                 @if($field === 'agtBoard')
-                                    {{-- the MLS (Multiple Listing Service) is a choice, not free text; a value the old system
-                                         saved that isn't in the list stays selectable so it is never lost --}}
+                                    {{-- the MLS (Multiple Listing Service) is a choice from a short list (AgentProfile::MLS_OPTIONS), not free text --}}
                                     @php $mlsNow = \App\Support\AgentProfile::canonicalMls(old($field, $agent->agtBoard)); @endphp
                                     <select id="f_{{ $field }}" name="{{ $field }}" class="{{ $input }}">
                                         <option value="">Select an MLS</option>
-                                        @foreach(\App\Support\AgentProfile::mlsChoices($agent->agtBoard) as $mlsValue => $mlsText)
+                                        @foreach(\App\Support\AgentProfile::mlsChoices() as $mlsValue => $mlsText)
                                             <option value="{{ $mlsValue }}" @selected($mlsNow === $mlsValue)>{{ $mlsText }}</option>
                                         @endforeach
                                     </select>

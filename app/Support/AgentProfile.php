@@ -66,21 +66,14 @@ class AgentProfile
     }
 
     /**
-     * The options for the MLS dropdown: the list above, plus - first - the agent's own saved value when it is
-     * something else (typed freely in the old system), so opening the form and saving never wipes it.
+     * The options for the MLS dropdown - exactly the list above and nothing else. (The old boards the old
+     * system allowed - SAZ, NAZ - are gone: everything is ARMLS now.)
      *
      * @return array<string,string> stored value => label
      */
-    public static function mlsChoices(?string $saved): array
+    public static function mlsChoices(): array
     {
-        $choices = self::MLS_OPTIONS;
-        $saved   = self::canonicalMls($saved);
-
-        if ($saved !== '' && !isset($choices[$saved])) {
-            $choices = [$saved => $saved . ' (current value)'] + $choices;
-        }
-
-        return $choices;
+        return self::MLS_OPTIONS;
     }
 
     /** Office record columns. */
@@ -97,18 +90,15 @@ class AgentProfile
         return $rules;
     }
 
-    /** @param Propagent|null $agent the agent being edited (the value they already have saved is always accepted, even if it isn't in the MLS list) */
-    public static function licenseRules(?Propagent $agent = null): array
+    public static function licenseRules(): array
     {
         $rules = array_map(fn () => ['nullable', 'string', 'max:100'], self::LICENSE);
 
-        // the MLS is a choice, not free text
-        $saved = self::canonicalMls($agent->agtBoard ?? null);
-
-        $rules['agtBoard'] = ['nullable', 'string', 'max:100', function ($attribute, $value, $fail) use ($saved) {
+        // the MLS is a choice from the list (or left blank), not free text
+        $rules['agtBoard'] = ['nullable', 'string', 'max:100', function ($attribute, $value, $fail) {
             $value = self::canonicalMls($value);
 
-            if ($value !== '' && !isset(self::MLS_OPTIONS[$value]) && $value !== $saved) {
+            if ($value !== '' && !isset(self::MLS_OPTIONS[$value])) {
                 $fail('Choose an MLS from the list.');
             }
         }];
