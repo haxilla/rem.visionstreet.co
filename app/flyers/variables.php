@@ -1,5 +1,35 @@
 <?php
 
+// A flyer can be missing some of its side records - an older / imported flyer with no style
+// record, or a brand-new one whose Details haven't been saved yet (no remarks or map). The
+// templates read these unconditionally ("Attempt to read property on null"), so any that
+// are missing get an empty, UNSAVED stand-in with the same defaults a new flyer is created
+// with (see app/member/flyer/save.php). Nothing here is ever written to the database.
+if (!$propInfo->theRemarks) {
+    $propInfo->setRelation('theRemarks', new \App\Models\Core\Propremark());
+}
+
+if (!$propInfo->theMap) {
+    $propInfo->setRelation('theMap', new \App\Models\Core\Propmapping());
+}
+
+if (!$propInfo->theStyle) {
+    $standInStyle = new \App\Models\Core\Propstyle();
+    $standInStyle->forceFill([
+        'template'          => '1pc',
+        'flyer_background'  => 'cccccc',
+        'headline_bar_bg'   => '333333',
+        'headline_bar_text' => 'ffffff',
+        'headline_text'     => '333333',
+        'graphic_words'     => 'greatbuy',
+        'graphic_textcolor' => 'ffffff',
+        'graphic_style'     => 'ul',
+        'roundedtop'        => 'roundedtop-600px_cccccc.gif',
+        'accentbars'        => '333333',
+    ]);
+    $propInfo->setRelation('theStyle', $standInStyle);
+}
+
 include('countBullets.php');
 
 $fromURL='https://rem.visionstreet.co';

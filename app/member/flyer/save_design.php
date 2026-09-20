@@ -69,8 +69,24 @@ if (!$flyer) {
     dd("Error: Flyer not found or you don't have permission to edit it.");
 }
 
+// Older / imported flyers can have no style record. Give it the same starting values a new
+// flyer is created with (app/member/flyer/save.php) so the choices below have somewhere to save.
 if (!$flyer->theStyle) {
-    dd("Error: Flyer has no style record.");
+    \App\Models\Core\Propstyle::create([
+        'propflyer_id'      => $flyer->id,
+        'propagent_id'      => auth()->id(),
+        'flyer_background'  => 'cccccc',
+        'headline_bar_bg'   => '333333',
+        'headline_bar_text' => 'ffffff',
+        'headline_text'     => '333333',
+        'graphic_words'     => 'greatbuy',
+        'graphic_textcolor' => 'ffffff',
+        'graphic_style'     => 'ul',
+        'roundedtop'        => 'roundedtop-600px_cccccc.gif',
+        'accentbars'        => '333333',
+    ]);
+
+    $flyer->load('theStyle');
 }
 
 if ($confirmedStep === 'style') {
