@@ -14,6 +14,29 @@ class Propflyer extends Model{
     protected $keyType = 'int';
     protected $guarded=['id'];
 
+    // Every flyer gets its public URL slug (see App\Support\FlyerSlug) as soon as it has a
+    // complete address - which a new flyer has from the first wizard step - so it happens
+    // on whichever path saves the flyer, with nothing to remember at each of them. A flyer
+    // that already has a slug is left alone. A model loaded with only some columns can't
+    // say whether it has one, so that case asks the database.
+    protected static function booted()
+    {
+        static::saved(function (Propflyer $flyer) {
+            $attributes = $flyer->getAttributes();
+
+            if (array_key_exists('url_slug', $attributes) && filled($attributes['url_slug'])) {
+                return;
+            }
+
+            $slug = \App\Support\FlyerSlug::ensure($flyer->getKey());
+
+            if ($slug) {
+                $flyer->setAttribute('url_slug', $slug);
+                $flyer->syncOriginalAttribute('url_slug');
+            }
+        });
+    }
+
     public function theAgent(){
         return $this->belongsTo('App\Models\Core\Propagent','propagent_id','id');
     }
