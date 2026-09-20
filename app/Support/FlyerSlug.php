@@ -170,16 +170,17 @@ class FlyerSlug
         return $text;
     }
 
-    /** "AZ", "az" and "Arizona" all give "AZ"; anything unrecognised gives ''. */
+    /** "AZ", "az" and "Arizona" all give "AZ"; anything that isn't a state (a stray "N0", say) gives ''. */
     private static function stateCode($state): string
     {
         $state = trim((string) $state);
+        $states = config('usstates', []);
 
         if (strlen($state) === 2) {
-            return strtoupper($state);
+            return isset($states[strtoupper($state)]) ? strtoupper($state) : '';
         }
 
-        foreach (config('usstates', []) as $code => $name) {
+        foreach ($states as $code => $name) {
             if (strcasecmp($name, $state) === 0) {
                 return $code;
             }

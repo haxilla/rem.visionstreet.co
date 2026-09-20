@@ -52,7 +52,7 @@ Artisan::command('flyers:backfill-slugs {--dry-run : Show what would be done, ch
                 if ($slug !== null) {
                     $assigned++;
 
-                    if ($dryRun && $shown++ < 15) {
+                    if ($shown++ < 15) {
                         $this->line("  #{$flyer->id}  ->  {$slug}");
                     }
 
