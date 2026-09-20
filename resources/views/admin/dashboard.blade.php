@@ -75,31 +75,23 @@
     $empty = 'rounded-2xl border border-dashed border-slate-300 p-8 text-center text-sm text-slate-500';
 @endphp
 
-<main class="min-h-screen bg-[#f4f7fb] pt-24">
-    <div class="px-4 py-6 sm:px-6 lg:px-10 lg:py-8">
+<main class="min-h-screen bg-[#f4f7fb] pt-[72px]">
+    <div class="px-4 py-4 sm:px-6 lg:px-10 lg:py-5">
 
             <div>
 
-                        {{-- HEADER --}}
-                        <div class="rounded-[20px] bg-white px-4 py-5 sm:px-6 sm:py-6 lg:px-8 lg:py-7 shadow-[0_12px_35px_rgba(15,23,42,0.06)]">
-                            <div class="text-[12px] font-semibold uppercase tracking-[0.22em] text-[#214e9b]/70">
-                                Campaign Operations
-                            </div>
-
-                            <h1 class="mt-2 text-[26px] font-semibold text-slate-900 sm:text-[32px]">
-                                Campaign Overview
-                            </h1>
-
-                            <p class="mt-2 text-[14px] text-slate-600">
-                                Each flyer's campaign request by authorization, delivery progress, and recent completions. Open a card to see its areas.
-                            </p>
-                        </div>
-
                         {{-- CAMPAIGN DASHBOARD --}}
-                        <div class="mt-6 rounded-[24px] bg-white shadow-[0_12px_35px_rgba(15,23,42,0.06)] overflow-hidden">
+                        <div class="rounded-2xl bg-white shadow-[0_12px_35px_rgba(15,23,42,0.06)] overflow-hidden">
 
-                            {{-- MAIN TAB BUTTONS --}}
-                            <div class="border-b border-slate-200 bg-slate-50 px-3 py-3 sm:px-6 sm:pt-5 sm:pb-0">
+                            {{-- TITLE + MAIN TAB BUTTONS: one slim bar - the title on the left, the tabs
+                                 sitting on the bar's bottom edge on the right --}}
+                            <div class="flex flex-col gap-3 border-b border-slate-200 bg-slate-50 px-3 pt-3 pb-3 sm:flex-row sm:items-end sm:justify-between sm:gap-6 sm:px-6 sm:pb-0">
+
+                                <div class="sm:pb-3">
+                                    <h1 class="text-lg font-semibold leading-tight text-slate-900">Campaign Overview</h1>
+                                    <p class="text-xs text-slate-500">Each flyer's request by stage. Open a card to see its areas.</p>
+                                </div>
+
                                 <div class="grid grid-cols-1 gap-2 sm:flex sm:flex-wrap">
 
                                     <button
@@ -139,15 +131,15 @@
                             </div>
 
                             {{-- TAB CONTENT --}}
-                            <div class="p-3 sm:p-6">
+                            <div class="p-3 sm:p-5">
 
                                 {{-- WAITING --}}
                                 <div class="campaign-panel" id="tab-waiting">
 
-                                    <div class="mb-5">
-                                        <h2 class="text-xl font-semibold text-slate-900">Waiting Campaigns</h2>
+                                    <div class="mb-3">
+                                        <h2 class="text-base font-semibold text-slate-900">Waiting Campaigns</h2>
 
-                                        <p class="mt-1 text-sm text-slate-500">
+                                        <p class="text-sm text-slate-500">
                                             {{ $summary($waitingAll) }}
                                             @if($oldestWaiting)
                                                 &middot; oldest request {{ $oldestWaiting->diffForHumans() }}
@@ -204,9 +196,9 @@
                                 {{-- IN PROGRESS --}}
                                 <div class="campaign-panel hidden" id="tab-progress">
 
-                                    <div class="mb-5">
-                                        <h2 class="text-xl font-semibold text-slate-900">In Progress Campaigns</h2>
-                                        <p class="mt-1 text-sm text-slate-500">{{ $summary($inProgress) }}</p>
+                                    <div class="mb-3">
+                                        <h2 class="text-base font-semibold text-slate-900">In Progress Campaigns</h2>
+                                        <p class="text-sm text-slate-500">{{ $summary($inProgress) }}</p>
                                     </div>
 
                                     <div class="space-y-3">
@@ -222,9 +214,9 @@
                                 {{-- COMPLETED --}}
                                 <div class="campaign-panel hidden" id="tab-completed">
 
-                                    <div class="mb-5">
-                                        <h2 class="text-xl font-semibold text-slate-900">Recently Completed Campaigns</h2>
-                                        <p class="mt-1 text-sm text-slate-500">Last {{ $completed->count() }} flyers to finish &middot; {{ $summary($completed) }}</p>
+                                    <div class="mb-3">
+                                        <h2 class="text-base font-semibold text-slate-900">Recently Completed Campaigns</h2>
+                                        <p class="text-sm text-slate-500">Last {{ $completed->count() }} flyers to finish &middot; {{ $summary($completed) }}</p>
                                     </div>
 
                                     <div class="space-y-3">
