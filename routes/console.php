@@ -261,3 +261,60 @@ Artisan::command('agents:tidy-names {--dry-run : Show what would be changed, cha
         . number_format($fields['agtLast']) . ' last names, '
         . number_format($fields['agtFullName']) . ' full names.');
 })->purpose('Put ALL-CAPS and all-lowercase agent names in proper capitals');
+
+/*
+| php artisan agents:fix-initials [--dry-run]
+|
+| A one-off repair. The first run of agents:tidy-names turned INITIALS into ordinary words (AJ -> Aj,
+| DJ KHAMIS -> Dj Khamis). This puts two-letter words that look like initials (AJ, DJ, TJ, KC - see
+| AgentNames::looksLikeInitials) back to capitals in agtFirst, agtLast and agtFullName. It touches
+| ONLY those words, and only ones in the form "Xx". --dry-run shows what it would change first.
+*/
+Artisan::command('agents:fix-initials {--dry-run : Show what would be changed, change nothing}', function () {
+    $dryRun  = (bool) $this->option('dry-run');
+    $changed = 0;
+    $shown   = 0;
+
+    \App\Models\Core\Propagent::query()
+        ->select('id', 'agtFirst', 'agtLast', 'agtFullName')
+        ->chunkById(1000, function ($agents) use ($dryRun, &$changed, &$shown) {
+            foreach ($agents as $agent) {
+                $update = [];
+
+                foreach (['agtFirst', 'agtLast', 'agtFullName'] as $field) {
+                    $value = (string) $agent->{$field};
+
+                    if ($value === '') {
+                        continue;
+                    }
+
+                    $fixed = \App\Support\AgentNames::restoreInitials($value);
+
+                    if ($fixed !== $value) {
+                        $update[$field] = $fixed;
+                    }
+                }
+
+                if (!$update) {
+                    continue;
+                }
+
+                $changed++;
+
+                if ($shown++ < 80) {
+                    $this->line("  #{$agent->id}  " . implode('   |   ', array_map(
+                        fn ($field) => "{$field}: \"{$agent->{$field}}\" -> \"{$update[$field]}\"",
+                        array_keys($update)
+                    )));
+                }
+
+                if (!$dryRun) {
+                    // straight to the table: no updated_at change, no model events
+                    \App\Models\Core\Propagent::whereKey($agent->id)->toBase()->update($update);
+                }
+            }
+        });
+
+    $this->newLine();
+    $this->info(($dryRun ? 'Would fix ' : 'Fixed ') . number_format($changed) . ' agent(s).');
+})->purpose('Put initials (AJ, DJ) that agents:tidy-names lowercased back to capitals');

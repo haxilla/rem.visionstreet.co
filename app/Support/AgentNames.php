@@ -75,7 +75,37 @@ class AgentNames
         $name = preg_replace_callback('/\bMc(\p{Ll}{3,})/u', fn ($m) => 'Mc' . mb_strtoupper(mb_substr($m[1], 0, 1)) . mb_substr($m[1], 1), $name);
 
         // roman numerals stay capitals (Smith III)
-        return preg_replace_callback('/\b(Ii|Iii|Iv|Vi|Vii|Viii|Ix)\b/', fn ($m) => strtoupper($m[1]), $name);
+        $name = preg_replace_callback('/\b(Ii|Iii|Iv|Vi|Vii|Viii|Ix)\b/', fn ($m) => strtoupper($m[1]), $name);
+
+        // and so do initials (AJ, DJ, TJ, KC)
+        return self::restoreInitials($name);
+    }
+
+    /**
+     * Whether a two-letter word is somebody's INITIALS (AJ, DJ, TJ, KC) rather than a short name
+     * (Al, Ed, Jo, Ty). A judgement, not a certainty: initials end in J or have no vowel at all (Y
+     * counts as a vowel), and the titles and suffixes Mr, Ms, Dr, Jr, Sr, St and the surname Ng are
+     * never taken for initials.
+     */
+    public static function looksLikeInitials(string $word): bool
+    {
+        if (!preg_match('/^[A-Za-z]{2}$/', $word)) {
+            return false;
+        }
+
+        $lower = strtolower($word);
+
+        if (in_array($lower, ['mr', 'ms', 'dr', 'jr', 'sr', 'st', 'ng', 'mc'], true)) {
+            return false;
+        }
+
+        return $lower[1] === 'j' || !preg_match('/[aeiouy]/', $lower);
+    }
+
+    /** "Aj Khamis" -> "AJ Khamis": a two-letter word in the form Xx that looks like initials goes back to capitals. */
+    public static function restoreInitials(string $name): string
+    {
+        return preg_replace_callback('/\b\p{Lu}\p{Ll}\b/u', fn ($m) => self::looksLikeInitials($m[0]) ? strtoupper($m[0]) : $m[0], $name);
     }
 
     /**
@@ -89,6 +119,11 @@ class AgentNames
         $words = preg_split('/[^A-Za-z0-9]+/', \Illuminate\Support\Str::ascii((string) $name), -1, PREG_SPLIT_NO_EMPTY) ?: [];
 
         return implode('', array_map(function ($word) {
+            // initials stay capitals (AJ Smith -> AJSmith)
+            if (strlen($word) === 2 && self::looksLikeInitials($word)) {
+                return strtoupper($word);
+            }
+
             return ($word === strtoupper($word) || $word === strtolower($word))
                 ? ucfirst(strtolower($word))
                 : ucfirst($word);
