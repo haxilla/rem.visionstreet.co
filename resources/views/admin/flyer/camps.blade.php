@@ -175,11 +175,15 @@ if ($propInfo->created_at) {
 
                 <span class="hidden h-3 border-l border-slate-300 sm:inline-block"></span>
 
-                <span>Last sent <strong class="font-semibold text-slate-900">{{ $lastSent ? $lastSent->format('M j, Y') : 'Never' }}</strong></span>
-                <span><strong class="font-semibold text-slate-900">{{ number_format(optional($propInfo->theStats)->xWebViews ?? 0) }}</strong> views</span>
+                {{-- the flyer's dates together, oldest first, then its traffic --}}
                 @if($createdDate)
                     <span>Created <strong class="font-semibold text-slate-900">{{ $createdDate }}</strong></span>
                 @endif
+                <span>Last sent <strong class="font-semibold text-slate-900">{{ $lastSent ? $lastSent->format('M j, Y') : 'Never' }}</strong></span>
+
+                <span class="hidden h-3 border-l border-slate-300 sm:inline-block"></span>
+
+                <span><strong class="font-semibold text-slate-900">{{ number_format(optional($propInfo->theStats)->xWebViews ?? 0) }}</strong> views</span>
 
             </div>
 
