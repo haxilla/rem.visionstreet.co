@@ -7,6 +7,7 @@ use App\Models\Core\AdminSetting;
 use App\Models\Core\Propagent;
 use App\Models\Core\Propdelivnow;
 use App\Models\Core\Propflyer;
+use App\Models\Core\Propflyerstat;
 use App\Support\AgentCampaigns;
 use App\Support\AgentImages;
 use App\Support\AgentNames;
@@ -1467,8 +1468,47 @@ class adminController extends Controller
         $campaign->emComplete = $completed?->format('Y-m-d H:i:s');
         $campaign->save();
 
+        $message = 'Dates updated.' . $this->raiseLastDelivery($campaign->propflyer_id, $completed);
+
         return redirect()->route('admin.flyerCamps', $campaign->propflyer_id)
-            ->with('status', 'Dates updated.');
+            ->with('status', $message);
+    }
+
+    /**
+     * The flyer's "last sent" (propflyerstats.xLastDeliveryDate) is normally
+     * set by the mailer when a delivery completes. When an admin dates a
+     * campaign complete by hand, move it FORWARD to that date if it is newer
+     * than what is stored - never backwards, so correcting or clearing an
+     * older campaign can't undo a genuinely later delivery. Returns a sentence
+     * for the status message ('' when nothing changed).
+     */
+    private function raiseLastDelivery($flyerId, ?Carbon $completed): string
+    {
+        if (!$completed) {
+            return '';
+        }
+
+        if (!Propflyerstat::where('propflyer_id', $flyerId)->exists()) {
+            return ' The flyer has no stats record, so its last sent date was not set.';
+        }
+
+        // raw value: legacy rows can hold NULL or a zero date
+        $stored = Propflyerstat::where('propflyer_id', $flyerId)->value('xLastDeliveryDate');
+
+        try {
+            $storedDate = $stored ? Carbon::parse($stored) : null;
+        } catch (\Throwable $e) {
+            $storedDate = null;
+        }
+
+        if ($storedDate && $storedDate->year > 1970 && !$completed->gt($storedDate)) {
+            return '';
+        }
+
+        Propflyerstat::where('propflyer_id', $flyerId)
+            ->update(['xLastDeliveryDate' => $completed->format('Y-m-d H:i:s')]);
+
+        return ' Flyer last sent updated to ' . $completed->format('M j, Y') . '.';
     }
 
     /**
