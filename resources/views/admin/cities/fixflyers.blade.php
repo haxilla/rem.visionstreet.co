@@ -76,7 +76,6 @@
                             <tr>
                                 <td>
                                     <a href="/admin/flyerCamps/{{ $f->id }}" style="color:#214e9b;font-weight:650">#{{ $f->id }}</a>
-                                    @if($f->deleted_at)<span class="ui-pill" style="background:#fee2e2;color:#991b1b">deleted</span>@endif
                                 </td>
                                 <td>{{ $f->xFullStreet ?: '—' }}</td>
                                 <td>{{ $f->xCity }}</td>

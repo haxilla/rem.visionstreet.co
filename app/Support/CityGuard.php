@@ -186,7 +186,7 @@ class CityGuard
     /**
      * The mass fix: give every flyer whose city is $from (in $state) the city $to. Matches ignoring capitals
      * and spaces, and counts a flyer whose state is only written in xState (the state column is "N0"/blank)
-     * or written out ("Arizona"). Deleted flyers are fixed too, so restoring one doesn't bring the mistake back.
+     * or written out ("Arizona"). Deleted flyers and ads are left out: they are not counted, listed or changed.
      * Returns how many flyers changed.
      */
     public static function relabelFlyers(string $from, string $state, string $to): int
@@ -200,7 +200,7 @@ class CityGuard
         return count($ids);
     }
 
-    /** Ids of the flyers (deleted ones too) that have this city in this state. */
+    /** Ids of the live flyers (not deleted, not ads) that have this city in this state. */
     public static function flyerIds(string $city, string $state): array
     {
         $state = strtoupper(trim($state));
@@ -209,6 +209,7 @@ class CityGuard
         return DB::table('remuserdb.propflyers')
             ->whereRaw("UPPER(TRIM(CASE WHEN TRIM(COALESCE(state, '')) IN ('', 'N0') THEN TRIM(COALESCE(xState, '')) ELSE TRIM(state) END)) IN (" . implode(',', array_fill(0, count($names), '?')) . ')', $names)
             ->whereRaw("REPLACE(TRIM(xCity), ' ', '') = ?", [str_replace(' ', '', trim($city))])
+            ->whereNull('deleted_at')
             ->whereRaw(FlyerAd::notAdSql())
             ->pluck('id')
             ->all();

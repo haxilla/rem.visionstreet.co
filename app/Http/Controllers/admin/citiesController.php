@@ -266,7 +266,7 @@ class citiesController extends Controller
         $flyerIds = CityGuard::flyerIds($row->city, $row->state);
 
         // every flyer that uses it (newest first), so each can be opened and corrected
-        $sample = \App\Models\Core\Propflyer::withTrashed()
+        $sample = Propflyer::query()
             ->leftJoin('remuserdb.propagents as a', 'a.id', '=', 'propflyers.propagent_id')
             ->leftJoin('propflyerstats as s', 's.propflyer_id', '=', 'propflyers.id')
             ->whereIn('propflyers.id', $flyerIds ?: [0])
