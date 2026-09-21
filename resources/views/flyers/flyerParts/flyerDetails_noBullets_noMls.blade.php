@@ -3,7 +3,7 @@
    style="margin:10px;margin-top:15px;"
 @endif>
    <div class="dontScalePubRemarks
-   @if($display=='screen') clickable @endif" style="padding-left:13px;"
+   @if($display=='screen') clickable @endif" style="padding-left:13px;overflow-wrap:anywhere;word-break:break-word;"
    @if($display=='screen') data-modal-trigger="crossstreets" @endif>
       <span class="accent_text"
       style="font-weight:bold;color:#{{$accentTextColor}};">
@@ -16,7 +16,8 @@
       <div class="dontScalePubRemarks
       @if($display=='screen') clickable @endif"
       style="line-height:2;max-height:165px;overflow:hidden;
-      padding-left:20px;padding-right:20px;margin-top:20px;"
+      padding-left:20px;padding-right:20px;margin-top:20px;
+      overflow-wrap:anywhere;word-break:break-word;"
       @if($display=='screen') data-modal-trigger="remarks" @endif>
          {{$propInfo->theRemarks->xPubRemarks}}
       </div>

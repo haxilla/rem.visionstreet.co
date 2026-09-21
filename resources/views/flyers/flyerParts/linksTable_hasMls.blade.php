@@ -1,8 +1,7 @@
 <!--- Links Table double wrapped to get 10px without
 affecting photo padding too -->
-<div>
-<table style="width:100%;margin:15px;
-margin-top:0;margin-bottom:0;">
+<div style="padding-left:15px;padding-right:15px;">
+<table style="width:100%;margin:0;">
    <tr>
       <td>
         @if($propInfo->xMlsNum)

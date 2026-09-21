@@ -94,7 +94,7 @@ data-flyerbackground="{{$propInfo->theStyle
                <div>
                   <!--photo / features table -->
                   <table style="padding:0;border-spacing:0;border-collapse:collapse;
-                  width:100%;">
+                  width:100%;table-layout:fixed;">
                      <tr>
                         <td style="width:70%;padding:0;margin:0;
                         vertical-align:top;">
