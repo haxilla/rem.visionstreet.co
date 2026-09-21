@@ -19,7 +19,7 @@
       padding-left:20px;padding-right:20px;margin-top:20px;
       overflow-wrap:anywhere;word-break:break-word;"
       @if($display=='screen') data-modal-trigger="remarks" @endif>
-         {{$propInfo->theRemarks->xPubRemarks}}
+         {{ \App\Support\FlyerText::plain($propInfo->theRemarks->xPubRemarks) }}
       </div>
       <div class="dontScalePubRemarks accent_text" style="text-align:right;
       padding:20px;padding-right:25px;">

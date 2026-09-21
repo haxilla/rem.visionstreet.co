@@ -242,7 +242,7 @@
                 <h2 class="text-2xl font-bold mb-5">About this Home</h2>
 
                 <p class="text-lg leading-8">
-                    {{ $details->theRemarks->xPubRemarks ?? '' }}
+                    {{ \App\Support\FlyerText::plain($details->theRemarks->xPubRemarks ?? '') }}
                 </p>
             </section>
 

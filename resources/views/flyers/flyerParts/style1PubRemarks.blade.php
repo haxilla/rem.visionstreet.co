@@ -31,5 +31,5 @@
   padding-right:20px;text-align:left;line-height:1.55;
   overflow:hidden;height:70px;font-size:12pt;box-sizing:content-box;"
 @endif>
-  {{$propInfo->theRemarks->xPubRemarks}}
+  {{ \App\Support\FlyerText::plain($propInfo->theRemarks->xPubRemarks) }}
 </div>

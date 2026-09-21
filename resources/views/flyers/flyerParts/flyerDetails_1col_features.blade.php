@@ -45,7 +45,7 @@
       @if($display=='screen') data-modal-trigger="remarks" @endif
       style="line-height:2;max-height:165px;overflow:hidden;
       padding-left:20px;padding-right:20px;margin-top:20px;">
-         {{$propInfo->theRemarks->xPubRemarks}}
+         {{ \App\Support\FlyerText::plain($propInfo->theRemarks->xPubRemarks) }}
       </div>
       <div style="text-align:right;padding:20px;
       padding-right:25px;">
