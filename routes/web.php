@@ -192,7 +192,7 @@ Route::post('/admin/trialToggle', [adminController::class, 'trialToggle'])->name
 Route::post('/admin/settings', [adminController::class, 'settingsSave'])->name('admin.settingsSave');
 
 
-//Admin > Data > Cities & Areas: manage the postal_cities table (admin-only via the controller; explicit routes,
+//Admin > Areas: manage the postal_cities table (admin-only via the controller; explicit routes,
 //defined before the /admin/{segments} catch-all below)
 Route::get('/admin/cities', [citiesController::class, 'index'])->name('admin.cities');
 Route::post('/admin/cities', [citiesController::class, 'store'])->name('admin.cities.store');

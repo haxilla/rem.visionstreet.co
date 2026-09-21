@@ -12,7 +12,8 @@ namespace App\Support;
  * site runs on, reports, ...) under one heading so the bar doesn't grow a link per page.
  *
  *  - 'match': URL patterns (request()->is) that light the entry up as "you are here";
- *  - 'note' (optional, group items only): a one-line description shown under the name.
+ *  - 'note' (optional, group items only): a one-line description shown under the name. Left out by
+ *    default - a drop-down item is just its name.
  */
 class AdminMenu
 {
@@ -35,13 +36,12 @@ class AdminMenu
                 'match' => ['admin/flyers*', 'admin/flyerCamps/*', 'admin/flyerEdit/*'],
             ],
             [
-                // the reference lists the rest of the site is built on
-                'label' => 'Data',
+                // everything an admin manages beyond agents and flyers goes in here, Areas first
+                'label' => 'Admin',
                 'items' => [
                     [
-                        'label' => 'Cities & Areas',
+                        'label' => 'Areas',
                         'href'  => '/admin/cities',
-                        'note'  => 'Which region, sub-area and MLS each city belongs to',
                         'match' => ['admin/cities*'],
                     ],
                 ],

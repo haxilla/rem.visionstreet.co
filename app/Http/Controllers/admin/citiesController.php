@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\Rule;
 
 /**
- * Admin > Data > Cities & Areas: search, view, add, edit and delete the rows of the
+ * Admin > Areas: search, view, add, edit and delete the rows of the
  * postal_cities table (which region / sub-area / MLS each city belongs to).
  *
  * Every change is logged (who, what). All routes are admin-only.

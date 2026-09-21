@@ -6,7 +6,7 @@
 @include('admin.layout.ui')
 
 {{--
-    Admin > Data > Cities & Areas: search, view, add, edit and delete the rows of postal_cities
+    Admin > Areas: search, view, add, edit and delete the rows of postal_cities
     (which region / sub-area / MLS each city belongs to). Controller: citiesController.
 --}}
 <main class="min-h-screen bg-[#f4f7fb] pt-24">
@@ -14,7 +14,7 @@
 
     @if($missing)
 
-        <div class="ui-top"><div class="ui-title"><h1>Cities &amp; Areas</h1></div></div>
+        <div class="ui-top"><div class="ui-title"><h1>Areas</h1></div></div>
 
         <div class="ui-alert warn">
             The <code>postal_cities</code> table wasn't found in the database this site uses. Create it with the
@@ -37,7 +37,7 @@
         {{-- TITLE + SEARCH + ADD --}}
         <div class="ui-top">
             <div class="ui-title">
-                <h1>Cities &amp; Areas</h1>
+                <h1>Areas</h1>
                 <span>{{ number_format($total) }} {{ $total === 1 ? 'city' : 'cities' }}</span>
             </div>
 

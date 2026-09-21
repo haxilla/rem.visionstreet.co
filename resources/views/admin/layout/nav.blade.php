@@ -28,7 +28,7 @@
     details.an-group[open] .an-caret { transform: rotate(180deg); }
 
     .an-group     { position: relative; }
-    .an-panel     { position: absolute; top: calc(100% + 18px); left: 50%; transform: translateX(-50%); min-width: 270px; padding: 8px;
+    .an-panel     { position: absolute; top: calc(100% + 18px); left: 50%; transform: translateX(-50%); min-width: 190px; padding: 8px;
                     border-radius: 16px; background: #fff; color: #334155; box-shadow: 0 18px 40px rgba(15,23,42,.22);
                     border: 1px solid rgba(15,23,42,.08); }
     .an-item      { display: block; padding: 10px 14px; border-radius: 10px; text-decoration: none; color: #334155; }

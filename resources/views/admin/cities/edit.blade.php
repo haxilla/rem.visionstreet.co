@@ -15,7 +15,7 @@
             <span>{{ $city->city }}, {{ $city->state }}</span>
         </div>
 
-        <a href="{{ route('admin.cities', ['q' => $city->city]) }}" class="ui-btn">&larr; Back to Cities &amp; Areas</a>
+        <a href="{{ route('admin.cities', ['q' => $city->city]) }}" class="ui-btn">&larr; Back to Areas</a>
     </div>
 
     @if($errors->any())
