@@ -209,6 +209,7 @@ class CityGuard
         return DB::table('remuserdb.propflyers')
             ->whereRaw("UPPER(TRIM(CASE WHEN TRIM(COALESCE(state, '')) IN ('', 'N0') THEN TRIM(COALESCE(xState, '')) ELSE TRIM(state) END)) IN (" . implode(',', array_fill(0, count($names), '?')) . ')', $names)
             ->whereRaw("REPLACE(TRIM(xCity), ' ', '') = ?", [str_replace(' ', '', trim($city))])
+            ->whereRaw(FlyerAd::notAdSql())
             ->pluck('id')
             ->all();
     }

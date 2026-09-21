@@ -7,7 +7,7 @@
 
 {{--
     Admin > Areas > No state: the flyers whose state is blank or "N0", so an admin can decide flyer by flyer
-    whether to fix or delete them. Read-only. Controller: citiesController@noState.
+    whether to fix or delete them. Controller: citiesController@noState.
 --}}
 <style>
     .ns-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
@@ -34,6 +34,16 @@
 
     @include('admin.cities._tabs', ['tabView' => 'nostate'])
 
+    @if(session('status'))
+        <div class="ui-alert ok">{{ session('status') }}</div>
+    @endif
+
+    @if($errors->any())
+        <div class="ui-alert bad">
+            @foreach($errors->all() as $error)<div>{{ $error }}</div>@endforeach
+        </div>
+    @endif
+
     {{-- WHAT THIS IS --}}
     <div class="ui-card">
         <div class="ui-card-h">
@@ -41,7 +51,7 @@
             <p>
                 The old system stored the state as <strong>N0</strong> whenever it couldn't read it. Without a state a flyer can't be looked up by
                 city + state, so its send areas can't be worked out. Use this list to decide, flyer by flyer, whether each one should be fixed or deleted.
-                Nothing on this page changes a flyer.
+                Nothing changes a flyer except "It's an ad", which marks that one flyer as an advertisement (it then leaves this list).
             </p>
         </div>
 
@@ -106,6 +116,7 @@
                         <th>Last sent</th>
                         <th style="text-align:right">Views</th>
                         <th>Probably</th>
+                        <th></th>
                     </tr>
                 </thead>
 
@@ -139,10 +150,17 @@
                                     <span class="ui-muted">&mdash;</span>
                                 @endif
                             </td>
+                            <td class="actions">
+                                <form method="POST" action="{{ route('admin.flyers.markAd', $f->id) }}"
+                                      onsubmit="return confirm('Mark flyer #{{ $f->id }} as an ad? It leaves this list.')">
+                                    @csrf
+                                    <button type="submit" class="ui-btn sm" title="An ad, not a property: only THIS flyer is marked">It's an ad</button>
+                                </form>
+                            </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="10" class="ui-empty">
+                            <td colspan="11" class="ui-empty">
                                 @if($anyFilter)
                                     No flyers match. <a href="{{ route('admin.cities.noState') }}" style="color:#214e9b;font-weight:650">Clear the search and filters</a>.
                                 @else

@@ -94,6 +94,13 @@
                                 <td class="actions">
                                     @unless($f->deleted_at)
                                         <a href="/admin/flyerEdit/{{ $f->id }}" class="ui-btn sm primary" title="Opens the flyer as its agent, where the address can be edited">Edit flyer</a>
+
+                                        <form method="POST" action="{{ route('admin.flyers.markAd', $f->id) }}"
+                                              onsubmit="return confirm('Mark flyer #{{ $f->id }} as an ad? It stops counting for this list (only this flyer).')">
+                                            @csrf
+                                            <input type="hidden" name="city_id" value="{{ $row->id }}">
+                                            <button type="submit" class="ui-btn sm" title="An ad, not a property: only THIS flyer is marked, and it stops adding a city to the list">It's an ad</button>
+                                        </form>
                                     @endunless
                                 </td>
                             </tr>

@@ -18,6 +18,11 @@ class PostalCityRegistrar
     /** The flyer's city + state, added if new. */
     public static function noteFlyer($flyer): bool
     {
+        // an ad has no real city to place
+        if (! empty($flyer->is_ad)) {
+            return false;
+        }
+
         return self::note($flyer->xCity ?? null, ($flyer->state ?? '') ?: ($flyer->xState ?? ''));
     }
 

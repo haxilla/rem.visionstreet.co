@@ -39,7 +39,14 @@ class AreaReview
           FROM remuserdb.propflyers f
          WHERE f.deleted_at IS NULL
            AND TRIM(COALESCE(f.xCity, '')) <> ''
+           AND {NOT_AD}
          GROUP BY pair_city, pair_state";
+
+    /** The flyer-cities query, leaving out the flyers marked as ads (see FlyerAd). */
+    private static function flyerCitiesSql(): string
+    {
+        return str_replace('{NOT_AD}', FlyerAd::notAdSql('f'), self::FLYER_CITIES);
+    }
 
     /** How many rows have no region yet - the number shown beside Areas. Never breaks a page: 0 if it can't be worked out. */
     public static function pendingCount(): int
@@ -68,7 +75,7 @@ class AreaReview
         return collect(DB::select("
             SELECT c.id, c.city, c.state, COALESCE(g.flyers, 0) AS flyers, g.last_flyer
               FROM remuserdb.postal_cities c
-              LEFT JOIN (" . self::FLYER_CITIES . ") g ON g.pair_city = c.city AND g.pair_state = c.state
+              LEFT JOIN (" . self::flyerCitiesSql() . ") g ON g.pair_city = c.city AND g.pair_state = c.state
              WHERE c.region IS NULL
              ORDER BY flyers DESC, c.city"));
     }
@@ -89,7 +96,7 @@ class AreaReview
      */
     public static function syncFromFlyers(): array
     {
-        $pairs = collect(DB::select(self::FLYER_CITIES));
+        $pairs = collect(DB::select(self::flyerCitiesSql()));
 
         $known  = [];
         $byCity = [];   // city => the states that have it in the table (to guess a missing state)

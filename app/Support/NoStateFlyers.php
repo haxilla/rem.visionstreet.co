@@ -24,6 +24,7 @@ class NoStateFlyers
             ->where(function ($q) {
                 $q->whereNull('propflyers.state')->orWhereRaw("TRIM(propflyers.state) IN ('', 'N0')");
             })
+            ->whereRaw(FlyerAd::notAdSql('propflyers'))
             ->select(
                 'propflyers.id', 'propflyers.propagent_id', 'propflyers.xFullStreet', 'propflyers.xCity',
                 'propflyers.xState', 'propflyers.state', 'propflyers.xZip', 'propflyers.created_at',
@@ -44,7 +45,7 @@ class NoStateFlyers
             return $count = (int) Propflyer::query()
                 ->where(function ($q) {
                     $q->whereNull('state')->orWhereRaw("TRIM(state) IN ('', 'N0')");
-                })->count();
+                })->whereRaw(FlyerAd::notAdSql())->count();
         } catch (\Throwable $e) {
             return 0;
         }
@@ -67,7 +68,8 @@ class NoStateFlyers
               LEFT JOIN propflyerstats s ON s.propflyer_id = f.id
               LEFT JOIN remuserdb.propagents a ON a.id = f.propagent_id
              WHERE f.deleted_at IS NULL
-               AND (f.state IS NULL OR TRIM(f.state) IN ('', 'N0'))");
+               AND (f.state IS NULL OR TRIM(f.state) IN ('', 'N0'))
+               AND " . FlyerAd::notAdSql('f'));
 
         $total = (int) ($row->total ?? 0);
 

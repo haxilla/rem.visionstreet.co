@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Core\PostalCity;
 use App\Support\AreaReview;
 use App\Support\CityGuard;
+use App\Support\FlyerAd;
+use App\Support\PostalCityRegistrar;
 use App\Support\NoStateFlyers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -300,6 +302,53 @@ class citiesController extends Controller
 
         return redirect()->route('admin.cities', ['view' => 'review'])
             ->with('status', $removed === 0 ? 'Nothing to remove - every city on this list is still used by a flyer.' : 'Removed ' . $removed . ' ' . ($removed === 1 ? 'city' : 'cities') . ' that no flyer uses.');
+    }
+
+    /**
+     * Mark ONE flyer as an ad (propflyers.is_ad): it has no real city, so the Areas tools stop counting it. The
+     * city entry it was holding open is deleted if it is region-less and no other flyer uses it. Other flyers
+     * with the same city text are not touched - each is marked on its own.
+     */
+    public function markAd(Request $request, $flyerId)
+    {
+        if (! FlyerAd::exists()) {
+            return back()->withErrors(['ad' => 'The flyers table does not have the is_ad column yet - run the SQL that adds it first.']);
+        }
+
+        $flyer = \App\Models\Core\Propflyer::withTrashed()->findOrFail($flyerId);
+
+        \Illuminate\Support\Facades\DB::table('remuserdb.propflyers')->where('id', $flyer->id)->update(['is_ad' => 1]);
+
+        // the entry this flyer held open goes when nothing else uses it (never one an admin has set up)
+        $state   = PostalCityRegistrar::stateCode(in_array(trim((string) $flyer->state), ['', 'N0'], true) ? $flyer->xState : $flyer->state);
+        $removed = null;
+
+        if ($state !== null && trim((string) $flyer->xCity) !== '') {
+            $row = PostalCity::where('state', $state)
+                ->where('city', PostalCityRegistrar::tidyCity($flyer->xCity))
+                ->whereNull('region')
+                ->first();
+
+            if ($row && CityGuard::flyerIds($row->city, $row->state) === []) {
+                $row->delete();
+                $removed = $row->city . ', ' . $row->state;
+            }
+        }
+
+        Log::info('Admin marked a flyer as an ad', ['admin_id' => Auth::guard('admin')->id(), 'flyer' => $flyer->id, 'city_removed' => $removed]);
+
+        $message = 'Flyer #' . $flyer->id . ' is marked as an ad.' . ($removed ? ' "' . $removed . '" was removed from the list.' : '');
+
+        // from a city's page: stay on it while flyers remain, otherwise (the entry is gone) go to the list
+        $cityId = (int) $request->input('city_id');
+
+        if ($cityId) {
+            return PostalCity::whereKey($cityId)->exists()
+                ? redirect()->route('admin.cities.fix', $cityId)->with('status', $message)
+                : redirect()->route('admin.cities', ['view' => 'review'])->with('status', $message);
+        }
+
+        return back()->with('status', $message);
     }
 
     /** Change the flyers of one city to the chosen known city. */
