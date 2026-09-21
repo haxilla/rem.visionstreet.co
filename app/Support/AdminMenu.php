@@ -44,12 +44,12 @@ class AdminMenu
                         'href'  => '/admin/cities',
                         'match' => ['admin/cities*'],
                     ],
+                    [
+                        'label' => 'Settings',
+                        'href'  => '/admin/settings',
+                        'match' => ['admin/settings*'],
+                    ],
                 ],
-            ],
-            [
-                'label' => 'Settings',
-                'href'  => '/admin/settings',
-                'match' => ['admin/settings*'],
             ],
         ];
     }

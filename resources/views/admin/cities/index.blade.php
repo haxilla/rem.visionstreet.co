@@ -133,9 +133,9 @@
                 </select>
 
                 @if($hasLocal)
-                    <select name="list" class="ui-select" aria-label="Local list" onchange="this.form.submit()">
-                        <option value="">All local lists</option>
-                        <option value="-" @selected($filters['list'] === '-')>No local list</option>
+                    <select name="list" class="ui-select" aria-label="Distro list" onchange="this.form.submit()">
+                        <option value="">All distro lists</option>
+                        <option value="-" @selected($filters['list'] === '-')>No distro list</option>
                         @foreach($optionsOf('local_list') as $v)
                             <option value="{{ $v }}" @selected($filters['list'] === $v)>{{ $v }}</option>
                         @endforeach
@@ -159,8 +159,8 @@
                             <th>State</th>
                             <th>Region</th>
                             <th>Sub-area</th>
+                            @if($hasLocal)<th>Distro list</th>@endif
                             <th>MLS</th>
-                            @if($hasLocal)<th>Local list</th>@endif
                             <th></th>
                         </tr>
                     </thead>
@@ -178,7 +178,6 @@
                                     @endif
                                 </td>
                                 <td>{!! $c->subregion ? e($c->subregion) : '<span class="ui-muted">&mdash;</span>' !!}</td>
-                                <td>{!! $c->mls_system ? e($c->mls_system) : '<span class="ui-muted">&mdash;</span>' !!}</td>
                                 @if($hasLocal)
                                     <td>
                                         @if($c->local_list)
@@ -188,6 +187,7 @@
                                         @endif
                                     </td>
                                 @endif
+                                <td>{!! $c->mls_system ? e($c->mls_system) : '<span class="ui-muted">&mdash;</span>' !!}</td>
                                 <td class="actions">
                                     <a href="{{ route('admin.cities.edit', $c->id) }}" class="ui-btn sm">Edit</a>
 

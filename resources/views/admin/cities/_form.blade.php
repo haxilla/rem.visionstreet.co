@@ -19,7 +19,7 @@
     // The LOCAL distribution list: the mailing list that is "local" for this city (azphxwv, aznaz ...).
     // Only offered once the column has been added to the table.
     if (!empty($lists['hasLocal'])) {
-        $choices[] = ['local_list', 'Local list', array_keys($lists['lists']), false, 'list', 'e.g. azphxwv', $lists['lists']];
+        $choices[] = ['local_list', 'Distro list', array_keys($lists['lists']), false, 'list', 'e.g. azphxwv', $lists['lists']];
     }
 @endphp
 
@@ -55,7 +55,7 @@
             </select>
 
             @if($column === 'local_list')
-                <div class="ui-help">The mailing list that counts as local for this city. A brand-new list name also has to exist on the mailer.</div>
+                <div class="ui-help">The distribution list that is local to this city. A brand-new list name also has to exist on the mailer.</div>
             @endif
 
             <input type="text" name="{{ $column }}_new" maxlength="100" placeholder="{{ $example }}" autocomplete="off"
