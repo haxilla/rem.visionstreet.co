@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 // keys such as phoenix / west_valley, "mls_system" is free text such as ARMLS or MLSSAZ.
 class PostalCity extends Model
 {
-    protected $table   = 'postal_cities';
+    protected $table   = 'remuserdb.postal_cities';
     public $timestamps = false;
     protected $guarded = ['id'];
 }

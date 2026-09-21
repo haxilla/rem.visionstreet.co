@@ -28,7 +28,7 @@ class citiesController extends Controller
     /** The list, with search and filters. */
     public function index(Request $request)
     {
-        if (!Schema::hasTable('postal_cities')) {
+        if (!Schema::hasTable('remuserdb.postal_cities')) {
             return view('admin.cities.index', ['missing' => true]);
         }
 
@@ -149,7 +149,7 @@ class citiesController extends Controller
 
         $data = $request->validate([
             'city'       => ['required', 'string', 'max:100',
-                Rule::unique('postal_cities', 'city')
+                Rule::unique('remuserdb.postal_cities', 'city')
                     ->where(fn ($q) => $q->where('state', $state))
                     ->ignore($ignoreId)],
             'state'      => ['required', 'string', Rule::in(array_keys(config('usstates')))],
