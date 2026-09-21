@@ -261,11 +261,15 @@ class citiesController extends Controller
 
         $flyerIds = CityGuard::flyerIds($row->city, $row->state);
 
+        // every flyer that uses it (newest first), so each can be opened and corrected
         $sample = \App\Models\Core\Propflyer::withTrashed()
             ->leftJoin('remuserdb.propagents as a', 'a.id', '=', 'propflyers.propagent_id')
-            ->whereIn('propflyers.id', array_slice($flyerIds, -15))
+            ->leftJoin('propflyerstats as s', 's.propflyer_id', '=', 'propflyers.id')
+            ->whereIn('propflyers.id', $flyerIds ?: [0])
             ->orderByDesc('propflyers.id')
-            ->get(['propflyers.id', 'propflyers.xFullStreet', 'propflyers.xCity', 'propflyers.xZip', 'propflyers.propagent_id', 'a.agtFullName as agent_name']);
+            ->select('propflyers.id', 'propflyers.xFullStreet', 'propflyers.xCity', 'propflyers.xState', 'propflyers.state', 'propflyers.xZip',
+                'propflyers.propagent_id', 'propflyers.deleted_at', 'propflyers.created_at', 'propflyers.creationDate', 's.xLastDeliveryDate', 'a.agtFullName as agent_name')
+            ->paginate(self::PER_PAGE)->withQueryString();
 
         return view('admin.cities.fixflyers', [
             'row'        => $row,
@@ -275,6 +279,27 @@ class citiesController extends Controller
             'suggestion' => CityGuard::suggest($row->city, $row->state),
             'total'      => PostalCity::count(),
         ]);
+    }
+
+    /**
+     * Delete every region-less entry that no flyer uses any more (what is left after flyers were corrected by
+     * hand). An entry a flyer still uses is kept.
+     */
+    public function destroyUnused()
+    {
+        $removed = 0;
+
+        foreach (AreaReview::pending()->where('flyers', 0) as $row) {
+            // the list matched on exact text; check again the way the mass fix matches before deleting
+            if (CityGuard::flyerIds($row->city, $row->state) === []) {
+                $removed += PostalCity::where('id', $row->id)->whereNull('region')->delete();
+            }
+        }
+
+        Log::info('Admin removed unused cities from the review list', ['admin_id' => Auth::guard('admin')->id(), 'removed' => $removed]);
+
+        return redirect()->route('admin.cities', ['view' => 'review'])
+            ->with('status', $removed === 0 ? 'Nothing to remove - every city on this list is still used by a flyer.' : 'Removed ' . $removed . ' ' . ($removed === 1 ? 'city' : 'cities') . ' that no flyer uses.');
     }
 
     /** Change the flyers of one city to the chosen known city. */
@@ -369,7 +394,9 @@ class citiesController extends Controller
         // from the list: back to the same search / page; from the city's own edit page: that page is gone
         $back = str_contains(url()->previous(), '/edit')
             ? redirect()->route('admin.cities')
-            : redirect()->back();
+            : (str_contains(url()->previous(), '/fix-flyers')
+                ? redirect()->route('admin.cities', ['view' => 'review'])
+                : redirect()->back());
 
         return $back->with('status', "Deleted {$city->city}, {$city->state}.");
     }

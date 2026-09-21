@@ -305,10 +305,13 @@
                     @csrf
                 </form>
 
+                <form id="unusedForm" method="POST" action="{{ route('admin.cities.removeUnused') }}" onsubmit="return confirm('Delete every city on this list that no flyer uses?')">@csrf</form>
+
                 <div class="ui-filters">
                     <button type="submit" form="fixForm" class="ui-btn sm primary">Fix flyers for ticked cities</button>
                     <button type="button" class="ui-btn sm" onclick="document.querySelectorAll('.fixBox').forEach(function(b){b.checked=true})">Tick every match ({{ $withSuggestion }})</button>
                     <button type="button" class="ui-btn sm" onclick="document.querySelectorAll('.fixBox').forEach(function(b){b.checked=false})">Untick all</button>
+                    <button type="submit" form="unusedForm" class="ui-btn sm" title="Deletes the entries that no flyer uses any more - what is left after you correct flyers by hand">Remove entries no flyer uses</button>
                     <span class="ui-muted" style="font-size:13px">"Should be" is the known city in the same state that each one is closest to. Check them, then fix the flyers - the misspelled city then leaves this list.</span>
                 </div>
 
@@ -335,9 +338,9 @@
                                             <input type="checkbox" class="fixBox" name="ids[]" value="{{ $r->id }}" form="fixForm" aria-label="Fix the flyers of {{ $r->city }}">
                                         @endif
                                     </td>
-                                    <td style="font-weight:650;color:#0f172a">{{ $r->city }}</td>
+                                    <td style="font-weight:650"><a href="{{ route('admin.cities.fix', $r->id) }}" style="color:#0f172a" title="See the flyers that use this">{{ $r->city }}</a></td>
                                     <td>{{ $r->state }}</td>
-                                    <td>{{ number_format($r->flyers) }}</td>
+                                    <td><a href="{{ route('admin.cities.fix', $r->id) }}" style="color:#214e9b;font-weight:650" title="See the flyers that use this">{{ number_format($r->flyers) }}</a></td>
                                     <td>
                                         @if($sg)
                                             <span class="ui-pill" style="{{ $sg['how'] === 'spelling' ? 'background:#dcfce7;color:#166534' : 'background:#fef3c7;color:#92400e' }}"
