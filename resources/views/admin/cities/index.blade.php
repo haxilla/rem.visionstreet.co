@@ -45,6 +45,7 @@
                 <input type="hidden" name="region" value="{{ $filters['region'] }}">
                 <input type="hidden" name="subregion" value="{{ $filters['subregion'] }}">
                 <input type="hidden" name="mls" value="{{ $filters['mls'] }}">
+                <input type="hidden" name="list" value="{{ $filters['list'] }}">
                 <input type="hidden" name="state" value="{{ $filters['state'] }}">
 
                 <div class="ui-search">
@@ -131,6 +132,16 @@
                     @endforeach
                 </select>
 
+                @if($hasLocal)
+                    <select name="list" class="ui-select" aria-label="Local list" onchange="this.form.submit()">
+                        <option value="">All local lists</option>
+                        <option value="-" @selected($filters['list'] === '-')>No local list</option>
+                        @foreach($optionsOf('local_list') as $v)
+                            <option value="{{ $v }}" @selected($filters['list'] === $v)>{{ $v }}</option>
+                        @endforeach
+                    </select>
+                @endif
+
                 @if($anyFilter)
                     <a href="{{ route('admin.cities') }}" class="ui-btn sm">Clear filters</a>
                 @endif
@@ -149,6 +160,7 @@
                             <th>Region</th>
                             <th>Sub-area</th>
                             <th>MLS</th>
+                            @if($hasLocal)<th>Local list</th>@endif
                             <th></th>
                         </tr>
                     </thead>
@@ -167,6 +179,15 @@
                                 </td>
                                 <td>{!! $c->subregion ? e($c->subregion) : '<span class="ui-muted">&mdash;</span>' !!}</td>
                                 <td>{!! $c->mls_system ? e($c->mls_system) : '<span class="ui-muted">&mdash;</span>' !!}</td>
+                                @if($hasLocal)
+                                    <td>
+                                        @if($c->local_list)
+                                            <span class="ui-pill" style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace">{{ $c->local_list }}</span>
+                                        @else
+                                            <span class="ui-muted">&mdash;</span>
+                                        @endif
+                                    </td>
+                                @endif
                                 <td class="actions">
                                     <a href="{{ route('admin.cities.edit', $c->id) }}" class="ui-btn sm">Edit</a>
 
@@ -179,7 +200,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="ui-empty">
+                                <td colspan="{{ $hasLocal ? 7 : 6 }}" class="ui-empty">
                                     @if($anyFilter)
                                         No cities match. <a href="{{ route('admin.cities') }}" style="color:#214e9b;font-weight:650">Clear the search and filters</a>.
                                     @else

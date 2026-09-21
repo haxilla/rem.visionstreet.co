@@ -38,17 +38,26 @@ class citiesController extends Controller
         $region    = trim((string) $request->query('region', ''));
         $subregion = trim((string) $request->query('subregion', ''));
         $mls       = trim((string) $request->query('mls', ''));
+        $list      = trim((string) $request->query('list', ''));
+
+        // "local_list" is added to the table with SQL; until that has been run the page simply
+        // doesn't show it.
+        $hasLocal = $this->hasLocalList();
 
         $query = PostalCity::query();
 
         if ($search !== '') {
             $like = '%' . str_replace(['\\', '%', '_'], ['\\\\', '\\%', '\\_'], $search) . '%';
 
-            $query->where(function ($q) use ($like) {
+            $query->where(function ($q) use ($like, $hasLocal) {
                 $q->where('city', 'like', $like)
                     ->orWhere('region', 'like', $like)
                     ->orWhere('subregion', 'like', $like)
                     ->orWhere('mls_system', 'like', $like);
+
+                if ($hasLocal) {
+                    $q->orWhere('local_list', 'like', $like);
+                }
             });
         }
 
@@ -57,7 +66,13 @@ class citiesController extends Controller
         }
 
         // "-" means "none set" (a NULL value), which a normal filter value can't say
-        foreach (['region' => $region, 'subregion' => $subregion, 'mls_system' => $mls] as $column => $value) {
+        $filterColumns = ['region' => $region, 'subregion' => $subregion, 'mls_system' => $mls];
+
+        if ($hasLocal) {
+            $filterColumns['local_list'] = $list;
+        }
+
+        foreach ($filterColumns as $column => $value) {
             if ($value === '-') {
                 $query->whereNull($column);
             } elseif ($value !== '') {
@@ -72,7 +87,8 @@ class citiesController extends Controller
             'missing'   => false,
             'cities'    => $cities,
             'search'    => $search,
-            'filters'   => ['state' => $state, 'region' => $region, 'subregion' => $subregion, 'mls' => $mls],
+            'filters'   => ['state' => $state, 'region' => $region, 'subregion' => $subregion, 'mls' => $mls, 'list' => $list],
+            'hasLocal'  => $hasLocal,
             'total'     => PostalCity::count(),
             'regions'   => PostalCity::selectRaw('region, COUNT(*) as n')->groupBy('region')->orderBy('region')->get(),
             'lists'     => $this->suggestions(),
@@ -153,11 +169,13 @@ class citiesController extends Controller
         // "Add a new ..." picked: the typed value takes the place of the "__new__" marker
         $typed = [];
 
-        foreach (['region', 'subregion', 'mls_system'] as $field) {
+        $hasLocal = $this->hasLocalList();
+
+        foreach (['region', 'subregion', 'mls_system', 'local_list'] as $field) {
             if ($request->input($field) === '__new__') {
                 $new = trim(preg_replace('/\s+/', ' ', (string) $request->input($field . '_new')));
 
-                // region / sub-area are keys: lower case, words joined with underscores
+                // region / sub-area / list name are keys: lower case, words joined with underscores
                 if ($field !== 'mls_system') {
                     $new = trim(preg_replace('/[\s\-]+/', '_', strtolower($new)), '_');
                 }
@@ -170,13 +188,21 @@ class citiesController extends Controller
 
         $state = strtoupper(trim((string) $request->input('state')));
 
-        $validator = Validator::make($request->all(), [
+        $rules = [
             'city'       => ['required', 'string', 'max:100'],
             'state'      => ['required', 'string', Rule::in(array_keys(config('usstates')))],
             'region'     => ['required', 'string', 'max:50', 'regex:/^[a-z0-9_]+$/'],
             'subregion'  => ['nullable', 'string', 'max:50', 'regex:/^[a-z0-9_]+$/'],
             'mls_system' => ['nullable', 'string', 'max:100'],
-        ], [
+        ];
+
+        if ($hasLocal) {
+            // a mailing list's name, as the mailer knows it (azphxwv, aznaz ...)
+            $rules['local_list'] = ['nullable', 'string', 'max:50', 'regex:/^[a-z0-9_]+$/'];
+        }
+
+        $validator = Validator::make($request->all(), $rules, [
+            'local_list.regex' => 'A list name can use lower-case letters, numbers and underscores only (for example: azphxwv).',
             'region.required' => 'Choose a region (or add a new one).',
             'region.regex'    => 'A new region can use letters, numbers and underscores only (for example: central).',
             'subregion.regex' => 'A new sub-area can use letters, numbers and underscores only (for example: east_valley).',
@@ -204,11 +230,19 @@ class citiesController extends Controller
         $data['city']  = trim(preg_replace('/\s+/', ' ', $data['city']));
         $data['state'] = $state;
 
-        foreach (['subregion', 'mls_system'] as $optional) {
-            $data[$optional] = ($data[$optional] ?? '') === '' ? null : trim($data[$optional]);
+        foreach (['subregion', 'mls_system', 'local_list'] as $optional) {
+            if (array_key_exists($optional, $data)) {
+                $data[$optional] = ($data[$optional] ?? '') === '' ? null : trim($data[$optional]);
+            }
         }
 
         return $data;
+    }
+
+    /** Has the local_list column been added to the table yet (it is added with SQL)? */
+    private function hasLocalList(): bool
+    {
+        return Schema::hasColumn('remuserdb.postal_cities', 'local_list');
     }
 
     /** Values already in use, offered as suggestions in the add / edit boxes so spellings stay consistent. */
@@ -217,10 +251,28 @@ class citiesController extends Controller
         $distinct = fn (string $column) => PostalCity::whereNotNull($column)->where($column, '<>', '')
             ->distinct()->orderBy($column)->pluck($column)->all();
 
+        // The mailing lists the site can send to (value = the list's name as the mailer knows it, shown with
+        // its plain name), plus any list name already used in the table that isn't one of those.
+        $lists = [];
+
+        foreach (include app_path('flyers/campaignAreas.php') as $area) {
+            $lists[$area['db']] = $area['db'] . ' - ' . $area['label'];
+        }
+
+        if ($this->hasLocalList()) {
+            foreach ($distinct('local_list') as $used) {
+                $lists[$used] = $lists[$used] ?? $used;
+            }
+        }
+
+        ksort($lists);
+
         return [
             'regions'    => $distinct('region'),
             'subregions' => $distinct('subregion'),
             'mls'        => $distinct('mls_system'),
+            'lists'      => $lists,
+            'hasLocal'   => $this->hasLocalList(),
         ];
     }
 }
