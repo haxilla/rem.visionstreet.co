@@ -691,6 +691,19 @@ document.addEventListener('DOMContentLoaded', () => {
     scaleFlyer();
     window.addEventListener('resize', scaleFlyer);
 
+    // The flyer's height changes after this first pass as its photos and logos
+    // load (a longer flyer was clipped until a reload, when they were cached),
+    // so measure again whenever the flyer or its column changes size.
+    window.addEventListener('load', scaleFlyer);
+
+    if ('ResizeObserver' in window) {
+        const observer = new ResizeObserver(scaleFlyer);
+        const stage = document.querySelector('.flyer-stage');
+
+        document.querySelectorAll('#flyer-scale-wrapper .flyer-panel').forEach(panel => observer.observe(panel));
+        if (stage) observer.observe(stage);
+    }
+
     // ------------------------------------------------------------
     // Narrow screens: "Preview flyer" opens the flyer full-screen,
     // "Close" (or Escape) returns to the controls. Same element as the
