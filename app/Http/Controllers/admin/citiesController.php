@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
 /**
@@ -139,28 +140,66 @@ class citiesController extends Controller
     }
 
     /**
-     * The validated, tidied fields. City + state must be unique together (the table's own rule,
-     * case-insensitive). Region and sub-area are lower-case keys (phoenix, west_valley) so the
-     * same territory can't end up spelled three ways; blank optional fields are stored as NULL.
+     * The validated, tidied fields. City + state must be unique together (case-insensitive, checked
+     * here through the model - the same connection every other form saves with).
+     *
+     * Region, sub-area and MLS are picked from the values already in the table. "Add a new..." posts
+     * the value "__new__" plus what was typed in <field>_new: that is tidied and used. A NEW region or
+     * sub-area is turned into a lower-case key ("West Valley" -> west_valley) so the same territory
+     * can't end up spelled three ways. Blank optional fields are stored as NULL.
      */
     private function validated(Request $request, ?int $ignoreId = null): array
     {
+        // "Add a new ..." picked: the typed value takes the place of the "__new__" marker
+        $typed = [];
+
+        foreach (['region', 'subregion', 'mls_system'] as $field) {
+            if ($request->input($field) === '__new__') {
+                $new = trim(preg_replace('/\s+/', ' ', (string) $request->input($field . '_new')));
+
+                // region / sub-area are keys: lower case, words joined with underscores
+                if ($field !== 'mls_system') {
+                    $new = trim(preg_replace('/[\s\-]+/', '_', strtolower($new)), '_');
+                }
+
+                $typed[$field] = $new;
+            }
+        }
+
+        $request->merge($typed);
+
         $state = strtoupper(trim((string) $request->input('state')));
 
-        $data = $request->validate([
-            'city'       => ['required', 'string', 'max:100',
-                Rule::unique('remuserdb.postal_cities', 'city')
-                    ->where(fn ($q) => $q->where('state', $state))
-                    ->ignore($ignoreId)],
+        $validator = Validator::make($request->all(), [
+            'city'       => ['required', 'string', 'max:100'],
             'state'      => ['required', 'string', Rule::in(array_keys(config('usstates')))],
             'region'     => ['required', 'string', 'max:50', 'regex:/^[a-z0-9_]+$/'],
             'subregion'  => ['nullable', 'string', 'max:50', 'regex:/^[a-z0-9_]+$/'],
             'mls_system' => ['nullable', 'string', 'max:100'],
         ], [
-            'city.unique'     => 'That city is already in the list for this state.',
-            'region.regex'    => 'Region is lower-case letters, numbers and underscores only (for example: phoenix, northern).',
-            'subregion.regex' => 'Sub-area is lower-case letters, numbers and underscores only (for example: west_valley).',
+            'region.required' => 'Choose a region (or add a new one).',
+            'region.regex'    => 'A new region can use letters, numbers and underscores only (for example: central).',
+            'subregion.regex' => 'A new sub-area can use letters, numbers and underscores only (for example: east_valley).',
         ]);
+
+        $validator->after(function ($v) use ($request, $state, $ignoreId) {
+            if ($v->errors()->has('city') || $v->errors()->has('state')) {
+                return;
+            }
+
+            $city = trim(preg_replace('/\s+/', ' ', (string) $request->input('city')));
+
+            $exists = PostalCity::where('state', $state)
+                ->where('city', $city)
+                ->when($ignoreId, fn ($q) => $q->where('id', '!=', $ignoreId))
+                ->exists();
+
+            if ($exists) {
+                $v->errors()->add('city', 'That city is already in the list for this state.');
+            }
+        });
+
+        $data = $validator->validate();
 
         $data['city']  = trim(preg_replace('/\s+/', ' ', $data['city']));
         $data['state'] = $state;

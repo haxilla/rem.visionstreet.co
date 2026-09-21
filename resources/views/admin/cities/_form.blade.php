@@ -1,6 +1,20 @@
-{{-- The fields for adding or editing a city. Needs: $city (a PostalCity, or null when adding), $lists, $states. --}}
+{{--
+    The fields for adding or editing a city. Needs: $city (a PostalCity, or null when adding),
+    $lists (the region / sub-area / MLS values already in the table), $states.
+
+    Region, sub-area and MLS are CHOSEN from what is already in the table, so they can't be
+    mistyped; "Add a new..." at the end of each list opens a box for a value that doesn't exist yet
+    (the server tidies it and adds it). Only the first form on the page includes the small script.
+--}}
 @php
     $val = fn (string $field, $default = '') => old($field, $city->{$field} ?? $default);
+
+    // [column, label, values in use, is it required?, what "new" is called, example for the new box]
+    $choices = [
+        ['region',     'Region',   $lists['regions'],    true,  'region',   'e.g. central'],
+        ['subregion',  'Sub-area', $lists['subregions'], false, 'sub-area', 'e.g. east_valley'],
+        ['mls_system', 'MLS',      $lists['mls'],        false, 'MLS',      'e.g. ARMLS'],
+    ];
 @endphp
 
 <div class="ui-grid">
@@ -18,24 +32,45 @@
         </select>
     </div>
 
-    <div class="ui-field">
-        <label for="region">Region</label>
-        <input type="text" id="region" name="region" maxlength="50" required list="dl-regions" autocomplete="off" value="{{ $val('region') }}">
-        <datalist id="dl-regions">@foreach($lists['regions'] as $v)<option value="{{ $v }}">@endforeach</datalist>
-        <div class="ui-help">phoenix, northern, southern, western&hellip;</div>
-    </div>
+    @foreach($choices as [$column, $label, $values, $required, $noun, $example])
+        @php $current = $val($column); @endphp
 
-    <div class="ui-field">
-        <label for="subregion">Sub-area</label>
-        <input type="text" id="subregion" name="subregion" maxlength="50" list="dl-subregions" autocomplete="off" value="{{ $val('subregion') }}">
-        <datalist id="dl-subregions">@foreach($lists['subregions'] as $v)<option value="{{ $v }}">@endforeach</datalist>
-        <div class="ui-help">Optional. metro, northeast, southeast, west_valley&hellip;</div>
-    </div>
+        <div class="ui-field js-choice">
+            <label for="{{ $column }}">{{ $label }}</label>
 
-    <div class="ui-field">
-        <label for="mls_system">MLS</label>
-        <input type="text" id="mls_system" name="mls_system" maxlength="100" list="dl-mls" autocomplete="off" value="{{ $val('mls_system') }}">
-        <datalist id="dl-mls">@foreach($lists['mls'] as $v)<option value="{{ $v }}">@endforeach</datalist>
-        <div class="ui-help">Optional. The best-fit local MLS, e.g. ARMLS, MLSSAZ.</div>
-    </div>
+            <select id="{{ $column }}" name="{{ $column }}" @if($required) required @endif>
+                <option value="">{{ $required ? 'Choose a ' . $noun . '…' : '— none —' }}</option>
+
+                @foreach($values as $v)
+                    <option value="{{ $v }}" @selected($current === $v)>{{ $v }}</option>
+                @endforeach
+
+                <option value="__new__" @selected($current === '__new__')>＋ Add a new {{ $noun }}…</option>
+            </select>
+
+            <input type="text" name="{{ $column }}_new" maxlength="100" placeholder="{{ $example }}" autocomplete="off"
+                   value="{{ old($column . '_new') }}" class="js-new" style="margin-top:8px;{{ $current === '__new__' ? '' : 'display:none' }}">
+        </div>
+    @endforeach
 </div>
+
+@once
+<script>
+// Show the "new value" box only while "Add a new..." is chosen in that list.
+(function () {
+    function sync(wrapper) {
+        var select = wrapper.querySelector('select');
+        var box    = wrapper.querySelector('.js-new');
+        var isNew  = select.value === '__new__';
+
+        box.style.display = isNew ? '' : 'none';
+
+        if (isNew) { box.focus(); }
+    }
+
+    document.querySelectorAll('.js-choice').forEach(function (wrapper) {
+        wrapper.querySelector('select').addEventListener('change', function () { sync(wrapper); });
+    });
+})();
+</script>
+@endonce
