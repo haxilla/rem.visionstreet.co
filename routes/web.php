@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\guest\guestController;
 use App\Http\Controllers\admin\adminController;
+use App\Http\Controllers\admin\citiesController;
 use App\Http\Controllers\member\memberController;
 use App\Http\Controllers\admin\bounceboxController;
 
@@ -190,6 +191,14 @@ Route::post('/admin/trialToggle', [adminController::class, 'trialToggle'])->name
 //system-wide admin settings (GET /admin/settings is served by the segments convention)
 Route::post('/admin/settings', [adminController::class, 'settingsSave'])->name('admin.settingsSave');
 
+
+//Admin > Data > Cities & Areas: manage the postal_cities table (admin-only via the controller; explicit routes,
+//defined before the /admin/{segments} catch-all below)
+Route::get('/admin/cities', [citiesController::class, 'index'])->name('admin.cities');
+Route::post('/admin/cities', [citiesController::class, 'store'])->name('admin.cities.store');
+Route::get('/admin/cities/{id}/edit', [citiesController::class, 'edit'])->whereNumber('id')->name('admin.cities.edit');
+Route::post('/admin/cities/{id}', [citiesController::class, 'update'])->whereNumber('id')->name('admin.cities.update');
+Route::post('/admin/cities/{id}/delete', [citiesController::class, 'destroy'])->whereNumber('id')->name('admin.cities.destroy');
 
 Route::match(['get', 'post'], '/admin/{segments}', [adminController::class, 'segments'])
     ->where('segments', '.+');
