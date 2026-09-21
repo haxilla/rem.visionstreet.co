@@ -24,6 +24,12 @@
     @else
 
         @php
+            $view         = $view ?? 'list';
+            $search       = $search ?? '';
+            $filters      = $filters ?? ['state' => '', 'region' => '', 'subregion' => '', 'mls' => '', 'list' => ''];
+            $hasLocal     = $hasLocal ?? false;
+            $pendingCount = $pendingCount ?? 0;
+
             $anyFilter = $search !== '' || array_filter($filters) !== [];
 
             // a chip / filter link: keep everything else, change one thing, go back to page 1
@@ -41,6 +47,7 @@
                 <span>{{ number_format($total) }} {{ $total === 1 ? 'city' : 'cities' }}</span>
             </div>
 
+            @if($view === 'list')
             <form method="GET" action="{{ route('admin.cities') }}" class="ui-tools" id="citySearch">
                 <input type="hidden" name="region" value="{{ $filters['region'] }}">
                 <input type="hidden" name="subregion" value="{{ $filters['subregion'] }}">
@@ -56,6 +63,13 @@
                 <button type="submit" class="ui-btn">Search</button>
                 <button type="button" class="ui-btn primary" onclick="var d=document.getElementById('addCity'); d.open=true; document.getElementById('city').focus(); d.scrollIntoView({behavior:'smooth', block:'start'});">+ Add city</button>
             </form>
+            @endif
+
+            {{-- compares every flyer's city + state with this list and adds the missing ones for review --}}
+            <form method="POST" action="{{ route('admin.cities.sync') }}" style="margin-left:auto">
+                @csrf
+                <button type="submit" class="ui-btn" title="Adds any city that flyers use but this list doesn't have yet, waiting for a region">Check flyers for new cities</button>
+            </form>
         </div>
 
         @if(session('status'))
@@ -67,6 +81,20 @@
                 @foreach($errors->all() as $error)<div>{{ $error }}</div>@endforeach
             </div>
         @endif
+
+        {{-- ALL CITIES / NEEDS REVIEW --}}
+        <nav class="ui-chips" style="background:#fff;border-radius:14px;margin-bottom:12px;box-shadow:0 8px 28px rgba(15,23,42,.06)" aria-label="Areas views">
+            <a href="{{ route('admin.cities') }}" class="ui-chip {{ $view === 'list' ? 'is-on' : '' }}">
+                All cities <span class="ui-count">{{ number_format($total) }}</span>
+            </a>
+
+            <a href="{{ route('admin.cities', ['view' => 'review']) }}" class="ui-chip {{ $view === 'review' ? 'is-on' : '' }}">
+                Needs review
+                <span class="ui-count" @if($pendingCount > 0 && $view !== 'review') style="background:#fef3c7;color:#92400e" @endif>{{ number_format($pendingCount) }}</span>
+            </a>
+        </nav>
+
+        @if($view === 'list')
 
         {{-- ADD A CITY --}}
         <details id="addCity" class="ui-card ui-add" @if($errors->any() && old('_form') === 'add') open @endif>
@@ -219,6 +247,62 @@
                 </div>
             @endif
         </div>
+
+        @else
+
+        {{-- NEEDS REVIEW: the cities that have no region yet --}}
+        <div class="ui-card">
+            <div class="ui-card-h">
+                <h2>Cities that need a region</h2>
+                <p>Each was added from a flyer with just a city and state. Choose its region (and, where it applies, its sub-area and distro list) to clear it from this list.</p>
+            </div>
+
+            @if($review->isEmpty())
+                <div class="ui-empty">Nothing needs review &mdash; every city in the list has a region.</div>
+            @else
+                <div class="ui-scroll">
+                    <table class="ui-table">
+                        <thead>
+                            <tr>
+                                <th>City</th>
+                                <th>State</th>
+                                <th>Flyers</th>
+                                <th>Newest flyer</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach($review as $r)
+                                <tr>
+                                    <td style="font-weight:650;color:#0f172a">{{ $r->city }}</td>
+                                    <td>{{ $r->state }}</td>
+                                    <td>{{ number_format($r->flyers) }}</td>
+                                    <td>
+                                        @if($r->last_flyer)
+                                            <a href="/admin/flyerCamps/{{ $r->last_flyer }}" style="color:#214e9b;font-weight:650">#{{ $r->last_flyer }}</a>
+                                        @else
+                                            <span class="ui-muted">&mdash;</span>
+                                        @endif
+                                    </td>
+                                    <td class="actions">
+                                        <a href="{{ route('admin.cities.edit', ['id' => $r->id, 'from' => 'review']) }}" class="ui-btn sm primary">Set up</a>
+
+                                        <form method="POST" action="{{ route('admin.cities.destroy', $r->id) }}"
+                                              onsubmit="return confirm({{ \Illuminate\Support\Js::from('Delete ' . $r->city . ', ' . $r->state . ' from the list? If a flyer still uses it, it will come back the next time the flyers are checked - fix the flyer\'s city instead.') }})">
+                                            @csrf
+                                            <button type="submit" class="ui-btn sm danger">Delete</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @endif
+        </div>
+
+        @endif
 
     @endif
 

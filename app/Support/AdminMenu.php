@@ -14,6 +14,7 @@ namespace App\Support;
  *  - 'match': URL patterns (request()->is) that light the entry up as "you are here";
  *  - 'note' (optional, group items only): a one-line description shown under the name. Left out by
  *    default - a drop-down item is just its name.
+ *  - 'badge' (optional): a key for a small "needs attention" number beside the entry (see badge()).
  */
 class AdminMenu
 {
@@ -42,6 +43,7 @@ class AdminMenu
                     [
                         'label' => 'Areas',
                         'href'  => '/admin/cities',
+                        'badge' => 'areas',
                         'match' => ['admin/cities*'],
                     ],
                     [
@@ -52,6 +54,25 @@ class AdminMenu
                 ],
             ],
         ];
+    }
+
+    /**
+     * The "needs attention" number for an entry - a group adds up its items. 0 = nothing to show.
+     * Add a new kind here and give the entry a matching 'badge' key.
+     */
+    public static function badge(array $entry): int
+    {
+        $count = 0;
+
+        foreach ($entry['items'] ?? [] as $child) {
+            $count += self::badge($child);
+        }
+
+        return $count + match ($entry['badge'] ?? null) {
+            // cities used by flyers that still have no region (Admin > Areas > Needs review)
+            'areas' => AreaReview::pendingCount(),
+            default => 0,
+        };
     }
 
     /** Does the current request belong to this menu entry (a link, or any item of a group)? */

@@ -35,6 +35,19 @@ class Propflyer extends Model{
                 $flyer->syncOriginalAttribute('url_slug');
             }
         });
+
+        // A flyer's city + state has to be in the Areas list (postal_cities). When a flyer is created, or
+        // its city / state changes, the pair is added there - city + state only, no region, which is what
+        // marks it "needs review" - if it isn't already. Best effort: it can never stop a flyer saving.
+        static::saved(function (Propflyer $flyer) {
+            try {
+                if ($flyer->wasRecentlyCreated || $flyer->wasChanged(['xCity', 'xState', 'state'])) {
+                    \App\Support\PostalCityRegistrar::noteFlyer($flyer);
+                }
+            } catch (\Throwable $e) {
+                // never let this interfere with saving the flyer
+            }
+        });
     }
 
     public function theAgent(){

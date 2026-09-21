@@ -34,7 +34,9 @@
     .an-item      { display: block; padding: 10px 14px; border-radius: 10px; text-decoration: none; color: #334155; }
     .an-item:hover { background: #f1f5f9; }
     .an-item.is-on { background: #eef3ff; }
-    .an-item-t    { display: block; font-size: 14px; font-weight: 700; color: #0f172a; }
+    .an-item-t    { display: inline; font-size: 14px; font-weight: 700; color: #0f172a; }
+    .an-badge     { display: inline-block; min-width: 18px; margin-left: 6px; padding: 2px 6px; border-radius: 999px; background: #f59e0b; color: #fff;
+                    font-size: 11px; font-weight: 800; line-height: 1.2; text-align: center; vertical-align: middle; }
     .an-item-n    { display: block; margin-top: 2px; font-size: 12px; font-weight: 500; color: #64748b; line-height: 1.35; }
 
     /* mobile menu: a group is a small heading with its links under it */
@@ -70,13 +72,14 @@
             <details class="an-group">
               <summary class="an-link {{ \App\Support\AdminMenu::isActive($navEntry) ? 'is-on' : '' }}">
                 {{ $navEntry['label'] }}
+                @if(($navBadge = \App\Support\AdminMenu::badge($navEntry)) > 0)<span class="an-badge">{{ $navBadge }}</span>@endif
                 <svg class="an-caret" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5 6 8.5 10 4.5"/></svg>
               </summary>
 
               <div class="an-panel">
                 @foreach($navEntry['items'] as $navChild)
                   <a href="{{ $navChild['href'] }}" class="an-item {{ \App\Support\AdminMenu::isActive($navChild) ? 'is-on' : '' }}">
-                    <span class="an-item-t">{{ $navChild['label'] }}</span>
+                    <span class="an-item-t">{{ $navChild['label'] }}</span>@if(($navBadge = \App\Support\AdminMenu::badge($navChild)) > 0)<span class="an-badge">{{ $navBadge }}</span>@endif
                     @if(!empty($navChild['note']))
                       <span class="an-item-n">{{ $navChild['note'] }}</span>
                     @endif
@@ -85,7 +88,7 @@
               </div>
             </details>
           @else
-            <a href="{{ $navEntry['href'] }}" class="an-link {{ \App\Support\AdminMenu::isActive($navEntry) ? 'is-on' : '' }}">{{ $navEntry['label'] }}</a>
+            <a href="{{ $navEntry['href'] }}" class="an-link {{ \App\Support\AdminMenu::isActive($navEntry) ? 'is-on' : '' }}">{{ $navEntry['label'] }}@if(($navBadge = \App\Support\AdminMenu::badge($navEntry)) > 0)<span class="an-badge">{{ $navBadge }}</span>@endif</a>
           @endif
         @endforeach
       </nav>
@@ -142,10 +145,10 @@
               @if(!empty($navEntry['items']))
                 <div class="an-mh">{{ $navEntry['label'] }}</div>
                 @foreach($navEntry['items'] as $navChild)
-                  <a href="{{ $navChild['href'] }}" class="block rounded-xl px-4 py-2.5 text-sm font-bold hover:bg-slate-100 {{ \App\Support\AdminMenu::isActive($navChild) ? 'an-m-on' : '' }}">{{ $navChild['label'] }}</a>
+                  <a href="{{ $navChild['href'] }}" class="block rounded-xl px-4 py-2.5 text-sm font-bold hover:bg-slate-100 {{ \App\Support\AdminMenu::isActive($navChild) ? 'an-m-on' : '' }}">{{ $navChild['label'] }}@if(($navBadge = \App\Support\AdminMenu::badge($navChild)) > 0)<span class="an-badge">{{ $navBadge }}</span>@endif</a>
                 @endforeach
               @else
-                <a href="{{ $navEntry['href'] }}" class="block rounded-xl px-4 py-2.5 text-sm font-bold hover:bg-slate-100 {{ \App\Support\AdminMenu::isActive($navEntry) ? 'an-m-on' : '' }}">{{ $navEntry['label'] }}</a>
+                <a href="{{ $navEntry['href'] }}" class="block rounded-xl px-4 py-2.5 text-sm font-bold hover:bg-slate-100 {{ \App\Support\AdminMenu::isActive($navEntry) ? 'an-m-on' : '' }}">{{ $navEntry['label'] }}@if(($navBadge = \App\Support\AdminMenu::badge($navEntry)) > 0)<span class="an-badge">{{ $navBadge }}</span>@endif</a>
               @endif
             @endforeach
 

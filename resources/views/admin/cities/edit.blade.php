@@ -15,7 +15,7 @@
             <span>{{ $city->city }}, {{ $city->state }}</span>
         </div>
 
-        <a href="{{ route('admin.cities', ['q' => $city->city]) }}" class="ui-btn">&larr; Back to Areas</a>
+        <a href="{{ ($from ?? null) === 'review' ? route('admin.cities', ['view' => 'review']) : route('admin.cities', ['q' => $city->city]) }}" class="ui-btn">&larr; Back to {{ ($from ?? null) === 'review' ? 'Needs review' : 'Areas' }}</a>
     </div>
 
     @if($errors->any())
@@ -32,12 +32,13 @@
 
         <form method="POST" action="{{ route('admin.cities.update', $city->id) }}" class="ui-card-b" autocomplete="off">
             @csrf
+            @if(($from ?? null) === 'review')<input type="hidden" name="from" value="review">@endif
 
             @include('admin.cities._form', ['city' => $city])
 
             <div class="ui-form-actions">
                 <button type="submit" class="ui-btn primary">Save changes</button>
-                <a href="{{ route('admin.cities', ['q' => $city->city]) }}" class="ui-btn">Cancel</a>
+                <a href="{{ ($from ?? null) === 'review' ? route('admin.cities', ['view' => 'review']) : route('admin.cities', ['q' => $city->city]) }}" class="ui-btn">Cancel</a>
             </div>
         </form>
     </div>

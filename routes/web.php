@@ -196,6 +196,7 @@ Route::post('/admin/settings', [adminController::class, 'settingsSave'])->name('
 //defined before the /admin/{segments} catch-all below)
 Route::get('/admin/cities', [citiesController::class, 'index'])->name('admin.cities');
 Route::post('/admin/cities', [citiesController::class, 'store'])->name('admin.cities.store');
+Route::post('/admin/cities/sync', [citiesController::class, 'sync'])->name('admin.cities.sync');
 Route::get('/admin/cities/{id}/edit', [citiesController::class, 'edit'])->whereNumber('id')->name('admin.cities.edit');
 Route::post('/admin/cities/{id}', [citiesController::class, 'update'])->whereNumber('id')->name('admin.cities.update');
 Route::post('/admin/cities/{id}/delete', [citiesController::class, 'destroy'])->whereNumber('id')->name('admin.cities.destroy');

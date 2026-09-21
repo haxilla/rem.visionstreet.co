@@ -4,6 +4,7 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Core\PostalCity;
+use App\Support\AreaReview;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -31,6 +32,19 @@ class citiesController extends Controller
     {
         if (!Schema::hasTable('remuserdb.postal_cities')) {
             return view('admin.cities.index', ['missing' => true]);
+        }
+
+        // "Needs review": the rows that have no region yet (see App\Support\AreaReview)
+        $pendingCount = AreaReview::pendingCount();
+
+        if ($request->query('view') === 'review') {
+            return view('admin.cities.index', [
+                'missing'      => false,
+                'view'         => 'review',
+                'review'       => AreaReview::pending(),
+                'pendingCount' => $pendingCount,
+                'total'        => PostalCity::count(),
+            ]);
         }
 
         $search    = trim((string) $request->query('q', ''));
@@ -85,6 +99,8 @@ class citiesController extends Controller
 
         return view('admin.cities.index', [
             'missing'   => false,
+            'view'      => 'list',
+            'pendingCount' => $pendingCount,
             'cities'    => $cities,
             'search'    => $search,
             'filters'   => ['state' => $state, 'region' => $region, 'subregion' => $subregion, 'mls' => $mls, 'list' => $list],
@@ -94,6 +110,25 @@ class citiesController extends Controller
             'lists'     => $this->suggestions(),
             'states'    => config('usstates'),
         ]);
+    }
+
+    /**
+     * Compare every flyer's city + state with the table and add the missing ones as bare (region-less)
+     * rows - so they show up under "Needs review". (New flyers do this by themselves; this catches the
+     * flyers that already existed.)
+     */
+    public function sync()
+    {
+        $added = AreaReview::syncFromFlyers();
+
+        Log::info('Admin checked flyers for new cities', ['admin_id' => Auth::guard('admin')->id(), 'added' => $added]);
+
+        return redirect()->route('admin.cities', ['view' => 'review'])->with(
+            'status',
+            $added === 0
+                ? 'Checked every flyer: all their cities are already in the list.'
+                : "Checked every flyer: {$added} new " . ($added === 1 ? 'city' : 'cities') . ' added and waiting for a region.'
+        );
     }
 
     /** Add a city. */
@@ -109,9 +144,10 @@ class citiesController extends Controller
             ->with('status', "Added {$city->city}, {$city->state}.");
     }
 
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
         return view('admin.cities.edit', [
+            'from'   => $request->query('from') === 'review' ? 'review' : null,
             'city'   => PostalCity::findOrFail($id),
             'lists'  => $this->suggestions(),
             'states' => config('usstates'),
@@ -132,8 +168,12 @@ class citiesController extends Controller
             'after'    => $city->only(['city', 'state', 'region', 'subregion', 'mls_system']),
         ]);
 
-        return redirect()->route('admin.cities', ['q' => $city->city])
-            ->with('status', "Saved {$city->city}, {$city->state}.");
+        // saved from the "Needs review" list: go back to it, so the next one is one click away
+        $to = $request->input('from') === 'review'
+            ? redirect()->route('admin.cities', ['view' => 'review'])
+            : redirect()->route('admin.cities', ['q' => $city->city]);
+
+        return $to->with('status', "Saved {$city->city}, {$city->state}.");
     }
 
     public function destroy($id)
