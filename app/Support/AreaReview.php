@@ -2,6 +2,7 @@
 
 namespace App\Support;
 
+use App\Models\Core\PostalCity;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -18,24 +19,24 @@ use Illuminate\Support\Facades\DB;
  *    that are missing (for flyers that already existed, or came from somewhere else).
  *
  * City + state are always compared TOGETHER (Phoenix, AZ and Phoenix, TX are different), ignoring
- * capitals and extra spaces. Deleted flyers are ignored.
+ * capitals and extra spaces. A state may be stored as "AZ" or written out ("Arizona"); both mean AZ.
+ * Deleted flyers are ignored.
  */
 class AreaReview
 {
     /**
-     * Every live flyer's city + state, counted (converted to one character set / collation so it can be
-     * compared with postal_cities whatever the flyers table uses).
+     * Every live flyer's city + state as stored (only grouped, counted). The output names are deliberately
+     * NOT the names of columns in the flyers table (MySQL would group by the column instead of the alias).
      */
     private const FLYER_CITIES = "
-        SELECT CONVERT(TRIM(f.xCity) USING utf8mb4) COLLATE utf8mb4_unicode_ci AS city,
-               CONVERT(UPPER(COALESCE(NULLIF(TRIM(f.state), ''), TRIM(f.xState))) USING utf8mb4) COLLATE utf8mb4_unicode_ci AS state,
+        SELECT CONVERT(TRIM(f.xCity) USING utf8mb4) COLLATE utf8mb4_unicode_ci AS pair_city,
+               CONVERT(UPPER(COALESCE(NULLIF(TRIM(f.state), ''), TRIM(f.xState), '')) USING utf8mb4) COLLATE utf8mb4_unicode_ci AS pair_state,
                COUNT(*) AS flyers,
                MAX(f.id) AS last_flyer
           FROM remuserdb.propflyers f
          WHERE f.deleted_at IS NULL
-           AND TRIM(f.xCity) <> ''
-           AND COALESCE(NULLIF(TRIM(f.state), ''), TRIM(f.xState)) <> ''
-         GROUP BY city, state";
+           AND TRIM(COALESCE(f.xCity, '')) <> ''
+         GROUP BY pair_city, pair_state";
 
     /** How many rows have no region yet - the number shown beside Areas. Never breaks a page: 0 if it can't be worked out. */
     public static function pendingCount(): int
@@ -64,29 +65,74 @@ class AreaReview
         return collect(DB::select("
             SELECT c.id, c.city, c.state, COALESCE(g.flyers, 0) AS flyers, g.last_flyer
               FROM remuserdb.postal_cities c
-              LEFT JOIN (" . self::FLYER_CITIES . ") g ON g.city = c.city AND g.state = c.state
+              LEFT JOIN (" . self::FLYER_CITIES . ") g ON g.pair_city = c.city AND g.pair_state = c.state
              WHERE c.region IS NULL
              ORDER BY flyers DESC, c.city"));
     }
 
     /**
-     * Compare every live flyer's city + state with the table and add the ones that are missing as bare
-     * (region-less) rows. Returns how many were added.
+     * Compare every live flyer's city + state with the table and add the missing ones as bare
+     * (region-less) rows. Returns exactly what it looked at, so a "found nothing" can be trusted (or not):
+     *
+     *   flyers      live flyers with a city
+     *   pairs       different city + state combinations among them
+     *   known       pairs already in the table
+     *   added       pairs that were missing and have now been added
+     *   unusable    pairs that could not be added, with why (state not recognised, city too long)
+     *   states      how the flyers' states are stored, most common first (state => flyers)
+     *
+     * @return array{flyers:int, pairs:int, known:int, added:int, unusable:array<int, array{city:string, state:string, flyers:int, why:string}>, states:array<string,int>}
      */
-    public static function syncFromFlyers(): int
+    public static function syncFromFlyers(): array
     {
-        $missing = collect(DB::select("
-            SELECT g.city, g.state
-              FROM (" . self::FLYER_CITIES . ") g
-              LEFT JOIN remuserdb.postal_cities c ON c.city = g.city AND c.state = g.state
-             WHERE c.id IS NULL"));
+        $pairs = collect(DB::select(self::FLYER_CITIES));
 
-        $added = 0;
+        $known = [];
 
-        foreach ($missing as $row) {
-            $added += PostalCityRegistrar::note($row->city, $row->state) ? 1 : 0;
+        foreach (PostalCity::query()->get(['city', 'state']) as $row) {
+            $known[self::key($row->city, $row->state)] = true;
         }
 
-        return $added;
+        $result = ['flyers' => (int) $pairs->sum('flyers'), 'pairs' => $pairs->count(), 'known' => 0, 'added' => 0, 'unusable' => [], 'states' => []];
+
+        foreach ($pairs as $pair) {
+            $state = PostalCityRegistrar::stateCode($pair->pair_state);
+            $city  = PostalCityRegistrar::tidyCity($pair->pair_city);
+
+            $shown = $state ?? (trim((string) $pair->pair_state) === '' ? '(blank)' : trim((string) $pair->pair_state));
+            $result['states'][$shown] = ($result['states'][$shown] ?? 0) + (int) $pair->flyers;
+
+            if ($state === null) {
+                $result['unusable'][] = ['city' => $city, 'state' => $shown, 'flyers' => (int) $pair->flyers, 'why' => 'the state is not recognised'];
+                continue;
+            }
+
+            if ($city === '' || mb_strlen($city) > 100) {
+                $result['unusable'][] = ['city' => $city, 'state' => $state, 'flyers' => (int) $pair->flyers, 'why' => 'the city is empty or too long'];
+                continue;
+            }
+
+            if (isset($known[self::key($city, $state)])) {
+                $result['known']++;
+                continue;
+            }
+
+            if (PostalCityRegistrar::note($city, $state)) {
+                $result['added']++;
+                $known[self::key($city, $state)] = true;
+            } else {
+                $result['unusable'][] = ['city' => $city, 'state' => $state, 'flyers' => (int) $pair->flyers, 'why' => 'it could not be saved'];
+            }
+        }
+
+        arsort($result['states']);
+
+        return $result;
+    }
+
+    /** One key for "this city in this state", ignoring capitals and spacing. */
+    private static function key(?string $city, ?string $state): string
+    {
+        return mb_strtolower(trim(preg_replace('/\s+/', ' ', (string) $city))) . '|' . strtoupper(trim((string) $state));
     }
 }

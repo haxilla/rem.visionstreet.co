@@ -21,14 +21,41 @@ class PostalCityRegistrar
         return self::note($flyer->xCity ?? null, ($flyer->state ?? '') ?: ($flyer->xState ?? ''));
     }
 
+    /**
+     * A state as its two-letter code: "AZ", "az", "AZ." and "Arizona" all give "AZ". Null when it isn't one
+     * of the states in config/usstates.
+     */
+    public static function stateCode(?string $state): ?string
+    {
+        $state = strtoupper(trim(rtrim(trim((string) $state), '.')));
+
+        if ($state === '') {
+            return null;
+        }
+
+        $states = config('usstates', []);
+
+        if (isset($states[$state])) {
+            return $state;
+        }
+
+        foreach ($states as $code => $name) {
+            if (strcasecmp($name, $state) === 0) {
+                return $code;
+            }
+        }
+
+        return null;
+    }
+
     /** Add city + state if the table doesn't have them yet. Returns true only when a new row was added. */
     public static function note(?string $city, ?string $state): bool
     {
         $city  = self::tidyCity($city);
-        $state = strtoupper(trim((string) $state));
+        $state = self::stateCode($state);
 
-        // a real, two-letter US state and a city we can store
-        if ($city === '' || mb_strlen($city) > 100 || !array_key_exists($state, config('usstates', []))) {
+        // a real US state and a city we can store
+        if ($city === '' || mb_strlen($city) > 100 || $state === null) {
             return false;
         }
 

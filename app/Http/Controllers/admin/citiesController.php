@@ -119,16 +119,19 @@ class citiesController extends Controller
      */
     public function sync()
     {
-        $added = AreaReview::syncFromFlyers();
+        $report = AreaReview::syncFromFlyers();
 
-        Log::info('Admin checked flyers for new cities', ['admin_id' => Auth::guard('admin')->id(), 'added' => $added]);
+        Log::info('Admin checked flyers for new cities', [
+            'admin_id' => Auth::guard('admin')->id(),
+            'flyers'   => $report['flyers'],
+            'pairs'    => $report['pairs'],
+            'known'    => $report['known'],
+            'added'    => $report['added'],
+            'unusable' => count($report['unusable']),
+        ]);
 
-        return redirect()->route('admin.cities', ['view' => 'review'])->with(
-            'status',
-            $added === 0
-                ? 'Checked every flyer: all their cities are already in the list.'
-                : "Checked every flyer: {$added} new " . ($added === 1 ? 'city' : 'cities') . ' added and waiting for a region.'
-        );
+        // shown on the Needs review page, so a "found nothing" can be checked against what was looked at
+        return redirect()->route('admin.cities', ['view' => 'review'])->with('sync_report', $report);
     }
 
     /** Add a city. */

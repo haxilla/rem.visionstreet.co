@@ -250,6 +250,49 @@
 
         @else
 
+        {{-- What "Check flyers for new cities" just looked at --}}
+        @if($report = session('sync_report'))
+            <div class="ui-card">
+                <div class="ui-card-h">
+                    <h2>{{ $report['added'] > 0 ? number_format($report['added']) . ' new ' . ($report['added'] === 1 ? 'city' : 'cities') . ' added for review' : 'No new cities found' }}</h2>
+                    <p>
+                        Checked {{ number_format($report['flyers']) }} flyers in {{ number_format($report['pairs']) }} different city + state
+                        combinations: {{ number_format($report['known']) }} already in the list,
+                        {{ number_format($report['added']) }} added,
+                        {{ number_format(count($report['unusable'])) }} could not be added.
+                    </p>
+                </div>
+
+                <div class="ui-card-b">
+                    <div style="font-size:13px;color:#475569;line-height:1.7">
+                        <strong>States on your flyers:</strong>
+                        @foreach($report['states'] as $st => $n)
+                            <span class="ui-pill" style="margin:0 4px 4px 0">{{ $st }} &middot; {{ number_format($n) }}</span>
+                        @endforeach
+                    </div>
+
+                    @if(count($report['unusable']) > 0)
+                        <div style="margin-top:14px;font-size:13px;font-weight:700;color:#92400e">Could not be added (fix the flyer's city or state):</div>
+                        <div class="ui-scroll" style="margin-top:6px">
+                            <table class="ui-table">
+                                <thead><tr><th>City</th><th>State as stored</th><th>Flyers</th><th>Why</th></tr></thead>
+                                <tbody>
+                                    @foreach(array_slice($report['unusable'], 0, 25) as $u)
+                                        <tr>
+                                            <td>{{ $u['city'] ?: '(blank)' }}</td>
+                                            <td>{{ $u['state'] }}</td>
+                                            <td>{{ number_format($u['flyers']) }}</td>
+                                            <td>{{ $u['why'] }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        @endif
+
         {{-- NEEDS REVIEW: the cities that have no region yet --}}
         <div class="ui-card">
             <div class="ui-card-h">
