@@ -52,4 +52,5 @@ return [
     'WV' => 'West Virginia',
     'WI' => 'Wisconsin',
     'WY' => 'Wyoming',
+    'MX' => 'Mexico',
 ];
