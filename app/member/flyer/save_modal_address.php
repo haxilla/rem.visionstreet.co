@@ -11,6 +11,9 @@ $validatedData = $request->validate([
     'xListPrice'  => 'nullable|integer',
 ]);
 
+// tidy the city (stray commas, capitals) and stop once on a likely misspelling - see CityGuard
+$validatedData['xCity'] = \App\Support\CityGuard::guardFlyer($request, $validatedData['xCity'], $validatedData['xState']);
+
 $flyer = Propflyer::where('id', $validatedData['flyerId'])
     ->where('propagent_id', auth()->id())
     ->first();

@@ -13,6 +13,9 @@ $validatedData = $request->validate([
     'xMlsNum'     => 'nullable|integer|digits_between:1,15',
 ]);
 
+// tidy the city (stray commas, capitals) and stop once on a likely misspelling - see CityGuard
+$validatedData['xCity'] = \App\Support\CityGuard::guardFlyer($request, $validatedData['xCity'], $validatedData['xState']);
+
 $flyerId = (int) request('flyerId');
 
 //set to false by default, if flyerId is not provided, it will be treated as a new flyer

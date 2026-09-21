@@ -5,6 +5,7 @@ namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use App\Models\Core\PostalCity;
 use App\Support\AreaReview;
+use App\Support\CityGuard;
 use App\Support\NoStateFlyers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -39,10 +40,14 @@ class citiesController extends Controller
         $pendingCount = AreaReview::pendingCount();
 
         if ($request->query('view') === 'review') {
+            $review = AreaReview::pending();
+
             return view('admin.cities.index', [
                 'missing'      => false,
                 'view'         => 'review',
-                'review'       => AreaReview::pending(),
+                'review'       => $review,
+                // what each city is probably a misspelling of (city => [city, how])
+                'suggestions'  => $review->mapWithKeys(fn ($r) => [$r->id => CityGuard::suggest($r->city, $r->state)])->all(),
                 'pendingCount' => $pendingCount,
                 'total'        => PostalCity::count(),
             ]);
@@ -208,6 +213,101 @@ class citiesController extends Controller
 
         // shown on the Needs review page, so a "found nothing" can be checked against what was looked at
         return redirect()->route('admin.cities', ['view' => 'review'])->with('sync_report', $report);
+    }
+
+    /**
+     * The mass fix, from the Needs review list: for each ticked city, change the flyers that have it to the
+     * city it is a misspelling of (worked out again here, not taken from the form), then drop the bare row.
+     */
+    public function fixFlyers(Request $request)
+    {
+        $ids = array_filter(array_map('intval', (array) $request->input('ids', [])));
+
+        if (! $ids) {
+            return redirect()->route('admin.cities', ['view' => 'review'])->withErrors(['fix' => 'Tick the cities to fix first.']);
+        }
+
+        $flyers = 0;
+        $fixed  = [];
+        $skipped = 0;
+
+        foreach (PostalCity::whereIn('id', $ids)->whereNull('region')->get() as $row) {
+            $suggestion = CityGuard::suggest($row->city, $row->state);
+
+            if (! $suggestion) {
+                $skipped++;
+                continue;
+            }
+
+            $flyers += $this->applyFix($row, $suggestion['city']);
+            $fixed[] = $row->city . ' → ' . $suggestion['city'];
+        }
+
+        Log::info('Admin mass-fixed flyer cities', ['admin_id' => Auth::guard('admin')->id(), 'flyers' => $flyers, 'fixed' => $fixed]);
+
+        $message = number_format($flyers) . ' ' . ($flyers === 1 ? 'flyer' : 'flyers') . ' corrected (' . count($fixed) . ' ' . (count($fixed) === 1 ? 'city' : 'cities') . ').';
+
+        if ($skipped) {
+            $message .= ' ' . $skipped . ' had no match and were left alone.';
+        }
+
+        return redirect()->route('admin.cities', ['view' => 'review'])->with('status', $message);
+    }
+
+    /** Fix the flyers of one city by hand: choose which known city they should have. */
+    public function fix($id)
+    {
+        $row = PostalCity::findOrFail($id);
+
+        $flyerIds = CityGuard::flyerIds($row->city, $row->state);
+
+        $sample = \App\Models\Core\Propflyer::withTrashed()
+            ->leftJoin('remuserdb.propagents as a', 'a.id', '=', 'propflyers.propagent_id')
+            ->whereIn('propflyers.id', array_slice($flyerIds, -15))
+            ->orderByDesc('propflyers.id')
+            ->get(['propflyers.id', 'propflyers.xFullStreet', 'propflyers.xCity', 'propflyers.xZip', 'propflyers.propagent_id', 'a.agtFullName as agent_name']);
+
+        return view('admin.cities.fixflyers', [
+            'row'        => $row,
+            'flyerCount' => count($flyerIds),
+            'sample'     => $sample,
+            'choices'    => CityGuard::knownCities($row->state),
+            'suggestion' => CityGuard::suggest($row->city, $row->state),
+            'total'      => PostalCity::count(),
+        ]);
+    }
+
+    /** Change the flyers of one city to the chosen known city. */
+    public function applyFixOne(Request $request, $id)
+    {
+        $row = PostalCity::findOrFail($id);
+
+        $choices = CityGuard::knownCities($row->state);
+        $to      = $choices[mb_strtolower(trim((string) $request->input('to')))] ?? null;
+
+        if (! $to) {
+            return back()->withErrors(['to' => 'Choose the city these flyers should have.']);
+        }
+
+        $flyers = $this->applyFix($row, $to);
+
+        Log::info('Admin fixed the city on flyers', ['admin_id' => Auth::guard('admin')->id(), 'from' => $row->city, 'to' => $to, 'state' => $row->state, 'flyers' => $flyers]);
+
+        return redirect()->route('admin.cities', ['view' => 'review'])
+            ->with('status', number_format($flyers) . ' ' . ($flyers === 1 ? 'flyer' : 'flyers') . ' changed from "' . $row->city . '" to "' . $to . '".');
+    }
+
+    /** Change the flyers to the city $to, and remove the bare row they came from. Returns how many flyers changed. */
+    private function applyFix(PostalCity $row, string $to): int
+    {
+        $count = CityGuard::relabelFlyers($row->city, $row->state, $to);
+
+        // only a region-less row goes: one an admin has set up stays, whatever flyers said
+        if ($row->region === null && mb_strtolower(trim($row->city)) !== mb_strtolower(trim($to))) {
+            $row->delete();
+        }
+
+        return $count;
     }
 
     /** Add a city. */

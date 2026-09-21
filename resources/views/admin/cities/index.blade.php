@@ -297,13 +297,30 @@
             @if($review->isEmpty())
                 <div class="ui-empty">Nothing needs review &mdash; every city in the list has a region.</div>
             @else
+                @php $suggestions = $suggestions ?? []; $withSuggestion = collect($suggestions)->filter()->count(); @endphp
+
+                {{-- the mass fix: the ticked cities are misspellings, so the FLYERS get the right city (no page nesting: the boxes and button point at this form) --}}
+                <form id="fixForm" method="POST" action="{{ route('admin.cities.fixFlyers') }}"
+                      onsubmit="var n=document.querySelectorAll('.fixBox:checked').length; if(!n){alert('Tick the cities to fix first.');return false;} return confirm('Change the city on the flyers of '+n+' ticked '+(n==1?'city':'cities')+' to the spelling shown? This changes the flyers themselves.');">
+                    @csrf
+                </form>
+
+                <div class="ui-filters">
+                    <button type="submit" form="fixForm" class="ui-btn sm primary">Fix flyers for ticked cities</button>
+                    <button type="button" class="ui-btn sm" onclick="document.querySelectorAll('.fixBox').forEach(function(b){b.checked=true})">Tick every match ({{ $withSuggestion }})</button>
+                    <button type="button" class="ui-btn sm" onclick="document.querySelectorAll('.fixBox').forEach(function(b){b.checked=false})">Untick all</button>
+                    <span class="ui-muted" style="font-size:13px">"Should be" is the known city in the same state that each one is closest to. Check them, then fix the flyers - the misspelled city then leaves this list.</span>
+                </div>
+
                 <div class="ui-scroll">
                     <table class="ui-table">
                         <thead>
                             <tr>
+                                <th style="width:34px"></th>
                                 <th>City</th>
                                 <th>State</th>
                                 <th>Flyers</th>
+                                <th>Should be</th>
                                 <th>Newest flyer</th>
                                 <th></th>
                             </tr>
@@ -311,10 +328,24 @@
 
                         <tbody>
                             @foreach($review as $r)
+                                @php $sg = $suggestions[$r->id] ?? null; @endphp
                                 <tr>
+                                    <td>
+                                        @if($sg)
+                                            <input type="checkbox" class="fixBox" name="ids[]" value="{{ $r->id }}" form="fixForm" aria-label="Fix the flyers of {{ $r->city }}">
+                                        @endif
+                                    </td>
                                     <td style="font-weight:650;color:#0f172a">{{ $r->city }}</td>
                                     <td>{{ $r->state }}</td>
                                     <td>{{ number_format($r->flyers) }}</td>
+                                    <td>
+                                        @if($sg)
+                                            <span class="ui-pill" style="{{ $sg['how'] === 'spelling' ? 'background:#dcfce7;color:#166534' : 'background:#fef3c7;color:#92400e' }}"
+                                                  title="{{ $sg['how'] === 'spelling' ? 'Only punctuation or capitals differ' : 'A close spelling - check it' }}">{{ $sg['city'] }}</span>
+                                        @else
+                                            <span class="ui-muted">&mdash;</span>
+                                        @endif
+                                    </td>
                                     <td>
                                         @if($r->last_flyer)
                                             <a href="/admin/flyerCamps/{{ $r->last_flyer }}" style="color:#214e9b;font-weight:650">#{{ $r->last_flyer }}</a>
@@ -323,7 +354,8 @@
                                         @endif
                                     </td>
                                     <td class="actions">
-                                        <a href="{{ route('admin.cities.edit', ['id' => $r->id, 'from' => 'review']) }}" class="ui-btn sm primary">Set up</a>
+                                        <a href="{{ route('admin.cities.edit', ['id' => $r->id, 'from' => 'review']) }}" class="ui-btn sm primary" title="It is a real city - give it a region">Set up</a>
+                                        <a href="{{ route('admin.cities.fix', $r->id) }}" class="ui-btn sm" title="It is a misspelling - correct the flyers">Fix flyers</a>
 
                                         <form method="POST" action="{{ route('admin.cities.destroy', $r->id) }}"
                                               onsubmit="return confirm({{ \Illuminate\Support\Js::from('Delete ' . $r->city . ', ' . $r->state . ' from the list? If a flyer still uses it, it will come back the next time the flyers are checked - fix the flyer\'s city instead.') }})">
