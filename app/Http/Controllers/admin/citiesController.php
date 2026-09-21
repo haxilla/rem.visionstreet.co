@@ -339,6 +339,10 @@ class citiesController extends Controller
                 ->when($ignoreId, fn ($q) => $q->where('id', '!=', $ignoreId))
                 ->exists();
 
+            if (\App\Support\PostalCityRegistrar::isCountryName($city, $state)) {
+                $v->errors()->add('city', 'Mexico is a country, not a city. Use its real city name with the state MX.');
+            }
+
             if ($exists) {
                 $v->errors()->add('city', 'That city is already in the list for this state.');
             }

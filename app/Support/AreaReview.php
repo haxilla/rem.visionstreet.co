@@ -105,8 +105,8 @@ class AreaReview
             $state = PostalCityRegistrar::stateCode($pair->pair_state);
             $city  = PostalCityRegistrar::tidyCity($pair->pair_city);
 
-            // "Mexico" in the city box is the state (MX), not a city: never listed, never added
-            if (PostalCityRegistrar::isCountryName($city)) {
+            // "Mexico" in the city box is the country, not a city (unless a US state has one): never listed, never added
+            if (PostalCityRegistrar::isCountryName($city, $state)) {
                 continue;
             }
 

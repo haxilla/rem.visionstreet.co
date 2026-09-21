@@ -48,10 +48,20 @@ class PostalCityRegistrar
         return null;
     }
 
-    /** "Mexico" is a state here (MX), never a city - a flyer that has it in the city box doesn't add a city. */
-    public static function isCountryName(?string $city): bool
+    /**
+     * "Mexico" is a country, not a city, so it never belongs in the city box - unless the state is a real US
+     * state that has a city by that name (Mexico, MO; Mexico, ME; Mexico, NY). With no state, or MX, it is
+     * the country and is never added or listed.
+     */
+    public static function isCountryName(?string $city, ?string $state = null): bool
     {
-        return in_array(mb_strtolower(trim((string) $city)), ['mexico', 'méxico', 'mx'], true);
+        if (! in_array(mb_strtolower(trim((string) $city)), ['mexico', 'méxico', 'mx'], true)) {
+            return false;
+        }
+
+        $state = strtoupper(trim((string) $state));
+
+        return $state === '' || $state === 'MX' || ! isset(config('usstates', [])[$state]);
     }
 
     /** Add city + state if the table doesn't have them yet. Returns true only when a new row was added. */
@@ -61,7 +71,7 @@ class PostalCityRegistrar
         $state = self::stateCode($state);
 
         // a real US state and a city we can store
-        if ($city === '' || mb_strlen($city) > 100 || $state === null || self::isCountryName($city)) {
+        if ($city === '' || mb_strlen($city) > 100 || $state === null || self::isCountryName($city, $state)) {
             return false;
         }
 
