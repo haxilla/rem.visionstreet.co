@@ -272,16 +272,19 @@
                     </div>
 
                     @if(count($report['unusable']) > 0)
-                        <div style="margin-top:14px;font-size:13px;font-weight:700;color:#92400e">Could not be added (fix the flyer's city or state):</div>
+                        <div style="margin-top:14px;font-size:13px;font-weight:700;color:#92400e">
+                            Could not be added &mdash; these flyers have no usable state (the old system stored "N0"). Ordered by how many flyers use each city:
+                        </div>
                         <div class="ui-scroll" style="margin-top:6px">
                             <table class="ui-table">
-                                <thead><tr><th>City</th><th>State as stored</th><th>Flyers</th><th>Why</th></tr></thead>
+                                <thead><tr><th>City</th><th>State as stored</th><th>Flyers</th><th>Probably</th><th>Why</th></tr></thead>
                                 <tbody>
                                     @foreach(array_slice($report['unusable'], 0, 25) as $u)
                                         <tr>
                                             <td>{{ $u['city'] ?: '(blank)' }}</td>
                                             <td>{{ $u['state'] }}</td>
                                             <td>{{ number_format($u['flyers']) }}</td>
+                                            <td>{!! !empty($u['guess']) ? '<strong>' . e($u['guess']) . '</strong>' : '<span class="ui-muted">&mdash;</span>' !!}</td>
                                             <td>{{ $u['why'] }}</td>
                                         </tr>
                                     @endforeach

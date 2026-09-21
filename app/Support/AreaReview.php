@@ -27,10 +27,13 @@ class AreaReview
     /**
      * Every live flyer's city + state as stored (only grouped, counted). The output names are deliberately
      * NOT the names of columns in the flyers table (MySQL would group by the column instead of the alias).
+     *
+     * The state is flyers.state, except that the old clean-up script wrote "N0" there for every flyer whose
+     * xState it couldn't read - "N0" means "no state", so the raw xState is used instead when there is one.
      */
     private const FLYER_CITIES = "
         SELECT CONVERT(TRIM(f.xCity) USING utf8mb4) COLLATE utf8mb4_unicode_ci AS pair_city,
-               CONVERT(UPPER(COALESCE(NULLIF(TRIM(f.state), ''), TRIM(f.xState), '')) USING utf8mb4) COLLATE utf8mb4_unicode_ci AS pair_state,
+               CONVERT(UPPER(CASE WHEN TRIM(COALESCE(f.state, '')) IN ('', 'N0') THEN TRIM(COALESCE(f.xState, '')) ELSE TRIM(f.state) END) USING utf8mb4) COLLATE utf8mb4_unicode_ci AS pair_state,
                COUNT(*) AS flyers,
                MAX(f.id) AS last_flyer
           FROM remuserdb.propflyers f
@@ -78,7 +81,8 @@ class AreaReview
      *   pairs       different city + state combinations among them
      *   known       pairs already in the table
      *   added       pairs that were missing and have now been added
-     *   unusable    pairs that could not be added, with why (state not recognised, city too long)
+     *   unusable    pairs that could not be added, with why (no usable state, city too long) and, for a missing
+     *               state, the state the city is probably in (when only one state has it in the table)
      *   states      how the flyers' states are stored, most common first (state => flyers)
      *
      * @return array{flyers:int, pairs:int, known:int, added:int, unusable:array<int, array{city:string, state:string, flyers:int, why:string}>, states:array<string,int>}
@@ -87,10 +91,12 @@ class AreaReview
     {
         $pairs = collect(DB::select(self::FLYER_CITIES));
 
-        $known = [];
+        $known  = [];
+        $byCity = [];   // city => the states that have it in the table (to guess a missing state)
 
         foreach (PostalCity::query()->get(['city', 'state']) as $row) {
             $known[self::key($row->city, $row->state)] = true;
+            $byCity[mb_strtolower(trim($row->city))][$row->state] = true;
         }
 
         $result = ['flyers' => (int) $pairs->sum('flyers'), 'pairs' => $pairs->count(), 'known' => 0, 'added' => 0, 'unusable' => [], 'states' => []];
@@ -103,7 +109,16 @@ class AreaReview
             $result['states'][$shown] = ($result['states'][$shown] ?? 0) + (int) $pair->flyers;
 
             if ($state === null) {
-                $result['unusable'][] = ['city' => $city, 'state' => $shown, 'flyers' => (int) $pair->flyers, 'why' => 'the state is not recognised'];
+                // no usable state: if only ONE state has this city in the table, that is the likely answer
+                $states = array_keys($byCity[mb_strtolower($city)] ?? []);
+
+                $result['unusable'][] = [
+                    'city'   => $city,
+                    'state'  => $shown,
+                    'flyers' => (int) $pair->flyers,
+                    'why'    => 'the flyer has no usable state',
+                    'guess'  => count($states) === 1 ? $states[0] : null,
+                ];
                 continue;
             }
 
@@ -126,6 +141,9 @@ class AreaReview
         }
 
         arsort($result['states']);
+
+        // the biggest problems first
+        usort($result['unusable'], fn ($x, $y) => $y['flyers'] <=> $x['flyers']);
 
         return $result;
     }
