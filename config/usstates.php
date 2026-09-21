@@ -23,6 +23,7 @@ return [
     'ME' => 'Maine',
     'MD' => 'Maryland',
     'MA' => 'Massachusetts',
+    'MX' => 'Mexico',
     'MI' => 'Michigan',
     'MN' => 'Minnesota',
     'MS' => 'Mississippi',
@@ -52,5 +53,4 @@ return [
     'WV' => 'West Virginia',
     'WI' => 'Wisconsin',
     'WY' => 'Wyoming',
-    'MX' => 'Mexico',
 ];
