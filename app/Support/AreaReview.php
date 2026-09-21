@@ -105,6 +105,11 @@ class AreaReview
             $state = PostalCityRegistrar::stateCode($pair->pair_state);
             $city  = PostalCityRegistrar::tidyCity($pair->pair_city);
 
+            // "Mexico" in the city box is the state (MX), not a city: never listed, never added
+            if (PostalCityRegistrar::isCountryName($city)) {
+                continue;
+            }
+
             $shown = $state ?? (trim((string) $pair->pair_state) === '' ? '(blank)' : trim((string) $pair->pair_state));
             $result['states'][$shown] = ($result['states'][$shown] ?? 0) + (int) $pair->flyers;
 
