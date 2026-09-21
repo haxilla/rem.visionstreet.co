@@ -82,17 +82,8 @@
             </div>
         @endif
 
-        {{-- ALL CITIES / NEEDS REVIEW --}}
-        <nav class="ui-chips" style="background:#fff;border-radius:14px;margin-bottom:12px;box-shadow:0 8px 28px rgba(15,23,42,.06)" aria-label="Areas views">
-            <a href="{{ route('admin.cities') }}" class="ui-chip {{ $view === 'list' ? 'is-on' : '' }}">
-                All cities <span class="ui-count">{{ number_format($total) }}</span>
-            </a>
-
-            <a href="{{ route('admin.cities', ['view' => 'review']) }}" class="ui-chip {{ $view === 'review' ? 'is-on' : '' }}">
-                Needs review
-                <span class="ui-count" @if($pendingCount > 0 && $view !== 'review') style="background:#fef3c7;color:#92400e" @endif>{{ number_format($pendingCount) }}</span>
-            </a>
-        </nav>
+        {{-- ALL CITIES / NEEDS REVIEW / NO STATE --}}
+        @include('admin.cities._tabs', ['tabView' => $view])
 
         @if($view === 'list')
 

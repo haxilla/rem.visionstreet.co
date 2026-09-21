@@ -5,6 +5,7 @@ namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use App\Models\Core\PostalCity;
 use App\Support\AreaReview;
+use App\Support\NoStateFlyers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -109,6 +110,81 @@ class citiesController extends Controller
             'regions'   => PostalCity::selectRaw('region, COUNT(*) as n')->groupBy('region')->orderBy('region')->get(),
             'lists'     => $this->suggestions(),
             'states'    => config('usstates'),
+        ]);
+    }
+
+    /**
+     * Areas > No state: the flyers whose state is blank or "N0" (the old system's "couldn't read it"). Everything
+     * needed to decide, flyer by flyer, whether to fix or delete them - address, city, the raw state text, agent,
+     * whether it was ever sent, its views and a guess at the state - with a search, filters and a CSV download.
+     * Read-only: nothing here changes a flyer.
+     */
+    public function noState(Request $request)
+    {
+        $search = trim((string) $request->query('q', ''));
+        $sent   = in_array($request->query('sent'), ['sent', 'never'], true) ? $request->query('sent') : '';
+        $city   = in_array($request->query('city'), ['has', 'none'], true) ? $request->query('city') : '';
+
+        $query = NoStateFlyers::query();
+
+        if ($search !== '') {
+            $like = '%' . str_replace(['\\', '%', '_'], ['\\\\', '\\%', '\\_'], $search) . '%';
+
+            $query->where(function ($q) use ($like, $search) {
+                $q->where('propflyers.xFullStreet', 'like', $like)
+                    ->orWhere('propflyers.xCity', 'like', $like)
+                    ->orWhere('propflyers.xZip', 'like', $like)
+                    ->orWhere('propflyers.xState', 'like', $like)
+                    ->orWhere('a.agtFullName', 'like', $like);
+
+                if (ctype_digit($search)) {
+                    $q->orWhere('propflyers.id', (int) $search)->orWhere('propflyers.propagent_id', (int) $search);
+                }
+            });
+        }
+
+        if ($sent === 'sent') {
+            $query->whereNotNull('s.xLastDeliveryDate');
+        } elseif ($sent === 'never') {
+            $query->whereNull('s.xLastDeliveryDate');
+        }
+
+        if ($city === 'has') {
+            $query->whereRaw("TRIM(COALESCE(propflyers.xCity, '')) <> ''");
+        } elseif ($city === 'none') {
+            $query->whereRaw("TRIM(COALESCE(propflyers.xCity, '')) = ''");
+        }
+
+        $cityStates = NoStateFlyers::cityStates();
+
+        // the whole (filtered) list as a spreadsheet, for working through it outside the site
+        if ($request->query('export') === 'csv') {
+            return response()->streamDownload(function () use ($query, $cityStates) {
+                $out = fopen('php://output', 'w');
+                fputcsv($out, ['flyer_id', 'agent_id', 'agent', 'address', 'city', 'zip', 'state_column', 'xState_as_typed', 'created', 'last_sent', 'views', 'probable_state', 'probable_from']);
+
+                foreach ($query->orderBy('propflyers.id')->cursor() as $f) {
+                    $g = NoStateFlyers::guess($f, $cityStates);
+
+                    fputcsv($out, [
+                        $f->id, $f->propagent_id, $f->agent_name, $f->xFullStreet, $f->xCity, $f->xZip, $f->state, $f->xState,
+                        $f->created_at ?: $f->creationDate, $f->xLastDeliveryDate, (int) $f->xWebViews, $g[0] ?? '', $g[1] ?? '',
+                    ]);
+                }
+
+                fclose($out);
+            }, 'flyers-with-no-state-' . now()->format('Y-m-d') . '.csv', ['Content-Type' => 'text/csv']);
+        }
+
+        $flyers = $query->orderByDesc('propflyers.id')->paginate(self::PER_PAGE)->withQueryString();
+
+        return view('admin.cities.nostate', [
+            'flyers'     => $flyers,
+            'summary'    => NoStateFlyers::summary(),
+            'cityStates' => $cityStates,
+            'search'     => $search,
+            'filters'    => ['sent' => $sent, 'city' => $city],
+            'total'      => PostalCity::count(),
         ]);
     }
 
