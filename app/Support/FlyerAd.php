@@ -29,6 +29,22 @@ class FlyerAd
         return $exists;
     }
 
+    /** How many live flyers are marked as ads - for the tab. 0 when the column isn't there yet. */
+    public static function count(): int
+    {
+        static $count = null;
+
+        if ($count === null) {
+            try {
+                $count = self::exists() ? (int) \Illuminate\Support\Facades\DB::table('remuserdb.propflyers')->whereNull('deleted_at')->where('is_ad', 1)->count() : 0;
+            } catch (\Throwable $e) {
+                $count = 0;
+            }
+        }
+
+        return $count;
+    }
+
     /** SQL condition "this flyer is not an ad" for a flyer table alias ('' for none) - always true before the column exists. */
     public static function notAdSql(string $alias = ''): string
     {

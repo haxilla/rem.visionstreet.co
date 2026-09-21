@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Core\Propflyer;
 use App\Models\Core\PostalCity;
+use Illuminate\Support\Facades\DB;
 use App\Support\AreaReview;
 use App\Support\CityGuard;
 use App\Support\FlyerAd;
@@ -339,6 +341,9 @@ class citiesController extends Controller
 
         $message = 'Flyer #' . $flyer->id . ' is marked as an ad.' . ($removed ? ' "' . $removed . '" was removed from the list.' : '');
 
+        // every page that shows the message also offers "Undo" (see admin.cities._tabs)
+        session()->flash('undo_ad', $flyer->id);
+
         // from a city's page: stay on it while flyers remain, otherwise (the entry is gone) go to the list
         $cityId = (int) $request->input('city_id');
 
@@ -349,6 +354,60 @@ class citiesController extends Controller
         }
 
         return back()->with('status', $message);
+    }
+
+    /** The flyers marked as ads, each with a way to take the mark off. */
+    public function ads(Request $request)
+    {
+        $search = trim((string) $request->query('q', ''));
+        $flyers = null;
+
+        if (FlyerAd::exists()) {
+            $query = Propflyer::query()
+                ->leftJoin('remuserdb.propagents as a', 'a.id', '=', 'propflyers.propagent_id')
+                ->where('propflyers.is_ad', 1)
+                ->select('propflyers.id', 'propflyers.propagent_id', 'propflyers.xFullStreet', 'propflyers.xCity', 'propflyers.xState',
+                    'propflyers.state', 'propflyers.xZip', 'propflyers.created_at', 'propflyers.creationDate', 'a.agtFullName as agent_name');
+
+            if ($search !== '') {
+                $like = '%' . str_replace(['\\', '%', '_'], ['\\\\', '\\%', '\\_'], $search) . '%';
+
+                $query->where(function ($q) use ($like, $search) {
+                    $q->where('propflyers.xFullStreet', 'like', $like)->orWhere('propflyers.xCity', 'like', $like)
+                        ->orWhere('propflyers.xZip', 'like', $like)->orWhere('a.agtFullName', 'like', $like);
+
+                    if (ctype_digit($search)) {
+                        $q->orWhere('propflyers.id', (int) $search);
+                    }
+                });
+            }
+
+            $flyers = $query->orderByDesc('propflyers.id')->paginate(self::PER_PAGE)->withQueryString();
+        }
+
+        return view('admin.cities.ads', ['flyers' => $flyers, 'search' => $search, 'total' => PostalCity::count()]);
+    }
+
+    /**
+     * Take the ad mark off ONE flyer. Its city and state then count again, so the flyer's city is put back in the
+     * list (as a bare "needs review" entry) if the list doesn't have it.
+     */
+    public function unmarkAd($flyerId)
+    {
+        if (! FlyerAd::exists()) {
+            return back()->withErrors(['ad' => 'The flyers table does not have the is_ad column yet.']);
+        }
+
+        $flyer = Propflyer::withTrashed()->findOrFail($flyerId);
+
+        DB::table('remuserdb.propflyers')->where('id', $flyer->id)->update(['is_ad' => 0]);
+
+        $flyer->is_ad = 0;
+        $added = ! $flyer->deleted_at && PostalCityRegistrar::noteFlyer($flyer);
+
+        Log::info('Admin took the ad mark off a flyer', ['admin_id' => Auth::guard('admin')->id(), 'flyer' => $flyer->id, 'city_added' => $added]);
+
+        return back()->with('status', 'Flyer #' . $flyer->id . ' is no longer marked as an ad.' . ($added ? ' Its city was added back to the list for review.' : ''));
     }
 
     /** Change the flyers of one city to the chosen known city. */

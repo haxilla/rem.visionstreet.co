@@ -198,6 +198,8 @@ Route::get('/admin/cities', [citiesController::class, 'index'])->name('admin.cit
 Route::post('/admin/cities', [citiesController::class, 'store'])->name('admin.cities.store');
 Route::post('/admin/cities/sync', [citiesController::class, 'sync'])->name('admin.cities.sync');
 Route::get('/admin/cities/no-state', [citiesController::class, 'noState'])->name('admin.cities.noState');
+Route::get('/admin/cities/ads', [citiesController::class, 'ads'])->name('admin.cities.ads');
+Route::post('/admin/flyers/{flyerId}/not-ad', [citiesController::class, 'unmarkAd'])->whereNumber('flyerId')->name('admin.flyers.unmarkAd');
 Route::post('/admin/flyers/{flyerId}/ad', [citiesController::class, 'markAd'])->whereNumber('flyerId')->name('admin.flyers.markAd');
 Route::post('/admin/cities/remove-unused', [citiesController::class, 'destroyUnused'])->name('admin.cities.removeUnused');
 Route::post('/admin/cities/fix-flyers', [citiesController::class, 'fixFlyers'])->name('admin.cities.fixFlyers');
